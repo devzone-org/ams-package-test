@@ -1,0 +1,39 @@
+{
+    "name": "devzone/ams",
+    "description": "A complete accounts management system.",
+    "license": "license",
+    "authors": [
+        {
+            "name": "Muhammad Talha",
+            "email": "talha@devzone.services",
+            "homepage": "https://devzone.services"
+        }
+    ],
+    "homepage": "https://github.com/devzone/ams",
+    "keywords": ["Laravel", "Ams"],
+    "require": {
+        "illuminate/support": "~7|~8",
+        "livewire/livewire": "^2.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~9.0",
+        "orchestra/testbench": "~5|~6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Devzone\\Ams\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Devzone\\Ams\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Devzone\\Ams\\AmsServiceProvider"
+            ]
+        }
+    }
+}
