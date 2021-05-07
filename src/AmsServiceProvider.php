@@ -2,6 +2,7 @@
 
 namespace Devzone\Ams;
 
+use Devzone\Ams\Console\DumpMasterData;
 use Devzone\Ams\Http\Livewire\Post\Show;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -101,6 +102,8 @@ class AmsServiceProvider extends ServiceProvider
         ], 'ams.views');*/
 
         // Registering package commands.
-        // $this->commands([]);
+         $this->commands([
+             DumpMasterData::class,
+         ]);
     }
 }

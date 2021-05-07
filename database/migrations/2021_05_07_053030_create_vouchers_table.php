@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateChartOfAccountTable extends Migration
+class CreateVouchersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateChartOfAccountTable extends Migration
      */
     public function up()
     {
-
-        Schema::create('chart_of_accounts', function (Blueprint $table) {
+        Schema::create('vouchers', function (Blueprint $table) {
             $table->id();
+            $table->string('name',30)->unique();
+            $table->integer('value')->default(0);
+            $table->char('is_lock',1)->default('f');
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ class CreateChartOfAccountTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('chart_of_accounts');
+        Schema::dropIfExists('vouchers');
     }
 }

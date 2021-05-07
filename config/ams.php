@@ -2,6 +2,6 @@
 
 return [
     'prefix' => 'accounts',
-    'middleware' => ['web'],
+    'middleware' => ['web','auth'],
 
 ];
