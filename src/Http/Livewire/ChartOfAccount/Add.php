@@ -4,6 +4,7 @@
 namespace Devzone\Ams\Http\Livewire\ChartOfAccount;
 
 
+use Devzone\Ams\Helper\GeneralJournal;
 use Devzone\Ams\Helper\Voucher;
 use Devzone\Ams\Models\ChartOfAccount;
 use Illuminate\Support\Facades\DB;
@@ -66,11 +67,27 @@ class Add extends Component
             ])->id;
 
             if($this->at_level == 4 && $this->opening_balance > 0){
-                //TODO posting to ledger
+                $voucher_no = Voucher::instance()->voucher()->get();
+                $entry = GeneralJournal::instance()->account($account_id);
+                if($this->determineNature()=='d'){
+                    if(empty($this->is_contra)){
+                        $entry = $entry->debit($this->opening_balance);
+                    } else {
+                        $entry = $entry->credit($this->opening_balance);
+                    }
+                } else {
+                    if(empty($this->is_contra)){
+                        $entry = $entry->credit($this->opening_balance);
+                    } else {
+                        $entry = $entry->debit($this->opening_balance);
+                    }
+                }
+                $entry->description('Opening balance')->voucherNo($voucher_no)
+                    ->date($this->date)->approve()->execute();
             }
             DB::commit();
             $this->success ='Account has been created.';
-            $this->reset(['account_name','account_type','parent_account','at_level','is_contra','opening_balance','show_opening_balance','sub_accounts']);
+            $this->reset(['account_name','date','account_type','parent_account','at_level','is_contra','opening_balance','show_opening_balance','sub_accounts']);
         } catch (\Exception $e) {
             DB::rollBack();
             $this->addError('account_name', $e->getMessage());

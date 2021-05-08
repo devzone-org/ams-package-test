@@ -24,8 +24,8 @@ class CreateLedgersTable extends Migration
             $table->text('description');
             $table->date('posting_date');
             $table->integer('posted_by');
-            $table->datetime('approved_at');
-            $table->integer('approved_by');
+            $table->datetime('approved_at')->nullable();
+            $table->integer('approved_by')->nullable();
             $table->char('is_approve',1)->default('f');
             $table->timestamps();
         });
