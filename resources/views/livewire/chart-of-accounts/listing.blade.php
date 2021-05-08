@@ -65,9 +65,22 @@
                                     </td>
                                 </tr>
                                 @foreach($coa->where('sub_account',$four->id) as $five)
-                                    <tr>
-                                        <td class="px-3 py-2  whitespace-nowrap text-sm font-medium text-gray-900">
-                                            {!! str_repeat('&nbsp;', 24) !!} {{ $five->name }}
+                                    <tr class="{{ $five->status=='f'?'bg-red-200':'' }}">
+                                        <td title="This is contra account" class="px-3 py-2  whitespace-nowrap text-sm font-medium text-gray-900">
+                                            <div class="flex flex-wrap content-center items-center">
+                                                <span>{!! str_repeat('&nbsp;', 24) !!}</span>
+
+                                            @if($five->is_contra == 't')
+                                                <svg  class="w-4 h-4 {{ $five->status=='f'?'text-red-600':'text-green-500' }}" fill="currentColor" viewBox="0 0 20 20"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd"
+                                                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                          clip-rule="evenodd"></path>
+                                                </svg>
+                                            @endif
+                                                <span> &nbsp;{{ $five->name }}</span>
+
+                                            </div>
                                         </td>
 
                                         <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{{ $five->code }}</td>

@@ -4,6 +4,7 @@
 namespace Devzone\Ams\Http\Livewire\ChartOfAccount;
 
 
+use Devzone\Ams\Helper\Voucher;
 use Devzone\Ams\Models\ChartOfAccount;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -48,9 +49,28 @@ class Add extends Component
         $this->validate();
         try {
             DB::beginTransaction();
+            $code = null;
+            if($this->at_level==4){
+                $code = Voucher::instance()->coa()->get();
+                $code = str_pad($code,7,"0",STR_PAD_LEFT);
+            }
+            $account_id = ChartOfAccount::create([
+                'name' => $this->account_name,
+                'type' => $this->account_type,
+                'sub_account' => $this->parent_account,
+                'level' => $this->at_level + 1,
+                'code' => $code,
+                'nature' => $this->determineNature(),
+                'is_contra' => !empty($this->is_contra)?'t':'f',
+                'status' => 't'
+            ])->id;
 
-
+            if($this->at_level == 4 && $this->opening_balance > 0){
+                //TODO posting to ledger
+            }
             DB::commit();
+            $this->success ='Account has been created.';
+            $this->reset(['account_name','account_type','parent_account','at_level','is_contra','opening_balance','show_opening_balance','sub_accounts']);
         } catch (\Exception $e) {
             DB::rollBack();
             $this->addError('account_name', $e->getMessage());
@@ -69,9 +89,9 @@ class Add extends Component
         ];
     }
 
-    private function determineNature($type)
+    private function determineNature()
     {
-        if (in_array($type, ['Assets', 'Expenses'])) {
+        if (in_array($this->account_type, ['Assets', 'Expenses'])) {
             return 'd';
         } else {
             return 'c';
