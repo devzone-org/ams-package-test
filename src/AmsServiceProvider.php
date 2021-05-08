@@ -3,6 +3,7 @@
 namespace Devzone\Ams;
 
 use Devzone\Ams\Console\DumpMasterData;
+use Devzone\Ams\Http\Livewire\ChartOfAccount\Add;
 use Devzone\Ams\Http\Livewire\ChartOfAccount\Listing;
 use Devzone\Ams\Http\Livewire\Post\Show;
 use Illuminate\Support\Facades\Route;
@@ -24,7 +25,8 @@ class AmsServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->registerRoutes();
 
-        Livewire::component('chart-of-accounts.listing',Listing::class);
+
+        $this->registerLivewireComponent();
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
@@ -106,5 +108,10 @@ class AmsServiceProvider extends ServiceProvider
          $this->commands([
              DumpMasterData::class,
          ]);
+    }
+
+    private function registerLivewireComponent(){
+        Livewire::component('chart-of-accounts.listing',Listing::class);
+        Livewire::component('chart-of-accounts.add',Add::class);
     }
 }

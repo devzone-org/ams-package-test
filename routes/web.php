@@ -13,5 +13,9 @@ Route::get('chart-of-accounts',function (){
     return view('ams::coa.list');
 });
 
+Route::get('chart-of-accounts/add',function (){
+    return view('ams::coa.add');
+});
 
-Route::get('test',[TalhaController::class,'test']);
+
+//Route::get('test',[TalhaController::class,'test']);
