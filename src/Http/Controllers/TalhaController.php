@@ -4,12 +4,13 @@
 namespace Devzone\Ams\Http\Controllers;
 
 
+use Devzone\Ams\Helper\Voucher;
 use Illuminate\Http\Request;
 
 class TalhaController extends Controller
 {
-    public function test(Request $request)
+    public function test()
     {
-        return view('ams::welcome');
+        return Voucher::instance()->tempVoucher()->get();
     }
 }

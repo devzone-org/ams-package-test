@@ -21,7 +21,7 @@ class ChartOfAccounts extends Migration
             $table->char('level',1);
             $table->string('code',7)->nullable();
             $table->char('nature',1);
-            $table->char('status',1)->default('f');
+            $table->char('status',1)->default('t');
             $table->char('is_contra',1)->default('f');
             $table->string('reference',50)->nullable();
             $table->timestamps();
