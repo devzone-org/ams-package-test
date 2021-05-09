@@ -12,10 +12,20 @@
             display: none !important;
         }
     </style>
+    <style>
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
     @livewireScripts
     <script src="{{ asset('ams/js/app.js') }}"></script>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-200">
 <div x-data="{menu:false,dropdown:false,activeIndex:-1}">
     @include('ams::include.header')
     <main>
