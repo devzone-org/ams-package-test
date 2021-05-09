@@ -22,6 +22,15 @@ class Voucher
         return $this;
     }
 
+    public function tempVoucherOnly()
+    {
+        $this->name = 'temp_voucher';
+        $voucher = \Devzone\Ams\Models\Voucher::where('name', $this->name)->get();
+        $voucher = $voucher->first();
+        $count = $voucher->value;
+        return $count + 1;
+    }
+
     public function voucher()
     {
         $this->name = 'voucher';

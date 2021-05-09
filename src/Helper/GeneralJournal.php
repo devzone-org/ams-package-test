@@ -26,6 +26,24 @@ class GeneralJournal
         return $ledger;
     }
 
+    public static function closingBalance($nature, $is_contra, $debit = 0, $credit = 0)
+    {
+        if ($nature == 'd') {
+            if ($is_contra == 'f') {
+                $balance = $debit - $credit;
+            } else {
+                $balance = $credit - $debit;
+            }
+        } else {
+            if ($is_contra == 'f') {
+                $balance = $credit - $debit;
+            } else {
+                $balance = $debit - $credit;
+            }
+        }
+        return $balance;
+    }
+
     public function account($id)
     {
         $this->account_id = $id;
@@ -71,7 +89,6 @@ class GeneralJournal
         $this->is_approve = 't';
         return $this;
     }
-
 
     public function execute()
     {

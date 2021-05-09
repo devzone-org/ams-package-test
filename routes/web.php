@@ -17,5 +17,13 @@ Route::get('chart-of-accounts/add',function (){
     return view('ams::coa.add');
 });
 
+Route::get('journal',function (){
+    return view('ams::journal.temp-list');
+});
+
+Route::get('journal/add',function (){
+    return view('ams::journal.add');
+});
+
 
 //Route::get('test',[TalhaController::class,'test']);

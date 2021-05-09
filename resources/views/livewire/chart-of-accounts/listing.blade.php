@@ -1,4 +1,4 @@
-<div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
+<div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-12">
 
     <div class="shadow sm:rounded-md sm:overflow-hidden">
         <div class="bg-white ">
@@ -85,9 +85,12 @@
 
                                         <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{{ $five->code }}</td>
                                         <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            20.00
+                                            @php
+                                                echo number_format(\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit),2);
+                                            @endphp
                                         </td>
-                                        <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{{date('d M, Y')}}</td>
+                                        <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            @if(!empty($five->posting_date)) {{date('d M, Y',strtotime($five->posting_date))}} @endif</td>
                                         <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
                                             <svg class="w-6 h-6 " fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                                  xmlns="http://www.w3.org/2000/svg">

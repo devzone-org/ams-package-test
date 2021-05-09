@@ -113,5 +113,6 @@ class AmsServiceProvider extends ServiceProvider
     private function registerLivewireComponent(){
         Livewire::component('chart-of-accounts.listing',Listing::class);
         Livewire::component('chart-of-accounts.add',Add::class);
+        Livewire::component('journal.add',\Devzone\Ams\Http\Livewire\Journal\Add::class);
     }
 }
