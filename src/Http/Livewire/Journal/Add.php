@@ -177,6 +177,11 @@ class Add extends Component
         return true;
     }
 
+    public function deleteAll(){
+        TempLedger::where('posted_by',Auth::user()->id)->delete();
+        $this->reset('entries');
+    }
+
     public function render()
     {
         return view('ams::livewire.journal.add');
