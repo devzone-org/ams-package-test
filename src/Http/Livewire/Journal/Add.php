@@ -6,6 +6,8 @@ namespace Devzone\Ams\Http\Livewire\Journal;
 
 use Devzone\Ams\Helper\Voucher;
 use Devzone\Ams\Models\ChartOfAccount;
+use Devzone\Ams\Models\TempLedger;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Add extends Component
@@ -17,12 +19,46 @@ class Add extends Component
     public $search_accounts;
     public $accounts = [];
     public $key_id;
+    public $deleted = [];
+    public $success;
+
+    protected $rules = [
+        'entries.*.account_id' => 'required|integer',
+        'posting_date' => 'required|date|date_format:Y-m-d',
+        'voucher_no' => 'required|integer',
+        'entries.*.description' => 'required|string',
+        'entries.*.debit' => 'required_without:credit|numeric',
+        'entries.*.credit' => 'required_without:debit|numeric',
+    ];
+
+    protected $validationAttributes = [
+        'entries.*.account_id' => 'account',
+        'entries.*.debit' => 'debit',
+        'entries.*.credit' => 'credit',
+        'entries.*.description' => 'description',
+
+    ];
 
     public function mount()
     {
-        $this->posting_date = date('Y-m-d');
-        $this->voucher_no = Voucher::instance()->tempVoucherOnly();
-        $this->entries[] = $this->defaultEntries();
+        $temp_entries = TempLedger::from('temp_ledgers as tl')
+            ->join('chart_of_accounts as coa', 'coa.id', '=', 'tl.account_id')
+            ->where('tl.posted_by', Auth::user()->id)
+            ->select('tl.*', 'coa.name as account_name')->get();
+
+
+
+        if ($temp_entries->isNotEmpty()) {
+            $this->posting_date = $temp_entries->first()->posting_date;
+            $this->voucher_no = $temp_entries->max('voucher_no');
+            $this->entries = $temp_entries->toArray();
+
+        } else {
+            $this->posting_date = date('Y-m-d');
+            $this->voucher_no = Voucher::instance()->tempVoucherOnly();
+            $this->entries[] = $this->defaultEntries();
+        }
+
     }
 
     private function defaultEntries()
@@ -43,16 +79,24 @@ class Add extends Component
 
     public function removeEntry($key)
     {
+        $entry = $this->entries[$key];
         unset($this->entries[$key]);
+        if (isset($entry['id'])) {
+            $this->deleted[] = $entry['id'];
+        }
     }
 
     public function searchAccounts($key)
     {
+
         $this->search_accounts_modal = true;
         $this->key_id = $key;
+        $this->emit('focusInput');
+
     }
 
-    public function chooseAccount($id,$name){
+    public function chooseAccount($id, $name)
+    {
         $this->entries[$this->key_id]['account_id'] = $id;
         $this->entries[$this->key_id]['account_name'] = $name;
         $this->search_accounts_modal = false;
@@ -73,6 +117,64 @@ class Add extends Component
         } else {
             $this->accounts = [];
         }
+    }
+
+    public function updated($name, $value)
+    {
+        $array = explode('.', $name);
+        if (count($array) == 3) {
+            if ($array[2] == 'debit') {
+                $this->entries[$array[1]]['credit'] = 0;
+            }
+            if ($array[2] == 'credit') {
+                $this->entries[$array[1]]['debit'] = 0;
+            }
+        }
+    }
+
+    public function draft()
+    {
+        $this->validate();
+        if (TempLedger::where('voucher_no', $this->voucher_no)
+            ->where('posted_by', '!=', Auth::user()->id)->exists()) {
+            $this->addError('voucher_no', 'Voucher # ' . $this->voucher_no . ' already in use. System have updated to new one kindly try again.');
+            $this->voucher_no = Voucher::instance()->tempVoucher()->get();
+            TempLedger::where('posted_by',Auth::user()->id)->update([
+                'voucher_no' => $this->voucher_no
+            ]);
+            return false;
+        }
+
+        if (!empty($this->deleted) > 0) {
+            TempLedger::where('posted_by', Auth::user()->id)->whereIn('id', $this->deleted)->delete();
+        }
+
+        foreach ($this->entries as $entry) {
+            if (isset($entry['id'])) {
+                //update
+                TempLedger::find($entry['id'])->update([
+                    'voucher_no' => $this->voucher_no,
+                    'debit' => $entry['debit'],
+                    'credit' => $entry['credit'],
+                    'description' => $entry['description'],
+                    'posting_date' => $this->posting_date,
+                ]);
+            } else {
+                //created
+                TempLedger::create([
+                    'account_id' => $entry['account_id'],
+                    'voucher_no' => $this->voucher_no,
+                    'debit' => $entry['debit'],
+                    'credit' => $entry['credit'],
+                    'description' => $entry['description'],
+                    'posting_date' => $this->posting_date,
+                    'posted_by' => Auth::user()->id
+                ]);
+            }
+        }
+
+        $this->success = 'Record has been updated.';
+        return true;
     }
 
     public function render()
