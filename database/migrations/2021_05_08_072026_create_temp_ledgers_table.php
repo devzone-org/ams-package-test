@@ -15,13 +15,13 @@ class CreateTempLedgersTable extends Migration
     {
         Schema::create('temp_ledgers', function (Blueprint $table) {
             $table->id();
-            $table->integer('account_id');
+            $table->integer('account_id')->nullable();
             $table->integer('voucher_no');
             $table->string('tracking_id',50)->nullable();
             $table->string('type',50)->nullable();
             $table->decimal('debit',11)->default(0);
             $table->decimal('credit',11)->default(0);
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->date('posting_date');
             $table->integer('posted_by');
             $table->timestamps();

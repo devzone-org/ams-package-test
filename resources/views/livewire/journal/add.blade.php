@@ -21,6 +21,7 @@
 
             </div>
             @if ($errors->any())
+
                 <div class="rounded-md bg-red-50 p-4 mb-4">
                     <div class="flex">
                         <div class="flex-shrink-0">
@@ -95,28 +96,28 @@
                 <thead class="bg-gray-50">
                 <tr>
                     <th scope="col"
-                        class="w-7 px-2   border-r py-3 text-left text-xs font-medium text-gray-500  tracking-wider">
+                        class="w-7 px-2   border-r py-2 text-left text-xs font-medium text-gray-500  tracking-wider">
                         #
                     </th>
                     <th scope="col"
-                        class="w-1/5 px-2   border-r py-3 text-left text-xs font-medium text-gray-500  tracking-wider">
+                        class="w-1/5 px-2   border-r py-2 text-left text-xs font-medium text-gray-500  tracking-wider">
                         Account
                     </th>
                     <th scope="col"
-                        class="px-2 py-3   border-r text-left text-xs font-medium text-gray-500  tracking-wider">
+                        class="px-2 py-2   border-r text-left text-xs font-medium text-gray-500  tracking-wider">
                         Description
                     </th>
                     <th scope="col"
-                        class="w-32 px-2 py-3   border-r text-right text-xs font-medium text-gray-500  tracking-wider">
+                        class="w-32 px-2 py-2   border-r text-right text-xs font-medium text-gray-500  tracking-wider">
                         Debit
                     </th>
                     <th scope="col"
-                        class="w-32 px-2 py-3   border-r text-right text-xs font-medium text-gray-500  tracking-wider">
+                        class="w-32 px-2 py-2   border-r text-right text-xs font-medium text-gray-500  tracking-wider">
                         Credit
                     </th>
                     <th scope="col" wire:click="addEntry()"
-                        class="w-10 cursor-pointer px-2 py-3   border-r text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        class="w-10 cursor-pointer px-2 py-2   border-r text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <svg class="w-6 h-6  " fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
                                   d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                                   clip-rule="evenodd"></path>
@@ -181,6 +182,24 @@
                         &nbsp;
                     </td>
                 </tr>
+                <tr>
+                    <td class="px-2  text-sm font-medium text-gray-900">
+
+                    </td>
+                    <td class="px-2     text-sm text-gray-500">
+
+                    </td>
+                    <th class="px-2    text-right  border-r  text-sm text-gray-900">
+                        Difference
+                    </th>
+                    <th colspan="2" class="px-2    border-r text-right text-sm text-gray-900">
+                        {{ number_format(abs(collect($entries)->sum('debit') - collect($entries)->sum('credit')),2) }}
+                    </th>
+
+                    <td class="  w-10 cursor-pointer px-2 py-3 py-3   border-r text-right text-xs font-medium text-red-700  tracking-wider  ">
+                        &nbsp;
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -203,7 +222,7 @@
                 </button>
             @endif
             @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
-                <button type="button"
+                <button type="button" wire:click="posted"
                         class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Post for Approval
                 </button>
@@ -232,25 +251,33 @@
                  x-transition:leave="ease-in duration-200"
                  x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
                  x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                 class="inline-block align-bottom bg-white rounded-lg  text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full  "
+                 class="h-1/3 inline-block align-bottom bg-white rounded-lg  text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full  "
                  role="dialog" aria-modal="true" aria-labelledby="modal-headline">
 
-                <div class="sm:flex sm:items-start px-2 pt-2 pb-2">
-                    <input type="text" wire:model.debounce.500ms="search_accounts" id="search"
-                           class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                <div class="  px-2 pt-2 pb-2">
+
+
+                        <div class="">
+                            <input type="text" wire:model.debounce.500ms="search_accounts" id="search" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"   autocomplete="off">
+                        </div>
+                        <p class="mt-2 text-sm text-gray-400" id="search-description">You can search accounts by Name, Code and Type.</p>
+
+
                 </div>
 
                 @if(!empty($accounts))
                     <table class="mt-3 min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col"
-                                class="px-2 py-2 text-left text-xs font-medium text-gray-500   tracking-wider">
-                                Code
-                            </th>
+
                             <th scope="col"
                                 class="px-2 py-2 text-left text-xs font-medium text-gray-500   tracking-wider">
                                 Name
+                            </th>
+
+                            <th scope="col"
+                                class="px-2 py-2 text-left text-xs font-medium text-gray-500   tracking-wider">
+                                Type
                             </th>
 
 
@@ -259,13 +286,13 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($accounts as $a)
                             <tr class="hover:bg-gray-50 cursor-pointer"
-                                wire:click="chooseAccount('{{ $a['id'] }}','{{ $a['name'] }}')">
+                                wire:click="chooseAccount('{{ $a['id'] }}','{{ $a['code'].' - '.$a['name'] }}')">
 
                                 <td class="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $a['code'] }}
+                                    {{ $a['code'] }} - {{ $a['name'] }}
                                 </td>
                                 <td class="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $a['name'] }}
+                                    {{ $a['type'] }}
                                 </td>
 
                             </tr>
@@ -284,6 +311,7 @@
                         <p class="text-sm opacity-25 pt-0 p-3">{{ empty($accounts) ? 'No Record Found': '' }}</p>
                     @endif
                 @endif
+
             </div>
         </div>
     </div>

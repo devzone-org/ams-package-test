@@ -56,4 +56,15 @@ class Voucher
             ]);
         return $count;
     }
+
+    public function updateCounter()
+    {
+        DB::table('vouchers')
+            ->where('name', $this->name)
+            ->update([
+                'value' => DB::raw('value + 1')
+            ]);
+
+        return \Devzone\Ams\Models\Voucher::where('name', $this->name)->first()->value + 1;
+    }
 }
