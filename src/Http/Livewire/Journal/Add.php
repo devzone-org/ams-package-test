@@ -169,7 +169,7 @@ class Add extends Component
                         'debit' => $entry['debit'],
                         'credit' => $entry['credit'],
                         'description' => $entry['description'],
-                        'posting_date' => $this->posting_date,
+                        'posting_date' => !empty($this->posting_date) ? $this->posting_date: null,
                     ]);
                 } else {
                     //created
@@ -179,7 +179,7 @@ class Add extends Component
                         'debit' => $entry['debit'],
                         'credit' => $entry['credit'],
                         'description' => $entry['description'] ?? null,
-                        'posting_date' => $this->posting_date,
+                        'posting_date' => !empty($this->posting_date) ? $this->posting_date: null,
                         'posted_by' => Auth::user()->id
                     ]);
                 }

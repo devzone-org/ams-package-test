@@ -22,7 +22,7 @@ class CreateTempLedgersTable extends Migration
             $table->decimal('debit',11)->default(0);
             $table->decimal('credit',11)->default(0);
             $table->text('description')->nullable();
-            $table->date('posting_date');
+            $table->date('posting_date')->nullable();
             $table->integer('posted_by');
             $table->timestamps();
         });

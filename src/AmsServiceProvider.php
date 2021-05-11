@@ -5,6 +5,7 @@ namespace Devzone\Ams;
 use Devzone\Ams\Console\DumpMasterData;
 use Devzone\Ams\Http\Livewire\ChartOfAccount\Add;
 use Devzone\Ams\Http\Livewire\ChartOfAccount\Listing;
+use Devzone\Ams\Http\Livewire\Journal\TempList;
 use Devzone\Ams\Http\Livewire\Post\Show;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -114,5 +115,6 @@ class AmsServiceProvider extends ServiceProvider
         Livewire::component('chart-of-accounts.listing',Listing::class);
         Livewire::component('chart-of-accounts.add',Add::class);
         Livewire::component('journal.add',\Devzone\Ams\Http\Livewire\Journal\Add::class);
+        Livewire::component('journal.temp-list',TempList::class);
     }
 }

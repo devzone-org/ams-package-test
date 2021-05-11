@@ -8,6 +8,10 @@
         @include('ams::journal.links')
 
 
+
+         @livewire('journal.temp-list')
+
+
     </div>
 @endsection
 
