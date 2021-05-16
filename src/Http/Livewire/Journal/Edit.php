@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class Add extends Component
+class Edit extends Component
 {
     use WithFileUploads;
 
@@ -48,8 +48,9 @@ class Add extends Component
 
     ];
 
-    public function mount()
+    public function mount($voucher_no)
     {
+        $this->voucher_no = $voucher_no;
         $this->account_list = ChartOfAccount::where('level', 5)->orderBy('type')->get()->toArray();
         $this->accounts = $this->account_list;
         $temp_entries = $this->getTempEntries();
@@ -64,28 +65,24 @@ class Add extends Component
                 $this->attachment_entries = $attachments->toArray();
             }
         } else {
-            $this->posting_date = date('Y-m-d');
-            $this->voucher_no = Voucher::instance()->tempVoucherOnly();
-            $this->entries[] = $this->defaultEntries();
-
+            $this->reset(['attachment_entries', 'entries']);
+            $this->addError('voucher_no', 'Invalid voucher no or this entry already posted.');
         }
 
     }
 
     private function getTempEntries()
     {
-        return TempLedger::from('temp_ledgers as tl')
-            ->leftJoin('chart_of_accounts as coa', 'coa.id', '=', 'tl.account_id')
-            ->where('tl.posted_by', Auth::user()->id)
-            ->select('tl.*', DB::raw('CONCAT(coa.code, " - ",   coa.name) as account_name'))->get();
+        return Ledger::from('ledgers as l')
+            ->leftJoin('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
+            ->where('l.voucher_no', $this->voucher_no)
+            ->where('l.is_approve', 'f')
+            ->select('l.*', DB::raw('CONCAT(coa.code, " - ",   coa.name) as account_name'))->get();
     }
 
-    private function defaultAttachmentEntries()
+    public function addEntry()
     {
-        return [
-            'account_id' => '',
-            'file' => '',
-        ];
+        $this->entries[] = $this->defaultEntries();
     }
 
     private function defaultEntries()
@@ -99,14 +96,17 @@ class Add extends Component
         ];
     }
 
-    public function addEntry()
-    {
-        $this->entries[] = $this->defaultEntries();
-    }
-
     public function addAttachmentEntry()
     {
         $this->attachment_entries[] = $this->defaultAttachmentEntries();
+    }
+
+    private function defaultAttachmentEntries()
+    {
+        return [
+            'account_id' => '',
+            'file' => '',
+        ];
     }
 
     public function removeAttachmentEntry($key)
@@ -182,25 +182,26 @@ class Add extends Component
     {
         try {
             DB::beginTransaction();
-            //$this->validate();
-            if (TempLedger::where('voucher_no', $this->voucher_no)
-                ->where('posted_by', '!=', Auth::user()->id)->exists()) {
-                $this->addError('voucher_no', 'Voucher # ' . $this->voucher_no . ' already in use. System have updated to new one kindly try again.');
-                $this->voucher_no = Voucher::instance()->tempVoucherOnly();
-                TempLedger::where('posted_by', Auth::user()->id)->update([
-                    'voucher_no' => $this->voucher_no
-                ]);
+            $this->validate();
+
+            $entries = collect($this->entries);
+            if ($entries->sum('debit') != $entries->sum('credit')) {
+                $this->addError('voucher_no', 'Sum of debit and credit is not equal.');
+                return false;
+            }
+            if (Ledger::where('voucher_no', $this->voucher_no)->where('is_approve', 't')->exists()) {
+                $this->addError('voucher_no', 'Unable to update because this entry already approved.');
                 return false;
             }
 
             if (!empty($this->deleted)) {
-                TempLedger::where('posted_by', Auth::user()->id)->whereIn('id', $this->deleted)->delete();
+                Ledger::where('is_approve', 'f')->whereIn('id', $this->deleted)->delete();
             }
 
             foreach ($this->entries as $entry) {
                 if (isset($entry['id'])) {
                     //update
-                    TempLedger::find($entry['id'])->update([
+                    Ledger::find($entry['id'])->update([
                         'account_id' => !empty($entry['account_id']) ? $entry['account_id'] : null,
                         'voucher_no' => $this->voucher_no,
                         'debit' => $entry['debit'],
@@ -210,7 +211,7 @@ class Add extends Component
                     ]);
                 } else {
                     //created
-                    TempLedger::create([
+                    Ledger::create([
                         'account_id' => !empty($entry['account_id']) ? $entry['account_id'] : null,
                         'voucher_no' => $this->voucher_no,
                         'debit' => $entry['debit'],
@@ -226,7 +227,7 @@ class Add extends Component
             }
             foreach ($this->attachment_entries as $ae) {
                 if (isset($ae['file'])) {
-                    $path = $ae['file']->storePublicly(env('AWS_FOLDER').'accounts', 's3');
+                    $path = $ae['file']->storePublicly(env('AWS_FOLDER') . 'accounts', 's3');
                     LedgerAttachment::create([
                         'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
                         'voucher_no' => $this->voucher_no,
@@ -262,84 +263,12 @@ class Add extends Component
         return true;
     }
 
-    public function deleteAll()
-    {
-
-        TempLedger::where('posted_by', Auth::user()->id)->delete();
-        LedgerAttachment::where('type', '0')->where('voucher_no', $this->voucher_no)->delete();
-        $this->reset('entries','attachment_entries');
-    }
-
-    public function posted()
-    {
-
-
-        $this->validate();
-        try {
-            DB::beginTransaction();
-
-            if (Ledger::where('voucher_no', $this->voucher_no)
-                ->where('posted_by', '!=', Auth::user()->id)->exists()) {
-                $this->addError('voucher_no', 'Voucher # ' . $this->voucher_no . ' already in use. System have updated to new one kindly try again.');
-                $this->voucher_no = Voucher::instance()->tempVoucherOnly();
-                return false;
-            }
-
-
-            $entries = collect($this->entries);
-            if ($entries->sum('debit') != $entries->sum('credit')) {
-                $this->addError('voucher_no', 'Sum of debit and credit is not equal.');
-                return false;
-            }
-
-            foreach ($this->entries as $entry) {
-                Ledger::create([
-                    'account_id' => $entry['account_id'],
-                    'voucher_no' => $this->voucher_no,
-                    'debit' => $entry['debit'],
-                    'credit' => $entry['credit'],
-                    'description' => $entry['description'],
-                    'posting_date' => $this->posting_date,
-                    'posted_by' => Auth::user()->id
-                ]);
-            }
-
-            if (!empty($this->deleted_attachment)) {
-                LedgerAttachment::where('type', '0')->whereIn('id', $this->deleted_attachment)->delete();
-            }
-
-            foreach ($this->attachment_entries as $ae) {
-                if (isset($ae['file'])) {
-                    $path = $ae['file']->storePublicly(env('AWS_FOLDER').'accounts', 's3');
-                    LedgerAttachment::create([
-                        'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
-                        'voucher_no' => $this->voucher_no,
-                        'attachment' => $path
-                    ]);
-                } else {
-                    if (isset($ae['id'])) {
-                        LedgerAttachment::find($ae['id'])->update([
-                            'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
-                        ]);
-                    }
-                }
-            }
 
 
 
-            TempLedger::where('posted_by', Auth::user()->id)->delete();
-            $this->reset('entries','attachment_entries');
-            $this->voucher_no = Voucher::instance()->tempVoucher()->updateCounter();
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            $this->addError('voucher_no', $e->getMessage());
-        }
-    }
 
     public function render()
     {
-        return view('ams::livewire.journal.add');
+        return view('ams::livewire.journal.edit');
     }
 }

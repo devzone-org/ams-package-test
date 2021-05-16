@@ -51,6 +51,12 @@ class Add extends Component
         try {
             DB::beginTransaction();
             $code = null;
+            if(
+                ChartOfAccount::where('name',$this->account_name)
+                    ->where('level',$this->at_level + 1)->exists()
+            ){
+                throw new \Exception('This account name already in use.');
+            }
             if($this->at_level==4){
                 $code = Voucher::instance()->coa()->get();
                 $code = str_pad($code,7,"0",STR_PAD_LEFT);
@@ -100,7 +106,7 @@ class Add extends Component
             'at_level' => 'required|in:3,4',
             'account_type' => 'required|in:Assets,Liabilities,Equity,Income,Expenses',
             'parent_account' => 'required|integer',
-            'account_name' => 'required|string|unique:chart_of_accounts,name',
+            'account_name' => 'required|string',
             'date' => 'required|date|date_format:Y-m-d',
             'opening_balance' => 'numeric|required_if:at_level,4'
         ];

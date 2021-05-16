@@ -15,7 +15,7 @@
 
                 <div class="col-span-6 sm:col-span-3">
                     <label for="voucher_no" class="block text-sm font-medium text-gray-700">Temp Voucher #</label>
-                    <input type="text" wire:model="voucher_no" readonly id="voucher_no" autocomplete="off"
+                    <input type="text" value="{{ $voucher_no }}" readonly id="voucher_no" autocomplete="off"
                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 </div>
 
@@ -288,25 +288,18 @@
 
     <div class="py-5 border-b border-gray-200 sm:flex sm:items-center sm:justify-between">
         <p class="text-sm leading-6 font-medium text-gray-900">
-            <button type="button" wire:click="deleteAll"
-                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500  sm:w-auto sm:text-sm">
-                Delete All
-            </button>
+{{--            <button type="button" wire:click="deleteAll"--}}
+{{--                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500  sm:w-auto sm:text-sm">--}}
+{{--                Delete All--}}
+{{--            </button>--}}
         </p>
         <div class="mt-3 flex sm:mt-0 sm:ml-4">
 
-            @if((!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
-                <button type="button" wire:click="draft" wire:loading.attr="disabled"
-                        class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <span wire:loading.remove wire:target="draft">Save as Draft</span>
-                    <span wire:loading wire:target="draft">Saving...</span>
-                </button>
-            @endif
             @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
-                <button type="button" wire:click="posted" wire:loading.attr="disabled"
+                <button type="button" wire:click="draft" wire:loading.attr="disabled"
                         class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <span wire:loading.remove wire:target="posted">Post for Approval</span>
-                    <span wire:loading wire:target="posted">Posting...</span>
+                    <span wire:loading.remove wire:target="draft">Update</span>
+                    <span wire:loading wire:target="draft">Updating...</span>
                 </button>
             @endif
         </div>
