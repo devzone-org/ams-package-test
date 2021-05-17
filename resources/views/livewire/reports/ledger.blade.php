@@ -34,45 +34,45 @@
                 <thead class="bg-gray-100">
                 <tr>
                     <th scope="col"
-                        class="w-20 px-2   border-r py-2 text-left text-xs font-medium text-gray-500  tracking-wider">
+                        class="w-20 px-2    border-r py-2 text-left text-sm font-bold text-gray-500  tracking-wider">
                         V. #
                     </th>
                     <th scope="col"
-                        class="w-28 px-2   border-r py-2 text-left text-xs font-medium text-gray-500  tracking-wider">
+                        class="w-28 px-2   border-r py-2 text-left text-sm font-bold text-gray-500  tracking-wider">
                         Date
                     </th>
                     <th scope="col"
-                        class="px-2 py-2   border-r text-left text-xs font-medium text-gray-500  tracking-wider">
+                        class="px-2 py-2   border-r text-left text-sm font-bold text-gray-500  tracking-wider">
                         Description
                     </th>
                     <th scope="col"
-                        class="w-28 px-2 py-2   border-r text-right text-xs font-medium text-gray-500  tracking-wider">
+                        class="w-28 px-2 py-2   border-r text-right text-sm font-bold text-gray-500  tracking-wider">
                         Dr
                     </th>
                     <th scope="col"
-                        class="w-28 px-2 py-2   border-r text-right text-xs font-medium text-gray-500  tracking-wider">
+                        class="w-28 px-2 py-2   border-r text-right text-sm font-bold text-gray-500  tracking-wider">
                         Cr
                     </th>
 
                     <th scope="col"
-                        class="w-28 px-2 py-2   border-r text-right text-xs font-medium text-gray-500  tracking-wider">
+                        class="w-28 px-2 py-2   border-r text-right text-sm font-bold text-gray-500  tracking-wider">
                         Balance
                     </th>
                     <th scope="col"
-                        class="w-7 cursor-pointer px-2 py-2   border-r text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        class="w-7 cursor-pointer px-2 py-2   border-r text-right text-sm font-bold text-gray-500 uppercase tracking-wider">
 
                     </th>
                 </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                 <tr class>
-                    <th colspan="3" class="px-2   text-right   text-sm   text-gray-500">
+                    <th colspan="3" class="px-2 py-2  text-right   text-xs   text-gray-500">
                         Opening Balance
                     </th>
                     <th></th>
                     <th></th>
-                    <th class="px-2     text-sm  text-right  text-gray-500">{{ number_format($opening_balance,2) }}</th>
-                    <th class="px-2      text-sm   text-gray-500"></th>
+                    <th class="px-2   py-2    text-xs  text-right  text-gray-500">{{ number_format($opening_balance,2) }}</th>
+                    <th class="px-2    py-2    text-xs   text-gray-500"></th>
                 </tr>
                 @php
                     $balance = $opening_balance;
@@ -95,28 +95,28 @@
                         }
                     @endphp
                     <tr class="{{ $loop->odd ? 'bg-gray-50' :'' }}">
-                        <td class="px-2    border-r text-sm   text-gray-500">
+                        <td class="px-2   py-2   border-r text-sm   text-gray-500">
                             {{ $en['voucher_no'] }}
                         </td>
-                        <td class="px-2     border-r text-sm text-gray-500">
+                        <td class="px-2   py-2    border-r text-sm text-gray-500">
                             {{ date('d M, Y',strtotime($en['posting_date'])) }}
                         </td>
-                        <td class="px-2      border-r  text-sm text-gray-500">
+                        <td class="px-2    py-2    border-r  text-sm text-gray-500">
                             {{ $en['description'] }}
                         </td>
-                        <td class="px-2  text-right  border-r text-sm text-gray-500">
+                        <td class="px-2  py-2  text-right  border-r text-sm text-gray-500">
                             {{ number_format($en['debit'],2) }}
                         </td>
-                        <td class="px-2  text-right border-r text-sm text-gray-500">
+                        <td class="px-2   py-2 text-right border-r text-sm text-gray-500">
                             {{ number_format($en['credit'],2) }}
                         </td>
                         <td
-                            class="  w-10 px-2  text-right border-r text-sm text-gray-500">
+                            class="  w-10 px-2 py-2   text-right border-r text-sm text-gray-500">
                             {{ number_format($balance,2) }}
 
                         </td>
                         <td
-                            class=" w-10 px-2  text-right border-r text-sm text-gray-500 ">
+                            class=" w-10 px-2   py-2 text-right border-r text-sm text-gray-500 ">
                             @php
                                 $att = \Devzone\Ams\Models\LedgerAttachment::where('voucher_no',$en['voucher_no'])->where('type','1')->get();
                             @endphp
@@ -137,7 +137,7 @@
                                          class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10 focus:outline-none"
                                          role="menu" aria-orientation="vertical" aria-labelledby="menu-button"
                                          tabindex="-1">
-                                        <div class="py-1" role="none">
+                                        <div class="" role="none">
                                             @foreach($att as $a)
                                                 @if(empty($a->account_id) || $en['account_id'] == $a->account_id)
                                                     <a @click="open = false;" href="{{ env('AWS_URL').$a->attachment }}"
@@ -155,32 +155,32 @@
                     </tr>
                 @endforeach
                 <tr class>
-                    <th colspan="3" class="px-2   text-right   text-sm   text-gray-500">
+                    <th colspan="3" class="px-2  py-2   text-right   text-sm   text-gray-500">
                         Closing Balance
                     </th>
                     <th></th>
                     <th></th>
-                    <th class="px-2    border-r text-sm  text-right  text-gray-500">{{ number_format($balance,2) }}</th>
-                    <th class="px-2    border-r text-sm   text-gray-500"></th>
+                    <th class="px-2    py-2   text-sm  text-right  text-gray-500">{{ number_format($balance,2) }}</th>
+                    <th class="px-2   py-2   border-r text-sm   text-gray-500"></th>
                 </tr>
                 <tr class>
-                    <th colspan="3" class="px-2   text-right   text-sm   text-gray-500">
+                    <th colspan="3" class="px-2   py-2  text-right   text-sm   text-gray-500">
                         Total Debit & Credit
                     </th>
-                    <th class="px-2    border-r text-sm  text-right  text-gray-500">{{ number_format(collect($ledger)->sum('debit'),2) }}</th>
-                    <th class="px-2    border-r text-sm  text-right  text-gray-500">{{ number_format(collect($ledger)->sum('credit'),2) }}</th>
-                    <th class="px-2    border-r text-sm  text-right  text-gray-500"></th>
-                    <th class="px-2    border-r text-sm   text-gray-500"></th>
+                    <th class="px-2   py-2   border-r text-sm  text-right  text-gray-500">{{ number_format(collect($ledger)->sum('debit'),2) }}</th>
+                    <th class="px-2   py-2   border-r text-sm  text-right  text-gray-500">{{ number_format(collect($ledger)->sum('credit'),2) }}</th>
+                    <th class="px-2   py-2   border-r text-sm  text-right  text-gray-500"></th>
+                    <th class="px-2   py-2   border-r text-sm   text-gray-500"></th>
                 </tr>
 
                 <tr class>
-                    <th colspan="3" class="px-2   text-right   text-sm   text-gray-500">
+                    <th colspan="3" class="px-2   py-2  text-right   text-sm   text-gray-500">
                         Total Number of Transactions
                     </th>
-                    <th class="px-2    border-r text-sm  text-right  text-gray-500">{{ number_format(collect($ledger)->count(),2) }}</th>
-                    <th class="px-2    border-r text-sm  text-right  text-gray-500"></th>
-                    <th class="px-2    border-r text-sm  text-right  text-gray-500"></th>
-                    <th class="px-2    border-r text-sm   text-gray-500"></th>
+                    <th class="px-2   py-2   border-r text-sm  text-right  text-gray-500">{{ number_format(collect($ledger)->count(),2) }}</th>
+                    <th class="px-2   py-2   border-r text-sm  text-right  text-gray-500"></th>
+                    <th class="px-2   py-2   border-r text-sm  text-right  text-gray-500"></th>
+                    <th class="px-2   py-2   border-r text-sm   text-gray-500"></th>
                 </tr>
 
                 </tbody>

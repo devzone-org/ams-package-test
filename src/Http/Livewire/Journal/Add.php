@@ -60,12 +60,21 @@ class Add extends Component
             $this->voucher_no = $temp_entries->max('voucher_no');
             $this->entries = $temp_entries->toArray();
             $attachments = LedgerAttachment::where('type', '0')->where('voucher_no', $this->voucher_no)->get();
+
+            for($i=1; $i<= 4 - $temp_entries->count(); $i++){
+                $this->entries[] = $this->defaultEntries();
+            }
+
             if ($attachments->isNotEmpty()) {
                 $this->attachment_entries = $attachments->toArray();
+
             }
         } else {
             $this->posting_date = date('Y-m-d');
             $this->voucher_no = Voucher::instance()->tempVoucherOnly();
+            $this->entries[] = $this->defaultEntries();
+            $this->entries[] = $this->defaultEntries();
+            $this->entries[] = $this->defaultEntries();
             $this->entries[] = $this->defaultEntries();
 
         }
@@ -198,6 +207,9 @@ class Add extends Component
             }
 
             foreach ($this->entries as $entry) {
+                if(empty($entry['account_id']) && empty($entry['debit']) && empty($entry['credit']) && empty($entry['description']) ){
+                    continue;
+                }
                 if (isset($entry['id'])) {
                     //update
                     TempLedger::find($entry['id'])->update([
@@ -293,6 +305,9 @@ class Add extends Component
             }
 
             foreach ($this->entries as $entry) {
+                if(empty($entry['account_id']) && empty($entry['debit']) && empty($entry['credit']) && empty($entry['description']) ){
+                    continue;
+                }
                 Ledger::create([
                     'account_id' => $entry['account_id'],
                     'voucher_no' => $this->voucher_no,

@@ -35,3 +35,7 @@ Route::get('reports/ledger',function(){
     return view('ams::reports.ledger');
 });
 
+Route::get('reports/trial',function(){
+    return view('ams::reports.trial');
+});
+

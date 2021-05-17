@@ -9,6 +9,7 @@ use Devzone\Ams\Http\Livewire\Journal\Edit;
 use Devzone\Ams\Http\Livewire\Journal\TempList;
 use Devzone\Ams\Http\Livewire\Post\Show;
 use Devzone\Ams\Http\Livewire\Reports\Ledger;
+use Devzone\Ams\Http\Livewire\Reports\Trial;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -120,5 +121,6 @@ class AmsServiceProvider extends ServiceProvider
         Livewire::component('journal.edit',Edit::class);
         Livewire::component('journal.temp-list',TempList::class);
         Livewire::component('reports.ledger',Ledger::class);
+        Livewire::component('reports.trial',Trial::class);
     }
 }

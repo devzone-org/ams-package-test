@@ -14,7 +14,7 @@
         <a href="{{ url('accounts/reports/trial') }}"
            class="{{  (Request::segment(3)=='trial') ? $as_current : $as_default }}  rounded-r-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-4 text-sm font-medium text-center hover:bg-gray-50 focus:z-10">
             <span> Trial Balance</span>
-            <span aria-hidden="true" class="{{  (Request::segment(3)=='add') ? 'bg-indigo-500' : 'bg-transparent' }}  absolute inset-x-0 bottom-0 h-0.5"></span>
+            <span aria-hidden="true" class="{{  (Request::segment(3)=='trial') ? 'bg-indigo-500' : 'bg-transparent' }}  absolute inset-x-0 bottom-0 h-0.5"></span>
         </a>
     </nav>
 

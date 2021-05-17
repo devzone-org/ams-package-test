@@ -1,5 +1,5 @@
-<div class="shadow sm:rounded-md sm:overflow-hidden">
-    <div class="bg-white ">
+<div class="shadow sm:rounded-md">
+    <div class="bg-white rounded-md">
         <div class="py-6 px-4   sm:p-6 ">
             <div class="flex justify-between items-center">
                 <h3 class="text-lg leading-6 font-medium text-gray-900">Chart of Accounts</h3>
@@ -87,7 +87,12 @@
                                     <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{{ $five->code }}</td>
                                     <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
                                         @php
-                                            echo number_format(\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit),2);
+                                            $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
+                                            if($clo<0){
+                                                echo '('.number_format(abs($clo),2).')';
+                                            } else {
+                                                echo number_format(abs($clo),2);
+                                            }
                                         @endphp
                                     </td>
                                     <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -108,7 +113,7 @@
             @endforeach
             </tbody>
         </table>
-
+        <p class="">&nbsp;</p>
 
     </div>
 
