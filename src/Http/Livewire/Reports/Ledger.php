@@ -5,6 +5,7 @@ namespace Devzone\Ams\Http\Livewire\Reports;
 
 
 use Devzone\Ams\Models\ChartOfAccount;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class Ledger extends Component
@@ -63,15 +64,35 @@ class Ledger extends Component
     public function render()
     {
         $ledger = [];
+        $opening_balance = 0;
         if (!empty($this->account_id) && !empty($this->from_date) && !empty($this->to_date)) {
             $ledger = \Devzone\Ams\Models\Ledger::where('is_approve', 't')
                 ->where('posting_date', '>=', $this->from_date)
                 ->where('posting_date', '<=', $this->to_date)
-                ->where('account_id',$this->account_id)
-                ->select('voucher_no', 'posting_date', 'description', 'debit', 'credit')
+                ->where('account_id', $this->account_id)
+                ->select('voucher_no', 'posting_date', 'description', 'debit', 'credit','account_id')
                 ->orderBy('voucher_no')->orderBy('posting_date')
                 ->get()->toArray();
+            $opening = \Devzone\Ams\Models\Ledger::where('is_approve', 't')
+                ->where('posting_date', '<', $this->from_date)
+                ->where('account_id', $this->account_id)
+                ->select(DB::raw('sum(debit) as debit'), DB::raw('sum(credit) as credit'))
+                ->groupBy('account_id')->first();
+            if ($this->account_details['nature'] == 'd') {
+                if($this->account_details['is_contra']=='f'){
+                    $opening_balance = $opening['debit'] - $opening['credit'];
+                } else {
+                    $opening_balance = $opening['credit'] - $opening['debit'];
+                }
+
+            } else {
+                if($this->account_details['is_contra']=='f') {
+                    $opening_balance = $opening['credit'] - $opening['debit'];
+                } else {
+                    $opening_balance = $opening['debit'] - $opening['credit'];
+                }
+            }
         }
-        return view('ams::livewire.reports.ledger', compact('ledger'));
+        return view('ams::livewire.reports.ledger', compact('ledger', 'opening_balance'));
     }
 }
