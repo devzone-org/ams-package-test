@@ -31,7 +31,13 @@
                         <div x-show="dropdown" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md z-10 shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
                             <a href="#" @click="dropdown=false" class="block px-4 py-2 text-sm text-gray-700   " @mouseenter="activeIndex = 0" @mouseleave="activeIndex = -1" :class="{ 'bg-gray-100': activeIndex === 0 }" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
                             <a href="#" @click="dropdown=false" class="block px-4 py-2 text-sm text-gray-700" @mouseenter="activeIndex = 1" @mouseleave="activeIndex = -1" :class="{ 'bg-gray-100': activeIndex === 1 }"  role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
-                            <a href="#" @click="dropdown=false" class="block px-4 py-2 text-sm text-gray-700" @mouseenter="activeIndex = 2" @mouseleave="activeIndex = -1" :class="{ 'bg-gray-100': activeIndex === 2 }"  role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <a :href="route('logout')" onclick="event.preventDefault();
+                                                this.closest('form').submit();" class="block px-4 py-2 text-sm text-gray-700" @mouseenter="activeIndex = 2" @mouseleave="activeIndex = -1" :class="{ 'bg-gray-100': activeIndex === 2 }"  role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -72,8 +78,13 @@
                 <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">Your Profile</a>
 
                 <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">Settings</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <a :href="route('logout')" onclick="event.preventDefault();
+                                                this.closest('form').submit();" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">Sign out</a>
 
-                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">Sign out</a>
+                </form>
+
             </div>
         </div>
     </div>
