@@ -33,7 +33,7 @@ class TempList extends Component
         $this->success = 'Voucher #' . $voucher_no . ' has been deleted.';
     }
 
-    public function approveTempEntry($voucher_no)
+    public function approveTempEntry($voucher_no, $print = null)
     {
         $vno = Voucher::instance()->voucher()->get();
         LedgerAttachment::where('type', '0')->where('voucher_no', $voucher_no)->update([
@@ -46,5 +46,13 @@ class TempList extends Component
             'approved_at' => date('Y-m-d H:i:s'),
             'approved_by' => Auth::user()->id
         ]);
+
+
+        if(!empty($print)){
+            $this->dispatchBrowserEvent('print-voucher', ['voucher_no' => $vno,'print'=>'true']);
+        }
+
+
+
     }
 }

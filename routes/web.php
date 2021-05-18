@@ -1,6 +1,7 @@
 <?php
 
 
+use Devzone\Ams\Http\Controllers\JournalController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -38,4 +39,6 @@ Route::get('reports/ledger',function(){
 Route::get('reports/trial',function(){
     return view('ams::reports.trial');
 });
+
+Route::get('journal/voucher/print/{voucher_no}/{print?}',[JournalController::class,'printVoucher']);
 
