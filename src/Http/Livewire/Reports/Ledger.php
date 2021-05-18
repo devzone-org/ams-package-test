@@ -19,8 +19,13 @@ class Ledger extends Component
     public $from_date;
     public $to_date;
 
-    public function mount()
+    public function mount($account_id)
     {
+        if ($account_id > 0) {
+            $this->account_details = ChartOfAccount::find($account_id);
+            $this->account_id = $account_id;
+            $this->account_name = $this->account_details['code'].' - '.$this->account_details['name'];
+        }
         $this->from_date = date('Y-m-d', strtotime('-15 days'));
         $this->to_date = date('Y-m-d');
     }
@@ -70,7 +75,7 @@ class Ledger extends Component
                 ->where('posting_date', '>=', $this->from_date)
                 ->where('posting_date', '<=', $this->to_date)
                 ->where('account_id', $this->account_id)
-                ->select('voucher_no', 'posting_date', 'description', 'debit', 'credit','account_id')
+                ->select('voucher_no', 'posting_date', 'description', 'debit', 'credit', 'account_id')
                 ->orderBy('voucher_no')->orderBy('posting_date')
                 ->get()->toArray();
             $opening = \Devzone\Ams\Models\Ledger::where('is_approve', 't')
@@ -79,14 +84,14 @@ class Ledger extends Component
                 ->select(DB::raw('sum(debit) as debit'), DB::raw('sum(credit) as credit'))
                 ->groupBy('account_id')->first();
             if ($this->account_details['nature'] == 'd') {
-                if($this->account_details['is_contra']=='f'){
+                if ($this->account_details['is_contra'] == 'f') {
                     $opening_balance = $opening['debit'] - $opening['credit'];
                 } else {
                     $opening_balance = $opening['credit'] - $opening['debit'];
                 }
 
             } else {
-                if($this->account_details['is_contra']=='f') {
+                if ($this->account_details['is_contra'] == 'f') {
                     $opening_balance = $opening['credit'] - $opening['debit'];
                 } else {
                     $opening_balance = $opening['debit'] - $opening['credit'];

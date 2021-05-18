@@ -112,12 +112,13 @@
                         </td>
                         <td
                             class="  w-10 px-2 py-2   text-right border-r text-sm text-gray-500">
-                            {{ number_format($balance,2) }}
+                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($balance) }}
 
                         </td>
                         <td
                             class=" w-10 px-2   py-2 text-right border-r text-sm text-gray-500 ">
                             @php
+
                                 $att = \Devzone\Ams\Models\LedgerAttachment::where('voucher_no',$en['voucher_no'])->where('type','1')->get();
                             @endphp
 
@@ -160,7 +161,7 @@
                     </th>
                     <th></th>
                     <th></th>
-                    <th class="px-2    py-2   text-sm  text-right  text-gray-500">{{ number_format($balance,2) }}</th>
+                    <th class="px-2    py-2   text-sm  text-right  text-gray-500">{{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($balance) }}</th>
                     <th class="px-2   py-2   border-r text-sm   text-gray-500"></th>
                 </tr>
                 <tr class>
@@ -185,9 +186,6 @@
 
                 </tbody>
             </table>
-
-
-
         </div>
     </div>
 

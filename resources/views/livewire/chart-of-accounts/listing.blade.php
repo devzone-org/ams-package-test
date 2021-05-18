@@ -98,11 +98,49 @@
                                     <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
                                         @if(!empty($five->posting_date)) {{date('d M, Y',strtotime($five->posting_date))}} @endif</td>
                                     <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
-                                        <svg class="w-6 h-6 " fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                             xmlns="http://www.w3.org/2000/svg">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                  d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
-                                        </svg>
+
+
+                                        <div class="relative inline-block text-left" x-data="{open:false}">
+                                            <div class="pt-0 pl-0">
+                                                <svg class="w-6 h-6 cursor-pointer" @click="open = true;" fill="none"
+                                                     stroke="currentColor" viewBox="0 0 24 24"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                          stroke-width="2"
+                                                          d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+                                                </svg>
+                                            </div>
+
+                                            <div @click.away="open=false;" x-show="open"
+                                                 class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10 focus:outline-none"
+                                                 role="menu" aria-orientation="vertical" aria-labelledby="menu-button"
+                                                 tabindex="-1">
+                                                <div class="" role="none">
+
+                                                    <a @click="open = false;"
+                                                       href="{{ url('accounts/reports/ledger') }}?account_id={{$five->id}}"
+                                                       target="_blank"
+                                                       class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
+                                                       role="menuitem" tabindex="-1"
+                                                       id="menu-item-0"> View Ledger </a>
+
+                                                    <a @click="open = false;"
+                                                       href="#"
+                                                       wire:click="changeStatus('{{ $five->id }}')"
+                                                       class="text-red-700 block px-4 py-2 text-sm hover:bg-red-100 rounded-b-md"
+                                                       role="menuitem" tabindex="-1"
+                                                       id="menu-item-0">
+                                                        @if($five->status=='f')
+                                                            Make Active
+                                                        @else
+                                                            Make Inactive
+                                                        @endif
+                                                    </a>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
 
                                 </tr>

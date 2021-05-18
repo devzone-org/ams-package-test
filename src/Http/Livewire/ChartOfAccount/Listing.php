@@ -20,4 +20,17 @@ class Listing extends Component
 
         return view('ams::livewire.chart-of-accounts.listing',compact('coa'));
     }
+
+    public function changeStatus($id){
+        $account = ChartOfAccount::find($id);
+        if($account->status == 't'){
+            $account->update([
+                'status' => 'f'
+            ]);
+        } else {
+            $account->update([
+                'status' => 't'
+            ]);
+        }
+    }
 }

@@ -7,8 +7,6 @@
             </div>
 
             <div class="grid grid-cols-6 gap-6">
-
-
                 <div class="col-span-6 sm:col-span-3">
                     <label for="from_date" class="block text-sm font-medium text-gray-700">From Date</label>
                     <input type="date" wire:model="from_date" id="from_date" autocomplete="off"

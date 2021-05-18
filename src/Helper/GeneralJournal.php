@@ -107,4 +107,12 @@ class GeneralJournal
 
     }
 
+    public static function numberFormat($balance){
+        if($balance>=0){
+            return number_format($balance,2);
+        } else {
+            return '('.number_format(abs($balance),2).')';
+        }
+    }
+
 }
