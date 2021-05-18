@@ -13,6 +13,10 @@ Via Composer
 
 ``` bash
 $ composer require devzone/ams
+$ php artisan migrate
+$ php artisan ams:master-data
+$ php artisan vendor:publish --provider="Devzone\Ams\AmsServiceProvider" --tag="ams.config"
+$ php artisan vendor:publish --provider="Devzone\Ams\AmsServiceProvider" --tag="ams.assets"
 ```
 
 ## Usage
