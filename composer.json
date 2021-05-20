@@ -10,7 +10,7 @@
         }
     ],
     "homepage": "https://github.com/devzone/ams",
-    "keywords": ["Laravel", "Ams"],
+    "keywords": [],
     "require": {
         "illuminate/support": "~7|~8",
         "livewire/livewire": "^2.4",
