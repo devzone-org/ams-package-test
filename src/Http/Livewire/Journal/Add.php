@@ -61,9 +61,9 @@ class Add extends Component
             $this->entries = $temp_entries->toArray();
             $attachments = LedgerAttachment::where('type', '0')->where('voucher_no', $this->voucher_no)->get();
 
-            for($i=1; $i<= 4 - $temp_entries->count(); $i++){
-                $this->entries[] = $this->defaultEntries();
-            }
+//            for($i=1; $i<= 4 - $temp_entries->count(); $i++){
+//                $this->entries[] = $this->defaultEntries();
+//            }
 
             if ($attachments->isNotEmpty()) {
                 $this->attachment_entries = $attachments->toArray();
@@ -73,9 +73,7 @@ class Add extends Component
             $this->posting_date = date('Y-m-d');
             $this->voucher_no = Voucher::instance()->tempVoucherOnly();
             $this->entries[] = $this->defaultEntries();
-            $this->entries[] = $this->defaultEntries();
-            $this->entries[] = $this->defaultEntries();
-            $this->entries[] = $this->defaultEntries();
+
 
         }
 
