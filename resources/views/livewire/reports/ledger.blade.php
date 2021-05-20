@@ -66,12 +66,12 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                 <tr class>
-                    <th colspan="3" class="px-2 py-2  text-right   text-xs   text-gray-500">
+                    <th colspan="3" class="px-2 py-2  text-right   text-sm   text-gray-500">
                         Opening Balance
                     </th>
                     <th></th>
                     <th></th>
-                    <th class="px-2   py-2    text-xs  text-right  text-gray-500">{{ number_format($opening_balance,2) }}</th>
+                    <th class="px-2   py-2    text-sm  text-right  text-gray-500">{{ number_format($opening_balance,2) }}</th>
                     <th class="px-2    py-2    text-xs   text-gray-500"></th>
                 </tr>
                 @php

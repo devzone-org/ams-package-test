@@ -76,7 +76,7 @@ class Ledger extends Component
                 ->where('posting_date', '<=', $this->to_date)
                 ->where('account_id', $this->account_id)
                 ->select('voucher_no', 'posting_date', 'description', 'debit', 'credit', 'account_id')
-                ->orderBy('voucher_no')->orderBy('posting_date')
+                ->orderBy('posting_date')->orderBy('voucher_no')
                 ->get()->toArray();
             $opening = \Devzone\Ams\Models\Ledger::where('is_approve', 't')
                 ->where('posting_date', '<', $this->from_date)
