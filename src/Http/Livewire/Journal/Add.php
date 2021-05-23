@@ -30,6 +30,7 @@ class Add extends Component
     public $deleted_attachment = [];
     public $success;
     public $account_list = [];
+    public $highlightIndex = 0;
 
     protected $rules = [
         'entries.*.account_id' => 'required|integer',
@@ -87,14 +88,6 @@ class Add extends Component
             ->select('tl.*', DB::raw('CONCAT(coa.code, " - ",   coa.name) as account_name'))->get();
     }
 
-    private function defaultAttachmentEntries()
-    {
-        return [
-            'account_id' => '',
-            'file' => '',
-        ];
-    }
-
     private function defaultEntries()
     {
         return [
@@ -114,6 +107,14 @@ class Add extends Component
     public function addAttachmentEntry()
     {
         $this->attachment_entries[] = $this->defaultAttachmentEntries();
+    }
+
+    private function defaultAttachmentEntries()
+    {
+        return [
+            'account_id' => '',
+            'file' => '',
+        ];
     }
 
     public function removeAttachmentEntry($key)
@@ -136,10 +137,18 @@ class Add extends Component
 
     public function searchAccounts($key)
     {
-
+        $this->accounts = $this->account_list;
         $this->search_accounts_modal = true;
         $this->key_id = $key;
         $this->emit('focusInput');
+
+    }
+
+    public function selectionAccount()
+    {
+        $contact = $this->accounts[$this->highlightIndex] ?? null;
+        $this->chooseAccount($contact['id'], $contact['name']);
+        $this->highlightIndex =0;
 
     }
 
@@ -148,7 +157,7 @@ class Add extends Component
         $this->entries[$this->key_id]['account_id'] = $id;
         $this->entries[$this->key_id]['account_name'] = $name;
         $this->search_accounts_modal = false;
-        $this->accounts = $this->account_list;
+
         $this->search_accounts = '';
         $this->entries[$this->key_id]['description'] = $this->entries[0]['description'];
     }
@@ -156,6 +165,7 @@ class Add extends Component
     public function updatedSearchAccounts($value)
     {
         if (strlen($value) > 1) {
+            $this->highlightIndex = 0;
             $accounts = ChartOfAccount::where(function ($q) use ($value) {
                 return $q->orWhere('name', 'LIKE', '%' . $value . '%')
                     ->orWhere('code', 'LIKE', '%' . $value . '%')
@@ -205,7 +215,7 @@ class Add extends Component
             }
 
             foreach ($this->entries as $entry) {
-                if(empty($entry['account_id']) && empty($entry['debit']) && empty($entry['credit']) && empty($entry['description']) ){
+                if (empty($entry['account_id']) && empty($entry['debit']) && empty($entry['credit']) && empty($entry['description'])) {
                     continue;
                 }
                 if (isset($entry['id'])) {
@@ -236,7 +246,7 @@ class Add extends Component
             }
             foreach ($this->attachment_entries as $ae) {
                 if (isset($ae['file'])) {
-                    $path = $ae['file']->storePublicly(env('AWS_FOLDER').'accounts', 's3');
+                    $path = $ae['file']->storePublicly(env('AWS_FOLDER') . 'accounts', 's3');
                     LedgerAttachment::create([
                         'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
                         'voucher_no' => $this->voucher_no,
@@ -277,7 +287,7 @@ class Add extends Component
 
         TempLedger::where('posted_by', Auth::user()->id)->delete();
         LedgerAttachment::where('type', '0')->where('voucher_no', $this->voucher_no)->delete();
-        $this->reset('entries','attachment_entries');
+        $this->reset('entries', 'attachment_entries');
     }
 
     public function posted()
@@ -303,7 +313,7 @@ class Add extends Component
             }
 
             foreach ($this->entries as $entry) {
-                if(empty($entry['account_id']) && empty($entry['debit']) && empty($entry['credit']) && empty($entry['description']) ){
+                if (empty($entry['account_id']) && empty($entry['debit']) && empty($entry['credit']) && empty($entry['description'])) {
                     continue;
                 }
                 Ledger::create([
@@ -323,7 +333,7 @@ class Add extends Component
 
             foreach ($this->attachment_entries as $ae) {
                 if (isset($ae['file'])) {
-                    $path = $ae['file']->storePublicly(env('AWS_FOLDER').'accounts', 's3');
+                    $path = $ae['file']->storePublicly(env('AWS_FOLDER') . 'accounts', 's3');
                     LedgerAttachment::create([
                         'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
                         'voucher_no' => $this->voucher_no,
@@ -339,9 +349,8 @@ class Add extends Component
             }
 
 
-
             TempLedger::where('posted_by', Auth::user()->id)->delete();
-            $this->reset('entries','attachment_entries');
+            $this->reset('entries', 'attachment_entries');
             $this->voucher_no = Voucher::instance()->tempVoucher()->updateCounter();
 
             DB::commit();
@@ -354,5 +363,23 @@ class Add extends Component
     public function render()
     {
         return view('ams::livewire.journal.add');
+    }
+
+    public function incrementHighlight()
+    {
+        if ($this->highlightIndex === count($this->accounts) - 1) {
+            $this->highlightIndex = 0;
+            return;
+        }
+        $this->highlightIndex++;
+    }
+
+    public function decrementHighlight()
+    {
+        if ($this->highlightIndex === 0) {
+            $this->highlightIndex = count($this->accounts) - 1;
+            return;
+        }
+        $this->highlightIndex--;
     }
 }

@@ -341,7 +341,12 @@
 
 
                         <div class="">
-                            <input type="text" wire:model.debounce.500ms="search_accounts" id="search" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"   autocomplete="off">
+                            <input type="text"
+                                   wire:model.debounce.500ms="search_accounts"
+                                   wire:keydown.arrow-up="decrementHighlight"
+                                   wire:keydown.arrow-down="incrementHighlight"
+                                   wire:keydown.enter="selectionAccount"
+                                   id="search" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"   autocomplete="off">
                         </div>
                         <p class="mt-2 text-sm text-gray-400" id="search-description">You can search accounts by Name, Code and Type.</p>
 
@@ -367,14 +372,14 @@
                         </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach($accounts as $a)
-                            <tr class="hover:bg-gray-50 cursor-pointer"
+                        @foreach($accounts as $key=> $a)
+                            <tr class="hover:bg-indigo-600 hover:text-white cursor-pointer  {{ $highlightIndex === $key ? 'bg-indigo-600 text-white' : ' text-gray-500' }}"
                                 wire:click="chooseAccount('{{ $a['id'] }}','{{ $a['code'].' - '.$a['name'] }}')">
 
-                                <td class="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
+                                <td class="px-2 py-2 whitespace-nowrap text-sm ">
                                     {{ $a['code'] }} - {{ $a['name'] }}
                                 </td>
-                                <td class="px-2 py-2 whitespace-nowrap text-sm text-gray-500">
+                                <td class="px-2 py-2 whitespace-nowrap text-sm  ">
                                     {{ $a['type'] }}
                                 </td>
 
