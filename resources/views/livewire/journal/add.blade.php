@@ -96,27 +96,27 @@
                 <thead class="bg-gray-50">
                 <tr>
                     <th scope="col"
-                        class="w-7 px-2   border-r py-2 text-left text-xs font-medium text-gray-500  tracking-wider">
+                        class="w-7 px-2   border-r py-2 text-center text-xs font-medium text-gray-500  tracking-wider">
                         #
                     </th>
                     <th scope="col"
-                        class="w-1/5 px-2   border-r py-2 text-left text-xs font-medium text-gray-500  tracking-wider">
+                        class="w-1/5 px-2   border-r py-2 text-center text-xs font-medium text-gray-500  tracking-wider">
                         Account
                     </th>
                     <th scope="col"
-                        class="px-2 py-2   border-r text-left text-xs font-medium text-gray-500  tracking-wider">
+                        class="px-2 py-2   border-r text-center text-xs font-medium text-gray-500  tracking-wider">
                         Description
                     </th>
                     <th scope="col"
-                        class="w-32 px-2 py-2   border-r text-right text-xs font-medium text-gray-500  tracking-wider">
+                        class="w-32 px-2 py-2   border-r text-center text-xs font-medium text-gray-500  tracking-wider">
                         Debit
                     </th>
                     <th scope="col"
-                        class="w-32 px-2 py-2   border-r text-right text-xs font-medium text-gray-500  tracking-wider">
+                        class="w-32 px-2 py-2   border-r text-center text-xs font-medium text-gray-500  tracking-wider">
                         Credit
                     </th>
                     <th scope="col" wire:click="addEntry()"
-                        class="w-10 cursor-pointer px-2 py-2   border-r text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        class="w-10 cursor-pointer px-2 py-2   border-r text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         <svg class="w-6 h-6  " fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
                                   d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
@@ -128,30 +128,30 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                 @foreach($entries as $key => $en)
                     <tr>
-                        <td class="px-2    border-r text-sm font-medium text-gray-900">
+                        <td class="px-2  text-center  border-r text-sm font-medium text-gray-900">
                             {{ $loop->iteration }}
                         </td>
-                        <td class="px-2     border-r text-sm text-gray-500">
+                        <td class="px-2  text-center   border-r text-sm text-gray-500">
                             <input wire:click="searchAccounts('{{ $key }}')" type="text" readonly
                                    wire:model.lazy="entries.{{$key}}.account_name"
-                                   class="p-0 focus:ring-0 block w-full  text-sm border-0  " autocomplete="off">
+                                   class="p-0 focus:ring-0 block w-full  text-sm border-0 text-center " autocomplete="off">
                         </td>
-                        <td class="px-2      border-r  text-sm text-gray-500">
-                    <textarea wire:ignore.self cols="30" rows="2" wire:model.lazy="entries.{{$key}}.description"
-                              class="p-0  focus:ring-0 block w-full  text-sm border-0  "></textarea>
+                        <td class="px-2   text-center   border-r  text-sm text-gray-500">
+                    <textarea wire:ignore.self cols="30" rows="1" wire:model.lazy="entries.{{$key}}.description"
+                              class="  p-0  focus:ring-0 block w-full  text-sm border-0  text-center "></textarea>
                         </td>
-                        <td class="px-2    border-r text-sm text-gray-500">
+                        <td class="px-2  text-center  border-r text-sm text-gray-500">
                             <input type="number" step="0.01" wire:model.lazy="entries.{{$key}}.debit"
-                                   class=" p-0 focus:ring-0 block w-full text-right text-sm border-0  "
+                                   class="text-center p-0 focus:ring-0 block w-full   text-sm border-0  "
                                    autocomplete="off">
                         </td>
-                        <td class="px-2   border-r text-sm text-gray-500">
+                        <td class="px-2  text-center border-r text-sm text-gray-500">
                             <input type="number" step="0.01" wire:model.lazy="entries.{{$key}}.credit"
-                                   class="p-0 focus:ring-0 block w-full text-right text-sm border-0  "
+                                   class="p-0 text-center focus:ring-0 block w-full  text-sm border-0  "
                                    autocomplete="off">
                         </td>
                         <td wire:click="removeEntry('{{ $key }}')"
-                            class="  w-10 cursor-pointer px-2 py-3   border-r text-right text-xs font-medium text-red-700  tracking-wider  ">
+                            class="  w-10 cursor-pointer px-2 py-3   border-r text-center text-xs font-medium text-red-700  tracking-wider  ">
                             <svg class="w-5 h-5 " fill="currentColor" viewBox="0 0 20 20"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
@@ -172,13 +172,13 @@
                     <th class="px-2    text-right  border-r  text-sm text-gray-900">
                         Total
                     </th>
-                    <th class="px-2    border-r text-right text-sm text-gray-900">
+                    <th class="px-2    border-r text-center text-sm text-gray-900">
                         {{ number_format(collect($entries)->sum('debit'),2) }}
                     </th>
-                    <th class="px-2   border-r text-right text-sm text-gray-900">
+                    <th class="px-2   border-r text-center text-sm text-gray-900">
                         {{ number_format(collect($entries)->sum('credit'),2) }}
                     </th>
-                    <td class="  w-10 cursor-pointer px-2 py-3 py-3   border-r text-right text-xs font-medium text-red-700  tracking-wider  ">
+                    <td class="  w-10 cursor-pointer px-2 py-3 py-3   border-r text-center text-xs font-medium text-red-700  tracking-wider  ">
                         &nbsp;
                     </td>
                 </tr>
@@ -192,7 +192,7 @@
                     <th class="px-2    text-right  border-r  text-sm text-gray-900">
                         Difference
                     </th>
-                    <th colspan="2" class="px-2    border-r text-right text-sm text-gray-900">
+                    <th colspan="2" class="px-2    border-r text-center text-sm text-gray-900">
                         {{ number_format(abs(collect($entries)->sum('debit') - collect($entries)->sum('credit')),2) }}
                     </th>
 
@@ -374,7 +374,7 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($accounts as $key=> $a)
                             <tr class="hover:bg-indigo-600 hover:text-white cursor-pointer  {{ $highlightIndex === $key ? 'bg-indigo-600 text-white' : ' text-gray-500' }}"
-                                wire:click="chooseAccount('{{ $a['id'] }}','{{ $a['code'].' - '.$a['name'] }}')">
+                                wire:click="chooseAccount('{{ $a['id'] }}','{{$a['name'] }}')">
 
                                 <td class="px-2 py-2 whitespace-nowrap text-sm ">
                                     {{ $a['code'] }} - {{ $a['name'] }}

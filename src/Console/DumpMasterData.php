@@ -44,8 +44,8 @@ class DumpMasterData extends Command
         ChartOfAccount::updateOrCreate(['id' => '8'], ['name' => 'Long Term Security Deposits', 'type' => 'Assets', 'sub_account' => '7', 'level' => '4', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '9'], ['name' => 'Current Assets', 'type' => 'Assets', 'sub_account' => '1', 'level' => '2', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '10'], ['name' => 'Cash and Cash Equivalents', 'type' => 'Assets', 'sub_account' => '9', 'level' => '3', 'nature' => 'd']);
-        ChartOfAccount::updateOrCreate(['id' => '11'], ['name' => 'Cash at Banks', 'reference' => 'cash-at-banks', 'type' => 'Assets', 'sub_account' => '10', 'level' => '4', 'nature' => 'd']);
-        ChartOfAccount::updateOrCreate(['id' => '12'], ['name' => 'Cash in Hand', 'reference' => 'cash-in-hand', 'type' => 'Assets', 'sub_account' => '10', 'level' => '4', 'nature' => 'd']);
+        ChartOfAccount::updateOrCreate(['id' => '11'], ['name' => 'Cash at Banks', 'reference' => 'cash-at-banks-4', 'type' => 'Assets', 'sub_account' => '10', 'level' => '4', 'nature' => 'd']);
+        ChartOfAccount::updateOrCreate(['id' => '12'], ['name' => 'Cash in Hand', 'reference' => 'cash-in-hand-4', 'type' => 'Assets', 'sub_account' => '10', 'level' => '4', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '13'], ['name' => 'Advances, Deposits and Prepayments', 'type' => 'Assets', 'sub_account' => '9', 'level' => '3', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '14'], ['name' => 'Advances', 'type' => 'Assets', 'sub_account' => '13', 'level' => '4', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '15'], ['name' => 'Staff Loan', 'type' => 'Assets', 'sub_account' => '13', 'level' => '4', 'nature' => 'd']);
@@ -89,6 +89,8 @@ class DumpMasterData extends Command
         ChartOfAccount::updateOrCreate(['id' => '56'], ['name' => 'Other Admin Expenses', 'type' => 'Expenses', 'sub_account' => '43', 'level' => '4', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '57'], ['name' => 'Vendor Payable', 'type' => 'Liabilities', 'sub_account' => '56', 'level' => '3', 'nature' => 'c']);
         ChartOfAccount::updateOrCreate(['id' => '58'], ['name' => 'Vendor Payable', 'type' => 'Liabilities', 'sub_account' => '57', 'level' => '4', 'nature' => 'c','reference'=>'vendor-payable-4']);
+        ChartOfAccount::updateOrCreate(['id' => '59'], ['name' => 'Inventory', 'reference' => 'inventory-4', 'type' => 'Assets', 'sub_account' => '10', 'level' => '4', 'nature' => 'd']);
+        ChartOfAccount::updateOrCreate(['id' => '60'], ['name' => 'Pharmacy Inventory', 'reference' => 'pharmacy-inventory-5', 'type' => 'Assets', 'sub_account' => '59', 'level' => '5', 'nature' => 'd']);
         $this->info('Dumping Finished...');
     }
 }

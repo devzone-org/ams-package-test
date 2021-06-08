@@ -99,11 +99,6 @@ class Add extends Component
         ];
     }
 
-    public function addEntry()
-    {
-        $this->entries[] = $this->defaultEntries();
-    }
-
     public function addAttachmentEntry()
     {
         $this->attachment_entries[] = $this->defaultAttachmentEntries();
@@ -148,7 +143,7 @@ class Add extends Component
     {
         $contact = $this->accounts[$this->highlightIndex] ?? null;
         $this->chooseAccount($contact['id'], $contact['name']);
-        $this->highlightIndex =0;
+        $this->highlightIndex = 0;
 
     }
 
@@ -186,11 +181,18 @@ class Add extends Component
     {
         $array = explode('.', $name);
         if (count($array) == 3) {
+
             if ($array[2] == 'debit') {
                 $this->entries[$array[1]]['credit'] = 0;
+                if(!is_numeric($value)){
+                    $this->entries[$array[1]]['debit'] = 0;
+                }
             }
             if ($array[2] == 'credit') {
                 $this->entries[$array[1]]['debit'] = 0;
+                if(!is_numeric($value)){
+                    $this->entries[$array[1]]['credit'] = 0;
+                }
             }
         }
     }
@@ -352,12 +354,17 @@ class Add extends Component
             TempLedger::where('posted_by', Auth::user()->id)->delete();
             $this->reset('entries', 'attachment_entries');
             $this->voucher_no = Voucher::instance()->tempVoucher()->updateCounter();
-
+            $this->addEntry();
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             $this->addError('voucher_no', $e->getMessage());
         }
+    }
+
+    public function addEntry()
+    {
+        $this->entries[] = $this->defaultEntries();
     }
 
     public function render()

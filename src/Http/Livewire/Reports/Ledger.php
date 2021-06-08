@@ -4,37 +4,44 @@
 namespace Devzone\Ams\Http\Livewire\Reports;
 
 
+use Devzone\Ams\Http\Traits\Searchable;
 use Devzone\Ams\Models\ChartOfAccount;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class Ledger extends Component
 {
+
+    use Searchable;
+
     public $search_accounts_modal = false;
     public $search_accounts;
     public $accounts = [];
     public $account_details = [];
     public $account_name;
+    public $account_name_s;
     public $account_id;
     public $from_date;
     public $to_date;
+    public $from_d;
+    public $to_d;
+    public $ledger = [];
+    public $opening_balance = 0;
+
+    protected $listeners = ['emitAccountId'];
 
     public function mount($account_id)
     {
         if ($account_id > 0) {
             $this->account_details = ChartOfAccount::find($account_id);
             $this->account_id = $account_id;
-            $this->account_name = $this->account_details['code'].' - '.$this->account_details['name'];
+            $this->account_name = $this->account_details['name'];
+            $this->dispatchBrowserEvent('title', ['name' => $this->account_name]);
         }
-        $this->from_date = date('Y-m-d', strtotime('-15 days'));
+        $this->from_date = date('Y-m-d', strtotime('-1 month'));
         $this->to_date = date('Y-m-d');
     }
 
-    public function searchAccounts()
-    {
-        $this->search_accounts_modal = true;
-        $this->emit('focusInput');
-    }
 
     public function chooseAccount($id, $name)
     {
@@ -44,7 +51,13 @@ class Ledger extends Component
         $this->account_details = collect($this->accounts)->firstWhere('id', $id);
         $this->accounts = [];
         $this->search_accounts = '';
+        $this->dispatchBrowserEvent('title', ['name' => $this->account_name]);
+    }
 
+    public function emitAccountId()
+    {
+        $this->account_details = ChartOfAccount::find($this->account_id);
+        $this->dispatchBrowserEvent('title', ['name' => $this->account_name]);
     }
 
     public function updatedSearchAccounts($value)
@@ -66,12 +79,23 @@ class Ledger extends Component
         }
     }
 
+    public function resetSearch()
+    {
+        $this->reset(['ledger','opening_balance','account_id','account_name','account_name_s','from_d','to_d']);
+    }
+
     public function render()
     {
-        $ledger = [];
-        $opening_balance = 0;
+        return view('ams::livewire.reports.ledger');
+    }
+
+    public function search()
+    {
+        $this->account_name_s = $this->account_name;
+        $this->from_d = $this->from_date;
+        $this->to_d = $this->to_date;
         if (!empty($this->account_id) && !empty($this->from_date) && !empty($this->to_date)) {
-            $ledger = \Devzone\Ams\Models\Ledger::where('is_approve', 't')
+            $this->ledger = \Devzone\Ams\Models\Ledger::where('is_approve', 't')
                 ->where('posting_date', '>=', $this->from_date)
                 ->where('posting_date', '<=', $this->to_date)
                 ->where('account_id', $this->account_id)
@@ -85,19 +109,18 @@ class Ledger extends Component
                 ->groupBy('account_id')->first();
             if ($this->account_details['nature'] == 'd') {
                 if ($this->account_details['is_contra'] == 'f') {
-                    $opening_balance = $opening['debit'] - $opening['credit'];
+                    $this->opening_balance = $opening['debit'] - $opening['credit'];
                 } else {
-                    $opening_balance = $opening['credit'] - $opening['debit'];
+                    $this->opening_balance = $opening['credit'] - $opening['debit'];
                 }
 
             } else {
                 if ($this->account_details['is_contra'] == 'f') {
-                    $opening_balance = $opening['credit'] - $opening['debit'];
+                    $this->opening_balance = $opening['credit'] - $opening['debit'];
                 } else {
-                    $opening_balance = $opening['debit'] - $opening['credit'];
+                    $this->opening_balance = $opening['debit'] - $opening['credit'];
                 }
             }
         }
-        return view('ams::livewire.reports.ledger', compact('ledger', 'opening_balance'));
     }
 }

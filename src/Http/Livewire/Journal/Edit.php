@@ -30,6 +30,8 @@ class Edit extends Component
     public $deleted_attachment = [];
     public $success;
     public $account_list = [];
+    public $highlightIndex = 0;
+
 
     protected $rules = [
         'entries.*.account_id' => 'required|integer',
@@ -77,7 +79,7 @@ class Edit extends Component
             ->leftJoin('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
             ->where('l.voucher_no', $this->voucher_no)
             ->where('l.is_approve', 'f')
-            ->select('l.*', DB::raw('CONCAT(coa.code, " - ",   coa.name) as account_name'))->get();
+            ->select('l.*', DB::raw('CONCAT(  coa.name) as account_name'))->get();
     }
 
     public function addEntry()
@@ -127,12 +129,21 @@ class Edit extends Component
         }
     }
 
+
+
     public function searchAccounts($key)
     {
-
+        $this->accounts = $this->account_list;
         $this->search_accounts_modal = true;
         $this->key_id = $key;
         $this->emit('focusInput');
+
+    }
+    public function selectionAccount()
+    {
+        $contact = $this->accounts[$this->highlightIndex] ?? null;
+        $this->chooseAccount($contact['id'], $contact['name']);
+        $this->highlightIndex = 0;
 
     }
 
@@ -169,13 +180,38 @@ class Edit extends Component
     {
         $array = explode('.', $name);
         if (count($array) == 3) {
+
             if ($array[2] == 'debit') {
                 $this->entries[$array[1]]['credit'] = 0;
+                if(!is_numeric($value)){
+                    $this->entries[$array[1]]['debit'] = 0;
+                }
             }
             if ($array[2] == 'credit') {
                 $this->entries[$array[1]]['debit'] = 0;
+                if(!is_numeric($value)){
+                    $this->entries[$array[1]]['credit'] = 0;
+                }
             }
         }
+    }
+
+    public function incrementHighlight()
+    {
+        if ($this->highlightIndex === count($this->accounts) - 1) {
+            $this->highlightIndex = 0;
+            return;
+        }
+        $this->highlightIndex++;
+    }
+
+    public function decrementHighlight()
+    {
+        if ($this->highlightIndex === 0) {
+            $this->highlightIndex = count($this->accounts) - 1;
+            return;
+        }
+        $this->highlightIndex--;
     }
 
     public function draft()
@@ -189,7 +225,7 @@ class Edit extends Component
                 $this->addError('voucher_no', 'Sum of debit and credit is not equal.');
                 return false;
             }
-            if (Ledger::where('voucher_no', $this->voucher_no)->where('is_approve', 'f')->exists()) {
+            if (Ledger::where('voucher_no', $this->voucher_no)->where('is_approve', 't')->exists()) {
                 $this->addError('voucher_no', 'Unable to update because this entry already approved.');
                 return false;
             }

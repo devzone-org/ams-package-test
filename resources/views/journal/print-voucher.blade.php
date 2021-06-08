@@ -12,17 +12,18 @@
 
 <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
     <div>
-        <h3 class="text-lg leading-6 text-center font-medium text-gray-900">{{ env('APP_NAME') }}</h3>
+        <h3 class="text-lg leading-6 text-center font-medium text-gray-900">{{ env('APP_NAME') }} - Voucher</h3>
         <p class="mt-1 text-sm text-center text-gray-500">Voucher Print Date Time: {{ date('d M Y h:i:s A') }}</p>
     </div>
     <div class="flex justify-between">
+
         <div>
-            <p>Posting Date: {{ date('d M, Y',strtotime($ledger->first()->posting_date)) }}</p>
-            <p>Voucher # {{ $ledger->first()->voucher_no }}</p>
+            <p class="text-left">Posted By: {{  $ledger->first()->posted }}</p>
+            <p class="text-left">Approved By: {{  $ledger->first()->approved }}</p>
         </div>
         <div>
-            <p class="text-right">Posted By: {{  $ledger->first()->posted }}</p>
-            <p class="text-right">Approved By: {{  $ledger->first()->approved }}</p>
+            <p class=" text-right flex items-end justify-end"><span>Voucher </span> &nbsp;&nbsp; <span class="text-xl font-bold"> #{{ $ledger->first()->voucher_no }}</span></p>
+            <p class=" text-right">Posting Date: {{ date('d M, Y',strtotime($ledger->first()->posting_date)) }}</p>
         </div>
     </div>
 
@@ -90,6 +91,8 @@
 
         </tbody>
     </table>
+
+    <p>This is computer generated voucher so does not need any signature.</p>
 
 
 </div>
