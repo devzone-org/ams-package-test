@@ -12,7 +12,7 @@
 
                 </div>
                 <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
+                    <div class="ml-10 flex   space-x-4">
                         @include('ams::include.header-links')
                     </div>
                 </div>

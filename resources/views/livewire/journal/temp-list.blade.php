@@ -223,7 +223,7 @@
                                 </div>
 
                                 <div>
-                                    <a href="{{ url('accounts/journal/edit').'/'.$tl->first()->voucher_no }}"
+                                    <a href="{{ url('accounts/accountant/journal/edit').'/'.$tl->first()->voucher_no }}"
                                        class="font-medium  py-1 px-2 rounded-md text-indigo-600 hover:text-indigo-800 hover:bg-indigo-100">
                                         Edit
                                     </a>
