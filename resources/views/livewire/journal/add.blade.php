@@ -131,14 +131,14 @@
                         <td class="px-2  text-center  border-r text-sm font-medium text-gray-900">
                             {{ $loop->iteration }}
                         </td>
-                        <td class="px-2  text-center   border-r text-sm text-gray-500">
+                        <td class="px-2  text-left   border-r text-sm text-gray-500">
                             <input wire:click="searchAccounts('{{ $key }}')" type="text" readonly
                                    wire:model.lazy="entries.{{$key}}.account_name"
-                                   class="p-0 focus:ring-0 block w-full  text-sm border-0 text-center " autocomplete="off">
+                                   class="p-0 focus:ring-0 block w-full  text-sm border-0 text-left " autocomplete="off">
                         </td>
-                        <td class="px-2   text-center   border-r  text-sm text-gray-500">
+                        <td class="px-2   text-left   border-r  text-sm text-gray-500">
                     <textarea wire:ignore.self cols="30" rows="1" wire:model.lazy="entries.{{$key}}.description"
-                              class="  p-0  focus:ring-0 block w-full  text-sm border-0  text-center "></textarea>
+                              class="  p-0  focus:ring-0 block w-full  text-sm border-0  text-left "></textarea>
                         </td>
                         <td class="px-2  text-center  border-r text-sm text-gray-500">
                             <input type="number" step="0.01" wire:model.lazy="entries.{{$key}}.debit"

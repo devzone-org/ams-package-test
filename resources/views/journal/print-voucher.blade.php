@@ -52,10 +52,31 @@
         </thead>
         <tbody class="bg-white  ">
 
-        @foreach($ledger as $t)
-            <tr class="{{ $loop->first ? 'border-t': '' }} {{ $loop->even ? 'bg-gray-50':'' }} {{ $loop->last ? 'border-b':'' }}">
+        @foreach($ledger->where('debit','>',0) as $t)
+            <tr class="{{ $loop->first ? 'border-t': '' }} {{ $loop->even ? 'bg-gray-50':'' }} border-b ">
                 <td class="px-2 py-2 border-r border-l text-sm text-gray-500">
-                    {{ $t->code }} - {{ $t->name }}
+                   {{ $t->name }}
+                </td>
+
+                <td class="px-2 py-2 border-r text-sm text-gray-500">
+                    {{ $t->description }}
+                </td>
+                <td class="px-2 py-2 text-right  border-r text-sm text-gray-500">
+                    @if($t->debit>0)
+                        {{ number_format($t->debit,2) }}
+                    @endif
+                </td>
+                <td class="px-2 text-right py-2 border-r text-sm text-gray-500">
+                    @if($t->credit>0)
+                        {{ number_format($t->credit,2) }}
+                    @endif
+                </td>
+            </tr>
+        @endforeach
+        @foreach($ledger->where('credit','>',0) as $t)
+            <tr class="{{ $loop->first ? 'border-t': '' }} {{ $loop->even ? 'bg-gray-50':'' }} border-b">
+                <td class="px-2 py-2 border-r border-l text-sm text-gray-500">
+                    {{ $t->name }}
                 </td>
 
                 <td class="px-2 py-2 border-r text-sm text-gray-500">

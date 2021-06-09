@@ -36,7 +36,9 @@ Route::get('accountant/ledger',function(){
     return view('ams::reports.ledger');
 });
 
-Route::get('reports/trial',function(){
+
+
+Route::get('reports/trial-balance',function(){
     return view('ams::reports.trial');
 });
 

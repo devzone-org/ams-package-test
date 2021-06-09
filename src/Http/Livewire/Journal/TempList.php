@@ -22,7 +22,7 @@ class TempList extends Component
             ->join('users as u', 'u.id', '=', 'l.posted_by')
             ->where('l.is_approve', 'f')
             ->select('l.*', 'coa.name', 'coa.code', 'u.name as posting')
-            ->orderBy('l.voucher_no')->get();
+            ->orderBy('l.voucher_no')->orderBy('l.id')->get();
         return view('ams::livewire.journal.temp-list', compact('temp_list'));
     }
 
