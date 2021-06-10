@@ -3,9 +3,9 @@
         <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
             <div>
                 <h3 class="text-lg leading-6 font-medium text-gray-900 text-center">{{ $account_name_s ?? 'General Ledger' }}</h3>
-                <p class="text-md  font-sm text-gray-900 text-center" >{{ env('APP_NAME') }}</p>
+                <p class="text-md  font-sm text-gray-500 text-center" >{{ env('APP_NAME') }}</p>
                 @if(!empty($from_d) && !empty($to_d))
-                <p class="text-md  font-sm text-gray-900 text-center" >Statement Period {{ date('d M, Y',strtotime($from_d)) }} to {{ date('d M, Y',strtotime($to_d)) }} </p>
+                <p class="text-md  font-sm text-gray-500 text-center" >Statement Period {{ date('d M, Y',strtotime($from_d)) }} to {{ date('d M, Y',strtotime($to_d)) }} </p>
 @endif
             </div>
 

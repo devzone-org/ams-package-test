@@ -42,5 +42,9 @@ Route::get('reports/trial-balance',function(){
     return view('ams::reports.trial');
 });
 
+Route::get('reports/profit-and-loss',function (){
+    return view('ams::reports.profit-loss');
+});
+
 Route::get('journal/voucher/print/{voucher_no}/{print?}',[JournalController::class,'printVoucher']);
 

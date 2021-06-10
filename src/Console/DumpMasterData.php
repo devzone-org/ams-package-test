@@ -91,6 +91,7 @@ class DumpMasterData extends Command
         ChartOfAccount::updateOrCreate(['id' => '58'], ['name' => 'Vendor Payable', 'type' => 'Liabilities', 'sub_account' => '57', 'level' => '4', 'nature' => 'c','reference'=>'vendor-payable-4']);
         ChartOfAccount::updateOrCreate(['id' => '59'], ['name' => 'Inventory', 'reference' => 'inventory-4', 'type' => 'Assets', 'sub_account' => '10', 'level' => '4', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '60'], ['name' => 'Pharmacy Inventory', 'reference' => 'pharmacy-inventory-5', 'type' => 'Assets', 'sub_account' => '59', 'level' => '5', 'nature' => 'd']);
+        ChartOfAccount::updateOrCreate(['id' => '61'], ['name' => 'Cost of Sales ', 'reference' => 'cost-of-sales-4','type' => 'Expenses', 'sub_account' => '43', 'level' => '4', 'nature' => 'd']);
         $this->info('Dumping Finished...');
     }
 }
