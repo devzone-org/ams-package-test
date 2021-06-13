@@ -118,7 +118,7 @@
                                                 <div class="" role="none">
 
                                                     <a @click="open = false;"
-                                                       href="{{ url('accounts/reports/ledger') }}?account_id={{$five->id}}"
+                                                       href="{{ url('accounts/accountant/ledger') }}?account_id={{$five->id}}"
                                                        target="_blank"
                                                        class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
                                                        role="menuitem" tabindex="-1"

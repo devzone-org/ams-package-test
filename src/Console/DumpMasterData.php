@@ -91,7 +91,11 @@ class DumpMasterData extends Command
         ChartOfAccount::updateOrCreate(['id' => '58'], ['name' => 'Vendor Payable', 'type' => 'Liabilities', 'sub_account' => '57', 'level' => '4', 'nature' => 'c','reference'=>'vendor-payable-4']);
         ChartOfAccount::updateOrCreate(['id' => '59'], ['name' => 'Inventory', 'reference' => 'inventory-4', 'type' => 'Assets', 'sub_account' => '10', 'level' => '4', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '60'], ['name' => 'Pharmacy Inventory', 'reference' => 'pharmacy-inventory-5', 'type' => 'Assets', 'sub_account' => '59', 'level' => '5', 'nature' => 'd']);
-        ChartOfAccount::updateOrCreate(['id' => '61'], ['name' => 'Cost of Sales ', 'reference' => 'cost-of-sales-4','type' => 'Expenses', 'sub_account' => '43', 'level' => '4', 'nature' => 'd']);
+        ChartOfAccount::updateOrCreate(['id' => '61'], ['name' => 'Cost of Sales', 'reference' => 'cost-of-sales-4','type' => 'Expenses', 'sub_account' => '43', 'level' => '4', 'nature' => 'd']);
+        ChartOfAccount::updateOrCreate(['id' => '62'], ['name' => 'Income - OPD', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c','reference' => 'income-opd-5']);
+        ChartOfAccount::updateOrCreate(['id' => '63'], ['name' => 'Employee Share Payable', 'type' => 'Liabilities', 'sub_account' => '23', 'level' => '3', 'nature' => 'c']);
+        ChartOfAccount::updateOrCreate(['id' => '64'], ['name' => 'Employee Share Payable', 'type' => 'Liabilities', 'sub_account' => '63', 'level' => '4', 'nature' => 'c','reference'=>'employee-share-payable-4']);
+        ChartOfAccount::updateOrCreate(['id' => '65'], ['name' => 'Expense Commission OPD', 'reference' => 'expense-commission-opd-5','type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         $this->info('Dumping Finished...');
     }
 }
