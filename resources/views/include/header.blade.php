@@ -27,19 +27,17 @@
                         <div>
 
                             <button @click="dropdown=!dropdown;" type="button"
-                                    class="max-w-xs bg-white rounded-full flex items-center text-sm focus:outline-none   lg:p-2 lg:rounded-md lg:hover:bg-gray-50"
+                                    class="max-w-xs flex items-center text-sm focus:outline-none   lg:p-2 hover:bg-gray-900"
                                     id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                                <img class="h-8 w-8 rounded-full"
+                                <img class="h-10 w-10 rounded-full border-2 border-gray-300 hover:border-white"
                                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80"
                                      alt="">
-                                <span class="hidden ml-3 text-left text-gray-700  font-medium lg:block">
+                                <span class="hidden ml-3 text-left text-white  font-medium lg:block">
                                     <span
                                         class="sr-only">Open user menu for </span>
                                     {{ env('APP_NAME') }} <br>
                                     <span class="text-xs">{{ Auth::user()->name }}</span>
                                 </span>
-
-
                                 <svg class="hidden flex-shrink-0 ml-2 h-5 w-5 text-gray-400 lg:block"
                                      x-description="Heroicon name: solid/chevron-down"
                                      xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
