@@ -103,13 +103,13 @@ class DumpMasterData extends Command
         ChartOfAccount::updateOrCreate(['id' => '70'], ['name' => 'Expense IPD OTA Commission', 'reference' => 'expense-ipd-ota-commission-5','type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '71'], ['name' => 'Expense IPD Doctor Commission', 'reference' => 'expense-ipd-doctor-commission-5','type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '72'], ['name' => 'Expense IPD Nurse Commission', 'reference' => 'expense-ipd-nurse-commission-5','type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
-        ChartOfAccount::updateOrCreate(['id' => '73'], ['name' => 'Expense IPD Anesthesia Commission', 'reference' => 'expense-ipd-anesthesia-commission-5','type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '73'], ['name' => 'Expense IPD Medicine Commission', 'reference' => 'expense-ipd-medicine-commission-5','type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '74'], ['name' => 'Income - IPD', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c','reference' => 'income-ipd-5']);
         ChartOfAccount::updateOrCreate(['id' => '75'], ['name' => 'Trade Payable', 'type' => 'Liabilities', 'sub_account' => '23', 'level' => '3', 'nature' => 'c']);
         ChartOfAccount::updateOrCreate(['id' => '76'], ['name' => 'Trade Payable', 'type' => 'Liabilities', 'sub_account' => '75', 'level' => '4', 'nature' => 'c']);
         ChartOfAccount::updateOrCreate(['id' => '77'], ['name' => 'Indoor Advances', 'reference'=>'indoor-advances-5', 'type' => 'Liabilities', 'sub_account' => '76', 'level' => '5', 'nature' => 'c']);
         ChartOfAccount::updateOrCreate(['id' => '78'], ['name' => 'Cash in Hand - Muhammad Talha',  'type' => 'Assets', 'sub_account' => '12', 'level' => '5', 'nature' => 'd']);
+        ChartOfAccount::updateOrCreate(['id' => '79'], ['name' => 'Expense IPD Anesthesia Commission', 'reference' => 'expense-ipd-anesthesia-commission-5','type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         $this->info('Dumping Finished...');
     }
 }
