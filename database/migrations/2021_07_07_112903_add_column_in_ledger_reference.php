@@ -13,7 +13,7 @@ class AddColumnInLedgerReference extends Migration
      */
     public function up()
     {
-        Schema::table('reference', function (Blueprint $table) {
+        Schema::table('ledgers', function (Blueprint $table) {
             $table->string('reference')->nullable();
         });
     }
