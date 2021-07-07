@@ -18,6 +18,7 @@ class GeneralJournal
     private $approved_at;
     private $approved_by;
     private $is_approve = 'f';
+    private $reference = null;
 
 
     public static function instance()
@@ -47,6 +48,12 @@ class GeneralJournal
     public function account($id)
     {
         $this->account_id = $id;
+        return $this;
+    }
+
+    public function reference($type)
+    {
+        $this->reference = $type;
         return $this;
     }
 
@@ -103,6 +110,7 @@ class GeneralJournal
             'approved_at' => $this->approved_at ?? null,
             'approved_by' => $this->approved_by ?? null,
             'is_approve' => $this->is_approve,
+            'reference' => $this->reference
         ]);
 
     }
