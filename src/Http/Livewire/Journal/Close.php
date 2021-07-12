@@ -1,0 +1,200 @@
+<?php
+
+
+namespace Devzone\Ams\Http\Livewire\Journal;
+
+
+use App\Models\User;
+use Devzone\Ams\Helper\GeneralJournal;
+use Devzone\Ams\Helper\Voucher;
+use Devzone\Ams\Models\ChartOfAccount;
+use Devzone\Ams\Models\DayClosing;
+use Devzone\Ams\Models\Ledger;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Livewire\Component;
+
+
+class Close extends Component
+{
+
+    public $users = [];
+    public $user_account_id;
+    public $current_user = [];
+    public $denomination_counting = [];
+    public $opening_balance;
+    public $opening_balance_date;
+    public $closing_balance = [];
+    public $closing_balance_heads = [];
+    public $difference;
+    public $retained_cash = 0;
+    public $transfers = [];
+    public $confirm_popup = false;
+    public $transfer_id;
+
+    protected $rules = [
+        'transfer_id' => 'required|integer'
+    ];
+    protected $listeners = ['proceedClosing'];
+
+    public function mount()
+    {
+        $this->users = User::from('users as u')->join('chart_of_accounts as coa', 'coa.id', '=', 'u.account_id')
+            ->select('u.*')->get()->toArray();
+        $this->denomination_counting = [
+            ['currency' => '5000', 'count' => '0', 'total' => '0'],
+            ['currency' => '1000', 'count' => '0', 'total' => '0'],
+            ['currency' => '500', 'count' => '0', 'total' => '0'],
+            ['currency' => '100', 'count' => '0', 'total' => '0'],
+            ['currency' => '50', 'count' => '0', 'total' => '0'],
+            ['currency' => '20', 'count' => '0', 'total' => '0'],
+            ['currency' => '10', 'count' => '0', 'total' => '0'],
+            ['currency' => '5', 'count' => '0', 'total' => '0'],
+            ['currency' => '2', 'count' => '0', 'total' => '0'],
+            ['currency' => '1', 'count' => '0', 'total' => '0']
+        ];
+
+        $this->transfers = ChartOfAccount::whereIn('sub_account', ['11', '12'])->get()->toArray();
+    }
+
+
+    public function render()
+    {
+        return view('ams::livewire.journal.close');
+    }
+
+    public function updatedUserAccountId($value)
+    {
+        $this->reset(['current_user', 'opening_balance', 'closing_balance']);
+
+        $user = collect($this->users)->firstWhere('account_id', $value);
+        if (!empty($user)) {
+            $this->current_user = $user;
+            $closing = DayClosing::where('account_id', $value)->orderBy('id', 'desc')->first();
+
+
+            if (!empty($closing)) {
+                $opening_balance = Ledger::where('account_id', $value)
+                    ->where('posting_date', '<=', $closing['date'])
+                    ->where('voucher_no', '<=', $closing['voucher_no'])
+                    ->select(DB::raw('sum(debit-credit) as balance'))->first();
+                $this->opening_balance = $opening_balance['balance'];
+                $this->opening_balance_date = $closing['date'];
+            }
+
+
+            $closing_balance = Ledger::where('account_id', $value)
+                ->when(!empty($closing), function ($q) use ($closing) {
+                    return $q->where('posting_date', '>=', $closing['date'])->where('voucher_no', '>', $closing['voucher_no']);
+                })->select(DB::raw('sum(debit-credit) as balance'), 'reference')
+                ->groupBy('reference')->get();
+            $this->closing_balance = $closing_balance->toArray();
+
+            $this->closing_balance_heads = $closing_balance->pluck('reference')->toArray();
+
+        }
+    }
+
+
+    public function updated($name, $value)
+    {
+        $array = explode('.', $name);
+        if (count($array) == 3) {
+            if ($array[0] == 'denomination_counting') {
+                if ($value > 0) {
+                    $this->denomination_counting[$array[1]]['total'] =
+                        $this->denomination_counting[$array[1]]['currency'] * $value;
+                } else {
+                    $this->denomination_counting[$array[1]]['total'] =
+                        $this->denomination_counting[$array[1]]['currency'] * 0;
+                }
+
+                $this->difference = (collect($this->denomination_counting)->sum('total') - collect($this->closing_balance)->sum('balance') - $this->opening_balance);
+            }
+        }
+    }
+
+
+    public function proceedClosing()
+    {
+        $this->validate();
+        try {
+            DB::beginTransaction();
+            $total_denomination = collect($this->denomination_counting)->sum('total');
+            $transfer_amount = $total_denomination - $this->retained_cash;
+            if ($total_denomination > 0) {
+                $vno = Voucher::instance()->voucher()->get();
+                if (empty($this->difference)) {
+                    $description = "Transfer Cash PKR " . number_format($transfer_amount, 2) . " to " . collect($this->transfers)->firstWhere('id', $this->transfer_id)['name'] . "; Cash Retained PKR " . number_format($this->retained_cash, 2) . " by " . Auth::user()->name . " on " . date('d M, Y');
+                    GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
+                        ->date(date('Y-m-d'))->approve()->description($description)->execute();
+                    GeneralJournal::instance()->account($this->transfer_id)->debit($transfer_amount)->voucherNo($vno)
+                        ->date(date('Y-m-d'))->approve()->reference('transfer')->description($description)->execute();
+                    if ($this->retained_cash > 0) {
+                        GeneralJournal::instance()->account($this->user_account_id)->debit($this->retained_cash)->voucherNo($vno)
+                            ->date(date('Y-m-d'))->approve()->description($description)->execute();
+                    }
+                } else if ($this->difference > 0) {
+
+                    $description = "Transfer Cash PKR " . number_format($transfer_amount, 2) . " to " . collect($this->transfers)->firstWhere('id', $this->transfer_id)['name'] . "; Cash Retained PKR " . number_format($this->retained_cash, 2) . "; Surplus PKR ".number_format($this->difference,2)." by " . Auth::user()->name . " on " . date('d M, Y');
+                    GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
+                        ->date(date('Y-m-d'))->approve()->description($description)->execute();
+                    GeneralJournal::instance()->account(67)->credit($this->difference)->voucherNo($vno)
+                        ->date(date('Y-m-d'))->approve()->description($description)->execute();
+
+                    if ($this->retained_cash > 0) {
+                        GeneralJournal::instance()->account($this->user_account_id)->debit($this->retained_cash)->voucherNo($vno)
+                            ->date(date('Y-m-d'))->approve()->description($description)->execute();
+                    }
+                    GeneralJournal::instance()->account($this->transfer_id)->debit($transfer_amount)->voucherNo($vno)
+                        ->date(date('Y-m-d'))->approve()->reference('transfer')->description($description)->execute();
+                    GeneralJournal::instance()->account($this->user_account_id)->debit($this->difference)->voucherNo($vno)
+                        ->date(date('Y-m-d'))->approve()->description($description)->execute();
+
+
+                } else if ($this->difference < 0){
+
+                    $description = "Transfer Cash PKR " . number_format($transfer_amount, 2) . " to " . collect($this->transfers)->firstWhere('id', $this->transfer_id)['name'] . "; Cash Retained PKR " . number_format($this->retained_cash, 2) . "; Shortage PKR ".number_format(abs($this->difference),2)." by " . Auth::user()->name . " on " . date('d M, Y');
+                    GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
+                        ->date(date('Y-m-d'))->approve()->description($description)->execute();
+
+                    GeneralJournal::instance()->account(82)->debit(abs($this->difference))->voucherNo($vno)
+                        ->date(date('Y-m-d'))->approve()->description($description)->execute();
+                    if ($this->retained_cash > 0) {
+                        GeneralJournal::instance()->account($this->user_account_id)->debit($this->retained_cash)->voucherNo($vno)
+                            ->date(date('Y-m-d'))->approve()->description($description)->execute();
+                    }
+                    GeneralJournal::instance()->account($this->transfer_id)->debit($transfer_amount)->voucherNo($vno)
+                        ->date(date('Y-m-d'))->approve()->reference('transfer')->description($description)->execute();
+                    GeneralJournal::instance()->account($this->user_account_id)->credit(abs($this->difference))->voucherNo($vno)
+                        ->date(date('Y-m-d'))->approve()->description($description)->execute();
+
+                }
+
+
+                $array['account_id'] = $this->user_account_id;
+                foreach ($this->closing_balance as $key => $c) {
+                    $array['ref_' . ($key + 1)] = $c['reference'];
+                    $array['ref_amount_' . ($key + 1)] = $c['balance'];
+                }
+                $array['close_by'] = Auth::id();
+                $array['closing_balance'] = collect($this->closing_balance)->sum('balance') + $this->opening_balance;
+                $array['physical_cash'] = $total_denomination;
+                $array['cash_retained'] = $this->retained_cash;
+                $array['date'] = date('Y-m-d');
+                $array['voucher_no'] = $vno;
+
+                DayClosing::create($array);
+            } else {
+                throw new \Exception('Denomination cash must be greater than 0.');
+            }
+
+            $this->redirect('/accounts/accountant/day-close');
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->addError('denomination_counting', $e->getMessage());
+            $this->confirm_popup = false;
+        }
+    }
+}

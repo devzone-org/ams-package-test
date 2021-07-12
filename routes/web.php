@@ -24,6 +24,11 @@ Route::get('accountant/journal', function () {
 Route::get('accountant/journal/add', function () {
     return view('ams::journal.add');
 });
+
+Route::get('accountant/day-close', function () {
+    return view('ams::journal.close');
+});
+
 Route::get('accountant/journal/edit/{voucher_no}', function ($voucher_no) {
     return view('ams::journal.edit', compact('voucher_no'));
 });

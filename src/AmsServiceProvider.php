@@ -5,13 +5,13 @@ namespace Devzone\Ams;
 use Devzone\Ams\Console\DumpMasterData;
 use Devzone\Ams\Http\Livewire\ChartOfAccount\Add;
 use Devzone\Ams\Http\Livewire\ChartOfAccount\Listing;
+use Devzone\Ams\Http\Livewire\Journal\Close;
 use Devzone\Ams\Http\Livewire\Journal\Edit;
 use Devzone\Ams\Http\Livewire\Journal\TempList;
 use Devzone\Ams\Http\Livewire\Post\Show;
 use Devzone\Ams\Http\Livewire\Reports\Ledger;
 use Devzone\Ams\Http\Livewire\Reports\ProfitLoss;
 use Devzone\Ams\Http\Livewire\Reports\Trial;
-use Devzone\Ams\Http\Livewire\Sample;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -27,8 +27,8 @@ class AmsServiceProvider extends ServiceProvider
     {
 
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'ams');
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'ams');
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'ams');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->registerRoutes();
 
 
@@ -47,7 +47,7 @@ class AmsServiceProvider extends ServiceProvider
     {
         Route::group($this->routeConfiguration(), function () {
 
-            $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+            $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
         });
     }
 
@@ -59,6 +59,52 @@ class AmsServiceProvider extends ServiceProvider
         ];
     }
 
+    private function registerLivewireComponent()
+    {
+        Livewire::component('chart-of-accounts.listing', Listing::class);
+        Livewire::component('chart-of-accounts.add', Add::class);
+        Livewire::component('journal.add', \Devzone\Ams\Http\Livewire\Journal\Add::class);
+        Livewire::component('journal.edit', Edit::class);
+        Livewire::component('journal.temp-list', TempList::class);
+        Livewire::component('reports.ledger', Ledger::class);
+        Livewire::component('reports.trial', Trial::class);
+        Livewire::component('reports.profit-loss', ProfitLoss::class);
+        Livewire::component('journal.close', Close::class);
+    }
+
+    /**
+     * Console-specific booting.
+     *
+     * @return void
+     */
+    protected function bootForConsole(): void
+    {
+        // Publishing the configuration file.
+        $this->publishes([
+            __DIR__ . '/../config/ams.php' => config_path('ams.php'),
+        ], 'ams.config');
+
+        // Publishing the views.
+        $this->publishes([
+            __DIR__ . '/../resources/views' => base_path('resources/views/vendor/ams'),
+        ], 'ams.views');
+
+        // Publishing assets.
+        $this->publishes([
+            __DIR__ . '/../resources/assets' => public_path('ams'),
+        ], 'ams.assets');
+
+        // Publishing the translation files.
+        /*$this->publishes([
+            __DIR__.'/../resources/lang' => resource_path('lang/vendor/devzone'),
+        ], 'ams.views');*/
+
+        // Registering package commands.
+        $this->commands([
+            DumpMasterData::class,
+        ]);
+    }
+
     /**
      * Register any package services.
      *
@@ -66,7 +112,7 @@ class AmsServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/ams.php', 'ams');
+        $this->mergeConfigFrom(__DIR__ . '/../config/ams.php', 'ams');
 
         // Register the service the package provides.
         $this->app->singleton('ams', function ($app) {
@@ -82,50 +128,5 @@ class AmsServiceProvider extends ServiceProvider
     public function provides()
     {
         return ['ams'];
-    }
-
-    /**
-     * Console-specific booting.
-     *
-     * @return void
-     */
-    protected function bootForConsole(): void
-    {
-        // Publishing the configuration file.
-        $this->publishes([
-            __DIR__.'/../config/ams.php' => config_path('ams.php'),
-        ], 'ams.config');
-
-        // Publishing the views.
-        $this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/ams'),
-        ], 'ams.views');
-
-        // Publishing assets.
-        $this->publishes([
-            __DIR__.'/../resources/assets' => public_path('ams'),
-        ], 'ams.assets');
-
-        // Publishing the translation files.
-        /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/devzone'),
-        ], 'ams.views');*/
-
-        // Registering package commands.
-         $this->commands([
-             DumpMasterData::class,
-         ]);
-    }
-
-    private function registerLivewireComponent(){
-        Livewire::component('chart-of-accounts.listing',Listing::class);
-        Livewire::component('chart-of-accounts.add',Add::class);
-        Livewire::component('journal.add',\Devzone\Ams\Http\Livewire\Journal\Add::class);
-        Livewire::component('journal.edit',Edit::class);
-        Livewire::component('journal.temp-list',TempList::class);
-        Livewire::component('reports.ledger',Ledger::class);
-        Livewire::component('reports.trial',Trial::class);
-        Livewire::component('reports.profit-loss',ProfitLoss::class);
-
     }
 }
