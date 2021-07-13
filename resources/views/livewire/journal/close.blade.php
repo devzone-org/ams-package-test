@@ -7,7 +7,7 @@
 
             <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 sm:col-span-2">
-                    <label for="user_account" class="block text-sm font-medium text-gray-700">User Account</label>
+                    <label for="user_account" class="block text-sm font-medium text-gray-700">ID to be closed</label>
                     <select id="user_account" wire:model="user_account_id"
                             class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         <option value=""></option>
@@ -58,9 +58,38 @@
                             @endif
                         </div>
                         <div class="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
-                            <p class="text-sm font-medium text-gray-600">User ID: {{ $current_user['id'] }}</p>
+                            <p class="text-sm font-medium text-gray-600">Teller: ID to be closed</p>
                             <p class="text-xl font-bold text-gray-900 sm:text-2xl">{{ $current_user['name'] }}</p>
                             <p class="text-sm font-medium text-gray-600">{{ $current_user['email'] }}</p>
+                        </div>
+                    </div>
+                    <div class="sm:flex sm:space-x-5">
+                        <div class="flex-shrink-0">
+                            @if(!empty(Auth::user()->attachment))
+                                <img class="mx-auto h-20 w-20 rounded-full"
+                                     src="{{ env('AWS_URL').Auth::user()->attachment }}"
+                                     alt="">
+                            @else
+                                <span
+                                    class="inline-flex items-center justify-center h-20 w-20 rounded-full bg-gray-500">
+                                  <span class="text-xl font-medium leading-none text-white">
+                                        @php
+                                            $words = explode(" ", Auth::user()->name);
+                                            $acronym = "";
+
+                                            foreach ($words as $w) {
+                                              $acronym .= $w[0];
+                                            }
+                                        @endphp
+                                      {{  $acronym }}
+                                  </span>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
+                            <p class="text-sm font-medium text-gray-600">Closing By</p>
+                            <p class="text-xl font-bold text-gray-900 sm:text-2xl">{{ Auth::user()->name }}</p>
+                            <p class="text-sm font-medium text-gray-600">{{ Auth::user()->email }}</p>
                         </div>
                     </div>
                 </div>
@@ -73,18 +102,18 @@
                 <thead class="">
                 <tr>
                     <th scope="col"
-                        class="px-6 bg-gray-50 py-3 text-left text-sm font-medium text-center text-gray-800   tracking-wider">
+                        class="px-6 bg-gray-50 py-3 uppercase text-left text-sm font-medium text-center text-gray-800   tracking-wider">
                         Opening Balance
                     </th>
                     @foreach($closing_balance_heads as $h)
                         @if(empty($h))
                             <th scope="col"
-                                class="px-6 bg-gray-50 py-3 text-left text-sm font-medium text-center text-gray-800   tracking-wider">
+                                class="px-6 bg-gray-50 uppercase py-3 text-left text-sm font-medium text-center text-gray-800   tracking-wider">
                                 Other
                             </th>
                         @else
                             <th scope="col"
-                                class="px-6 bg-gray-50 py-3 text-left text-sm font-medium  text-center text-gray-800   tracking-wider">
+                                class="px-6 bg-gray-50 uppercase py-3 text-left text-sm font-medium  text-center text-gray-800   tracking-wider">
                                 {{ ucwords(str_replace('-',' ',$h)) }}
                             </th>
                         @endif
@@ -92,8 +121,8 @@
                     @endforeach
 
                     <th scope="col"
-                        class="px-6 py-3 bg-gray-50 text-left text-sm font-medium text-gray-800 text-center  tracking-wider">
-                        Closing Balance
+                        class="px-6 py-3 bg-gray-50 uppercase text-left text-sm font-medium text-gray-800 text-center  tracking-wider">
+                          Closing Balance (CB)
                     </th>
 
                 </tr>
@@ -106,7 +135,7 @@
                                 PKR {{ number_format($opening_balance) }}
                             </div>
                             <div class="text-sm text-gray-500">
-                                {{ date('d M, Y',strtotime($opening_balance_date)) }}
+                              as at  {{ date('d M, Y',strtotime($opening_balance_date)) }}
                             </div>
                         @else
                             -
@@ -121,6 +150,9 @@
                         <div class="text-sm">
                             PKR {{number_format(collect($closing_balance)->sum('balance') + $opening_balance)}}
                         </div>
+                        <div class="text-sm text-gray-500">
+                            as at  {{ date('d M, Y') }}
+                        </div>
                     </td>
 
                 </tr>
@@ -131,7 +163,7 @@
 
             <div class="bg-white py-6 px-4  sm:p-6 mt-5">
                 <h3 class="text-lg leading-6 font-medium text-gray-900">
-                    Denomination Counting (Physical Cash)
+                    Denomination Counting (DC)
                 </h3>
             </div>
 
@@ -144,15 +176,15 @@
                         <thead class="bg-gray-50">
                         <tr>
                             <th scope="col"
-                                class="px-6 py-3 text-left text-sm font-medium text-gray-800   tracking-wider">
+                                class="uppercase px-6 py-3 text-left text-sm font-medium text-gray-800   tracking-wider">
                                 Currency
                             </th>
                             <th scope="col"
-                                class="px-6 py-3 w-75 text-left text-sm font-medium text-gray-800    ">
+                                class="uppercase px-6 py-3 w-75 text-left text-sm font-medium text-gray-800    ">
                                 Count
                             </th>
                             <th scope="col"
-                                class="px-6 py-3 text-left text-sm font-medium text-gray-800   tracking-wider">
+                                class="uppercase px-6 py-3 text-left text-sm font-medium text-gray-800   tracking-wider">
                                 Total
                             </th>
                         </tr>
@@ -190,7 +222,7 @@
 
                         <tr class="">
                             <td class="     px-6 py-2   text-lg font-medium text-gray-900">
-                                Closing Balance
+                                CB System Cash
                             </td>
                             <td class="  px-6 py-2 font-medium   text-lg text-gray-900">
                                 PKR {{number_format(collect($closing_balance)->sum('balance') + $opening_balance,2)}}
@@ -199,7 +231,7 @@
 
                         <tr class="">
                             <td class="     px-6 py-2   text-lg font-medium text-gray-900">
-                                Denomination Counting
+                                DC Physical Cash
                             </td>
                             <td class="  px-6 py-2 font-medium   text-lg text-gray-900">
                                 PKR {{number_format(collect($denomination_counting)->sum('total'),2)}}
@@ -286,6 +318,12 @@
                                 </select>
                             </td>
                         </tr>
+
+                        <tr class="">
+                            <td colspan="2" class="px-6 py-2 text-center bg-gray-50  text-lg font-sm text-gray-900">
+                                Transfer to "{{ collect($transfers)->firstWhere('id',$transfer_id)['name'] }}"
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                     @if(!empty($transfer_id))
@@ -348,7 +386,7 @@
                 <div class="p-4">
                     Are you sure you want to transfer
                     PKR {{ number_format(collect($denomination_counting)->sum('total') - $retained_cash ,2) }}
-                    to {{ collect($transfers)->firstWhere('id',$transfer_id)['name'] }}
+                    to {{ collect($transfers)->firstWhere('id',$transfer_id)['name'] }} from {{ $current_user['name'] ?? '' }}
                     <br>
                     Press <strong>Y</strong> to confirm
                 </div>

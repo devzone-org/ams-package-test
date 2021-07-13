@@ -51,5 +51,9 @@ Route::get('reports/profit-and-loss',function (){
     return view('ams::reports.profit-loss');
 });
 
+Route::get('reports/day-closing',function (){
+    return view('ams::reports.day-closing');
+});
+
 Route::get('journal/voucher/print/{voucher_no}/{print?}',[JournalController::class,'printVoucher']);
 

@@ -41,6 +41,7 @@ class Close extends Component
     {
         $this->users = User::from('users as u')->join('chart_of_accounts as coa', 'coa.id', '=', 'u.account_id')
             ->select('u.*')->get()->toArray();
+
         $this->denomination_counting = [
             ['currency' => '5000', 'count' => '0', 'total' => '0'],
             ['currency' => '1000', 'count' => '0', 'total' => '0'],
@@ -119,13 +120,19 @@ class Close extends Component
     {
         $this->validate();
         try {
+            if ((collect($this->closing_balance)->sum('balance') + $this->opening_balance) < 0) {
+                throw new \Exception('Closing Balance should be greater than 0.');
+            }
             DB::beginTransaction();
             $total_denomination = collect($this->denomination_counting)->sum('total');
             $transfer_amount = $total_denomination - $this->retained_cash;
+            $description = "[TILL CLOSING: " . date('d M Y h:i A') . "]; [Teller: " . $this->current_user['name'] .
+                " Till closed by: " . Auth::user()->name . "][Transferring PKR " . number_format($transfer_amount, 2) . " to " . collect($this->transfers)->firstWhere('id', $this->transfer_id)['name'] . " from till of Teller '" . $this->current_user['name'] . "'. Cash Retained PKR " .
+                number_format($this->retained_cash, 2) . " in till of " . $this->current_user['name'] . "]";
             if ($total_denomination > 0) {
                 $vno = Voucher::instance()->voucher()->get();
                 if (empty($this->difference)) {
-                    $description = "Transfer Cash PKR " . number_format($transfer_amount, 2) . " to " . collect($this->transfers)->firstWhere('id', $this->transfer_id)['name'] . "; Cash Retained PKR " . number_format($this->retained_cash, 2) . " by " . Auth::user()->name . " on " . date('d M, Y');
+
                     GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
                         ->date(date('Y-m-d'))->approve()->description($description)->execute();
                     GeneralJournal::instance()->account($this->transfer_id)->debit($transfer_amount)->voucherNo($vno)
@@ -136,7 +143,7 @@ class Close extends Component
                     }
                 } else if ($this->difference > 0) {
 
-                    $description = "Transfer Cash PKR " . number_format($transfer_amount, 2) . " to " . collect($this->transfers)->firstWhere('id', $this->transfer_id)['name'] . "; Cash Retained PKR " . number_format($this->retained_cash, 2) . "; Surplus PKR ".number_format($this->difference,2)." by " . Auth::user()->name . " on " . date('d M, Y');
+                    $description .= " Surplus PKR " . number_format($this->difference, 2)."/-";
                     GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
                         ->date(date('Y-m-d'))->approve()->description($description)->execute();
                     GeneralJournal::instance()->account(67)->credit($this->difference)->voucherNo($vno)
@@ -152,9 +159,8 @@ class Close extends Component
                         ->date(date('Y-m-d'))->approve()->description($description)->execute();
 
 
-                } else if ($this->difference < 0){
-
-                    $description = "Transfer Cash PKR " . number_format($transfer_amount, 2) . " to " . collect($this->transfers)->firstWhere('id', $this->transfer_id)['name'] . "; Cash Retained PKR " . number_format($this->retained_cash, 2) . "; Shortage PKR ".number_format(abs($this->difference),2)." by " . Auth::user()->name . " on " . date('d M, Y');
+                } else if ($this->difference < 0) {
+                    $description .= " Shortage PKR " . number_format(abs($this->difference), 2)."/-";
                     GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
                         ->date(date('Y-m-d'))->approve()->description($description)->execute();
 
@@ -183,6 +189,7 @@ class Close extends Component
                 $array['cash_retained'] = $this->retained_cash;
                 $array['date'] = date('Y-m-d');
                 $array['voucher_no'] = $vno;
+                $array['transfer_to'] = $this->transfer_id;
 
                 DayClosing::create($array);
             } else {

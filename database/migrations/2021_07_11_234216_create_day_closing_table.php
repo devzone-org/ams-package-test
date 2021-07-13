@@ -35,6 +35,7 @@ class CreateDayClosingTable extends Migration
             $table->decimal('physical_cash');
             $table->decimal('cash_retained');
             $table->integer('voucher_no');
+            $table->integer('transfer_to');
             $table->date('date');
             $table->timestamps();
         });

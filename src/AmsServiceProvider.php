@@ -9,6 +9,7 @@ use Devzone\Ams\Http\Livewire\Journal\Close;
 use Devzone\Ams\Http\Livewire\Journal\Edit;
 use Devzone\Ams\Http\Livewire\Journal\TempList;
 use Devzone\Ams\Http\Livewire\Post\Show;
+use Devzone\Ams\Http\Livewire\Reports\DayClosing;
 use Devzone\Ams\Http\Livewire\Reports\Ledger;
 use Devzone\Ams\Http\Livewire\Reports\ProfitLoss;
 use Devzone\Ams\Http\Livewire\Reports\Trial;
@@ -69,6 +70,7 @@ class AmsServiceProvider extends ServiceProvider
         Livewire::component('reports.ledger', Ledger::class);
         Livewire::component('reports.trial', Trial::class);
         Livewire::component('reports.profit-loss', ProfitLoss::class);
+        Livewire::component('reports.day-closing', DayClosing::class);
         Livewire::component('journal.close', Close::class);
     }
 
