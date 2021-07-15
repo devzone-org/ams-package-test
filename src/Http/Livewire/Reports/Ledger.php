@@ -32,16 +32,53 @@ class Ledger extends Component
 
     public function mount($account_id)
     {
+        $this->from_date = date('Y-m-d', strtotime('-1 month'));
+        $this->to_date = date('Y-m-d');
         if ($account_id > 0) {
             $this->account_details = ChartOfAccount::find($account_id);
             $this->account_id = $account_id;
             $this->account_name = $this->account_details['name'];
             $this->dispatchBrowserEvent('title', ['name' => $this->account_name]);
+            $this->search();
         }
-        $this->from_date = date('Y-m-d', strtotime('-1 month'));
-        $this->to_date = date('Y-m-d');
+
     }
 
+    public function search()
+    {
+        $this->account_name_s = $this->account_name;
+        $this->from_d = $this->from_date;
+        $this->to_d = $this->to_date;
+
+        if (!empty($this->account_id) && !empty($this->from_date) && !empty($this->to_date)) {
+            $this->ledger = \Devzone\Ams\Models\Ledger::where('is_approve', 't')
+                ->where('posting_date', '>=', $this->from_date)
+                ->where('posting_date', '<=', $this->to_date)
+                ->where('account_id', $this->account_id)
+                ->select('voucher_no', 'posting_date', 'description', 'debit', 'credit', 'account_id')
+                ->orderBy('posting_date')->orderBy('voucher_no')
+                ->get()->toArray();
+            $opening = \Devzone\Ams\Models\Ledger::where('is_approve', 't')
+                ->where('posting_date', '<', $this->from_date)
+                ->where('account_id', $this->account_id)
+                ->select(DB::raw('sum(debit) as debit'), DB::raw('sum(credit) as credit'))
+                ->groupBy('account_id')->first();
+            if ($this->account_details['nature'] == 'd') {
+                if ($this->account_details['is_contra'] == 'f') {
+                    $this->opening_balance = $opening['debit'] - $opening['credit'];
+                } else {
+                    $this->opening_balance = $opening['credit'] - $opening['debit'];
+                }
+
+            } else {
+                if ($this->account_details['is_contra'] == 'f') {
+                    $this->opening_balance = $opening['credit'] - $opening['debit'];
+                } else {
+                    $this->opening_balance = $opening['debit'] - $opening['credit'];
+                }
+            }
+        }
+    }
 
     public function chooseAccount($id, $name)
     {
@@ -81,46 +118,11 @@ class Ledger extends Component
 
     public function resetSearch()
     {
-        $this->reset(['ledger','opening_balance','account_id','account_name','account_name_s','from_d','to_d']);
+        $this->reset(['ledger', 'opening_balance', 'account_id', 'account_name', 'account_name_s', 'from_d', 'to_d']);
     }
 
     public function render()
     {
         return view('ams::livewire.reports.ledger');
-    }
-
-    public function search()
-    {
-        $this->account_name_s = $this->account_name;
-        $this->from_d = $this->from_date;
-        $this->to_d = $this->to_date;
-        if (!empty($this->account_id) && !empty($this->from_date) && !empty($this->to_date)) {
-            $this->ledger = \Devzone\Ams\Models\Ledger::where('is_approve', 't')
-                ->where('posting_date', '>=', $this->from_date)
-                ->where('posting_date', '<=', $this->to_date)
-                ->where('account_id', $this->account_id)
-                ->select('voucher_no', 'posting_date', 'description', 'debit', 'credit', 'account_id')
-                ->orderBy('posting_date')->orderBy('voucher_no')
-                ->get()->toArray();
-            $opening = \Devzone\Ams\Models\Ledger::where('is_approve', 't')
-                ->where('posting_date', '<', $this->from_date)
-                ->where('account_id', $this->account_id)
-                ->select(DB::raw('sum(debit) as debit'), DB::raw('sum(credit) as credit'))
-                ->groupBy('account_id')->first();
-            if ($this->account_details['nature'] == 'd') {
-                if ($this->account_details['is_contra'] == 'f') {
-                    $this->opening_balance = $opening['debit'] - $opening['credit'];
-                } else {
-                    $this->opening_balance = $opening['credit'] - $opening['debit'];
-                }
-
-            } else {
-                if ($this->account_details['is_contra'] == 'f') {
-                    $this->opening_balance = $opening['credit'] - $opening['debit'];
-                } else {
-                    $this->opening_balance = $opening['debit'] - $opening['credit'];
-                }
-            }
-        }
     }
 }

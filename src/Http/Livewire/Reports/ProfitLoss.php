@@ -4,6 +4,7 @@
 namespace Devzone\Ams\Http\Livewire\Reports;
 
 
+use Carbon\Carbon;
 use Devzone\Ams\Models\ChartOfAccount;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -18,8 +19,9 @@ class ProfitLoss extends Component
 
     public function mount()
     {
-        $this->from_date = date('Y-m-d', strtotime('-1 month'));
+        $this->from_date = Carbon::now()->startOfMonth()->subMonth(3)->toDateString();
         $this->to_date = date('Y-m-d');
+        $this->search();
     }
 
     public function render()
