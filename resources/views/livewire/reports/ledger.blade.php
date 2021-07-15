@@ -109,7 +109,7 @@
                     @endphp
                     <tr class="{{ $loop->odd ? 'bg-gray-50' :'' }}">
                         <td class="px-2   py-2   border-r text-sm   text-gray-500">
-                            <a class="font-medium text-indigo-600 hover:text-indigo-500" href="javascript:void(0);" onclick="window.open('{{ url('accounts/journal/voucher/print').'/'.$en['voucher_no'] }}','voucher-print','height=500,width=800');">{{ $en['voucher_no'] }}</a>
+                            <a class="font-medium text-indigo-600 hover:text-indigo-500" href="javascript:void(0);" onclick="window.open('{{ url('accounts/journal/voucher/print').'/'.$en['voucher_no'] }}','voucher-print-{{$en['voucher_no']}}','height=500,width=800');">{{ $en['voucher_no'] }}</a>
                         </td>
                         <td class="px-2   py-2    border-r text-sm text-gray-500">
                             {{ date('d M, Y',strtotime($en['posting_date'])) }}
