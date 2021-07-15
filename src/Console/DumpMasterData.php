@@ -34,7 +34,7 @@ class DumpMasterData extends Command
             ]);
         }
 
-        if (!Voucher::where('name', 'coa')->exists()) {
+        if (!Voucher::where('name', 'advances_receipt')->exists()) {
             Voucher::create([
                 'name' => 'advances_receipt'
             ]);
