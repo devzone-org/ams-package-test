@@ -42,6 +42,11 @@ class Voucher
         $this->name = 'coa';
         return $this;
     }
+    public function advances()
+    {
+        $this->name = 'advances_receipt';
+        return $this;
+    }
 
     public function get()
     {

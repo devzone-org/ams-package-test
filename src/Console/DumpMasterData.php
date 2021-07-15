@@ -34,6 +34,12 @@ class DumpMasterData extends Command
             ]);
         }
 
+        if (!Voucher::where('name', 'coa')->exists()) {
+            Voucher::create([
+                'name' => 'advances_receipt'
+            ]);
+        }
+
         ChartOfAccount::updateOrCreate(['id' => '1'], ['name' => 'Assets', 'type' => 'Assets', 'sub_account' => null, 'level' => '1', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '2'], ['name' => 'Fixed Assets', 'type' => 'Assets', 'sub_account' => '1', 'level' => '2', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '3'], ['name' => 'Fixed Assets', 'type' => 'Assets', 'sub_account' => '2', 'level' => '3', 'nature' => 'd']);
