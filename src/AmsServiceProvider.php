@@ -72,6 +72,8 @@ class AmsServiceProvider extends ServiceProvider
         Livewire::component('reports.profit-loss', ProfitLoss::class);
         Livewire::component('reports.day-closing', DayClosing::class);
         Livewire::component('journal.close', Close::class);
+        Livewire::component('journal.payments.listing', \Devzone\Ams\Http\Livewire\Journal\Payment\Listing::class);
+        Livewire::component('journal.payments.add', \Devzone\Ams\Http\Livewire\Journal\Payment\Add::class);
     }
 
     /**

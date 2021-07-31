@@ -16,6 +16,7 @@ trait Searchable
     public $searchable_id;
     public $searchable_name;
     public $searchable_type;
+
     public $searchable_column = [
         'accounts' => ['name', 'code', 'type'],
 
@@ -55,6 +56,7 @@ trait Searchable
             $this->highlight_index = $key;
         }
         $data = $this->searchable_data[$this->highlight_index] ?? null;
+
         $this->{$this->searchable_id} = $data['id'];
         $this->{$this->searchable_name} = $data['name'];
         $this->emitSelf(Str::camel('emit_' . $this->searchable_id));
@@ -70,6 +72,7 @@ trait Searchable
         $this->searchable_query = '';
         $this->searchable_type = '';
         $this->searchable_data = [];
+
     }
 
     public function updatedSearchableQuery($value)
