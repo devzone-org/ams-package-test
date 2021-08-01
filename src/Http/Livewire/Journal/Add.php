@@ -309,10 +309,13 @@ class Add extends Component
 
 
             $entries = collect($this->entries);
-            if ($entries->sum('debit') != $entries->sum('credit')) {
-                $this->addError('voucher_no', 'Sum of debit and credit is not equal.');
-                return false;
-            }
+            $debit= $entries->sum('debit');
+            $credit = $entries->sum('credit');
+
+//            if ($entries->sum('debit') != $entries->sum('credit')) {
+//                $this->addError('voucher_no', 'Sum of debit and credit is not equal.');
+//                return false;
+//            }
 
             foreach ($this->entries as $entry) {
                 if (empty($entry['account_id']) && empty($entry['debit']) && empty($entry['credit']) && empty($entry['description'])) {
