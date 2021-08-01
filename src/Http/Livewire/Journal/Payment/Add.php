@@ -4,6 +4,7 @@ namespace Devzone\Ams\Http\Livewire\Journal\Payment;
 
 use Devzone\Ams\Http\Traits\Searchable;
 use Devzone\Ams\Models\PaymentReceiving;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -23,6 +24,7 @@ class Add extends Component
     public $mode;
     public $instrument_no;
     public $attachment;
+    public $success;
     protected $listeners = ['emitAccountId'];
 
     protected $rules = [
@@ -56,10 +58,22 @@ class Add extends Component
                 $path = $this->attachment->storePublicly(env('AWS_FOLDER') . 'accounts', 's3');
             }
 
-
-
+            PaymentReceiving::create([
+                'nature' => $this->nature,
+                'posting_date' => $this->posting_date,
+                'first_account_id' => $this->first_account_id,
+                'second_account_id' => $this->second_account_id,
+                'amount' => $this->amount,
+                'attachment' => $path,
+                'mode' => $this->mode,
+                'description' => $this->description,
+                'instrument_no' => $this->instrument_no,
+                'added_by' => Auth::user()->id
+            ]);
 
             DB::commit();
+            $this->reset(['nature','posting_date','first_account_id','second_account_id','second_account_name','first_account_name','amount','attachment','mode','instrument_no']);
+            $this->success = 'Record has been added.';
         } catch (\Exception $e) {
             DB::rollBack();
             $this->addError('nature', $e->getMessage());

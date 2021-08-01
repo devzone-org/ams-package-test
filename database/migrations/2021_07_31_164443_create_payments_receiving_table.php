@@ -25,6 +25,7 @@ class CreatePaymentsReceivingTable extends Migration
             $table->string('mode',20);
             $table->string('instrument_no',30)->nullable();
             $table->integer('added_by');
+            $table->integer('voucher_no')->nullable();
             $table->integer('approved_by')->nullable();
             $table->dateTime('approved_at')->nullable();
             $table->timestamps();
