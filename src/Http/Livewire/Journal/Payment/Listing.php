@@ -9,11 +9,19 @@ use Devzone\Ams\Models\PaymentReceiving;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Listing extends Component
 {
 
+    use WithPagination;
+
     public $success;
+    public $nature;
+    public $from;
+    public $to;
+    public $status;
+
 
     public function render()
     {
@@ -24,11 +32,46 @@ class Listing extends Component
             ->leftJoin('users as a', 'a.id', '=', 'pr.approved_by')
             ->select(
                 'pr.*', 'f.name as first_account_name', 's.name as second_account_name', 'u.name as added_by', 'a.name as approved_by_name'
-            )->get();
+            )
+            ->when(!empty($this->nature),function($q){
+                return $q->where('pr.nature',$this->nature);
+            })
+            ->when(!empty($this->status),function($q){
+                if($this->status=='t'){
+                    return $q->whereNotNull('pr.approved_at');
+                } else {
+                    return $q->whereNull('pr.approved_at');
+                }
+
+            })
+            ->when(!empty($this->from) && !empty($this->to) ,function($q){
+                return $q->where('pr.posting_date','>=',$this->from)->where('pr.posting_date','<=',$this->to);
+            })
+            ->orderBy('pr.id', 'desc')
+            ->paginate(20);
 
         return view('ams::livewire.journal.payments.listing', compact('entries'));
     }
 
+    public function search(){
+
+    }
+
+    public function resetSearch(){
+        $this->reset(['status','from','to','nature']);
+    }
+
+
+    public function delete($id)
+    {
+        $payment = PaymentReceiving::find($id);
+        if (empty($payment['approved_at'])) {
+            $payment->delete();
+            $this->success = 'Record has been deleted.';
+        } else {
+            $this->addError('success', 'Record has already been approved so unable to delete.');
+        }
+    }
 
     public function approve($id)
     {
@@ -44,9 +87,9 @@ class Listing extends Component
 
             $description = $payment->description;
             $created = User::find($payment['added_by']);
-            $description .= " Created by ".$created->name." @ ".date('d M, Y h:i A',strtotime($payment['created_at']));
-            $description .= ". Approved by ".Auth::user()->name." @ ".date('d M, Y h:i A');
-            if($payment['nature'] == 'receive'){
+            $description .= " Created by " . $created->name . " @ " . date('d M, Y h:i A', strtotime($payment['created_at']));
+            $description .= ". Approved by " . Auth::user()->name . " @ " . date('d M, Y h:i A');
+            if ($payment['nature'] == 'receive') {
                 GeneralJournal::instance()->account($payment['first_account_id'])
                     ->credit($payment['amount'])->voucherNo($vno)
                     ->date(date('Y-m-d'))->approve()->description($description)->execute();
@@ -56,7 +99,7 @@ class Listing extends Component
                     ->date(date('Y-m-d'))->approve()->description($description)->execute();
             }
 
-            if($payment['nature'] == 'pay'){
+            if ($payment['nature'] == 'pay') {
                 GeneralJournal::instance()->account($payment['first_account_id'])
                     ->debit($payment['amount'])->voucherNo($vno)
                     ->date(date('Y-m-d'))->approve()->description($description)->execute();
@@ -66,7 +109,7 @@ class Listing extends Component
                     ->date(date('Y-m-d'))->approve()->description($description)->execute();
             }
 
-            $payment -> update([
+            $payment->update([
                 'approved_by' => Auth::user()->id,
                 'approved_at' => date('Y-m-d H:i:s'),
                 'voucher_no' => $vno

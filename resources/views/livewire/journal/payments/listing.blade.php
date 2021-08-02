@@ -1,4 +1,56 @@
 <div>
+    <div class="shadow mb-5 overflow-hidden border-b border-gray-200 sm:rounded-lg">
+        <div class="bg-white py-6 px-4 space-y-6 sm:p-6 ">
+            <div class="grid grid-cols-8 gap-6">
+                <div class="col-span-8 sm:col-span-1">
+                    <label for="nature" class="block text-sm font-medium text-gray-700">Nature</label>
+                    <select wire:model.defer="nature"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="">All</option>
+                        <option value="pay">Paid</option>
+                        <option value="receive">Received</option>
+                    </select>
+
+                </div>
+
+                <div class="col-span-8 sm:col-span-1">
+                    <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                    <select wire:model.defer="status"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="">All</option>
+                        <option value="t">Approve</option>
+                        <option value="f">Not Approved</option>
+                    </select>
+
+                </div>
+
+                <div class="col-span-8 sm:col-span-2">
+                    <label for="from" class="block text-sm font-medium text-gray-700">From</label>
+                    <input type="date" wire:model.defer="from" id="from" autocomplete="off"
+                           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+
+                <div class="col-span-8 sm:col-span-2">
+                    <label for="to" class="block text-sm font-medium text-gray-700">To</label>
+                    <input type="date" wire:model.defer="to" id="to" autocomplete="off"
+                           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+
+                <div class="col-span-8 sm:col-span-2">
+                    <button type="button" wire:click="search"
+                            class="bg-white mt-6 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Search
+                    </button>
+
+                    <button type="button" wire:click="resetSearch"
+                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="shadow sm:rounded-md sm:overflow-hidden bg-white">
         <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
             <div class="flex justify-between items-center">
@@ -123,7 +175,17 @@
                         {{ $loop -> iteration }}
                     </td>
                     <td class="px-6 py-4  text-sm text-gray-500">
-                        {{ $e->nature }}
+
+                        @if($e->nature=='pay')
+                            <span
+                                class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                              Paid
+                            </span>
+                        @else
+                            <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                              Received
+                            </span>
+                        @endif
                     </td>
                     <td class="px-6 py-4  text-sm text-gray-500">
                         {{ date('d M, Y',strtotime($e->posting_date)) }}
@@ -151,11 +213,49 @@
                         @endif
                     </td>
                     <td class="px-6 py-4  text-right text-sm font-medium">
-                        @if(empty($e->approved_at))
-                            <button type="button" wire:click="approve('{{ $e->id }}')"
-                                    class="text-indigo-600 hover:text-indigo-900">Approve
-                            </button>
-                        @endif
+
+
+                            <div class="relative inline-block text-left" x-data="{open:false}">
+                                <div>
+                                    <button type="button" x-on:click="open=true;" @click.away="open=false;"
+                                            class="  rounded-full flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+                                            id="menu-button" aria-expanded="true" aria-haspopup="true">
+                                        <span class="sr-only">Open options</span>
+                                        <!-- Heroicon name: solid/dots-vertical -->
+                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                             fill="currentColor" aria-hidden="true">
+                                            <path
+                                                d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+
+                                <div x-show="open"
+                                     class="origin-top-right absolute right-0 mt-2 w-56 z-10 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                     role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                                    <div class="py-1" role="none">
+                                        <a href="#"
+                                           class="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                                           role="menuitem" tabindex="-1">View</a>
+                                        @if(empty($e->approved_at))
+
+                                            <a href="#"  wire:click="approve('{{ $e->id }}')"
+                                               class="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                                               role="menuitem" tabindex="-1">Approve</a>
+
+
+                                            <a href="#"  wire:click="delete('{{ $e->id }}')"
+                                               class="text-red-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                                               role="menuitem" tabindex="-1">Delete</a>
+
+                                        @endif
+
+
+
+                                    </div>
+                                </div>
+                            </div>
                     </td>
                 </tr>
             @endforeach
@@ -163,6 +263,11 @@
 
             </tbody>
         </table>
+        @if($entries->hasPages())
+            <div class="bg-white border-t px-3 py-2">
+                {{ $entries->links() }}
+            </div>
+        @endif
     </div>
 
 
