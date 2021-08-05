@@ -35,10 +35,18 @@ class Ledger extends Component
         $this->from_date = date('Y-m-d', strtotime('-1 month'));
         $this->to_date = date('Y-m-d');
         if ($account_id > 0) {
+
             $this->account_details = ChartOfAccount::find($account_id);
             $this->account_id = $account_id;
             $this->account_name = $this->account_details['name'];
             $this->dispatchBrowserEvent('title', ['name' => $this->account_name]);
+
+            if(!empty(request()->query('date'))){
+                $this->from_date = request()->query('date');
+                $this->to_date = request()->query('date');
+                $this->from_d = $this->from_date;
+                $this->to_d = $this->to_date;
+            }
             $this->search();
         }
 

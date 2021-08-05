@@ -5,6 +5,7 @@ namespace Devzone\Ams\Http\Livewire\Journal\Payment;
 use App\Models\User;
 use Devzone\Ams\Helper\GeneralJournal;
 use Devzone\Ams\Helper\Voucher;
+use Devzone\Ams\Models\LedgerAttachment;
 use Devzone\Ams\Models\PaymentReceiving;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -102,11 +103,11 @@ class Listing extends Component
             if ($payment['nature'] == 'pay') {
                 GeneralJournal::instance()->account($payment['first_account_id'])
                     ->debit($payment['amount'])->voucherNo($vno)
-                    ->date(date('Y-m-d'))->approve()->description($description)->execute();
+                    ->date($payment['posting_date'])->approve()->description($description)->execute();
 
                 GeneralJournal::instance()->account($payment['second_account_id'])
                     ->credit($payment['amount'])->voucherNo($vno)
-                    ->date(date('Y-m-d'))->approve()->description($description)->execute();
+                    ->date($payment['posting_date'])->approve()->description($description)->execute();
             }
 
             $payment->update([
@@ -114,6 +115,14 @@ class Listing extends Component
                 'approved_at' => date('Y-m-d H:i:s'),
                 'voucher_no' => $vno
             ]);
+            foreach ([$payment['first_account_id'],$payment['second_account_id']] as $account_id){
+                LedgerAttachment::create([
+                    'account_id' => $account_id,
+                    'voucher_no' => $vno,
+                    'type' => 1,
+                    'attachment' => $payment['attachment']
+                ]);
+            }
 
 
             DB::commit();

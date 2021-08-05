@@ -51,8 +51,8 @@
         </div>
     </div>
 
-    <div class="shadow sm:rounded-md sm:overflow-hidden bg-white">
-        <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+    <div class="shadow sm:rounded-md   bg-white">
+        <div class="bg-white py-6 px-4 space-y-6 sm:p-6 rounded-md">
             <div class="flex justify-between items-center">
                 <h3 class="text-lg leading-6 font-medium text-gray-900">Payments & Receiving</h3>
                 <a href="{{  url('accounts/accountant/payments/add') }}"
@@ -133,7 +133,7 @@
         </div>
 
 
-        <table class="min-w-full divide-y divide-gray-200">
+        <table class="min-w-full divide-y divide-gray-200  rounded-md ">
             <thead class="bg-gray-50">
             <tr>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -148,7 +148,7 @@
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Accounts
                 </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" class="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Description
                 </th>
 
@@ -168,7 +168,7 @@
                 </th>
             </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="bg-white divide-y divide-gray-200  rounded-md">
             @foreach($entries as $e)
                 <tr>
                     <td class="px-6 py-4  text-sm font-medium text-gray-900">
@@ -179,10 +179,11 @@
                         @if($e->nature=='pay')
                             <span
                                 class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-red-100 text-red-800">
-                              Paid
+                              Payment
                             </span>
                         @else
-                            <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                            <span
+                                class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
                               Received
                             </span>
                         @endif
@@ -191,7 +192,14 @@
                         {{ date('d M, Y',strtotime($e->posting_date)) }}
                     </td>
                     <td class="px-6 py-4  text-sm text-gray-500">
-                        {{ $e -> first_account_name }} <br> {{ $e -> second_account_name }}
+
+                        <a class="text-indigo-600 hover:text-blue-900"
+                           href="{{ url('accounts/accountant/ledger') }}?account_id={{$e -> first_account_id}}&date={{$e->posting_date}}"
+                           target="_blank">{{ $e->nature=='pay' ? 'Dr':'Cr' }} - {{ $e -> first_account_name }}</a>
+                        <br>
+                        <a class="text-indigo-600 hover:text-blue-900"
+                           href="{{ url('accounts/accountant/ledger') }}?account_id={{$e -> second_account_id}}&date={{$e->posting_date}}"
+                           target="_blank">{{ $e->nature!='pay' ? 'Dr':'Cr' }} - {{ $e -> second_account_name }}</a>
                     </td>
 
                     <td class="px-6 py-4  text-sm text-gray-500">
@@ -215,47 +223,49 @@
                     <td class="px-6 py-4  text-right text-sm font-medium">
 
 
-                            <div class="relative inline-block text-left" x-data="{open:false}">
-                                <div>
-                                    <button type="button" x-on:click="open=true;" @click.away="open=false;"
-                                            class="  rounded-full flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-                                            id="menu-button" aria-expanded="true" aria-haspopup="true">
-                                        <span class="sr-only">Open options</span>
-                                        <!-- Heroicon name: solid/dots-vertical -->
-                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                             fill="currentColor" aria-hidden="true">
-                                            <path
-                                                d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
-                                        </svg>
-                                    </button>
-                                </div>
+                        <div class="relative inline-block text-left" x-data="{open:false}">
+                            <div>
+                                <button type="button" x-on:click="open=true;" @click.away="open=false;"
+                                        class="  rounded-full flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+                                        id="menu-button" aria-expanded="true" aria-haspopup="true">
+                                    <span class="sr-only">Open options</span>
+                                    <!-- Heroicon name: solid/dots-vertical -->
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                         fill="currentColor" aria-hidden="true">
+                                        <path
+                                            d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+                                    </svg>
+                                </button>
+                            </div>
 
 
-                                <div x-show="open"
-                                     class="origin-top-right absolute right-0 mt-2 w-56 z-10 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
-                                     role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-                                    <div class="py-1" role="none">
-                                        <a href="#"
+                            <div x-show="open"
+                                 class="origin-top-right absolute right-0 mt-2 w-56 z-10 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                 role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                                <div class="py-1" role="none">
+
+                                    @if(empty($e->approved_at))
+
+                                        <a href="#" wire:click="approve('{{ $e->id }}')"
                                            class="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                                           role="menuitem" tabindex="-1">View</a>
-                                        @if(empty($e->approved_at))
-
-                                            <a href="#"  wire:click="approve('{{ $e->id }}')"
-                                               class="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                                               role="menuitem" tabindex="-1">Approve</a>
+                                           role="menuitem" tabindex="-1">Approve</a>
 
 
-                                            <a href="#"  wire:click="delete('{{ $e->id }}')"
-                                               class="text-red-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                                               role="menuitem" tabindex="-1">Delete</a>
+                                        <a href="#" wire:click="delete('{{ $e->id }}')"
+                                           class="text-red-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                                           role="menuitem" tabindex="-1">Delete</a>
 
-                                        @endif
+                                    @else
+                                        <a href="javascript:void(0);"
+                                           onclick="window.open('{{ url('accounts/journal/voucher/print').'/'.$e->voucher_no }}','voucher-print-{{$e->voucher_no}}','height=500,width=800');"
+                                           class="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                                           role="menuitem" tabindex="-1">View Voucher</a>
+                                    @endif
 
 
-
-                                    </div>
                                 </div>
                             </div>
+                        </div>
                     </td>
                 </tr>
             @endforeach
@@ -264,7 +274,7 @@
             </tbody>
         </table>
         @if($entries->hasPages())
-            <div class="bg-white border-t px-3 py-2">
+            <div class="bg-white border-t px-3 py-2  rounded-md">
                 {{ $entries->links() }}
             </div>
         @endif
