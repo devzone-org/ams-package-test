@@ -57,6 +57,9 @@ class Add extends Component
             ){
                 throw new \Exception('This account name already in use.');
             }
+            if($this->at_level==3 && !auth()->user()->can('2.create.coa.all')){
+                throw new \Exception(env('PERMISSION_ERROR'));
+            }
             if($this->at_level==4){
                 $code = Voucher::instance()->coa()->get();
                 $code = str_pad($code,7,"0",STR_PAD_LEFT);

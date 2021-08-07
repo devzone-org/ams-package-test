@@ -13,14 +13,13 @@ class Listing extends Component
     public function render()
     {
         $coa = ChartOfAccount::from('chart_of_accounts as coa')
-            ->leftJoin('ledgers as l', function($q){
-                return $q->on('l.account_id', '=', 'coa.id')->where('l.is_approve','t');
+            ->leftJoin('ledgers as l', function ($q) {
+                return $q->on('l.account_id', '=', 'coa.id')->where('l.is_approve', 't');
             })
             ->when(!empty($this->type), function ($q) {
                 return $q->where('coa.type', $this->type);
             })->select('coa.*', DB::raw('SUM(l.debit) as debit'), DB::raw('SUM(l.credit) as credit'),
                 DB::raw('max(l.posting_date) as posting_date'))
-
             ->groupBy('coa.id')->get();
 
         return view('ams::livewire.chart-of-accounts.listing', compact('coa'));
@@ -28,15 +27,17 @@ class Listing extends Component
 
     public function changeStatus($id)
     {
-        $account = ChartOfAccount::find($id);
-        if ($account->status == 't') {
-            $account->update([
-                'status' => 'f'
-            ]);
-        } else {
-            $account->update([
-                'status' => 't'
-            ]);
+        if (auth()->user()->can('2.edit.coa.status')) {
+            $account = ChartOfAccount::find($id);
+            if ($account->status == 't') {
+                $account->update([
+                    'status' => 'f'
+                ]);
+            } else {
+                $account->update([
+                    'status' => 't'
+                ]);
+            }
         }
     }
 }

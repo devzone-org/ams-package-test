@@ -7,6 +7,7 @@ namespace Devzone\Ams\Console;
 use Devzone\Ams\Models\ChartOfAccount;
 use Devzone\Ams\Models\Voucher;
 use Illuminate\Console\Command;
+use Spatie\Permission\Models\Permission;
 
 class DumpMasterData extends Command
 {
@@ -39,6 +40,7 @@ class DumpMasterData extends Command
                 'name' => 'advances_receipt'
             ]);
         }
+        $this->info('Dumping Vouchers Finished...');
 
         ChartOfAccount::updateOrCreate(['id' => '1'], ['name' => 'Assets', 'type' => 'Assets', 'sub_account' => null, 'level' => '1', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '2'], ['name' => 'Fixed Assets', 'type' => 'Assets', 'sub_account' => '1', 'level' => '2', 'nature' => 'd']);
@@ -103,7 +105,7 @@ class DumpMasterData extends Command
         ChartOfAccount::updateOrCreate(['id' => '64'], ['name' => 'Employee Share Payable', 'type' => 'Liabilities', 'sub_account' => '63', 'level' => '4', 'nature' => 'c', 'reference' => 'employee-share-payable-4']);
         ChartOfAccount::updateOrCreate(['id' => '65'], ['name' => 'Expense OPD Charges', 'reference' => 'expense-commission-opd-5', 'type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '66'], ['name' => 'Surplus Income', 'type' => 'Income', 'sub_account' => '38', 'level' => '4', 'nature' => 'c']);
-        ChartOfAccount::updateOrCreate(['id' => '67'], ['name' => 'Inc - Cash Surplus', 'type' => 'Income', 'sub_account' => '66', 'level' => '5', 'nature' => 'c','reference' => 'inc-cash-surplus']);
+        ChartOfAccount::updateOrCreate(['id' => '67'], ['name' => 'Inc - Cash Surplus', 'type' => 'Income', 'sub_account' => '66', 'level' => '5', 'nature' => 'c', 'reference' => 'inc-cash-surplus']);
         ChartOfAccount::updateOrCreate(['id' => '68'], ['name' => 'Cost of Sales - Pharmacy', 'reference' => 'cost-of-sales-pharmacy-5', 'type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '69'], ['name' => 'Sales - Pharmacy', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c', 'reference' => 'income-pharmacy-5']);
         ChartOfAccount::updateOrCreate(['id' => '70'], ['name' => 'Expense IPD OTA Charges', 'reference' => 'expense-ipd-ota-commission-5', 'type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
@@ -117,11 +119,34 @@ class DumpMasterData extends Command
         ChartOfAccount::updateOrCreate(['id' => '78'], ['name' => 'Cash in Hand - Muhammad Talha', 'type' => 'Assets', 'sub_account' => '12', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '79'], ['name' => 'Expense IPD Anesthesia Charges', 'reference' => 'expense-ipd-anesthesia-commission-5', 'type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '80'], ['name' => 'Sales Return - Pharmacy', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c', 'reference' => 'income-return-pharmacy-5', 'is_contra' => 't']);
-        ChartOfAccount::updateOrCreate(['id' => '81'], ['name' => 'Payable Inter Transfer IPD Medicine', 'type' => 'Liabilities', 'sub_account' => '76', 'level' => '5','reference' => 'payable-medicine-5', 'nature' => 'c']);
-        ChartOfAccount::updateOrCreate(['id' => '82'], ['name' => 'Expense Cash Shortage', 'type' => 'Expenses', 'sub_account' => '56', 'level' => '5', 'nature' => 'd','reference' => 'exp-cash-shortage']);
+        ChartOfAccount::updateOrCreate(['id' => '81'], ['name' => 'Payable Inter Transfer IPD Medicine', 'type' => 'Liabilities', 'sub_account' => '76', 'level' => '5', 'reference' => 'payable-medicine-5', 'nature' => 'c']);
+        ChartOfAccount::updateOrCreate(['id' => '82'], ['name' => 'Expense Cash Shortage', 'type' => 'Expenses', 'sub_account' => '56', 'level' => '5', 'nature' => 'd', 'reference' => 'exp-cash-shortage']);
         ChartOfAccount::updateOrCreate(['reference' => 'income-lab-5'], ['name' => 'Income - Lab', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c']);
         ChartOfAccount::updateOrCreate(['reference' => 'advance-tax-236'], ['name' => 'Recoverable Advance Tax u/s 236(H)', 'type' => 'Assets', 'sub_account' => '18', 'level' => '5', 'nature' => 'd']);
-        ChartOfAccount::updateOrCreate([ 'reference' => 'income-dayout-5'], ['name' => 'Income - Dayout', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c']);
-        $this->info('Dumping Finished...');
+        ChartOfAccount::updateOrCreate(['reference' => 'income-dayout-5'], ['name' => 'Income - Dayout', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c']);
+        $this->info('Dumping Chart of Accounts Finished...');
+
+        Permission::updateOrCreate(['name' => '2.dashboard'], ['guard_name' => 'web', 'description' => 'dashboard', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.coa.view'], ['guard_name' => 'web', 'description' => 'view chart of accounts ', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.edit.coa.status'], ['guard_name' => 'web', 'description' => 'active/inactive account status', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.create.coa.all'], ['guard_name' => 'web', 'description' => 'create account all levels', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.create.coa.level5'], ['guard_name' => 'web', 'description' => 'create account 5th level', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.create.transfer.restricted-date'], ['guard_name' => 'web', 'description' => 'create journal entry restricted date', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.create.transfer.any-date'], ['guard_name' => 'web', 'description' => 'create journal entry any date', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.delete.transfer.unapproved'], ['guard_name' => 'web', 'description' => 'delete transfer entry before approval', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.edit.transfer.unapproved'], ['guard_name' => 'web', 'description' => 'edit transfer entry before approval', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.post.unapprove'], ['guard_name' => 'web', 'description' => 'post un approve journals', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.view.ledger'], ['guard_name' => 'web', 'description' => 'view ledger', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.day.closing'], ['guard_name' => 'web', 'description' => 'day closing', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.payments.any'], ['guard_name' => 'web', 'description' => 'create payment and receiving transaction - any till', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.payments.own'], ['guard_name' => 'web', 'description' => 'create payment and receiving transaction - own till', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.payments.approve'], ['guard_name' => 'web', 'description' => 'payment and receiving transaction - approve ', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.payments.edit'], ['guard_name' => 'web', 'description' => 'payment and receiving transaction - edit ', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.payments.view'], ['guard_name' => 'web', 'description' => 'payment and receiving transaction - view ', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.payments.reversal'], ['guard_name' => 'web', 'description' => 'payment and receiving transaction - reversal ', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '3.trail-balance'], ['guard_name' => 'web', 'description' => 'Trail balance', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '3.pnl'], ['guard_name' => 'web', 'description' => 'Profit and Loss', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '3.day-closing'], ['guard_name' => 'web', 'description' => 'Day Closing', 'portal' => 'accounts', 'section' => 'accounts']);
+        $this->info('Dumping Permissions Finished...');
     }
 }

@@ -28,30 +28,40 @@ class TempList extends Component
 
     public function deleteTempEntry($voucher_no)
     {
-        Ledger::where('is_approve', 'f')->where('voucher_no', $voucher_no)->delete();
-        LedgerAttachment::where('type', '0')->where('voucher_no', $voucher_no)->delete();
-        $this->success = 'Voucher #' . $voucher_no . ' has been deleted.';
+        if (auth()->user()->can('2.delete.transfer.unapproved')) {
+            Ledger::where('is_approve', 'f')->where('voucher_no', $voucher_no)->delete();
+            LedgerAttachment::where('type', '0')->where('voucher_no', $voucher_no)->delete();
+            $this->success = 'Voucher #' . $voucher_no . ' has been deleted.';
+        } else {
+            $this->addError('success', env('PERMISSION_ERROR'));
+        }
+
     }
 
     public function approveTempEntry($voucher_no, $print = null)
     {
-        $vno = Voucher::instance()->voucher()->get();
-        LedgerAttachment::where('type', '0')->where('voucher_no', $voucher_no)->update([
-            'type' => '1',
-            'voucher_no' => $vno
-        ]);
-        Ledger::where('is_approve', 'f')->where('voucher_no', $voucher_no)->update([
-            'voucher_no' => $vno,
-            'is_approve' => 't',
-            'approved_at' => date('Y-m-d H:i:s'),
-            'approved_by' => Auth::user()->id
-        ]);
+        if(auth()->user()->can('2.post.unapprove')) {
 
 
-        if(!empty($print)){
-            $this->dispatchBrowserEvent('print-voucher', ['voucher_no' => $vno,'print'=>'true']);
+            $vno = Voucher::instance()->voucher()->get();
+            LedgerAttachment::where('type', '0')->where('voucher_no', $voucher_no)->update([
+                'type' => '1',
+                'voucher_no' => $vno
+            ]);
+            Ledger::where('is_approve', 'f')->where('voucher_no', $voucher_no)->update([
+                'voucher_no' => $vno,
+                'is_approve' => 't',
+                'approved_at' => date('Y-m-d H:i:s'),
+                'approved_by' => Auth::user()->id
+            ]);
+
+
+            if (!empty($print)) {
+                $this->dispatchBrowserEvent('print-voucher', ['voucher_no' => $vno, 'print' => 'true']);
+            }
+        } else {
+            $this->addError('success', env('PERMISSION_ERROR'));
         }
-
 
 
     }

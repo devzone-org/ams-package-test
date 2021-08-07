@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
+use function MongoDB\BSON\toRelaxedExtendedJSON;
 
 class Listing extends Component
 {
@@ -34,19 +35,19 @@ class Listing extends Component
             ->select(
                 'pr.*', 'f.name as first_account_name', 's.name as second_account_name', 'u.name as added_by', 'a.name as approved_by_name'
             )
-            ->when(!empty($this->nature),function($q){
-                return $q->where('pr.nature',$this->nature);
+            ->when(!empty($this->nature), function ($q) {
+                return $q->where('pr.nature', $this->nature);
             })
-            ->when(!empty($this->status),function($q){
-                if($this->status=='t'){
+            ->when(!empty($this->status), function ($q) {
+                if ($this->status == 't') {
                     return $q->whereNotNull('pr.approved_at');
                 } else {
                     return $q->whereNull('pr.approved_at');
                 }
 
             })
-            ->when(!empty($this->from) && !empty($this->to) ,function($q){
-                return $q->where('pr.posting_date','>=',$this->from)->where('pr.posting_date','<=',$this->to);
+            ->when(!empty($this->from) && !empty($this->to), function ($q) {
+                return $q->where('pr.posting_date', '>=', $this->from)->where('pr.posting_date', '<=', $this->to);
             })
             ->orderBy('pr.id', 'desc')
             ->paginate(20);
@@ -54,12 +55,14 @@ class Listing extends Component
         return view('ams::livewire.journal.payments.listing', compact('entries'));
     }
 
-    public function search(){
+    public function search()
+    {
 
     }
 
-    public function resetSearch(){
-        $this->reset(['status','from','to','nature']);
+    public function resetSearch()
+    {
+        $this->reset(['status', 'from', 'to', 'nature']);
     }
 
 
@@ -79,6 +82,9 @@ class Listing extends Component
         try {
             DB::beginTransaction();
 
+            if (!auth()->user()->can('2.payments.approve')) {
+                throw new \Exception(env('PERMISSION_ERROR'));
+            }
             $payment = PaymentReceiving::find($id);
 
             if (!empty($payment['approved_at'])) {
@@ -115,7 +121,7 @@ class Listing extends Component
                 'approved_at' => date('Y-m-d H:i:s'),
                 'voucher_no' => $vno
             ]);
-            foreach ([$payment['first_account_id'],$payment['second_account_id']] as $account_id){
+            foreach ([$payment['first_account_id'], $payment['second_account_id']] as $account_id) {
                 LedgerAttachment::create([
                     'account_id' => $account_id,
                     'voucher_no' => $vno,

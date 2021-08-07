@@ -4,6 +4,7 @@
 namespace Devzone\Ams\Http\Livewire\Journal;
 
 
+use Carbon\Carbon;
 use Devzone\Ams\Helper\Voucher;
 use Devzone\Ams\Models\ChartOfAccount;
 use Devzone\Ams\Models\Ledger;
@@ -184,13 +185,13 @@ class Add extends Component
 
             if ($array[2] == 'debit') {
                 $this->entries[$array[1]]['credit'] = 0;
-                if(!is_numeric($value)){
+                if (!is_numeric($value)) {
                     $this->entries[$array[1]]['debit'] = 0;
                 }
             }
             if ($array[2] == 'credit') {
                 $this->entries[$array[1]]['debit'] = 0;
-                if(!is_numeric($value)){
+                if (!is_numeric($value)) {
                     $this->entries[$array[1]]['credit'] = 0;
                 }
             }
@@ -320,6 +321,15 @@ class Add extends Component
                 if (empty($entry['account_id']) && empty($entry['debit']) && empty($entry['credit']) && empty($entry['description'])) {
                     continue;
                 }
+
+                $date = Carbon::now()->subDays(env('JOURNAL_RESTRICTION_DAYS'))->toDateString();
+                if (!auth()->user()->can('2.create.transfer.any-date')) {
+
+                    if ($date > $this->posting_date) {
+                        throw new \Exception('Posting date must be equal or greater than ' . date('d M, Y',strtotime($date)));
+                    }
+                }
+
                 Ledger::create([
                     'account_id' => $entry['account_id'],
                     'voucher_no' => $this->voucher_no,

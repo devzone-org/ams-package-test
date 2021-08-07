@@ -3,6 +3,7 @@
 namespace Devzone\Ams\Http\Livewire\Journal\Payment;
 
 use Devzone\Ams\Http\Traits\Searchable;
+use Devzone\Ams\Models\ChartOfAccount;
 use Devzone\Ams\Models\PaymentReceiving;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +26,9 @@ class Add extends Component
     public $instrument_no;
     public $attachment;
     public $success;
+
     protected $listeners = ['emitAccountId'];
+
 
     protected $rules = [
         'nature' => 'required',
@@ -37,6 +40,15 @@ class Add extends Component
         'mode' => 'required|string',
         'attachment' => 'nullable|max:1024',
     ];
+
+    public function mount()
+    {
+        if (auth()->user()->can('2.payments.own') && !auth()->user()->can('2.payments.any')) {
+
+            $this->second_account_id = Auth::user()->account_id;
+            $this->second_account_name = Auth::user()->account_name;
+        }
+    }
 
     public function render()
     {
@@ -57,7 +69,9 @@ class Add extends Component
             if (!empty($this->attachment)) {
                 $path = $this->attachment->storePublicly(env('AWS_FOLDER') . 'accounts', 's3');
             }
-
+            if (auth()->user()->can('2.payments.own') && !auth()->user()->can('2.payments.any')) {
+                $this->second_account_id = Auth::user()->account_id;
+            }
             PaymentReceiving::create([
                 'nature' => $this->nature,
                 'posting_date' => $this->posting_date,
@@ -72,7 +86,7 @@ class Add extends Component
             ]);
 
             DB::commit();
-            $this->reset(['nature','posting_date','first_account_id','second_account_id','second_account_name','first_account_name','amount','attachment','mode','instrument_no']);
+            $this->reset(['nature', 'posting_date', 'first_account_id', 'second_account_id', 'second_account_name', 'first_account_name', 'amount', 'attachment', 'mode', 'instrument_no']);
             $this->success = 'Record has been added.';
         } catch (\Exception $e) {
             DB::rollBack();

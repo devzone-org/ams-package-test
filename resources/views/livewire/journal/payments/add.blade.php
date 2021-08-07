@@ -1,9 +1,12 @@
 <div>
     <div class="pb-5 border-gray-200">
         <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">
-            <a href="{{ url('accounts/accountant/payments') }}" class="p-3 bg-gray-200 border-2 rounded-md  border-gray-400 cursor-pointer hover:bg-gray-300 ">
+            <a href="{{ url('accounts/accountant/payments') }}"
+               class="p-3 bg-gray-200 border-2 rounded-md  border-gray-400 cursor-pointer hover:bg-gray-300 ">
                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+                    <path fill-rule="evenodd"
+                          d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                          clip-rule="evenodd"></path>
                 </svg>
             </a>
             <span class="ml-4">Go Back</span>
@@ -151,10 +154,17 @@
                                 Received In
                             @endif
                         </label>
-                        <input type="text" readonly
-                               wire:click="searchableOpenModal('second_account_id','second_account_name','accounts')"
-                               wire:model="second_account_name"
-                               class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        @if(auth()->user()->can('2.payments.any'))
+                            <input type="text" readonly
+                                   wire:click="searchableOpenModal('second_account_id','second_account_name','accounts')"
+                                   wire:model="second_account_name"
+                                   class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            @else
+                            <input type="text" readonly
+
+                                   wire:model="second_account_name"
+                                   class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        @endif
                     </div>
                     <div class="col-span-6 sm:col-span-2">
                         <label for="mode" class="block text-sm font-medium text-gray-700">Mode of Payment</label>
