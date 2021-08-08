@@ -99,11 +99,11 @@ class Listing extends Component
             if ($payment['nature'] == 'receive') {
                 GeneralJournal::instance()->account($payment['first_account_id'])
                     ->credit($payment['amount'])->voucherNo($vno)
-                    ->date(date('Y-m-d'))->approve()->description($description)->execute();
+                    ->date($payment['posting_date'])->approve()->description($description)->execute();
 
                 GeneralJournal::instance()->account($payment['second_account_id'])
                     ->debit($payment['amount'])->voucherNo($vno)
-                    ->date(date('Y-m-d'))->approve()->description($description)->execute();
+                    ->date($payment['posting_date'])->approve()->description($description)->execute();
             }
 
             if ($payment['nature'] == 'pay') {
