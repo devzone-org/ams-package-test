@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
-use function MongoDB\BSON\toRelaxedExtendedJSON;
 
 class Listing extends Component
 {
@@ -121,9 +120,9 @@ class Listing extends Component
                 'approved_at' => date('Y-m-d H:i:s'),
                 'voucher_no' => $vno
             ]);
-            foreach ([$payment['first_account_id'], $payment['second_account_id']] as $account_id) {
+            if (!empty($payment['attachment'])) {
                 LedgerAttachment::create([
-                    'account_id' => $account_id,
+                    'account_id' => null,
                     'voucher_no' => $vno,
                     'type' => 1,
                     'attachment' => $payment['attachment']

@@ -63,13 +63,13 @@ class ProfitLoss extends Component
                 if ($r->is_contra == 'f') {
                     $balance = $r->debit - $r->credit;
                 } else {
-                    $balance = $r->credit - $r->debit;
+                    $balance = - ($r->credit - $r->debit);
                 }
             } else {
                 if ($r->is_contra == 'f') {
                     $balance = $r->credit - $r->debit;
                 } else {
-                    $balance = $r->debit - $r->credit;
+                    $balance = - ($r->debit - $r->credit);
                 }
             }
             $p_ref = $accounts->firstWhere('id',$r->sub_account);
