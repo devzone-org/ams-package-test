@@ -105,7 +105,7 @@ class DumpMasterData extends Command
         ChartOfAccount::updateOrCreate(['id' => '64'], ['name' => 'Employee Share Payable', 'type' => 'Liabilities', 'sub_account' => '63', 'level' => '4', 'nature' => 'c', 'reference' => 'employee-share-payable-4']);
         ChartOfAccount::updateOrCreate(['id' => '65'], ['name' => 'Expense OPD Charges', 'reference' => 'expense-commission-opd-5', 'type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '66'], ['name' => 'Surplus Income', 'type' => 'Income', 'sub_account' => '38', 'level' => '4', 'nature' => 'c']);
-        ChartOfAccount::updateOrCreate(['id' => '67'], ['name' => 'Inc - Cash Surplus', 'type' => 'Income', 'sub_account' => '66', 'level' => '5', 'nature' => 'c', 'reference' => 'inc-cash-surplus']);
+        ChartOfAccount::updateOrCreate(['id' => '67'], ['name' => 'Income - Till Cash Surplus', 'type' => 'Income', 'sub_account' => '66', 'level' => '5', 'nature' => 'c', 'reference' => 'inc-cash-surplus']);
         ChartOfAccount::updateOrCreate(['id' => '68'], ['name' => 'Cost of Sales - Pharmacy', 'reference' => 'cost-of-sales-pharmacy-5', 'type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '69'], ['name' => 'Sales - Pharmacy', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c', 'reference' => 'income-pharmacy-5']);
         ChartOfAccount::updateOrCreate(['id' => '70'], ['name' => 'Expense IPD OTA Charges', 'reference' => 'expense-ipd-ota-commission-5', 'type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
@@ -115,12 +115,12 @@ class DumpMasterData extends Command
         ChartOfAccount::updateOrCreate(['id' => '74'], ['name' => 'Income - IPD', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c', 'reference' => 'income-ipd-5']);
         ChartOfAccount::updateOrCreate(['id' => '75'], ['name' => 'Trade Payable', 'type' => 'Liabilities', 'sub_account' => '23', 'level' => '3', 'nature' => 'c']);
         ChartOfAccount::updateOrCreate(['id' => '76'], ['name' => 'Trade Payable', 'type' => 'Liabilities', 'sub_account' => '75', 'level' => '4', 'nature' => 'c']);
-        ChartOfAccount::updateOrCreate(['id' => '77'], ['name' => 'Indoor Admission Advances', 'reference' => 'indoor-advances-5', 'type' => 'Liabilities', 'sub_account' => '76', 'level' => '5', 'nature' => 'c']);
+        ChartOfAccount::updateOrCreate(['id' => '77'], ['name' => 'Advances - IPD Admissions', 'reference' => 'indoor-advances-5', 'type' => 'Liabilities', 'sub_account' => '76', 'level' => '5', 'nature' => 'c']);
         ChartOfAccount::updateOrCreate(['id' => '78'], ['name' => 'Cash in Hand - Muhammad Talha', 'type' => 'Assets', 'sub_account' => '12', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '79'], ['name' => 'Expense IPD Anesthesia Charges', 'reference' => 'expense-ipd-anesthesia-commission-5', 'type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['id' => '80'], ['name' => 'Sales Return - Pharmacy', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c', 'reference' => 'income-return-pharmacy-5', 'is_contra' => 't']);
         ChartOfAccount::updateOrCreate(['id' => '81'], ['name' => 'Payable Inter Transfer IPD Medicine', 'type' => 'Liabilities', 'sub_account' => '76', 'level' => '5', 'reference' => 'payable-medicine-5', 'nature' => 'c']);
-        ChartOfAccount::updateOrCreate(['id' => '82'], ['name' => 'Expense Cash Shortage', 'type' => 'Expenses', 'sub_account' => '56', 'level' => '5', 'nature' => 'd', 'reference' => 'exp-cash-shortage']);
+        ChartOfAccount::updateOrCreate(['id' => '82'], ['name' => 'Expense Till Cash Shortage', 'type' => 'Expenses', 'sub_account' => '56', 'level' => '5', 'nature' => 'd', 'reference' => 'exp-cash-shortage']);
         ChartOfAccount::updateOrCreate(['reference' => 'income-lab-5'], ['name' => 'Income - Lab', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c']);
         ChartOfAccount::updateOrCreate(['reference' => 'advance-tax-236'], ['name' => 'Recoverable Advance Tax u/s 236(H)', 'type' => 'Assets', 'sub_account' => '18', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['reference' => 'income-dayout-5'], ['name' => 'Income - Dayout', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c']);

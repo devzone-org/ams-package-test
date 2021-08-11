@@ -17,7 +17,8 @@ class JournalController extends Controller
             ->where('l.is_approve', 't')
             ->where('l.voucher_no', $voucher_no)
             ->select('l.*', 'coa.name', 'coa.code','p.name as posted','a.name as approved')
-            ->orderBy('id','asc')->get();
+            ->orderBy('id','asc')
+            ->get();
 
 
 
