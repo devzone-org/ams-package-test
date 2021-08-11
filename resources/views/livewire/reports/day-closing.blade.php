@@ -1,4 +1,4 @@
-<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+<div class="max-w-full mx-auto py-6 sm:px-6 lg:px-8">
     <div class="mb-4 shadow sm:rounded-md sm:overflow-hidden">
         <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
             <div class="grid grid-cols-6 gap-6">
