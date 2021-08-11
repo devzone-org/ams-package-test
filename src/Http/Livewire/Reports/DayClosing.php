@@ -40,9 +40,8 @@ class DayClosing extends Component
             ->whereDate('dc.created_at', '>=', $this->from_date)
             ->whereDate('dc.created_at', '<=', $this->to_date)
             ->orderBy('dc.date','desc')
-            ->get()->toArray();
-
-
+            ->get()
+            ->toArray();
     }
 
 }

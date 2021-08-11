@@ -50,6 +50,7 @@ class ProfitLoss extends Component
             ->whereIn('coa.type', ['Income', 'Expenses'])
             ->groupBy(DB::raw("DATE_FORMAT(l.posting_date,'%Y-%m')"))
             ->groupBy('l.account_id')
+            ->orderBy('coa.name','asc')
             ->get();
 
         $account_ids = array_unique($report->pluck('sub_account')->toArray());
