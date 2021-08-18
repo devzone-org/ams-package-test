@@ -35,7 +35,7 @@ class Add extends Component
 
     protected $rules = [
         'entries.*.account_id' => 'required|integer',
-        'posting_date' => 'required|date|date_format:Y-m-d',
+        'posting_date' => 'required|date|date_format:d M Y',
         'voucher_no' => 'required|integer',
         'entries.*.description' => 'required|string',
         'entries.*.debit' => 'nullable|numeric',
@@ -47,7 +47,6 @@ class Add extends Component
         'entries.*.debit' => 'debit',
         'entries.*.credit' => 'credit',
         'entries.*.description' => 'description',
-
     ];
 
     public function mount()
@@ -58,7 +57,7 @@ class Add extends Component
 
 
         if ($temp_entries->isNotEmpty()) {
-            $this->posting_date = $temp_entries->first()->posting_date;
+            $this->posting_date = date('d M Y', strtotime($temp_entries->first()->posting_date));
             $this->voucher_no = $temp_entries->max('voucher_no');
             $this->entries = $temp_entries->toArray();
             $attachments = LedgerAttachment::where('type', '0')->where('voucher_no', $this->voucher_no)->get();
@@ -72,7 +71,7 @@ class Add extends Component
 
             }
         } else {
-            $this->posting_date = date('Y-m-d');
+            $this->posting_date = date('d M Y');
             $this->voucher_no = Voucher::instance()->tempVoucherOnly();
             $this->entries[] = $this->defaultEntries();
 
@@ -229,7 +228,7 @@ class Add extends Component
                         'debit' => $entry['debit'],
                         'credit' => $entry['credit'],
                         'description' => $entry['description'],
-                        'posting_date' => !empty($this->posting_date) ? $this->posting_date : null,
+                        'posting_date' => !empty($this->posting_date) ? $this->formatDate($this->posting_date) : null,
                     ]);
                 } else {
                     //created
@@ -239,7 +238,7 @@ class Add extends Component
                         'debit' => $entry['debit'],
                         'credit' => $entry['credit'],
                         'description' => $entry['description'] ?? null,
-                        'posting_date' => !empty($this->posting_date) ? $this->posting_date : null,
+                        'posting_date' => !empty($this->posting_date) ? $this->formatDate($this->posting_date) : null,
                         'posted_by' => Auth::user()->id
                     ]);
                 }
@@ -267,7 +266,7 @@ class Add extends Component
 
             $temp_entries = $this->getTempEntries();
 
-            $this->posting_date = $temp_entries->first()->posting_date;
+            $this->posting_date = date('d M Y', strtotime($temp_entries->first()->posting_date));
             $this->voucher_no = $temp_entries->max('voucher_no');
             $this->entries = $temp_entries->toArray();
 
@@ -285,9 +284,14 @@ class Add extends Component
         return true;
     }
 
+    private function formatDate($date)
+    {
+        return Carbon::createFromFormat('d M Y', $date)
+            ->format('Y-m-d');
+    }
+
     public function deleteAll()
     {
-
         TempLedger::where('posted_by', Auth::user()->id)->delete();
         LedgerAttachment::where('type', '0')->where('voucher_no', $this->voucher_no)->delete();
         $this->reset('entries', 'attachment_entries');
@@ -302,7 +306,7 @@ class Add extends Component
             DB::beginTransaction();
 
             if (Ledger::where('voucher_no', $this->voucher_no)
-                ->where('posted_by', '!=', Auth::user()->id)->where('is_approve','f')->exists()) {
+                ->where('posted_by', '!=', Auth::user()->id)->where('is_approve', 'f')->exists()) {
                 $this->addError('voucher_no', 'Voucher # ' . $this->voucher_no . ' already in use. System have updated to new one kindly try again.');
                 $this->voucher_no = Voucher::instance()->tempVoucherOnly();
                 return false;
@@ -325,8 +329,8 @@ class Add extends Component
                 $date = Carbon::now()->subDays(env('JOURNAL_RESTRICTION_DAYS'))->toDateString();
                 if (!auth()->user()->can('2.create.transfer.any-date')) {
 
-                    if ($date > $this->posting_date) {
-                        throw new \Exception('Posting date must be equal or greater than ' . date('d M, Y',strtotime($date)));
+                    if ($date > $this->formatDate($this->posting_date)) {
+                        throw new \Exception('Posting date must be equal or greater than ' . date('d M, Y', strtotime($date)));
                     }
                 }
 
@@ -336,7 +340,7 @@ class Add extends Component
                     'debit' => $entry['debit'],
                     'credit' => $entry['credit'],
                     'description' => $entry['description'],
-                    'posting_date' => $this->posting_date,
+                    'posting_date' => $this->formatDate($this->posting_date),
                     'posted_by' => Auth::user()->id
                 ]);
             }

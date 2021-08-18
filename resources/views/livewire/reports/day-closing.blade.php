@@ -15,13 +15,13 @@
                 </div>
                 <div class="col-span-6 sm:col-span-1">
                     <label for="from_date" class="block text-sm font-medium text-gray-700">From Date</label>
-                    <input type="date" wire:model.defer="from_date" id="from_date" autocomplete="off"
+                    <input type="text" wire:model.lazy="from_date" readonly id="from_date" autocomplete="off"
                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 </div>
 
                 <div class="col-span-6 sm:col-span-1">
                     <label for="to_date" class="block text-sm font-medium text-gray-700">To Date</label>
-                    <input type="date" wire:model.defer="to_date" id="to_date" autocomplete="off"
+                    <input type="text" wire:model.lazy="to_date" readonly id="to_date" autocomplete="off"
                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 </div>
                 <div class="col-span-6 sm:col-span-2">
@@ -119,7 +119,7 @@
                         </td>
 
                         <td class="px-2   py-2 text-center border-r text-sm text-gray-500">
-                            {{ number_format($r['closing_balance']) }}
+                            {{ number_format($r['closing_balance'],2) }}
                         </td>
 
                         <td class="px-2   py-2 text-center border-r text-sm text-gray-500">
@@ -131,9 +131,9 @@
 
                         <td class="px-2   py-2 text-center border-r text-sm text-gray-500">
                             @if($r['closing_balance'] - $r['physical_cash']<=0)
-                            {{ number_format(abs($r['closing_balance'] - $r['physical_cash'])) }}
+                            {{ number_format(abs($r['closing_balance'] - $r['physical_cash']),2) }}
                                 @else
-                                ({{number_format(abs($r['closing_balance'] - $r['physical_cash'])) }})
+                                ({{number_format(abs($r['closing_balance'] - $r['physical_cash']),2) }})
                             @endif
                         </td>
 
@@ -153,4 +153,27 @@
         </div>
     </div>
 </div>
+
+
+
+@section('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+    <script>
+        let from_date = new Pikaday({
+            field: document.getElementById('from_date'),
+            format: "DD MMM YYYY"
+        });
+
+        let to_date = new Pikaday({
+            field: document.getElementById('to_date'),
+            format: "DD MMM YYYY"
+        });
+
+        from_date.setDate(new Date('{{ $from_date }}'));
+        to_date.setDate(new Date('{{ $to_date }}'));
+
+    </script>
+@endsection
+
 

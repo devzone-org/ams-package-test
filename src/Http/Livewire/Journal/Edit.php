@@ -4,11 +4,10 @@
 namespace Devzone\Ams\Http\Livewire\Journal;
 
 
-use Devzone\Ams\Helper\Voucher;
 use Devzone\Ams\Models\ChartOfAccount;
 use Devzone\Ams\Models\Ledger;
 use Devzone\Ams\Models\LedgerAttachment;
-use Devzone\Ams\Models\TempLedger;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -35,7 +34,7 @@ class Edit extends Component
 
     protected $rules = [
         'entries.*.account_id' => 'required|integer',
-        'posting_date' => 'required|date|date_format:Y-m-d',
+        'posting_date' => 'required|date|date_format:d M Y',
         'voucher_no' => 'required|integer',
         'entries.*.description' => 'required|string',
         'entries.*.debit' => 'nullable|numeric',
@@ -59,7 +58,7 @@ class Edit extends Component
 
 
         if ($temp_entries->isNotEmpty()) {
-            $this->posting_date = $temp_entries->first()->posting_date;
+            $this->posting_date = date('d M Y', strtotime($temp_entries->first()->posting_date));
             $this->voucher_no = $temp_entries->max('voucher_no');
             $this->entries = $temp_entries->toArray();
             $attachments = LedgerAttachment::where('type', '0')->where('voucher_no', $this->voucher_no)->get();
@@ -129,8 +128,6 @@ class Edit extends Component
         }
     }
 
-
-
     public function searchAccounts($key)
     {
         $this->accounts = $this->account_list;
@@ -139,6 +136,7 @@ class Edit extends Component
         $this->emit('focusInput');
 
     }
+
     public function selectionAccount()
     {
         $contact = $this->accounts[$this->highlightIndex] ?? null;
@@ -183,13 +181,13 @@ class Edit extends Component
 
             if ($array[2] == 'debit') {
                 $this->entries[$array[1]]['credit'] = 0;
-                if(!is_numeric($value)){
+                if (!is_numeric($value)) {
                     $this->entries[$array[1]]['debit'] = 0;
                 }
             }
             if ($array[2] == 'credit') {
                 $this->entries[$array[1]]['debit'] = 0;
-                if(!is_numeric($value)){
+                if (!is_numeric($value)) {
                     $this->entries[$array[1]]['credit'] = 0;
                 }
             }
@@ -243,7 +241,7 @@ class Edit extends Component
                         'debit' => $entry['debit'],
                         'credit' => $entry['credit'],
                         'description' => $entry['description'],
-                        'posting_date' => !empty($this->posting_date) ? $this->posting_date : null,
+                        'posting_date' => !empty($this->posting_date) ? $this->formatDate($this->posting_date) : null,
                     ]);
                 } else {
                     //created
@@ -253,7 +251,7 @@ class Edit extends Component
                         'debit' => $entry['debit'],
                         'credit' => $entry['credit'],
                         'description' => $entry['description'] ?? null,
-                        'posting_date' => !empty($this->posting_date) ? $this->posting_date : null,
+                        'posting_date' => !empty($this->posting_date) ? $this->formatDate($this->posting_date) : null,
                         'posted_by' => Auth::user()->id
                     ]);
                 }
@@ -281,7 +279,7 @@ class Edit extends Component
 
             $temp_entries = $this->getTempEntries();
 
-            $this->posting_date = $temp_entries->first()->posting_date;
+            $this->posting_date = date('d M Y', strtotime($temp_entries->first()->posting_date));
             $this->voucher_no = $temp_entries->max('voucher_no');
             $this->entries = $temp_entries->toArray();
 
@@ -299,9 +297,13 @@ class Edit extends Component
         return true;
     }
 
+    private function formatDate($date)
+    {
 
+        return Carbon::createFromFormat('d M Y', $date)
+            ->format('Y-m-d');
 
-
+    }
 
     public function render()
     {

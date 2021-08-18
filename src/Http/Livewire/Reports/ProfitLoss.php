@@ -19,8 +19,8 @@ class ProfitLoss extends Component
 
     public function mount()
     {
-        $this->from_date = Carbon::now()->startOfMonth()->subMonth(3)->toDateString();
-        $this->to_date = date('Y-m-d');
+        $this->from_date = Carbon::now()->startOfMonth()->subMonth(3)->format('d M Y');
+        $this->to_date = date('d M Y');
         $this->search();
     }
 
@@ -29,8 +29,14 @@ class ProfitLoss extends Component
         return view('ams::livewire.reports.profit-loss');
     }
 
+    private function formatDate($date){
+        return Carbon::createFromFormat('d M Y',$date)
+                                ->format('Y-m-d');
+    }
+
     public function search()
     {
+
         $report = \Devzone\Ams\Models\Ledger::from('ledgers as l')
             ->join('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
             ->select(
@@ -44,8 +50,8 @@ class ProfitLoss extends Component
                 'coa.sub_account',
                 'l.account_id',
                 DB::raw("DATE_FORMAT(l.posting_date,'%Y-%m') as month"))
-            ->where('l.posting_date', '>=', $this->from_date)
-            ->where('l.posting_date', '<=', $this->to_date)
+            ->where('l.posting_date', '>=', $this->formatDate($this->from_date))
+            ->where('l.posting_date', '<=', $this->formatDate($this->to_date))
             ->where('l.is_approve', 't')
             ->whereIn('coa.type', ['Income', 'Expenses'])
             ->groupBy(DB::raw("DATE_FORMAT(l.posting_date,'%Y-%m')"))

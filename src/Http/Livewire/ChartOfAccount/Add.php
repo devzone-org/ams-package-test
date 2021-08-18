@@ -4,6 +4,7 @@
 namespace Devzone\Ams\Http\Livewire\ChartOfAccount;
 
 
+use Carbon\Carbon;
 use Devzone\Ams\Helper\GeneralJournal;
 use Devzone\Ams\Helper\Voucher;
 use Devzone\Ams\Models\ChartOfAccount;
@@ -25,7 +26,7 @@ class Add extends Component
 
     public function mount()
     {
-        $this->date = date('Y-m-d');
+        $this->date = date('d M Y');
     }
 
     public function updated($name, $value)
@@ -43,6 +44,12 @@ class Add extends Component
     public function render()
     {
         return view('ams::livewire.chart-of-accounts.add');
+    }
+
+
+    private function formatDate($date){
+        return Carbon::createFromFormat('d M Y',$date)
+            ->format('Y-m-d');
     }
 
     public function create()
@@ -91,8 +98,9 @@ class Add extends Component
                         $entry = $entry->debit($this->opening_balance);
                     }
                 }
+
                 $entry->description('Opening balance')->voucherNo($voucher_no)
-                    ->date($this->date)->approve()->execute();
+                    ->date($this->formatDate($this->date))->approve()->execute();
             }
             DB::commit();
             $this->success ='Account has been created.';
@@ -110,7 +118,7 @@ class Add extends Component
             'account_type' => 'required|in:Assets,Liabilities,Equity,Income,Expenses',
             'parent_account' => 'required|integer',
             'account_name' => 'required|string',
-            'date' => 'required|date|date_format:Y-m-d',
+            'date' => 'required|date|date_format:d M Y',
             'opening_balance' => 'numeric|required_if:at_level,4'
         ];
     }

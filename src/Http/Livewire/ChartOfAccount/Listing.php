@@ -20,7 +20,9 @@ class Listing extends Component
                 return $q->where('coa.type', $this->type);
             })->select('coa.*', DB::raw('SUM(l.debit) as debit'), DB::raw('SUM(l.credit) as credit'),
                 DB::raw('max(l.posting_date) as posting_date'))
-            ->groupBy('coa.id')->get();
+            ->groupBy('coa.id')
+            ->orderByRaw('FIELD(coa.type,"Assets","Liabilities","Equity","Income","Expenses")')
+            ->get();
 
         return view('ams::livewire.chart-of-accounts.listing', compact('coa'));
     }

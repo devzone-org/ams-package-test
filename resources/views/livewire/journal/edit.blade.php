@@ -9,7 +9,7 @@
             <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 sm:col-span-3">
                     <label for="posting_date" class="block text-sm font-medium text-gray-700">Posting Date</label>
-                    <input type="date" wire:model="posting_date" id="posting_date" autocomplete="off"
+                    <input type="text" readonly wire:model.lazy="posting_date" id="posting_date" autocomplete="off"
                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 </div>
 
@@ -408,3 +408,23 @@
         })
     });
 </script>
+
+
+
+@section('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+    <script>
+        let from_date = new Pikaday({
+            field: document.getElementById('posting_date'),
+            format: "DD MMM YYYY"
+        });
+
+
+
+        from_date.setDate(new Date('{{ $posting_date }}'));
+
+
+    </script>
+@endsection
+

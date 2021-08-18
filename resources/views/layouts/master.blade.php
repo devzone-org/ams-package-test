@@ -22,8 +22,13 @@
             -moz-appearance: textfield;
         }
     </style>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
+
     @livewireScripts
     <script src="{{ asset('ams/js/app.js') }}"></script>
+
+
+
 </head>
 <body class="bg-gray-200">
 <div x-data="{menu:false,dropdown:false,activeIndex:-1}">
@@ -31,6 +36,8 @@
     <main>
         @yield('content')
     </main>
+
+    @yield('script')
 </div>
 </body>
 </html>

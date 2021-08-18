@@ -2,6 +2,7 @@
 
 namespace Devzone\Ams\Http\Livewire\Journal\Payment;
 
+use Carbon\Carbon;
 use Devzone\Ams\Http\Traits\Searchable;
 use Devzone\Ams\Models\ChartOfAccount;
 use Devzone\Ams\Models\PaymentReceiving;
@@ -74,7 +75,7 @@ class Add extends Component
             }
             PaymentReceiving::create([
                 'nature' => $this->nature,
-                'posting_date' => $this->posting_date,
+                'posting_date' => $this->formatDate($this->posting_date),
                 'first_account_id' => $this->first_account_id,
                 'second_account_id' => $this->second_account_id,
                 'amount' => $this->amount,
@@ -92,5 +93,13 @@ class Add extends Component
             DB::rollBack();
             $this->addError('nature', $e->getMessage());
         }
+    }
+
+
+    private function formatDate($date)
+    {
+
+        return Carbon::createFromFormat('d M Y', $date)
+            ->format('Y-m-d');
     }
 }

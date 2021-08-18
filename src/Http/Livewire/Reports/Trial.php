@@ -4,6 +4,7 @@
 namespace Devzone\Ams\Http\Livewire\Reports;
 
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -15,8 +16,14 @@ class Trial extends Component
 
     public function mount()
     {
-        $this->from_date = date('Y-m-d', strtotime('-1 month'));
-        $this->to_date = date('Y-m-d');
+        $this->from_date = date('d M Y', strtotime('-1 month'));
+        $this->to_date = date('d M Y');
+    }
+
+    private function formatDate($date){
+
+        return Carbon::createFromFormat('d M Y',$date)
+            ->format('Y-m-d');
     }
 
     public function render()
@@ -26,24 +33,27 @@ class Trial extends Component
             $pnl = \Devzone\Ams\Models\Ledger::from('ledgers as l')
                 ->join('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
                 ->where('l.is_approve', 't')
-                ->where('l.posting_date','>=',$this->from_date)
-                ->where('l.posting_date','<=',$this->to_date)
+                ->where('l.posting_date','>=',$this->formatDate($this->from_date))
+                ->where('l.posting_date','<=',$this->formatDate($this->to_date))
                 ->whereIn('coa.type', ['Expenses', 'Income'])
                 ->select(DB::raw('sum(debit) as debit'), DB::raw('sum(credit) as credit'), 'coa.type', 'coa.name','coa.code', 'coa.nature', 'coa.is_contra')
                 ->groupBy('l.account_id')
+                ->orderByRaw('FIELD(coa.type,"Income","Expenses")')
                 ->get();
 
             $balance = \Devzone\Ams\Models\Ledger::from('ledgers as l')
                 ->join('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
                 ->where('l.is_approve', 't')
-                ->where('l.posting_date','<=',$this->to_date)
+                ->where('l.posting_date','<=',$this->formatDate($this->to_date))
                 ->whereIn('coa.type', ['Assets', 'Liabilities','Equity'])
                 ->select(DB::raw('sum(debit) as debit'), DB::raw('sum(credit) as credit'), 'coa.type', 'coa.name','coa.code', 'coa.nature', 'coa.is_contra')
                 ->groupBy('l.account_id')
+                ->orderByRaw('FIELD(coa.type,"Assets","Liabilities","Equity")')
                 ->get();
 
 
-            foreach ($pnl as $pl) {
+
+            foreach ($balance as $pl) {
                 $debit = $credit = 0;
                 if ($pl->nature == 'd') {
                     if ($pl->is_contra == 'f') {
@@ -65,7 +75,9 @@ class Trial extends Component
                 $ledger[] = ['type' => $pl['type'], 'code' => $pl['code'], 'account_name' => $pl['name'], 'debit' => $debit, 'credit' => $credit];
             }
 
-            foreach ($balance as $pl) {
+
+
+            foreach ($pnl as $pl) {
                 $debit = $credit = 0;
                 if ($pl->nature == 'd') {
                     if ($pl->is_contra == 'f') {

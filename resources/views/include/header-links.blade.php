@@ -4,7 +4,7 @@
        class="{{ Request::segment(1)=='accounts' && empty(Request::segment(2))? $a_current : '' }} rounded-md py-2 px-3 inline-flex items-center text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-gray-900 active:bg-gray-50">
         Dashboard </a>
 
-    <div class="relative" x-data="{open:false}">
+    <div class="relative" x-data="{open:false}" x-cloak>
 
         <button type="button" @click="open=true;"
                 class="{{ Request::segment(1)=='accounts' && Request::segment(2) == 'accountant' ? $a_current : '' }}  cursor-pointer  rounded-md py-2 px-3 inline-flex items-center text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-gray-900 focus-within:bg-gray-50 focus-within:outline-none"
@@ -130,7 +130,7 @@
             </div>
         </div>
     </div>
-    <div class="relative" x-data="{open:false}">
+    <div class="relative" x-data="{open:false}" x-cloak>
 
         <button type="button" @click="open=true;"
                 class="{{ Request::segment(1)=='accounts' && Request::segment(2) == 'reports' ? $a_current : '' }}   cursor-pointer  rounded-md py-2 px-3 inline-flex items-center text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-gray-900 focus-within:bg-gray-50 focus-within:outline-none"

@@ -3,6 +3,7 @@
 namespace Devzone\Ams\Http\Livewire\Journal\Payment;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Devzone\Ams\Helper\GeneralJournal;
 use Devzone\Ams\Helper\Voucher;
 use Devzone\Ams\Models\LedgerAttachment;
@@ -46,13 +47,21 @@ class Listing extends Component
 
             })
             ->when(!empty($this->from) && !empty($this->to), function ($q) {
-                return $q->where('pr.posting_date', '>=', $this->from)->where('pr.posting_date', '<=', $this->to);
+                return $q->where('pr.posting_date', '>=', $this->formatDate($this->from))->where('pr.posting_date', '<=', $this->formatDate($this->to));
             })
             ->orderBy('pr.id', 'desc')
             ->paginate(20);
 
         return view('ams::livewire.journal.payments.listing', compact('entries'));
     }
+
+    private function formatDate($date)
+    {
+
+        return Carbon::createFromFormat('d M Y', $date)
+            ->format('Y-m-d');
+    }
+
 
     public function search()
     {

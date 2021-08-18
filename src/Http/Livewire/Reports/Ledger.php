@@ -6,6 +6,7 @@ namespace Devzone\Ams\Http\Livewire\Reports;
 
 use Devzone\Ams\Http\Traits\Searchable;
 use Devzone\Ams\Models\ChartOfAccount;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -32,8 +33,8 @@ class Ledger extends Component
 
     public function mount($account_id)
     {
-        $this->from_date = date('Y-m-d', strtotime('-1 month'));
-        $this->to_date = date('Y-m-d');
+        $this->from_date = date('d M Y', strtotime('-1 month'));
+        $this->to_date = date('d M Y');
         if ($account_id > 0) {
 
             $this->account_details = ChartOfAccount::find($account_id);
@@ -42,8 +43,8 @@ class Ledger extends Component
             $this->dispatchBrowserEvent('title', ['name' => $this->account_name]);
 
             if(!empty(request()->query('date'))){
-                $this->from_date = request()->query('date');
-                $this->to_date = request()->query('date');
+                $this->from_date = date('d M Y',strtotime(request()->query('date')));
+                $this->to_date = date('d M Y',strtotime(request()->query('date')));
                 $this->from_d = $this->from_date;
                 $this->to_d = $this->to_date;
             }
@@ -51,7 +52,13 @@ class Ledger extends Component
         }
 
     }
+    private function formatDate($date)
+    {
 
+        return Carbon::createFromFormat('d M Y', $date)
+            ->format('Y-m-d');
+
+    }
     public function search()
     {
         $this->account_name_s = $this->account_name;
@@ -60,14 +67,14 @@ class Ledger extends Component
 
         if (!empty($this->account_id) && !empty($this->from_date) && !empty($this->to_date)) {
             $this->ledger = \Devzone\Ams\Models\Ledger::where('is_approve', 't')
-                ->where('posting_date', '>=', $this->from_date)
-                ->where('posting_date', '<=', $this->to_date)
+                ->where('posting_date', '>=', $this->formatDate($this->from_date))
+                ->where('posting_date', '<=', $this->formatDate($this->to_date))
                 ->where('account_id', $this->account_id)
                 ->select('voucher_no', 'posting_date', 'description', 'debit', 'credit', 'account_id')
                 ->orderBy('posting_date')->orderBy('voucher_no')
                 ->get()->toArray();
             $opening = \Devzone\Ams\Models\Ledger::where('is_approve', 't')
-                ->where('posting_date', '<', $this->from_date)
+                ->where('posting_date', '<', $this->formatDate($this->from_date))
                 ->where('account_id', $this->account_id)
                 ->select(DB::raw('sum(debit) as debit'), DB::raw('sum(credit) as credit'))
                 ->groupBy('account_id')->first();

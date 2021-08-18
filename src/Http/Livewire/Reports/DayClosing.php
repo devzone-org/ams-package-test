@@ -5,6 +5,7 @@ namespace Devzone\Ams\Http\Livewire\Reports;
 
 
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Livewire\Component;
 
 class DayClosing extends Component
@@ -18,11 +19,17 @@ class DayClosing extends Component
 
     public function mount()
     {
-        $this->from_date = date('Y-m-d', strtotime('-1 month'));
-        $this->to_date = date('Y-m-d');
+        $this->from_date = date('d M Y', strtotime('-1 month'));
+        $this->to_date = date('d M Y');
         $this->users = User::from('users as u')->join('chart_of_accounts as coa', 'coa.id', '=', 'u.account_id')
             ->select('u.*')->get()->toArray();
     }
+    private function formatDate($date){
+        return Carbon::createFromFormat('d M Y',$date)
+            ->format('Y-m-d');
+
+    }
+
 
     public function render()
     {
@@ -37,8 +44,8 @@ class DayClosing extends Component
             ->join('users as c', 'c.id', '=', 'dc.close_by')
             ->select('dc.*', 'u.name as user_id', 't.name as transfer_name', 'c.name as close_by')
             ->where('dc.account_id', $this->user_account_id)
-            ->whereDate('dc.created_at', '>=', $this->from_date)
-            ->whereDate('dc.created_at', '<=', $this->to_date)
+            ->whereDate('dc.created_at', '>=', $this->formatDate($this->from_date))
+            ->whereDate('dc.created_at', '<=', $this->formatDate($this->to_date))
             ->orderBy('dc.date','desc')
             ->get()
             ->toArray();
