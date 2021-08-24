@@ -122,8 +122,10 @@ class DumpMasterData extends Command
         ChartOfAccount::updateOrCreate(['id' => '81'], ['name' => 'Payable Inter Transfer IPD Medicine', 'type' => 'Liabilities', 'sub_account' => '76', 'level' => '5', 'reference' => 'payable-medicine-5', 'nature' => 'c']);
         ChartOfAccount::updateOrCreate(['id' => '82'], ['name' => 'Expense Till Cash Shortage', 'type' => 'Expenses', 'sub_account' => '56', 'level' => '5', 'nature' => 'd', 'reference' => 'exp-cash-shortage']);
         ChartOfAccount::updateOrCreate(['reference' => 'income-lab-5'], ['name' => 'Income - Lab', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c']);
+        ChartOfAccount::updateOrCreate(['reference' => 'income-radiology-5'], ['name' => 'Income - Radiology', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c']);
         ChartOfAccount::updateOrCreate(['reference' => 'advance-tax-236'], ['name' => 'Recoverable Advance Tax u/s 236(H)', 'type' => 'Assets', 'sub_account' => '18', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['reference' => 'income-dayout-5'], ['name' => 'Income - Dayout', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c']);
+        ChartOfAccount::updateOrCreate(['reference' => 'income-return-dayout-5'], ['name' => 'Dayout Return', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c','is_contra' => 't']);
         ChartOfAccount::updateOrCreate(['reference' => 'expense-admission-referral-5'], ['name' => 'Expense Patient Referral Commission', 'type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['reference' => 'expense-doctor-visits-5'], ['name' => 'Expense Doctor Visits', 'type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         $this->info('Dumping Chart of Accounts Finished...');
