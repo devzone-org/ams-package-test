@@ -223,10 +223,10 @@ class Edit extends Component
                 $this->addError('voucher_no', 'Sum of debit and credit is not equal.');
                 return false;
             }
-            if (Ledger::where('voucher_no', $this->voucher_no)->where('is_approve', 'f')->exists()) {
-                $this->addError('voucher_no', 'Unable to update because this entry already approved.');
-                return false;
-            }
+//            if (Ledger::where('voucher_no', $this->voucher_no)->where('is_approve', 'f')->exists()) {
+//                $this->addError('voucher_no', 'Unable to update because this entry already approved.');
+//                return false;
+//            }
 
             if (!empty($this->deleted)) {
                 Ledger::where('is_approve', 'f')->whereIn('id', $this->deleted)->delete();
