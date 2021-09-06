@@ -5,7 +5,7 @@
 
 <header class=" not-printable bg-white shadow">
     <div class="absolute">
-        <img class="p-4 mt-1 w-28" src="https://i.ibb.co/GnFZRTQ/circle-cropped-1.png" alt="">
+        <img class="p-4 mt-1 w-24" src="{{ url(env('CLIENT_LOGO')) }}" alt="">
     </div>
     <div class="mx-auto ml-20 px-2 sm:px-4 lg:divide-y lg:divide-gray-200 lg:px-8">
         <div class="relative h-14 flex justify-between">
