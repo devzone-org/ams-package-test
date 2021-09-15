@@ -77,7 +77,7 @@ class Ledger extends Component
                 ->where('posting_date', '<', $this->formatDate($this->from_date))
                 ->where('account_id', $this->account_id)
                 ->select(DB::raw('sum(debit) as debit'), DB::raw('sum(credit) as credit'))
-                ->groupBy('account_id')->first();
+                 ->first();
             if ($this->account_details['nature'] == 'd') {
                 if ($this->account_details['is_contra'] == 'f') {
                     $this->opening_balance = $opening['debit'] - $opening['credit'];
