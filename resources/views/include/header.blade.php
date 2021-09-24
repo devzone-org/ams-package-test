@@ -13,11 +13,12 @@
         <div class="relative h-14 flex justify-between">
             <div class="relative z-10 px-2 flex lg:px-0">
                 <div class="flex items-center p-2 pl-0">
-
+                    @if(empty(env('PHARMACY_ONLY')))
                     <a href="{{url('hospital')}}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 {{ Request::segment(1)=='hospital' ? 'bg-indigo-100' : 'bg-white' }} hover:bg-indigo-50  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Reception Portal
                     </a>
-                    <a href="{{url('pharmacy')}}" class="ml-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 {{ Request::segment(1)=='pharmacy' ? 'bg-indigo-100' : 'bg-white' }} hover:bg-indigo-50  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    @endif
+                    <a href="{{url('pharmacy')}}" class="@if(empty(env('PHARMACY_ONLY'))) ml-8 @endif inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 {{ Request::segment(1)=='pharmacy' ? 'bg-indigo-100' : 'bg-white' }} hover:bg-indigo-50  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Pharmacy Portal
                     </a>
                     <a href="{{url('accounts')}}" class="ml-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 {{ Request::segment(1)=='accounts' ? 'bg-indigo-100' : 'bg-white' }} hover:bg-indigo-50  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
