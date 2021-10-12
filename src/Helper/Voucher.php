@@ -42,6 +42,7 @@ class Voucher
         $this->name = 'coa';
         return $this;
     }
+
     public function advances()
     {
         $this->name = 'advances_receipt';
@@ -50,16 +51,26 @@ class Voucher
 
     public function get()
     {
-        $voucher = \Devzone\Ams\Models\Voucher::where('name', $this->name)->get();
-        $voucher = $voucher->first();
-        $count = $voucher->value;
-        $count = $count + 1;
-        DB::table('vouchers')
-            ->where('id', $voucher->id)
-            ->update([
-                'value' => DB::raw('value + 1')
-            ]);
-        return $count;
+        DB::beginTransaction();
+        try {
+            $voucher = \Devzone\Ams\Models\Voucher::where('name', $this->name)->lockForUpdate()->get();
+            $voucher = $voucher->first();
+            $count = $voucher->value;
+            $count = $count + 1;
+
+            DB::table('vouchers')
+                ->where('id', $voucher->id)
+                ->update([
+                    'value' => DB::raw('value + 1')
+                ]);
+            DB::commit();
+            return $count;
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
     }
 
     public function updateCounter()
