@@ -53,7 +53,8 @@ class Voucher
     {
         DB::beginTransaction();
         try {
-            $voucher = \Devzone\Ams\Models\Voucher::where('name', $this->name)->lockForUpdate()->get();
+            $voucher = \Devzone\Ams\Models\Voucher::where('name', $this->name)
+                ->lockForUpdate()->get();
             $voucher = $voucher->first();
             $count = $voucher->value;
             $count = $count + 1;
