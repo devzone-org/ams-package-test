@@ -120,9 +120,9 @@ class Close extends Component
     {
         $this->validate();
         try {
-            if ((collect($this->closing_balance)->sum('balance') + $this->opening_balance) < 0) {
-                throw new \Exception('Closing Balance should be greater than 0.');
-            }
+//            if ((collect($this->closing_balance)->sum('balance') + $this->opening_balance) < 0) {
+//                throw new \Exception('Closing Balance should be greater than 0.');
+//            }
             DB::beginTransaction();
             $total_denomination = collect($this->denomination_counting)->sum('total');
             $transfer_amount = $total_denomination - $this->retained_cash;
