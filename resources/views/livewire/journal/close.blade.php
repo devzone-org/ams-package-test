@@ -143,7 +143,11 @@
                     </td>
                     @foreach($closing_balance_heads as $h)
                         <td class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500">
-                            {{ number_format(collect($closing_balance)->where('reference',$h)->first()['balance']) }}
+                            @if(collect($closing_balance)->where('reference',$h)->first()['balance']>0)
+                                {{ number_format(collect($closing_balance)->where('reference',$h)->first()['balance']) }}
+                                @else
+                                ({{ number_format(abs(collect($closing_balance)->where('reference',$h)->first()['balance'])) }})
+                            @endif
                         </td>
                     @endforeach
                     <td class="px-6 py-4 text-center text-sm text-gray-500">
