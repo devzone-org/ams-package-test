@@ -42,7 +42,7 @@
                                      alt="">
                             @else
                                 <span
-                                    class="inline-flex items-center justify-center h-20 w-20 rounded-full bg-gray-500">
+                                        class="inline-flex items-center justify-center h-20 w-20 rounded-full bg-gray-500">
                                   <span class="text-xl font-medium leading-none text-white">
                                         @php
                                             $words = explode(" ", $current_user['name']);
@@ -71,14 +71,17 @@
                                      alt="">
                             @else
                                 <span
-                                    class="inline-flex items-center justify-center h-20 w-20 rounded-full bg-gray-500">
+                                        class="inline-flex items-center justify-center h-20 w-20 rounded-full bg-gray-500">
                                   <span class="text-xl font-medium leading-none text-white">
                                         @php
                                             $words = explode(" ", Auth::user()->name);
                                             $acronym = "";
 
                                             foreach ($words as $w) {
+                                            if(!empty($w[0])){
                                               $acronym .= $w[0];
+                                            }
+
                                             }
                                         @endphp
                                       {{  $acronym }}
@@ -122,7 +125,7 @@
 
                     <th scope="col"
                         class="px-6 py-3 bg-gray-50 uppercase text-left text-sm font-medium text-gray-800 text-center  tracking-wider">
-                          Closing Balance (CB)
+                        Closing Balance (CB)
                     </th>
 
                 </tr>
@@ -135,7 +138,7 @@
                                 PKR {{ number_format($opening_balance) }}
                             </div>
                             <div class="text-sm text-gray-500">
-                              as at  {{ date('d M, Y',strtotime($opening_balance_date)) }}
+                                as at {{ date('d M, Y',strtotime($opening_balance_date)) }}
                             </div>
                         @else
                             -
@@ -145,8 +148,8 @@
                         <td class="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500">
                             @if(collect($closing_balance)->where('reference',$h)->first()['balance']>0)
                                 {{ number_format(collect($closing_balance)->where('reference',$h)->first()['balance']) }}
-                                @else
-                                ({{ number_format(abs(collect($closing_balance)->where('reference',$h)->first()['balance'])) }})
+                            @else
+                            ({{ number_format(abs(collect($closing_balance)->where('reference',$h)->first()['balance'])) }})
                             @endif
                         </td>
                     @endforeach
@@ -155,7 +158,7 @@
                             PKR {{number_format(collect($closing_balance)->sum('balance') + $opening_balance)}}
                         </div>
                         <div class="text-sm text-gray-500">
-                            as at  {{ date('d M, Y') }}
+                            as at {{ date('d M, Y') }}
                         </div>
                     </td>
 
@@ -390,7 +393,8 @@
                 <div class="p-4">
                     Are you sure you want to transfer
                     PKR {{ number_format(collect($denomination_counting)->sum('total') - $retained_cash ,2) }}
-                    to {{ collect($transfers)->firstWhere('id',$transfer_id)['name'] }} from {{ $current_user['name'] ?? '' }}
+                    to {{ collect($transfers)->firstWhere('id',$transfer_id)['name'] }}
+                    from {{ $current_user['name'] ?? '' }}
                     <br>
                     Press <strong>Y</strong> to confirm
                 </div>

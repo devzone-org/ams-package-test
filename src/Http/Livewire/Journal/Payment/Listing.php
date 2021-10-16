@@ -106,21 +106,21 @@ class Listing extends Component
             $description .= ". Approved by " . Auth::user()->name . " @ " . date('d M, Y h:i A');
             if ($payment['nature'] == 'receive') {
                 GeneralJournal::instance()->account($payment['first_account_id'])
-                    ->credit($payment['amount'])->voucherNo($vno)
+                    ->credit($payment['amount'])->voucherNo($vno)->reference('receiving')
                     ->date($payment['posting_date'])->approve()->description($description)->execute();
 
                 GeneralJournal::instance()->account($payment['second_account_id'])
-                    ->debit($payment['amount'])->voucherNo($vno)
+                    ->debit($payment['amount'])->voucherNo($vno)->reference('receiving')
                     ->date($payment['posting_date'])->approve()->description($description)->execute();
             }
 
             if ($payment['nature'] == 'pay') {
                 GeneralJournal::instance()->account($payment['first_account_id'])
-                    ->debit($payment['amount'])->voucherNo($vno)
+                    ->debit($payment['amount'])->voucherNo($vno)->reference('payment')
                     ->date($payment['posting_date'])->approve()->description($description)->execute();
 
                 GeneralJournal::instance()->account($payment['second_account_id'])
-                    ->credit($payment['amount'])->voucherNo($vno)
+                    ->credit($payment['amount'])->voucherNo($vno)->reference('payment')
                     ->date($payment['posting_date'])->approve()->description($description)->execute();
             }
 
