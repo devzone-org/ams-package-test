@@ -4,6 +4,8 @@
 namespace Devzone\Ams\Helper;
 
 
+use App\Events\TillBalances;
+use App\Models\User;
 use Devzone\Ams\Models\Ledger;
 use Illuminate\Support\Facades\Auth;
 
@@ -99,6 +101,10 @@ class GeneralJournal
 
     public function execute()
     {
+//         if(User::where('account_id',$this->account_id)->exists()){
+//             TillBalances::dispatch('hello');
+//         }
+
         Ledger::create([
             'account_id' => $this->account_id,
             'voucher_no' => $this->voucher_no,
