@@ -142,11 +142,11 @@
                         </td>
                         <td class="px-2  text-center  border-r text-sm text-gray-500">
                             <input type="number" step="0.01" wire:model.lazy="entries.{{$key}}.debit"
-                                   class="text-center p-0 focus:ring-0 block w-full   text-sm border-0  "
+                                   class="text-center p-0 focus:ring-0 block w-full   text-sm border-0  "  onclick="this.select()"
                                    autocomplete="off">
                         </td>
                         <td class="px-2  text-center border-r text-sm text-gray-500">
-                            <input type="number" step="0.01" wire:model.lazy="entries.{{$key}}.credit"
+                            <input type="number" step="0.01" wire:model.lazy="entries.{{$key}}.credit" onclick="this.select()"
                                    class="p-0 text-center focus:ring-0 block w-full  text-sm border-0  "
                                    autocomplete="off">
                         </td>

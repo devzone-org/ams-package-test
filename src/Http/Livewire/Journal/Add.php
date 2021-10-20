@@ -300,13 +300,12 @@ class Add extends Component
     public function posted()
     {
 
-
         $this->validate();
         try {
             DB::beginTransaction();
 
             if (Ledger::where('voucher_no', $this->voucher_no)
-                ->where('posted_by', '!=', Auth::user()->id)->where('is_approve', 'f')->exists()) {
+                 ->where('is_approve', 'f')->exists()) {
                 $this->addError('voucher_no', 'Voucher # ' . $this->voucher_no . ' already in use. System have updated to new one kindly try again.');
                 $this->voucher_no = Voucher::instance()->tempVoucherOnly();
                 return false;

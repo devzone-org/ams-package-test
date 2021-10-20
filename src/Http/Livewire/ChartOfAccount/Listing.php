@@ -9,6 +9,7 @@ use Livewire\Component;
 class Listing extends Component
 {
     public $type;
+    public $confirm;
 
     public function render()
     {
@@ -29,6 +30,7 @@ class Listing extends Component
 
     public function changeStatus($id)
     {
+
         if (auth()->user()->can('2.edit.coa.status')) {
             $account = ChartOfAccount::find($id);
             if ($account->status == 't') {
