@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Devzone\Ams\Helper\GeneralJournal;
 use Devzone\Ams\Helper\Voucher;
+use Devzone\Ams\Models\Ledger;
 use Devzone\Ams\Models\LedgerAttachment;
 use Devzone\Ams\Models\PaymentReceiving;
 use Illuminate\Support\Facades\Auth;
@@ -63,8 +64,52 @@ class Listing extends Component
     }
 
 
-    public function search()
+    public function reverseEntry($id)
     {
+        try {
+            DB::beginTransaction();
+            if (!auth()->user()->can('2.payments.reversal')) {
+                throw new \Exception(env('PERMISSION_ERROR'));
+            }
+            $payment = PaymentReceiving::find($id);
+            if (empty($payment)) {
+                throw new \Exception('Record not found.');
+            }
+            if ($payment['reversal'] == 't') {
+                throw new \Exception('You have already posted entry as reversal.');
+            }
+            if (empty($payment['voucher_no'])) {
+                throw new \Exception('Voucher no not found.');
+            }
+
+            $entries = Ledger::where('voucher_no', $payment['voucher_no'])->get();
+            $vno = Voucher::instance()->voucher()->get();
+            foreach ($entries as $e) {
+
+                $data = $e->toArray();
+                $debit = $data['debit'];
+                $credit = $data['credit'];
+
+                unset($data['id'], $data['created_at'], $data['updated_at']);
+                $data['approved_at'] = date('Y-m-d H:i:s');
+                $data['description'] = "REVERSAL ENTRY AGAINST VOUCHER # ".$data['voucher_no']." " . $data['description'];
+                $data['debit'] = $credit;
+                $data['credit'] = $debit;
+                $data['voucher_no'] = $vno;
+                Ledger::create($data);
+
+            }
+
+            $payment->update([
+                'reversal' => 't'
+            ]);
+
+            DB::commit();
+        } catch (\Exception $e) {
+
+            $this->addError('status', $e->getMessage());
+            DB::rollBack();
+        }
 
     }
 
@@ -106,7 +151,7 @@ class Listing extends Component
             $description .= ". Approved by " . Auth::user()->name . " @ " . date('d M, Y h:i A');
             if ($payment['nature'] == 'receive') {
                 GeneralJournal::instance()->account($payment['first_account_id'])
-                    ->credit($payment['amount'])->voucherNo($vno)->reference('receiving')
+                    ->credit($payment['amount'])->voucherNo($vno)->reference('payment')
                     ->date($payment['posting_date'])->approve()->description($description)->execute();
 
                 GeneralJournal::instance()->account($payment['second_account_id'])
@@ -116,7 +161,7 @@ class Listing extends Component
 
             if ($payment['nature'] == 'pay') {
                 GeneralJournal::instance()->account($payment['first_account_id'])
-                    ->debit($payment['amount'])->voucherNo($vno)->reference('payment')
+                    ->debit($payment['amount'])->voucherNo($vno)->reference('receiving')
                     ->date($payment['posting_date'])->approve()->description($description)->execute();
 
                 GeneralJournal::instance()->account($payment['second_account_id'])

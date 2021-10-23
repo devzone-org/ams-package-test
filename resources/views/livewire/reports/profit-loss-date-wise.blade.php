@@ -1,6 +1,6 @@
-<div class=" {{ count($heading) > 7 ? '' : 'max-w-7xl' }} mx-auto py-6 sm:px-6 lg:px-8">
+<div class=" {{ count($heading) > 7 ? '' : 'max-w-7xl' }}  py-6 sm:px-6 lg:px-8">
 
-    <div class="mb-4 shadow sm:rounded-md sm:overflow-hidden">
+    <div class="mb-4 shadow sm:rounded-md sm:overflow-hiddens">
         <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 
 
@@ -33,16 +33,54 @@
             </div>
 
             <div>
-                <h3 class="text-lg leading-6 text-center font-medium text-gray-900">Profit and Loss (P&L)</h3>
+                <h3 class="text-lg leading-6 text-center font-medium text-gray-900">Profit and Loss (P&L) Date Wise</h3>
                 <p class="text-md  font-sm text-gray-500 text-center">{{ env('APP_NAME') }}</p>
                 <p class="text-md  font-sm text-gray-500 text-center">Statement
                     Period {{ date('d M, Y',strtotime($from_date)) }} to {{ date('d M, Y',strtotime($to_date)) }} </p>
 
             </div>
+
+            @if ($errors->any())
+
+                <div class="rounded-md bg-red-50 p-4 mb-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <!-- Heroicon name: x-circle -->
+                            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg"
+                                 viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                      clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-red-800">
+                                @php
+                                    $count = count($errors->all());
+                                @endphp
+                                There {{ $count > 1 ? "were {$count} errors": "was {$count} error" }} with your
+                                submission
+                            </h3>
+                            <div class="mt-2 text-sm text-red-700">
+                                <ul class="list-disc pl-5 space-y-1">
+
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
-        <div>
+        <div class=""
+             @if(count($heading)>9)
+             style="width: {{count($heading)*100}}px;"
+        @endif>
             @if(!empty($heading))
-                <table class="min-w-full table-fixed divide-y divide-gray-200">
+                <table class="min-w-full table-fixed divide-y divide-gray-200 ">
                     <thead class="bg-gray-100">
                     <tr>
                         <th scope="col"
@@ -53,7 +91,7 @@
                         @foreach($heading as $h)
                             <th scope="col"
                                 class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
-                                {{ date('M Y',strtotime($h)) }}
+                                {{ $h  }}
                             </th>
 
                         @endforeach
@@ -84,7 +122,7 @@
                                 @endphp
                                 <td class="px-2   py-2   text-center border-r text-sm text-gray-500">
                                     @if(!empty($first))
-                                        <a target="_blank" class="hover:text-gray-900" href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($h.'-01'))}}&to={{date('t M Y',strtotime($h.'-01'))}}">
+                                        <a target="_blank" class="hover:text-gray-900" href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($en->first()['date']))}}&to={{date('d M Y',strtotime($en->first()['date']))}}">
                                         {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
                                         </a>
                                     @else

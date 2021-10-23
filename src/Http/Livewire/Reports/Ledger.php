@@ -48,6 +48,12 @@ class Ledger extends Component
                 $this->from_d = $this->from_date;
                 $this->to_d = $this->to_date;
             }
+            if(!empty(request()->query('from')) && !empty(request()->query('to'))){
+                $this->from_date = date('d M Y',strtotime(request()->query('from')));
+                $this->to_date = date('d M Y',strtotime(request()->query('to')));
+                $this->from_d = $this->from_date;
+                $this->to_d = $this->to_date;
+            }
             $this->search();
         }
 

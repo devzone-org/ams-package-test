@@ -77,6 +77,9 @@ Route::group(['middleware' => ['permission:3.pnl']], function () {
     Route::get('reports/profit-and-loss', function () {
         return view('ams::reports.profit-loss');
     });
+    Route::get('reports/profit-and-loss/date-wise', function () {
+        return view('ams::reports.profit-loss-datewise');
+    });
 });
 Route::group(['middleware' => ['permission:3.day-closing']], function () {
     Route::get('reports/day-closing', function () {

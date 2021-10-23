@@ -44,6 +44,7 @@ class Add extends Component
 
     public function mount()
     {
+        $this->posting_date = date('d M Y');
         if (auth()->user()->can('2.payments.own') && !auth()->user()->can('2.payments.any')) {
 
             $this->second_account_id = Auth::user()->account_id;
@@ -76,6 +77,13 @@ class Add extends Component
             if ($this->formatDate($this->posting_date) > date('Y-m-d')) {
                 throw new \Exception('Future date not allowed.');
             }
+            $date = Carbon::now()->subDays(env('JOURNAL_RESTRICTION_DAYS'))->toDateString();
+            if (!auth()->user()->can('2.create.transfer.any-date')) {
+
+                if ($date > $this->formatDate($this->posting_date)) {
+                    throw new \Exception('Posting date must be equal or greater than ' . date('d M, Y', strtotime($date)));
+                }
+            }
             PaymentReceiving::create([
                 'nature' => $this->nature,
                 'posting_date' => $this->formatDate($this->posting_date),
@@ -90,7 +98,7 @@ class Add extends Component
             ]);
 
             DB::commit();
-            $this->reset(['nature', 'posting_date', 'first_account_id', 'second_account_id', 'second_account_name', 'first_account_name', 'amount', 'attachment','description', 'mode', 'instrument_no']);
+            $this->reset(['nature', 'first_account_id', 'second_account_id', 'second_account_name', 'first_account_name', 'amount', 'attachment','description', 'mode', 'instrument_no']);
             $this->success = 'Record has been added.';
         } catch (\Exception $e) {
             DB::rollBack();

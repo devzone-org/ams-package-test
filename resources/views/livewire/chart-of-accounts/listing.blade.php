@@ -16,7 +16,7 @@
 
         </div>
 
-        <table class="min-w-full divide-y divide-gray-200">
+        <table   class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
             <tr>
 
@@ -117,25 +117,30 @@
                                                  tabindex="-1">
                                                 <div class="" role="none">
 
-                                                    <a @click="open = false;"
+                                                    <a  @click="open = false;"
                                                        href="{{ url('accounts/accountant/ledger') }}?account_id={{$five->id}}"
                                                        target="_blank"
                                                        class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
                                                        role="menuitem" tabindex="-1"
                                                        id="menu-item-0"> View Ledger </a>
 
-                                                    <a @click="open = false;"
-                                                       href="#"
+                                                    <button type="button"
+
                                                        wire:click="changeStatus('{{ $five->id }}')"
-                                                       class="text-red-700 block px-4 py-2 text-sm hover:bg-red-100 rounded-b-md"
+                                                       class="text-red-700 block  px-4 py-2 text-sm hover:bg-red-100 rounded-b-md"
                                                        role="menuitem" tabindex="-1"
                                                        id="menu-item-0">
+                                                        <span wire:loading.remove  wire:target="changeStatus">
                                                         @if($five->status=='f')
                                                             Make Active
                                                         @else
                                                             Make Inactive
                                                         @endif
-                                                    </a>
+                                                        </span>
+                                                        <span wire:loading wire:target="changeStatus">
+                                                            Processing...
+                                                        </span>
+                                                    </button>
 
 
                                                 </div>
@@ -179,13 +184,27 @@
                                     overflow-hidden shadow-xl transform transition-all
                                     sm:my-8 sm:align-middle sm:max-w-xl sm:w-full  "
                  role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                <div class="px-4 py-5 sm:px-6">
+                <div class="px-4 py-5 sm:px-6" @click.away="open = false;">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">
-                        OPD Details
+                       Attention
                     </h3>
                     <p class="mt-1 max-w-2xl text-sm text-gray-500">
-                        Patient's OPD and Charges Details.
+                        Are you sure you want to perform this action?
                     </p>
+                    <button type="button"
+                            wire:loading.attr="disabled"
+                            wire:click="changeStatusConfirm"
+                            class="inline-flex items-center mt-2 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            role="menuitem" tabindex="-1"
+                            id="menu-item-0">
+                                                        <span wire:loading.remove  wire:target="changeStatusConfirm">
+                                                         Proceed
+                                                        </span>
+                        <span wire:loading wire:target="changeStatusConfirm">
+                                                            Processing...
+                                                        </span>
+                    </button>
+
                 </div>
 
             </div>

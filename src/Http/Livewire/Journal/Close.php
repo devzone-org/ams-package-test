@@ -136,7 +136,7 @@ class Close extends Component
                     GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
                         ->date(date('Y-m-d'))->approve()->description($description)->execute();
                     GeneralJournal::instance()->account($this->transfer_id)->debit($transfer_amount)->voucherNo($vno)
-                        ->date(date('Y-m-d'))->approve()->reference('transfer')->description($description)->execute();
+                        ->date(date('Y-m-d'))->approve()->reference('day close')->description($description)->execute();
                     if ($this->retained_cash > 0) {
                         GeneralJournal::instance()->account($this->user_account_id)->debit($this->retained_cash)->voucherNo($vno)
                             ->date(date('Y-m-d'))->approve()->description($description)->execute();
@@ -154,7 +154,7 @@ class Close extends Component
                             ->date(date('Y-m-d'))->approve()->description($description)->execute();
                     }
                     GeneralJournal::instance()->account($this->transfer_id)->debit($transfer_amount)->voucherNo($vno)
-                        ->date(date('Y-m-d'))->approve()->reference('transfer')->description($description)->execute();
+                        ->date(date('Y-m-d'))->approve()->reference('day close')->description($description)->execute();
                     GeneralJournal::instance()->account($this->user_account_id)->debit($this->difference)->voucherNo($vno)
                         ->date(date('Y-m-d'))->approve()->description($description)->execute();
 
@@ -171,7 +171,7 @@ class Close extends Component
                             ->date(date('Y-m-d'))->approve()->description($description)->execute();
                     }
                     GeneralJournal::instance()->account($this->transfer_id)->debit($transfer_amount)->voucherNo($vno)
-                        ->date(date('Y-m-d'))->approve()->reference('transfer')->description($description)->execute();
+                        ->date(date('Y-m-d'))->approve()->reference('day close')->description($description)->execute();
                     GeneralJournal::instance()->account($this->user_account_id)->credit(abs($this->difference))->voucherNo($vno)
                         ->date(date('Y-m-d'))->approve()->description($description)->execute();
 
