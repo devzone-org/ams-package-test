@@ -129,6 +129,8 @@ class DumpMasterData extends Command
         ChartOfAccount::updateOrCreate(['reference' => 'expense-admission-referral-5'], ['name' => 'Expense Patient Referral Commission', 'type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['reference' => 'expense-doctor-visits-5'], ['name' => 'Expense Doctor Visits', 'type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['reference' => 'customer-receivable-4'], ['name' => 'Customers Receivable', 'type' => 'Assets', 'sub_account' => '10', 'level' => '4', 'nature' => 'd']);
+        ChartOfAccount::updateOrCreate(['reference' => 'expense-lab-shares-5'], ['name' => 'Expense Lab Shares', 'type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
+        ChartOfAccount::updateOrCreate(['reference' => 'expense-radio-shares-5'], ['name' => 'Expense Radiology Shares', 'type' => 'Expenses', 'sub_account' => '61', 'level' => '5', 'nature' => 'd']);
         $this->info('Dumping Chart of Accounts Finished...');
 
         Permission::updateOrCreate(['name' => '2.dashboard'], ['guard_name' => 'web', 'description' => 'dashboard', 'portal' => 'accounts', 'section' => 'accounts']);

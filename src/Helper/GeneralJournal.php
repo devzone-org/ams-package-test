@@ -4,7 +4,7 @@
 namespace Devzone\Ams\Helper;
 
 
-use App\Events\TillBalances;
+use App\Jobs\EmployeePayable;
 use App\Models\User;
 use Devzone\Ams\Models\Ledger;
 use Illuminate\Support\Facades\Auth;
@@ -105,6 +105,7 @@ class GeneralJournal
 //             TillBalances::dispatch('hello');
 //         }
 
+
         Ledger::create([
             'account_id' => $this->account_id,
             'voucher_no' => $this->voucher_no,
@@ -119,13 +120,16 @@ class GeneralJournal
             'reference' => $this->reference
         ]);
 
+        EmployeePayable::dispatch($this->account_id, $this->posting_date)
+            ->afterCommit();
     }
 
-    public static function numberFormat($balance){
-        if($balance>=0){
-            return number_format($balance,2);
+    public static function numberFormat($balance)
+    {
+        if ($balance >= 0) {
+            return number_format($balance, 2);
         } else {
-            return '('.number_format(abs($balance),2).')';
+            return '(' . number_format(abs($balance), 2) . ')';
         }
     }
 
