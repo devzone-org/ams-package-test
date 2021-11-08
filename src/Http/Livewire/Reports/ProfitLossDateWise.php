@@ -61,7 +61,7 @@ class ProfitLossDateWise extends Component
                 'coa.sub_account',
                 'l.account_id',
                 DB::raw("DATE_FORMAT(l.posting_date,'%d %M') as month"),
-                DB::raw("DATE_FORMAT(l.posting_date,'%d %M %Y') as date"))
+                DB::raw("DATE_FORMAT(l.posting_date,'%Y-%m-%d') as date"))
             ->where('l.posting_date', '>=', $this->formatDate($this->from_date))
             ->where('l.posting_date', '<=', $this->formatDate($this->to_date))
             ->where('l.is_approve', 't')
