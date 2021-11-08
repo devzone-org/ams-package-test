@@ -122,7 +122,7 @@
                                 @endphp
                                 <td class="px-2   py-2   text-center border-r text-sm text-gray-500">
                                     @if(!empty($first))
-                                        <a target="_blank" class="hover:text-gray-900" href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($en->first()['date']))}}&to={{date('d M Y',strtotime($en->first()['date']))}}">
+                                        <a target="_blank" class="hover:text-gray-900" href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($first['date']))}}&to={{date('d M Y',strtotime($first['date']))}}">
                                         {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
                                         </a>
                                     @else
@@ -182,7 +182,7 @@
                                 @endphp
                                 <td class="px-2   py-2   text-center border-r text-sm text-gray-500">
                                     @if(!empty($first))
-                                        <a target="_blank" class="hover:text-gray-900" href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($h.'-01'))}}&to={{date('t M Y',strtotime($h.'-01'))}}">
+                                        <a target="_blank" class="hover:text-gray-900" href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($first['date']))}}&to={{date('d M Y',strtotime($first['date']))}}">
                                         {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
                                         </a>
                                     @else
@@ -269,7 +269,7 @@
                                 @endphp
                                 <td class="px-2   py-2   text-center border-r text-sm text-gray-500">
                                     @if(!empty($first))
-                                        <a target="_blank" class="hover:text-gray-900" href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($h.'-01'))}}&to={{date('t M Y',strtotime($h.'-01'))}}">
+                                        <a target="_blank" class="hover:text-gray-900" href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($first['date']))}}&to={{date('d M Y',strtotime($first['date']))}}">
                                         {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
                                         </a>
                                     @else
