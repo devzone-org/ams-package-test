@@ -9,6 +9,8 @@ use Devzone\Ams\Models\Ledger;
 use Devzone\Ams\Models\LedgerAttachment;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use App\Jobs\EmployeePayable;
+
 
 class TempList extends Component
 {
@@ -54,6 +56,14 @@ class TempList extends Component
                 'approved_at' => date('Y-m-d H:i:s'),
                 'approved_by' => Auth::user()->id
             ]);
+
+            $updated_ledger = Ledger::where('voucher_no',$vno)->get();
+
+            foreach ($updated_ledger as $ul){
+
+                EmployeePayable::dispatch($ul->account_id, $ul->posting_date)
+                    ->afterCommit();
+            }
 
 
             if (!empty($print)) {
