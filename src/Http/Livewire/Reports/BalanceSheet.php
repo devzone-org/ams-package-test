@@ -15,6 +15,8 @@ class BalanceSheet extends Component
     public $level4 = [];
     public $level5 = [];
     public $data;
+    public $pnl;
+
 
     public function mount()
     {
@@ -52,6 +54,8 @@ class BalanceSheet extends Component
             ->orderBy('coa.name', 'asc')
             ->get();
 
+        $this->calculateProfit($report);
+
         $l4 = array_unique($report->pluck('sub_account')->toArray());
         $l4_accounts = ChartOfAccount::whereIn('id', $l4)->get();
 
@@ -62,12 +66,15 @@ class BalanceSheet extends Component
 
         foreach ($l3_accounts as $l3) {
             $balance_v3 = 0;
-            $this->data[ 'l3' . $l3['id']] = false;
+            $this->data['l3' . $l3['id']] = true;
             foreach ($l4_accounts->where('sub_account', $l3->id) as $l4) {
                 $balance_v4 = 0;
-                $this->data[ 'l4' .  $l4->id] = false;
+                $this->data['l4' . $l4->id] = false;
                 foreach ($report->where('sub_account', $l4->id) as $r) {
                     $balance = 0;
+                    if ($r->type == 'Equity' && $r->is_contra == 't') {
+                        continue;
+                    }
 
                     if ($r->nature == 'd') {
                         if ($r->is_contra == 'f') {
@@ -81,6 +88,9 @@ class BalanceSheet extends Component
                         } else {
                             $balance = -($r->debit - $r->credit);
                         }
+                    }
+                    if ($r->type == 'Equity') {
+                        $balance = $balance + $this->pnl;
                     }
                     $balance_v4 += $balance;
                     $this->level5[] = [
@@ -118,6 +128,38 @@ class BalanceSheet extends Component
             ];
         }
 
+
         $this->data = json_encode($this->data);
+    }
+
+    private function calculateProfit($report)
+    {
+        $pnl = \Devzone\Ams\Models\Ledger::from('ledgers as l')
+            ->join('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
+            ->select(
+                DB::raw('sum(l.debit) as debit'),
+                DB::raw('sum(l.credit) as credit'),
+                'coa.type'
+            )
+            ->where('l.is_approve', 't')
+            ->whereIn('coa.type', ['Income', 'Expenses'])
+            ->groupBy('coa.type')
+            ->get();
+        $total_expense = 0;
+        $total_income = 0;
+        $expense = $pnl->where('type', 'Expenses')->first();
+        if (!empty($expense)) {
+            $total_expense = $expense['debit'] - $expense['credit'];
+        }
+        $income = $pnl->where('type', 'Income')->first();
+        if (!empty($income)) {
+            $total_income = $income['credit'] - $income['debit'];
+        }
+
+        $total_partner = $report->where('type', 'Equity')->where('level', '5')->count();
+        if (empty($total_partner)) {
+            $total_partner = 1;
+        }
+        $this->pnl = ($total_income - $total_expense) / $total_partner;
     }
 }
