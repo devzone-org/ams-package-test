@@ -60,10 +60,12 @@
                         </td>
 
                         <td class="px-2  py-2  text-right  border-r text-sm text-gray-500">
-                            {{ number_format($en['debit'],2) }}
+
+                            {{ $en['debit']>=0 ? number_format($en['debit'],2) : '('.number_format(abs($en['debit']),2).')' }}
                         </td>
                         <td class="px-2   py-2 text-right border-r text-sm text-gray-500">
-                            {{ number_format($en['credit'],2) }}
+
+                            {{ $en['credit']>=0 ? number_format($en['credit'],2) : '('.number_format(abs($en['credit']),2).')' }}
                         </td>
                     </tr>
                 @endforeach

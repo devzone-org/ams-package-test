@@ -9,6 +9,7 @@ use Devzone\Ams\Http\Livewire\Journal\Close;
 use Devzone\Ams\Http\Livewire\Journal\Edit;
 use Devzone\Ams\Http\Livewire\Journal\TempList;
 use Devzone\Ams\Http\Livewire\Post\Show;
+use Devzone\Ams\Http\Livewire\Reports\BalanceSheet;
 use Devzone\Ams\Http\Livewire\Reports\DayClosing;
 use Devzone\Ams\Http\Livewire\Reports\Ledger;
 use Devzone\Ams\Http\Livewire\Reports\ProfitLoss;
@@ -74,6 +75,7 @@ class AmsServiceProvider extends ServiceProvider
 
         Livewire::component('reports.profit-loss-datewise', ProfitLossDateWise::class);
         Livewire::component('reports.day-closing', DayClosing::class);
+        Livewire::component('reports.balance-sheet',BalanceSheet::class);
         Livewire::component('journal.close', Close::class);
         Livewire::component('journal.payments.listing', \Devzone\Ams\Http\Livewire\Journal\Payment\Listing::class);
         Livewire::component('journal.payments.add', \Devzone\Ams\Http\Livewire\Journal\Payment\Add::class);
