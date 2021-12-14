@@ -81,6 +81,11 @@ Route::group(['middleware' => ['permission:3.pnl']], function () {
         return view('ams::reports.profit-loss-datewise');
     });
 });
+
+Route::get('reports/balance-sheet',function(){
+    return view('ams::reports.balance-sheet');
+});
+
 Route::group(['middleware' => ['permission:3.day-closing']], function () {
     Route::get('reports/day-closing', function () {
         return view('ams::reports.day-closing');
@@ -88,5 +93,4 @@ Route::group(['middleware' => ['permission:3.day-closing']], function () {
 });
 Route::group(['middleware' => ['permission:2.view.ledger']], function () {
     Route::get('journal/voucher/print/{voucher_no}/{print?}', [JournalController::class, 'printVoucher']);
-
 });
