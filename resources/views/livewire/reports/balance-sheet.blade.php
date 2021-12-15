@@ -39,9 +39,24 @@
                     </th>
                 </tr>
                 @foreach($lvl3 as $l3)
-                    <tr class="bg-white hover:bg-gray-100" @click="l3{{$l3['id']}} = ! l3{{$l3['id']}}">
-                        <td class="px-2 py-1 whitespace-nowrap text-sm   text-gray-500">
-                            {{ $l3['name'] }}
+                    <tr class="bg-white hover:bg-gray-100" >
+                        <td class="px-2 py-1 whitespace-nowrap text-sm  flex text-gray-500">
+                            <div @click="l3{{$l3['id']}} = ! l3{{$l3['id']}}" class="cursor-pointer">
+                                <template x-if="! l3{{$l3['id']}}">
+                                <svg   xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                </svg>
+                                </template>
+                                <template x-if=" l3{{$l3['id']}}">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                                    </svg>
+                                </template>
+                            </div>
+                            <div>
+                                {{ $l3['name'] }}
+                            </div>
                         </td>
                         <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-500">
 
@@ -56,9 +71,24 @@
                     </tr>
                     @foreach(collect($level4)->where('sub_account',$l3['id']) as $l4)
                         <tr class="bg-white hover:bg-gray-100" x-show="l3{{$l3['id']}}"
-                            @click="l4{{$l4['id']}} = ! l4{{$l4['id']}}">
-                            <td class="pl-12 px-2 py-1 whitespace-nowrap text-sm  text-gray-500">
-                                {{ $l4['name'] }}
+                            >
+                            <td class="pl-12 px-2 py-1 whitespace-nowrap text-sm  text-gray-500 flex">
+                                <div @click="l4{{$l4['id']}} = ! l4{{$l4['id']}}" class="cursor-pointer">
+                                    <template x-if="! l4{{$l4['id']}}">
+                                        <svg   xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                        </svg>
+                                    </template>
+                                    <template x-if="l4{{$l4['id']}}">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                                        </svg>
+                                    </template>
+                                </div>
+                                <div>
+                                    {{ $l4['name'] }}
+                                </div>
                             </td>
                             <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-500">
 
@@ -72,12 +102,12 @@
                             </td>
                         </tr>
                         @foreach(collect($level5)->where('sub_account',$l4['id']) as $l5)
-                            <tr class="bg-white hover:bg-gray-100" x-show="l4{{$l4['id']}}">
+                            <tr class="bg-white hover:bg-gray-100" x-show="l4{{$l4['id']}} && l3{{$l3['id']}}">
                                 <td class="pl-24 px-2 py-1 whitespace-nowrap text-sm   text-gray-500">
                                     {{ $l5['name'] }}
                                 </td>
                                 <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-500">
-                                    @if($l4['balance']>=0)
+                                    @if($l5['balance']>=0)
                                         {{ number_format($l5['balance'],2) }}
                                     @else
                                     ({{ number_format(abs($l5['balance']),2) }})
@@ -92,10 +122,10 @@
                 @endforeach
                 <tr class=" bg-white ">
                     <th colspan="2" class=" text-left align-top  pb-12  px-2 py-1">
-                      Total  {{ $type }}
+                        Total {{ $type }}
                     </th>
 
-                    <th   class=" text-left   align-top   px-2 py-1">
+                    <th class=" text-left   align-top   px-2 py-1">
                         @php
                             $total = collect($level3)->where('type',$type)->sum('balance');
                         @endphp
