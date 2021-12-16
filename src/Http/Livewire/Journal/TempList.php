@@ -42,7 +42,7 @@ class TempList extends Component
 
     public function approveTempEntry($voucher_no, $print = null)
     {
-        if(auth()->user()->can('2.post.unapprove')) {
+        if (auth()->user()->can('2.post.unapprove')) {
 
 
             $vno = Voucher::instance()->voucher()->get();
@@ -57,12 +57,13 @@ class TempList extends Component
                 'approved_by' => Auth::user()->id
             ]);
 
-            $updated_ledger = Ledger::where('voucher_no',$vno)->get();
+            $updated_ledger = Ledger::where('voucher_no', $vno)->get();
+            if (class_exists('App\Jobs\EmployeePayable')) {
+                foreach ($updated_ledger as $ul) {
 
-            foreach ($updated_ledger as $ul){
-
-                EmployeePayable::dispatch($ul->account_id, $ul->posting_date)
-                    ->afterCommit();
+                    EmployeePayable::dispatch($ul->account_id, $ul->posting_date)
+                        ->afterCommit();
+                }
             }
 
 

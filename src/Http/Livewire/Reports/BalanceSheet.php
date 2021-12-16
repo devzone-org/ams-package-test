@@ -16,13 +16,21 @@ class BalanceSheet extends Component
     public $level5 = [];
     public $data;
     public $pnl;
+    public $asat;
 
 
     public function mount()
     {
 
+        $this->asat = date('d M Y');
         $this->search();
 
+    }
+
+    private function formatDate($date)
+    {
+        return Carbon::createFromFormat('d M Y', $date)
+            ->format('Y-m-d');
     }
 
     public function render()
@@ -31,9 +39,16 @@ class BalanceSheet extends Component
     }
 
 
+    public function resetSearch()
+    {
+        $this->reset('asat');
+    }
+
+
     public function search()
     {
 
+        $this->reset('level3','level4','level5','data','pnl');
         $report = \Devzone\Ams\Models\Ledger::from('ledgers as l')
             ->join('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
             ->select(
@@ -49,6 +64,7 @@ class BalanceSheet extends Component
                 'coa.id'
             )
             ->where('l.is_approve', 't')
+            ->where('l.posting_date', '<=', $this->formatDate($this->asat))
             ->whereIn('coa.type', ['Assets', 'Liabilities', 'Equity'])
             ->groupBy('l.account_id')
             ->orderBy('coa.name', 'asc')
@@ -142,6 +158,7 @@ class BalanceSheet extends Component
                 'coa.type'
             )
             ->where('l.is_approve', 't')
+            ->where('l.posting_date', '<=', $this->formatDate($this->asat))
             ->whereIn('coa.type', ['Income', 'Expenses'])
             ->groupBy('coa.type')
             ->get();
