@@ -120,8 +120,12 @@ class GeneralJournal
             'reference' => $this->reference
         ]);
 
-        EmployeePayable::dispatch($this->account_id, $this->posting_date)
-            ->afterCommit();
+        if   ( class_exists('App\Jobs\EmployeePayable')) {
+            dd('asd');
+            EmployeePayable::dispatch($this->account_id, $this->posting_date)
+                ->afterCommit();
+        }
+
     }
 
     public static function numberFormat($balance)
