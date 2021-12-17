@@ -121,7 +121,7 @@ class GeneralJournal
         ]);
 
         if   ( class_exists('App\Jobs\EmployeePayable')) {
-            dd('asd');
+
             EmployeePayable::dispatch($this->account_id, $this->posting_date)
                 ->afterCommit();
         }
