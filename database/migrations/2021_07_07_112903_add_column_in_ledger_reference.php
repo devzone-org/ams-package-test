@@ -14,7 +14,7 @@ class AddColumnInLedgerReference extends Migration
     public function up()
     {
         Schema::table('ledgers', function (Blueprint $table) {
-            $table->string('reference')->default('other');
+            $table->string('reference')->default('other')->nullable();
         });
     }
 
