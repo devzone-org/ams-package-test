@@ -393,7 +393,7 @@
                 <div class="p-4">
                     Are you sure you want to transfer
                     PKR {{ number_format(collect($denomination_counting)->sum('total') - $retained_cash ,2) }}
-                    to {{ collect($transfers)->firstWhere('id',$transfer_id)['name'] }}
+                    to {{ collect($transfers)->firstWhere('id',$transfer_id)['name'] ?? '' }}
                     from {{ $current_user['name'] ?? '' }}
                     <br>
                     Press <strong>Y</strong> to confirm
