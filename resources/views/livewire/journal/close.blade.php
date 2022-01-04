@@ -328,7 +328,7 @@
 
                         <tr class="">
                             <td colspan="2" class="px-6 py-2 text-center bg-gray-50  text-lg font-sm text-gray-900">
-                                Transfer to "{{ collect($transfers)->firstWhere('id',$transfer_id)['name'] }}"
+                                Transfer to "{{ collect($transfers)->firstWhere('id',$transfer_id)['name'] ?? '' }}"
                             </td>
                         </tr>
                         </tbody>
