@@ -54,6 +54,10 @@
                         Closing Date
                     </th>
                     <th scope="col"
+                        class="  px-2  text-center  border-r py-2 text-left text-sm font-bold text-gray-500  tracking-wider">
+                        Voucher
+                    </th>
+                    <th scope="col"
                         class="  px-2  text-center border-r py-2 text-left text-sm font-bold text-gray-500  tracking-wider">
                         User ID
                     </th>
@@ -107,6 +111,9 @@
                     <tr class="">
                         <td class="px-2  text-center py-2   border-r text-sm   text-gray-500">
                             {{ date('d M Y',strtotime($r['created_at'])) }}
+                        </td>
+                        <td class="px-2 text-center py-2   border-r text-sm   text-gray-500">
+                            <a class="font-medium text-indigo-600 hover:text-indigo-500" href="javascript:void(0);" onclick="window.open('{{ url('accounts/journal/voucher/print').'/'.$r['voucher_no'] }}','voucher-print-{{$r['voucher_no']}}','height=500,width=800');">{{ $r['voucher_no'] }}</a>
                         </td>
                         <td class="px-2  text-center py-2    border-r text-sm text-gray-500">
                             {{ $r['user_id'] }}
