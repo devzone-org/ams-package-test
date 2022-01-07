@@ -24,6 +24,8 @@ class Listing extends Component
     public $from;
     public $to;
     public $status;
+    public $reversal_id;
+    public $reverse_modal = false;
 
 
     public function render()
@@ -64,14 +66,21 @@ class Listing extends Component
     }
 
 
-    public function reverseEntry($id)
+    public function openReverseModal($id)
+    {
+        $this->reversal_id = $id;
+        $this->reverse_modal = true;
+    }
+
+
+    public function reverseEntry()
     {
         try {
             DB::beginTransaction();
             if (!auth()->user()->can('2.payments.reversal')) {
                 throw new \Exception(env('PERMISSION_ERROR'));
             }
-            $payment = PaymentReceiving::find($id);
+            $payment = PaymentReceiving::find($this->reversal_id);
             if (empty($payment)) {
                 throw new \Exception('Record not found.');
             }
