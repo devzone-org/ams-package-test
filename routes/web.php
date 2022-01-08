@@ -65,6 +65,8 @@ Route::group(['middleware' => ['permission:2.view.ledger']], function () {
     Route::get('accountant/ledger', function () {
         return view('ams::reports.ledger');
     });
+
+    Route::get('accountant/ledger/export', [\Devzone\Ams\Http\Controllers\Exports\LedgerExportController::class, 'download']);
 });
 
 Route::group(['middleware' => ['permission:3.trail-balance']], function () {
