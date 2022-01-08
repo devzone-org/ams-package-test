@@ -319,11 +319,11 @@
                    <div class="p-3 flex  justify-between ">
 
 
-                       <button type="button" wire:click="approveTempEntry('{{ $tl->first()->voucher_no }}')" class="inline-flex  items-center px-4 py-2 border border-green-700 text-sm font-medium rounded-md text-green-700  hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                       <button type="button" wire:click="approveTempEntry('{{ $tl->first()->voucher_no }}')" wire:loading.attr="disabled" class="inline-flex  items-center px-4 py-2 border border-green-700 text-sm font-medium rounded-md text-green-700  hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                            Approve Only
                        </button>
 
-                       <button type="button" wire:click="approveTempEntry('{{ $tl->first()->voucher_no }}','true')" class="inline-flex   items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                       <button type="button" wire:click="approveTempEntry('{{ $tl->first()->voucher_no }}','true')" wire:loading.attr="disabled" class="inline-flex   items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                            Print and Approve
                        </button>
                    </div>

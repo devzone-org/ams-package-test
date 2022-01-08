@@ -30,10 +30,11 @@
                 </div>
                 <div class="col-span-6 sm:col-span-2">
                     <div class="mt-6 flex-shrink-0 flex ">
-                        <button type="button" wire:click="search" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            Search
+                        <button type="button" wire:click="search" wire:loading.attr="disabled" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <span wire:loading wire:target="search">Searching ...</span>
+                            <span wire:loading.remove wire:target="search">Search</span>
                         </button>
-                        <button type="button" wire:click="resetSearch" class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                        <button type="button" wire:click="resetSearch" wire:loading.attr="disabled" class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                             Reset
                         </button>
                     </div>
