@@ -73,15 +73,24 @@ Route::group(['middleware' => ['permission:3.trail-balance']], function () {
     Route::get('reports/trial-balance', function () {
         return view('ams::reports.trial');
     });
+
+    Route::get('reports/trial-balance/export', [\Devzone\Ams\Http\Controllers\Exports\TrialExportController::class, 'downloadTrial']);
+
 });
 
 Route::group(['middleware' => ['permission:3.pnl']], function () {
     Route::get('reports/profit-and-loss', function () {
         return view('ams::reports.profit-loss');
     });
+
+    Route::get('reports/profit-and-loss/export', [\Devzone\Ams\Http\Controllers\Exports\ProfitLossExportController::class, 'download']);
+
     Route::get('reports/profit-and-loss/date-wise', function () {
         return view('ams::reports.profit-loss-datewise');
     });
+
+    Route::get('reports/profit-and-loss/date-wise/export', [\Devzone\Ams\Http\Controllers\Exports\PnlDatewiseController::class, 'download']);
+
 });
 Route::group(['middleware' => ['permission:3.balance-sheet']], function () {
 
@@ -94,7 +103,10 @@ Route::group(['middleware' => ['permission:3.day-closing']], function () {
     Route::get('reports/day-closing', function () {
         return view('ams::reports.day-closing');
     });
+
+    Route::get('reports/day-closing/export', [\Devzone\Ams\Http\Controllers\Exports\DayClosingExportController::class, 'download']);
 });
+
 Route::group(['middleware' => ['permission:2.view.ledger']], function () {
     Route::get('journal/voucher/print/{voucher_no}/{print?}', [JournalController::class, 'printVoucher']);
 });
