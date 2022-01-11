@@ -14,6 +14,9 @@ Route::group(['middleware' => ['permission:2.coa.view']], function () {
     Route::get('accountant/chart-of-accounts', function () {
         return view('ams::coa.list');
     });
+
+    Route::get('accountant/chart-of-accounts/export', [\Devzone\Ams\Http\Controllers\Exports\CoaExportController::class, 'download']);
+
 });
 
 Route::group(['middleware' => ['permission:2.create.coa.all|2.create.coa.level5']], function () {
