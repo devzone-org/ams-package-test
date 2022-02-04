@@ -12,32 +12,27 @@
             display: none !important;
         }
     </style>
-    <style>
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type="number"] {
-            -moz-appearance: textfield;
-        }
-    </style>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
 
     @livewireScripts
     <script src="{{ asset('ams/js/app.js') }}"></script>
-
-
-
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.1/dist/alpine.min.js" defer></script>
 </head>
-<body class="bg-gray-200">
-<div x-data="{menu:false,dropdown:false,activeIndex:-1}">
-    @include('ams::include.header')
-    <main>
-        @yield('content')
-    </main>
+<body>
 
-    @yield('script')
-</div>
+<div class="h-screen flex overflow-hidden bg-gray-100" x-data="{sidebar:false}" x-cloak>
+
+{{--    @include('ams::include.header')--}}
+
+
+    @include('ams::include.sidebar')
+    <div class="flex flex-col w-0 flex-1 overflow-hidden">
+        <main class="flex-1 relative z-0 overflow-y-auto focus:outline-none" tabindex="0">
+            @yield('content')
+        </main>
+
+    </div>
+        @yield('script')
+
+
 </body>
 </html>
