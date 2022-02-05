@@ -37,6 +37,10 @@
             </div>
             <div class="flex-1 h-0 pt-5  pb-4 overflow-y-auto">
 
+                <div class="flex-shrink-0 flex items-center px-4">
+                    <img class=" h-8 w-auto" src="{{ config('app.logo') }}" alt="Logo">
+                </div>
+
                 @include('ams::include.sidebar-links')
             </div>
 
@@ -54,6 +58,10 @@
         <div class="flex flex-col h-0 flex-1 border-r border-gray-200 bg-white">
 
             <div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
+{{--                <div class="flex items-center  px-4 ">--}}
+{{--                    <img class=" h-20 ml-12 " src="{{ url(env('CLIENT_LOGO')) }}"  width="100" alt="Logo">--}}
+
+{{--                </div>--}}
 
 
                 @include('ams::include.sidebar-links')
