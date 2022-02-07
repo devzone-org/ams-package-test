@@ -48,7 +48,7 @@
             <!-- Search bar -->
             <div class="flex-1 px-4 flex justify-between ">
                 <div class="flex-1 flex">
-                    <span class=" inline-flex items-center px-4 py-2 border border-transparent text-lg font-medium rounded-md text-indigo-700 "> Accounts Portal</span>
+                    <span class=" inline-flex items-center px-4 py-2 border border-transparent text-lg font-medium rounded-md text-indigo-700 ">  </span>
                 </div>
                 <div class="ml-4 flex items-center md:ml-6">
 

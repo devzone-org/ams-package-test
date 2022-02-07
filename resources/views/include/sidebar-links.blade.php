@@ -13,10 +13,9 @@
         <button
                 class="flex items-center w-full py-2 pl-2 pr-1 text-sm font-medium text-gray-600 bg-white rounded-md group hover:text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 @click.prevent="isExpanded = !isExpanded" x-bind:aria-expanded="isExpanded">
-            <svg  class="{{ Request::segment(1)=='accounts' && Request::segment(2) == 'accountant' ? $a_current : '' }} mr-3 h-6 w-6"
-                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M15 9a2 2 0 10-4 0v5a2 2 0 01-2 2h6m-6-4h4m8 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="{{ Request::segment(1)=='accounts' && Request::segment(2) == 'accountant' ? $a_current : '' }} mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
             Accountant
             <svg :class="{ 'text-gray-400 rotate-90': isExpanded, 'text-gray-300': !isExpanded }" x-state:on="Expanded"
@@ -33,6 +32,15 @@
                class="{{ (Request::segment(3)=='journal' && Request::segment(4)=='add') ? $a_current : $a_default }} group rounded-md pr-2 pl-11 pl-3 py-2 flex items-center text-sm font-normal"
             >
                 General Journal
+            </a>
+        </div>
+
+        <div x-show="isExpanded" class="space-y-1">
+
+            <a href="{{ url('accounts/accountant/journal') }}"
+               class="{{ (Request::segment(3)=='journal' && empty(Request::segment(4))) ? $a_current : $a_default }} group rounded-md pr-2 pl-11 pl-3 py-2 flex items-center text-sm font-normal"
+            >
+                Temp General Journal
             </a>
         </div>
 

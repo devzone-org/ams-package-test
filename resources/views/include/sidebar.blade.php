@@ -37,8 +37,8 @@
             </div>
             <div class="flex-1 h-0 pt-5  pb-4 overflow-y-auto">
 
-                <div class="flex-shrink-0 flex items-center px-4">
-                    <img class=" h-8 w-auto" src="{{ config('app.logo') }}" alt="Logo">
+                <div class="flex-shrink-0 flex items-center px-4 mx-auto">
+                    <img class=" w-auto" src="{{ url(config('app.logo'))  }}" alt="Logo">
                 </div>
 
                 @include('ams::include.sidebar-links')
@@ -56,12 +56,14 @@
     <div class="flex flex-col w-64">
         <!-- Sidebar component, swap this element with another sidebar if you like -->
         <div class="flex flex-col h-0 flex-1 border-r border-gray-200 bg-white">
-
             <div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
-
+                <div class="flex-shrink-0 flex items-center px-4 mx-auto">
+                    <a href="{{ url('/') }}">
+                    <img class=" w-auto p-6" src="{{ url(config('app.logo'))  }}" alt="Logo">
+                    </a>
+                </div>
                 @include('ams::include.sidebar-links')
             </div>
-
         </div>
     </div>
 </div>
