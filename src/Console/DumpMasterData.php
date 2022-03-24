@@ -29,6 +29,12 @@ class DumpMasterData extends Command
             ]);
         }
 
+        if (!Voucher::where('name', 'pv_no')->exists()) {
+            Voucher::create([
+                'name' => 'pv_no'
+            ]);
+        }
+
         if (!Voucher::where('name', 'coa')->exists()) {
             Voucher::create([
                 'name' => 'coa'

@@ -37,6 +37,12 @@ class Voucher
         return $this;
     }
 
+    public function pvNo()
+    {
+        $this->name = 'pv_no';
+        return $this;
+    }
+
     public function coa()
     {
         $this->name = 'coa';
