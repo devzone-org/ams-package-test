@@ -82,11 +82,11 @@
                          x-transition:leave-end="transform opacity-0 scale-95"
                          class="origin-top-right absolute right-0 mt-2 w-48 rounded-md z-10 shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                          role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                        <a href="#" @click="dropdown=false" class="block px-4 py-2 text-sm text-gray-700   "
+                        <a href="{{url('ums')}}" @click="dropdown=false" class="block px-4 py-2 text-sm text-gray-700   "
                            @mouseenter="activeIndex = 0" @mouseleave="activeIndex = -1"
                            :class="{ 'bg-gray-100': activeIndex === 0 }" role="menuitem" tabindex="-1"
                            id="user-menu-item-0">Your Profile</a>
-                        <a href="#" @click="dropdown=false" class="block px-4 py-2 text-sm text-gray-700"
+                        <a href="{{url('ums')}}" @click="dropdown=false" class="block px-4 py-2 text-sm text-gray-700"
                            @mouseenter="activeIndex = 1" @mouseleave="activeIndex = -1"
                            :class="{ 'bg-gray-100': activeIndex === 1 }" role="menuitem" tabindex="-1"
                            id="user-menu-item-1">Settings</a>
