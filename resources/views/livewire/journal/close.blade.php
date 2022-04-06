@@ -1,5 +1,5 @@
 <div>
-    <div class="shadow sm:rounded-md sm:overflow-hidden bg-white">
+    <div class="shadow sm:rounded-md sm:overflow-hidden bg-white overflow-auto">
         <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
             <div>
                 <h3 class="text-lg leading-6 font-medium text-gray-900">Day Closing</h3>
@@ -178,7 +178,7 @@
 
 
             <div class="grid grid-cols-6 gap-6">
-                <div class="col-span-6 sm:col-span-3">
+                <div class="col-span-6 sm:col-span-3 overflow-auto">
                     <table class="min-w-full border divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                         <tr>
