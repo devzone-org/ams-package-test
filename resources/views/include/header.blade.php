@@ -68,9 +68,15 @@
                                 class="bg-white rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
                                 id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                             <span class="sr-only">Open user menu</span>
-                            <img class="h-8 w-8 rounded-full"
-                                 src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=4&amp;w=256&amp;h=256&amp;q=80"
-                                 alt="">
+                            @if(!empty(auth()->user()->attachment))
+                                <img class="h-8 w-8 rounded-full" src="{{ env('AWS_URL') . auth()->user()->attachment }}" alt="">
+                            @else
+                                <div class="rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            @endif
                         </button>
                     </div>
                     <div x-show="dropdown" x-cloak="" @click.away="dropdown=false"
@@ -82,10 +88,6 @@
                          x-transition:leave-end="transform opacity-0 scale-95"
                          class="origin-top-right absolute right-0 mt-2 w-48 rounded-md z-10 shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                          role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                        <a href="{{url('ums')}}" @click="dropdown=false" class="block px-4 py-2 text-sm text-gray-700   "
-                           @mouseenter="activeIndex = 0" @mouseleave="activeIndex = -1"
-                           :class="{ 'bg-gray-100': activeIndex === 0 }" role="menuitem" tabindex="-1"
-                           id="user-menu-item-0">Your Profile</a>
                         <a href="{{url('ums')}}" @click="dropdown=false" class="block px-4 py-2 text-sm text-gray-700"
                            @mouseenter="activeIndex = 1" @mouseleave="activeIndex = -1"
                            :class="{ 'bg-gray-100': activeIndex === 1 }" role="menuitem" tabindex="-1"
