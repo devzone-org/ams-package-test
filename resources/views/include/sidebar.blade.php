@@ -38,7 +38,7 @@
             <div class="flex-1 h-0 pt-5  pb-4 overflow-y-auto">
 
                 <div class="flex-shrink-0 flex items-center px-4 mx-auto">
-                    <img class=" w-auto" src="{{ url(config('app.logo'))  }}" alt="Logo">
+                    <img class=" w-auto" src="{{ url(env('CLIENT_LOGO')) }}" alt="Logo">
                 </div>
 
                 @include('ams::include.sidebar-links')
@@ -59,7 +59,7 @@
             <div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
                 <div class="flex-shrink-0 flex items-center px-4 mx-auto">
                     <a href="{{ url('/') }}">
-                    <img class=" w-auto p-6" src="{{ url(config('app.logo'))  }}" alt="Logo">
+                    <img class=" w-auto p-6" src="{{ url(env('CLIENT_LOGO')) }}" alt="Logo">
                     </a>
                 </div>
                 @include('ams::include.sidebar-links')
