@@ -18,14 +18,21 @@
                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 {{ Request::segment(1)=='hospitals' ? 'bg-indigo-100' : 'bg-white' }} hover:bg-indigo-50  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Welcome Screen
                         </a>
-                        @if(empty(env('PHARMACY_ONLY')))
-                            <a href="{{url('hospital')}}"
+                        <a href="{{url('hospital')}}"
                                class="ml-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 {{ Request::segment(1)=='hospital' ? 'bg-indigo-100' : 'bg-white' }} hover:bg-indigo-50  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 Reception Portal
-                            </a>
-                        @endif
+                        </a>
                         <a href="{{url('pharmacy')}}"
-                           class="@if(empty(env('PHARMACY_ONLY'))) ml-8 @endif inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 {{ Request::segment(1)=='pharmacy' ? 'bg-indigo-100' : 'bg-white' }} hover:bg-indigo-50  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                           class=" ml-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 {{ Request::segment(1)=='pharmacy' ? 'bg-indigo-100' : 'bg-white' }} hover:bg-indigo-50  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Pharmacy Portal
+                        </a>
+                        <a href="{{url('accounts')}}"
+                           class="ml-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 {{ Request::segment(1)=='accounts' ? 'bg-indigo-100' : 'bg-white' }} hover:bg-indigo-50  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Accounts Portal
+                        </a>
+                    @elseif(env('PHARMACY_ONLY') == '1')
+                        <a href="{{url('pharmacy')}}"
+                           class=" inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 {{ Request::segment(1)=='pharmacy' ? 'bg-indigo-100' : 'bg-white' }} hover:bg-indigo-50  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Pharmacy Portal
                         </a>
                         <a href="{{url('accounts')}}"
