@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use function Couchbase\defaultDecoder;
 
 class Add extends Component
 {
@@ -199,6 +200,7 @@ class Add extends Component
 
     public function draft()
     {
+        $this->resetErrorBag();
         try {
             DB::beginTransaction();
             //$this->validate();
@@ -247,7 +249,7 @@ class Add extends Component
                 LedgerAttachment::where('type', '0')->whereIn('id', $this->deleted_attachment)->delete();
             }
             foreach ($this->attachment_entries as $ae) {
-                if (isset($ae['file'])) {
+                if (!empty($ae['file'])) {
                     $path = $ae['file']->storePublicly(env('AWS_FOLDER') . 'accounts', 's3');
                     LedgerAttachment::create([
                         'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
@@ -255,8 +257,8 @@ class Add extends Component
                         'attachment' => $path
                     ]);
                 } else {
-                    if (isset($ae['id'])) {
-                        LedgerAttachment::find($ae['id'])->update([
+                    if (!empty($ae['account_id'])) {
+                        LedgerAttachment::find($ae['account_id'])->update([
                             'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
                         ]);
                     }
