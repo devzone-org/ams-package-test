@@ -33,7 +33,7 @@ class CoaExportController
 
         $csv->insertAll($sth);
 
-        $csv->output('coa.csv');
+        $csv->output('COA' . date('d M Y h:i A') . '.csv');
 
 
 

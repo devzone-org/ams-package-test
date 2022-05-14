@@ -18,7 +18,7 @@ class DayClosingExportController
     public function __construct()
     {
         $request = request();
-        $this->user_account_id = $request['account_id'];
+        $this->user_account_id = $request['id'];
         $this->from_date = $request['from_date'];
         $this->to_date = $request['to_date'];
     }
@@ -70,7 +70,7 @@ class DayClosingExportController
 
         $csv->insertAll($data);
 
-        $csv->output('day closing.csv');
+        $csv->output('Day Closing' . date('d M Y h:i A') . '.csv');
 
 //        $request = request();
 //        $user_account_id = $request['id'];

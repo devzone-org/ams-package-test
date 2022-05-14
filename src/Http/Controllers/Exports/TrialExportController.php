@@ -109,7 +109,7 @@ class TrialExportController
 
         $csv->insertAll($ledger);
 
-        $csv->output('ledger.csv');
+        $csv->output('Trial & Balance'. date('d M Y h:i A') . '.csv');
 
 //        $request = request();
 //        $from_date = $request['from_date'];

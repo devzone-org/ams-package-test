@@ -13,6 +13,7 @@ class LedgerExportController
     protected $account_id;
     protected $from_date;
     protected $to_date;
+    protected $coa;
 
     public function __construct()
     {
@@ -20,6 +21,7 @@ class LedgerExportController
         $this->account_id = $request['id'];
         $this->from_date = $request['from_date'];
         $this->to_date = $request['to_date'];
+        $this->coa = ChartOfAccount::find($request['id']);
     }
 
     private function formatDate($date)
@@ -107,7 +109,7 @@ class LedgerExportController
 
         $csv->insertAll($data);
 
-        $csv->output('ledger.csv');
+        $csv->output('GL'. $this->coa['name']. ' - ' . date('d M Y h:i A') . '.csv');
 
 //        $request = request();
 //        $account_id = $request['id'];
