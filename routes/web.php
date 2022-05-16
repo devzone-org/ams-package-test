@@ -81,9 +81,14 @@ Route::group(['middleware' => ['permission:3.pnl']], function () {
     Route::get('reports/profit-and-loss', function () {
         return view('ams::reports.profit-loss');
     });
+    Route::get('reports/profit-and-loss/export', [\Devzone\Ams\Http\Controllers\Exports\ProfitLossExportController::class, 'download']);
+
     Route::get('reports/profit-and-loss/date-wise', function () {
         return view('ams::reports.profit-loss-datewise');
     });
+
+    Route::get('reports/profit-and-loss/date-wise/export', [\Devzone\Ams\Http\Controllers\Exports\ProfitLossDateWiseExport::class, 'download']);
+
 });
 Route::group(['middleware' => ['permission:3.balance-sheet']], function () {
 

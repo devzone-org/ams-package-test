@@ -58,7 +58,8 @@ class DayClosingExportController
                 'physical_cash' => $s['physical_cash'],
                 'cash_retained' => $s['cash_retained'],
                 'adjustment' => $s['adjustment'],
-                'amount_transferred' => $s['amount_transferred']
+                'amount_transferred' => $s['amount_transferred'],
+                'transfer_to' => $s['transfer_name']
 
             ];
 
@@ -66,11 +67,11 @@ class DayClosingExportController
 
         $csv = Writer::createFromFileObject(new SplTempFileObject());
 
-        $csv->insertOne(['closing_date', 'voucher_no', 'user_id', 'close_by', 'close_at', 'closing_balance', 'physical_cash','cash_retained' ,'adjustment', 'amount_transferred']);
+        $csv->insertOne(['Closing Date', 'Voucher #', 'User ID', 'Closed By', 'Close At', 'System Cash', 'Physical Cash','Amount Retained' ,'Adjustment', 'Amount Transferred','Transfer To']);
 
         $csv->insertAll($data);
 
-        $csv->output('Day Closing' . date('d M Y h:i A') . '.csv');
+        $csv->output('Day Closing ' . date('d M Y h:i A') . '.csv');
 
 //        $request = request();
 //        $user_account_id = $request['id'];
