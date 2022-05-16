@@ -2,14 +2,12 @@
 
 namespace Devzone\Ams\Http\Controllers\Exports;
 
-use Devzone\Ams\Exports\ProfitLossExport;
 use Devzone\Ams\Models\ChartOfAccount;
 use Illuminate\Support\Facades\DB;
 use League\Csv\Writer;
 use SplTempFileObject;
-use Excel;
 
-class ProfitLossExportController
+class ProfitLossDateWiseExport
 {
 
     protected $from_date;
@@ -34,6 +32,8 @@ class ProfitLossExportController
 
     public function download()
     {
+        $from = \Carbon\Carbon::parse($this->from_date);
+        $to = \Carbon\Carbon::parse($this->to_date);
 
         $report = \Devzone\Ams\Models\Ledger::from('ledgers as l')
             ->join('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
@@ -47,12 +47,13 @@ class ProfitLossExportController
                 'coa.reference',
                 'coa.sub_account',
                 'l.account_id',
-                DB::raw("DATE_FORMAT(l.posting_date,'%Y-%m') as month"))
+                DB::raw("DATE_FORMAT(l.posting_date,'%d %M') as month"),
+                DB::raw("DATE_FORMAT(l.posting_date,'%Y-%m-%d') as date"))
             ->where('l.posting_date', '>=', $this->formatDate($this->from_date))
             ->where('l.posting_date', '<=', $this->formatDate($this->to_date))
             ->where('l.is_approve', 't')
             ->whereIn('coa.type', ['Income', 'Expenses'])
-            ->groupBy(DB::raw("DATE_FORMAT(l.posting_date,'%Y-%m')"))
+            ->groupBy(DB::raw("DATE_FORMAT(l.posting_date,'%d %M')"))
             ->groupBy('l.account_id')
             ->orderBy('coa.name', 'asc')
             ->get();
@@ -92,11 +93,13 @@ class ProfitLossExportController
                 'balance' => $balance,
                 'account_id' => $r->account_id,
                 'reference' => $r->reference,
-                'p_ref' => $p_ref
+                'p_ref' => $p_ref,
+                'date' => $r->date
             ];
         }
 
         $report = $pnl;
+
         $data = [];
         $bal = [];
 
@@ -107,7 +110,6 @@ class ProfitLossExportController
         ];
 
         foreach (collect($report)->where('type', 'Income')->groupBy('account_id') as $key => $en) {
-
 
             $bal = [];
             foreach ($heading as $h) {
@@ -130,12 +132,12 @@ class ProfitLossExportController
 
         $bal = [];
         foreach ($heading as $h) {
-            $bal[] = collect($report)->where('type', 'Income')->where('month', $h)->sum('balance');
+            $bal[] = number_format(collect($report)->where('type', 'Income')->where('month', $h)->sum('balance'),2);
         }
         $data [] = [
             'name' => 'Total Revenue',
             'balance' => $bal,
-            'total' => number_format(collect($report)->where('type', 'Income')->sum('balance'),2)
+            'total' => number_format(collect($report)->where('type', 'Income')->sum('balance'),2),
         ];
 
         $data[] = [
@@ -208,7 +210,7 @@ class ProfitLossExportController
         foreach (collect($report)->where('type', 'Expenses')->where('p_ref', '!=', 'cost-of-sales-4')->groupBy('account_id') as $key => $en) {
             $bal = [];
             foreach ($heading as $h) {
-                $first = collect($report)->where('account_id', $key)->where('month', $h)->first();
+                $first =collect($report)->where('account_id', $key)->where('month', $h)->first();
                 if (!empty($first)) {
                     $bal[] = $first['balance'];
                 } else {
@@ -227,7 +229,7 @@ class ProfitLossExportController
         $bal = [];
         foreach ($heading as $h) {
 
-            $bal[] = collect($report)->where('type', 'Expenses')->where('p_ref', '!=', 'cost-of-sales-4')->where('month', $h)->sum('balance');
+            $bal[] = number_format(collect($report)->where('type', 'Expenses')->where('p_ref', '!=', 'cost-of-sales-4')->where('month', $h)->sum('balance'),2);
         }
         $data [] = [
             'name' => 'Total Other Expenses',
@@ -243,7 +245,7 @@ class ProfitLossExportController
         $bal = [];
         foreach ($heading as $h) {
 
-            $bal[] = collect($report)->where('type', 'Income')->where('month', $h)->sum('balance') - collect($report)->where('type', 'Expenses')->where('month', $h)->sum('balance');
+            $bal[] = number_format(collect($report)->where('type', 'Income')->where('month', $h)->sum('balance') - collect($report)->where('type', 'Expenses')->where('month', $h)->sum('balance'),2);
         }
         $data [] = [
             'name' => 'Net Profit/(Loss)',
@@ -256,7 +258,7 @@ class ProfitLossExportController
 
         $months = [];
         foreach ($heading as $h) {
-            $months[] = date('M Y', strtotime($h));
+            $months[] = date('d M Y', strtotime($h));
         }
 
         array_unshift($months, 'Account Head');
@@ -276,16 +278,9 @@ class ProfitLossExportController
             }
         }
 
-        $csv->output('P&L '. date('d M Y h:i A') . '.csv');
+        $csv->output('P&L Datewise '. date('d M Y h:i A') . '.csv');
 
 
-//        $request = request();
-//        $from_date = $request['from_date'];
-//        $to_date = $request['to_date'];
-//
-//        $export = new ProfitLossExport( $from_date, $to_date);
-//
-//        return Excel::download($export,'P&L'. date('d M Y h:i A') . '.xlsx');
     }
 
 }

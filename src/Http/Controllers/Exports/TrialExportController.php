@@ -102,14 +102,43 @@ class TrialExportController
             }
         }
 
+        foreach ($ledger as $l) {
+
+            $data[] = [
+                'type' => $l['type'],
+                'account_name' => $l['code'] . '-' . $l['account_name'],
+                'debit' => $l['debit'] >= 0 ? number_format($l['debit'], 2) : number_format(-$l['debit'], 2),
+                'credit' => $l['credit'] >= 0 ? number_format($l['credit'], 2) : number_format(-$l['credit'], 2),
+            ];
+        }
+
+        $debit = collect($ledger)->sum('debit');
+        $credit = collect($ledger)->sum('credit');
+
+        $data[] = [
+            '1' => null,
+            'name' => 'Total',
+            'debit' => $debit > 0 ? number_format($debit, 2) : number_format(-$debit, 2),
+            'credit' => $credit > 0 ? number_format($credit, 2) : number_format(-$credit, 2),
+
+        ];
+
+        $data[] = [
+            '1' => null,
+            'name' => 'Difference',
+            '3' => null,
+            '4' => number_format($debit-$credit,2),
+
+        ];
+
 
         $csv = Writer::createFromFileObject(new SplTempFileObject());
 
-        $csv->insertOne(['type', 'code', 'account_name', 'debit', 'credit']);
+        $csv->insertOne(['Type', 'Account Name', 'Dr', 'Cr']);
 
-        $csv->insertAll($ledger);
+        $csv->insertAll($data);
 
-        $csv->output('Trial & Balance'. date('d M Y h:i A') . '.csv');
+        $csv->output('Trial & Balance ' . date('d M Y h:i A') . '.csv');
 
 //        $request = request();
 //        $from_date = $request['from_date'];

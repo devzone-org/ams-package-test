@@ -76,24 +76,34 @@ class LedgerExportController
         $data = [];
         $balance = $opening_balance;
 
-        foreach ($ledger as $key=>  $en){
+        $data [] = [
+            'name' => 'Opening Balance',
+            '2' => null,
+            '3' => null,
+            '4' => null,
+            '5' => null,
+            'balance' => $opening_balance,
+
+        ];
+        foreach ($ledger as $key => $en) {
+
 
             if ($account['nature'] == 'd') {
-                if($account['is_contra']=='f'){
-                    $balance = $balance+ $en['debit'] - $en['credit'];
+                if ($account['is_contra'] == 'f') {
+                    $balance = $balance + $en['debit'] - $en['credit'];
                 } else {
-                    $balance = $balance- $en['debit'] + $en['credit'];
+                    $balance = $balance - $en['debit'] + $en['credit'];
                 }
 
             } else {
-                if($account['is_contra']=='f') {
-                    $balance = $balance- $en['debit'] + $en['credit'];
+                if ($account['is_contra'] == 'f') {
+                    $balance = $balance - $en['debit'] + $en['credit'];
                 } else {
-                    $balance = $balance+ $en['debit'] - $en['credit'];
+                    $balance = $balance + $en['debit'] - $en['credit'];
                 }
             }
 
-            $data[]=[
+            $data[] = [
                 'voucher_no' => $en['voucher_no'],
                 'posting_date' => $en['posting_date'],
                 'description' => !empty($en['reference']) ?? '' . $en['description'],
@@ -103,13 +113,46 @@ class LedgerExportController
             ];
         }
 
+        if ($balance >= 0) {
+           $closing = number_format($balance, 2);
+        } else {
+            $closing = number_format(-$balance, 2);
+        }
+
+        $data [] = [
+            'name' => 'Closing Balance',
+            '2' => null,
+            '3' => null,
+            '4' => null,
+            '5' => null,
+            'balance' => $closing,
+
+        ];
+        $data [] = [
+            'name' => 'Total Debit & Credit',
+            '2' => null,
+            '3' => null,
+            'debit' => number_format(collect($ledger)->sum('debit'),2),
+            'credit' => number_format(collect($ledger)->sum('credit'),2),
+            '6' => null,
+        ];
+        $data [] = [
+            'name' => 'Total Number of Transactions',
+            '2' => null,
+            '3' => null,
+            '4' => null,
+            'debit' => number_format(collect($ledger)->count(),2),
+            '6' => null,
+
+        ];
+
         $csv = Writer::createFromFileObject(new SplTempFileObject());
 
-        $csv->insertOne(['voucher_no', 'posting_date', 'description', 'debit', 'credit', 'balance']);
+        $csv->insertOne(['Voucher #', 'Date', 'Description', 'Dr', 'Cr', 'Balance']);
 
         $csv->insertAll($data);
 
-        $csv->output('GL'. $this->coa['name']. ' - ' . date('d M Y h:i A') . '.csv');
+        $csv->output('GL ' . $this->coa['name'] . ' - ' . date('d M Y h:i A') . '.csv');
 
 //        $request = request();
 //        $account_id = $request['id'];
