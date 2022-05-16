@@ -14,6 +14,7 @@ Route::group(['middleware' => ['permission:2.coa.view']], function () {
     Route::get('accountant/chart-of-accounts', function () {
         return view('ams::coa.list');
     });
+    Route::get('accountant/chart-of-accounts/export', [\Devzone\Ams\Http\Controllers\Exports\CoaExportController::class, 'download']);
 });
 
 Route::group(['middleware' => ['permission:2.create.coa.all|2.create.coa.level5']], function () {
@@ -65,12 +66,15 @@ Route::group(['middleware' => ['permission:2.view.ledger']], function () {
     Route::get('accountant/ledger', function () {
         return view('ams::reports.ledger');
     });
+    Route::get('accountant/ledger/export', [\Devzone\Ams\Http\Controllers\Exports\LedgerExportController::class, 'download']);
 });
 
 Route::group(['middleware' => ['permission:3.trail-balance']], function () {
     Route::get('reports/trial-balance', function () {
         return view('ams::reports.trial');
     });
+
+    Route::get('reports/trial-balance/export', [\Devzone\Ams\Http\Controllers\Exports\TrialExportController::class, 'downloadTrial']);
 });
 
 Route::group(['middleware' => ['permission:3.pnl']], function () {
@@ -92,6 +96,8 @@ Route::group(['middleware' => ['permission:3.day-closing']], function () {
     Route::get('reports/day-closing', function () {
         return view('ams::reports.day-closing');
     });
+    Route::get('reports/day-closing/export', [\Devzone\Ams\Http\Controllers\Exports\DayClosingExportController::class, 'download']);
+
 });
 Route::group(['middleware' => ['permission:2.view.ledger']], function () {
     Route::get('journal/voucher/print/{voucher_no}/{print?}', [JournalController::class, 'printVoucher']);

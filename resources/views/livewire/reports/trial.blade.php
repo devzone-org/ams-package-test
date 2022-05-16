@@ -7,18 +7,26 @@
             </div>
 
             <div class="grid grid-cols-6 gap-6">
-                <div class="col-span-6 sm:col-span-3">
+                <div class="col-span-6 sm:col-span-2">
                     <label for="from_date" class="block text-sm font-medium text-gray-700">From Date</label>
                     <input type="text" readonly wire:model.lazy="from_date" id="from_date" autocomplete="off"
                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 </div>
 
-                <div class="col-span-6 sm:col-span-3">
+                <div class="col-span-6 sm:col-span-2">
                     <label for="to_date" class="block text-sm font-medium text-gray-700">To Date</label>
                     <input type="text" readonly wire:model.lazy="to_date" id="to_date" autocomplete="off"
                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 </div>
 
+                <div  class="col-span-6 sm:col-span-2 mt-6">
+                    @if(!empty($ledger))
+                        <a href="{{'trial-balance/export'}}?from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}" target="_blank"
+                           class="ml-3 disabled:opacity-30 bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none ">
+                            Export.xls
+                        </a>
+                    @endif
+                </div>
             </div>
         </div>
         <div>
