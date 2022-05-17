@@ -23,6 +23,10 @@
                                 class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                             Reset
                         </button>
+                        <a href="{{'balance-sheet/export'}}?asat={{$asat}}" target="_blank"
+                           class="ml-3 disabled:opacity-30 bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none ">
+                            Export.csv
+                        </a>
                     </div>
                 </div>
 

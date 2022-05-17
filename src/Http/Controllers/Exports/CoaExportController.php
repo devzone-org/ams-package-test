@@ -8,10 +8,17 @@ use Excel;
 use Illuminate\Support\Facades\DB;
 use League\Csv\Writer;
 use SplTempFileObject;
-use function Couchbase\defaultDecoder;
 
 class CoaExportController
 {
+
+    protected $type;
+
+    public function __construct()
+    {
+        $request = request();
+        $this->type = $request['type'];
+    }
 
     private function closingBalance($nature, $is_contra, $debit = 0, $credit = 0)
     {
@@ -44,29 +51,40 @@ class CoaExportController
                 DB::raw('max(l.posting_date) as posting_date'))
             ->groupBy('coa.id')
             ->orderByRaw('FIELD(coa.type,"Assets","Liabilities","Equity","Income","Expenses")')
-            ->get()->toArray();
+            ->get();
 
 
         $data = [];
-        foreach ($sth as $s) {
+        foreach ($sth->where('level', 1) as $one) {
 
-//            dd($s);
-            $clo =  $this->closingBalance($s['nature'], $s['is_contra'], $s['debit'], $s['credit']);
-            if ($clo < 0) {
-                $bal= number_format(-$clo, 2 );
-            } else {
-               $bal = number_format($clo, 2);
+
+            foreach($sth->where('sub_account',$one->id) as $two){
+                foreach($sth->where('sub_account',$two->id) as $three){
+                    foreach($sth->where('sub_account',$three->id) as $four){
+                        foreach($sth->where('sub_account',$four->id) as $five){
+
+                            $clo =  $this->closingBalance($five['nature'], $five['is_contra'], $five['debit'], $five['credit']);
+                            if ($clo < 0) {
+                                $bal= number_format($clo, 2 );
+                            } else {
+                                $bal = number_format($clo, 2);
+                            }
+
+                            $data [] = [
+                                'name' => $five['name'],
+                                'code' => str_pad($five['code'],7,"0",STR_PAD_LEFT),
+                                'balance' => $bal,
+                                'date' => !empty($five['posting_date']) ? date('d M, Y',strtotime($five['posting_date'])) : ''
+
+                            ];
+
+                        }
+                    }
+                }
             }
-
-            $data [] = [
-                'name' => $s['name'],
-                'code' => $s['code'],
-                'balance' => $bal,
-                'date' => !empty($s['posting_date']) ? date('d M, Y',strtotime($s['posting_date'])) : '',
-            ];
-
         }
 
+//        dd($data);
 
         $csv = Writer::createFromFileObject(new SplTempFileObject());
 
