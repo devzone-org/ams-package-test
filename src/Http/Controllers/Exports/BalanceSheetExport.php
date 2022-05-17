@@ -24,7 +24,10 @@ class BalanceSheetExport
     }
     public function download()
     {
-//        $this->reset('level3', 'level4', 'level5', 'data', 'pnl');
+        $level3 = [];
+        $level4 = [];
+        $level5 = [];
+
         $report = \Devzone\Ams\Models\Ledger::from('ledgers as l')
             ->join('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
             ->select(
