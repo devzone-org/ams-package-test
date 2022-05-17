@@ -17,11 +17,13 @@ class BalanceSheetExport
         $request = request();
         $this->asat = $request['asat'];
     }
+
     private function formatDate($date)
     {
         return \Carbon\Carbon::createFromFormat('d M Y', $date)
             ->format('Y-m-d');
     }
+
     public function download()
     {
         $level3 = [];
@@ -124,65 +126,101 @@ class BalanceSheetExport
         }
         $data = [];
         foreach (collect($level3)->groupBy('type')->toArray() as $type => $lvl3) {
-            $data[]=[
+            $data[] = [
                 'name' => $type,
-                'balance1' => null,
-                'balance' => null
+                '2' => null,
+                '3' => null,
+                '4' => null,
+                '5' => null,
+                '6' => null,
+                '7' => null
 
             ];
-            foreach ($lvl3 as $l3) {
+            foreach (   $lvl3 as $l3) {
 
                 $data[] = [
+                    '1' => null,
                     'name' => $l3['name'],
-                    'balance1' => null,
-                    'balance' => number_format($l3['balance'],2)
+                    '3' => null,
+                    '4' => null,
+                    '5' => null,
+                    '6' => null,
+                    'balance' => number_format($l3['balance'], 2),
+
+
+
                 ];
 
                 foreach (collect($level4)->where('sub_account', $l3['id']) as $l4) {
                     $data[] = [
+                        '1' => null,
+                        '2' => null,
                         'name' => $l4['name'],
-                        'balance1' => null,
-                        'balance' =>number_format($l4['balance'],2)
+                        '4' => null,
+                        '5' => null,
+                        'balance' => number_format($l4['balance'], 2),
+                        '7' => null,
+
                     ];
 
                     foreach (collect($level5)->where('sub_account', $l4['id']) as $l5) {
                         $data[] = [
+                            '1' => null,
+                            '2' => null,
+                            '3' => null,
                             'name' => $l5['name'],
-                            'balance' => number_format($l5['balance'],2)
+                            '5' => null,
+                            'balance' => number_format($l5['balance'], 2),
+                            '7' => null,
                         ];
                     }
                 }
             }
 
-            $data[] =[
+            $data[] = [
                 'name' => 'Total ' . $type,
-                'balance1' => null,
-                'balance' => number_format(collect($level3)->where('type',$type)->sum('balance')),
-                ];
+                '2' => null,
+                '3' => null,
+                '4' => null,
+                '5' => null,
+                '6' => null,
+                'balance' => number_format(collect($level3)->where('type', $type)->sum('balance')),
 
-            $data[] =[
+
+            ];
+
+            $data[] = [
                 'name' => null,
-                'balance1' => null,
+                '2' => null,
+                '3' => null,
+                '4' => null,
+                '5' => null,
                 'balance' => null,
-                ];
+                '7' => null,
+
+            ];
         }
 
-        $liabilities = collect($level3)->where('type','Liabilities')->sum('balance');
-        $equity = collect($level3)->where('type','Equity')->sum('balance');
+        $liabilities = collect($level3)->where('type', 'Liabilities')->sum('balance');
+        $equity = collect($level3)->where('type', 'Equity')->sum('balance');
         $total = $liabilities + $equity;
 
-        $data[] =[
+        $data[] = [
             'name' => ' Total Liabilities & Equity ',
-            'balance1' => null,
-            'balance' => number_format($total,2)
+            '2' => null,
+            '3' => null,
+            '4' => null,
+            '5' => null,
+            '6' => null,
+            'balance' => number_format($total, 2),
+
+
         ];
-
-
 
 
         $csv = Writer::createFromFileObject(new SplTempFileObject());
 
-        $csv->insertOne(['Name', 'PKR', 'PKR']);
+        $csv->insertOne(['Name','', '','','','PKR', 'PKR']);
 
         $csv->insertAll($data);
 
