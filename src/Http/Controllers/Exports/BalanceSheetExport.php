@@ -136,7 +136,7 @@ class BalanceSheetExport
                 '7' => null
 
             ];
-            foreach (   $lvl3 as $l3) {
+            foreach ($lvl3 as $l3) {
 
                 $data[] = [
                     '1' => null,
@@ -158,8 +158,8 @@ class BalanceSheetExport
                         'name' => $l4['name'],
                         '4' => null,
                         '5' => null,
+                        '6' => null,
                         'balance' => number_format($l4['balance'], 2),
-                        '7' => null,
 
                     ];
 
