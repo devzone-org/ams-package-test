@@ -101,14 +101,13 @@ class TrialExportController
                 $ledger[] = ['type' => $pl['type'], 'code' => $pl['code'], 'account_name' => $pl['name'], 'debit' => $debit, 'credit' => $credit];
             }
         }
-
         foreach ($ledger as $l) {
 
             $data[] = [
                 'type' => $l['type'],
                 'account_name' => $l['code'] . '-' . $l['account_name'],
-                'debit' => $l['debit'] >= 0 ? number_format($l['debit'], 2) : number_format(-$l['debit'], 2),
-                'credit' => $l['credit'] >= 0 ? number_format($l['credit'], 2) : number_format(-$l['credit'], 2),
+                'debit' => number_format($l['debit'], 2),
+                'credit' => number_format($l['credit'], 2),
             ];
         }
 
@@ -116,18 +115,18 @@ class TrialExportController
         $credit = collect($ledger)->sum('credit');
 
         $data[] = [
-            '1' => null,
+            'type' => null,
             'name' => 'Total',
-            'debit' => $debit > 0 ? number_format($debit, 2) : number_format(-$debit, 2),
-            'credit' => $credit > 0 ? number_format($credit, 2) : number_format(-$credit, 2),
+            'debit' => $debit > 0 ? number_format($debit, 2) : number_format(- $debit, 2),
+            'credit' => $credit > 0 ? number_format($credit, 2) : number_format(- $credit, 2),
 
         ];
 
         $data[] = [
-            '1' => null,
+            'type' => null,
             'name' => 'Difference',
-            '3' => null,
-            '4' => number_format($debit-$credit,2),
+            'debit' => null,
+            'credit' => number_format($debit-$credit,2),
 
         ];
 

@@ -38,7 +38,7 @@ class DayClosingExportController
             ->join('users as u', 'u.account_id', '=', 'dc.account_id')
             ->join('users as t', 't.account_id', '=', 'dc.transfer_to')
             ->join('users as c', 'c.id', '=', 'dc.close_by')
-            ->select('dc.created_at','dc.voucher_no', 'u.name as user_id','c.name as close_by','dc.closing_balance','dc.physical_cash','dc.cash_retained', DB::raw('(dc.closing_balance - dc.physical_cash) as adjustment'), DB::raw('(dc.physical_cash - dc.cash_retained) as amount_transferred'),'t.name as transfer_name' )
+            ->select('dc.created_at','dc.voucher_no', 'u.name as user_id','c.name as close_by','dc.closing_balance','dc.physical_cash','dc.cash_retained', DB::raw('(dc.physical_cash - dc.closing_balance) as adjustment'), DB::raw('(dc.physical_cash - dc.cash_retained) as amount_transferred'),'t.name as transfer_name' )
             ->where('dc.account_id', $this->user_account_id)
             ->whereDate('dc.created_at', '>=', $this->formatDate($this->from_date))
             ->whereDate('dc.created_at', '<=', $this->formatDate($this->to_date))

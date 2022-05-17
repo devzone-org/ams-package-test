@@ -95,6 +95,9 @@ Route::group(['middleware' => ['permission:3.balance-sheet']], function () {
     Route::get('reports/balance-sheet', function () {
         return view('ams::reports.balance-sheet');//
     });
+
+    Route::get('reports/balance-sheet/export', [\Devzone\Ams\Http\Controllers\Exports\BalanceSheetExport::class, 'download']);
+
 });
 
 Route::group(['middleware' => ['permission:3.day-closing']], function () {
