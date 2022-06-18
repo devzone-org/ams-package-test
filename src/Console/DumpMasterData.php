@@ -166,6 +166,7 @@ class DumpMasterData extends Command
         Permission::updateOrCreate(['name' => '3.pnl'], ['guard_name' => 'web', 'description' => 'Profit and Loss', 'portal' => 'accounts', 'section' => 'accounts']);
         Permission::updateOrCreate(['name' => '3.balance-sheet'], ['guard_name' => 'web', 'description' => 'Statement of Financial Position', 'portal' => 'accounts', 'section' => 'accounts']);
         Permission::updateOrCreate(['name' => '3.day-closing'], ['guard_name' => 'web', 'description' => 'Day Closing', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '3.trace-voucher'], ['guard_name' => 'web', 'description' => 'Trace Voucher', 'portal' => 'accounts', 'section' => 'accounts']);
         $this->info('Dumping Permissions Finished...');
     }
 }

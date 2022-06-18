@@ -1,5 +1,88 @@
 <div class="">
-    @if($temp_list->isEmpty())
+    <form wire:submit.prevent="search">
+        <div class="shadow mb-5 overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <div class="bg-white py-6 px-4 space-y-6 sm:p-6 ">
+                <div class="grid grid-cols-8 gap-6">
+                    <div class="col-span-8 sm:col-span-2">
+                        <label for="salesman" class="block text-sm font-medium text-gray-700"> Search Type</label>
+                        <select wire:model.lazy="type"
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value=""></option>
+                            <option value="voucher">Search by Voucher</option>
+                            <option value="voucher_range">Search by Voucher Range</option>
+                        </select>
+                    </div>
+
+                    @if($type == 'voucher' || empty($type))
+                        <div class=" col-span-8 sm:col-span-2">
+                            <label for="doctor" class="block text-sm font-medium text-gray-700">Voucher #</label>
+                            <input type="text" wire:model.lazy="voucher_no"
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                    @endif
+
+
+                    @if($type == 'voucher_range')
+                        <div class="col-span-8 sm:col-span-2">
+                            <label for="doctor" class="block text-sm font-medium text-gray-700">Voucher from</label>
+                            <input type="text" wire:model.lazy="voucher_from"
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+
+
+                        <div class="col-span-8 sm:col-span-2">
+                            <label for="doctor" class="block text-sm font-medium text-gray-700">Voucher to</label>
+                            <input type="text" wire:model.lazy="voucher_to"
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                    @endif
+
+                    <div class="col-span-8 sm:col-span-2">
+                        <label for="salesman" class="block text-sm font-medium text-gray-700">Date Range</label>
+                        <select wire:model="range"
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="today">Today</option>
+                            <option value="yesterday">Yesterday</option>
+                            <option value="seven_days">Last 7 Days</option>
+                            <option value="thirty_days">Last 30 Days</option>
+                            <option value="custom_range">Custom Range</option>
+                        </select>
+                    </div>
+
+                    <div class="{{$date_range ? 'block ' : 'hidden '}} col-span-8 sm:col-span-2">
+                        <label for="from" class="block text-sm font-medium text-gray-700">From</label>
+                        <input type="text" wire:model.lazy="from" autocomplete="off" id="from" readonly
+                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+
+                    <div class="{{$date_range ? 'block ' : 'hidden '}} col-span-8 sm:col-span-2">
+                        <label for="to" class="block text-sm font-medium text-gray-700">To</label>
+                        <input type="text" wire:model.lazy="to" autocomplete="off" id="to" readonly
+                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+
+
+                    <div class="col-span-8 sm:col-span-2">
+                        <button type="submit"
+                                class="bg-white mt-6 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <div wire:loading wire:target="search">
+                                Searching ...
+                            </div>
+                            <div wire:loading.remove wire:target="search">
+                                Search
+                            </div>
+                        </button>
+
+                        <button type="button" wire:click="resetSearch" wire:loading.attr="disabled"
+                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    @if(empty($temp_list))
         <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
             <div class="flex">
                 <div class="flex-shrink-0">
@@ -94,15 +177,15 @@
         @foreach($temp_list->groupBy('voucher_no') as $ky => $tl)
             <div class="shadow rounded-md">
 
-                <div class="bg-white  mb-5 rounded-md">
+                <div class="bg-white  mb-5 rounded-md overflow-hidden">
                     @if($loop->first)
                         <div class="py-6 px-4 space-y-6 sm:p-6">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">Temporary Journal Entries</h3>
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Trace Voucher Entries</h3>
                         </div>
                     @endif
 
 
-                    <table class="min-w-full table-fixed  ">
+                    <table class="min-w-full table-fixed">
                         <thead class="">
                         <tr class="">
                             <th scope="col"
@@ -280,28 +363,21 @@
 
                                     <div class="">
 
-                                        <p class="text-sm font-normal ">
+                                        <p class="text-sm font-normal mt-1 ">
                                             Posted by {{ $tl->first()->posting }} on
                                             <time
                                                     datetime="{{ $tl->first()->posting_date }}">{{ date('d M, Y',strtotime($tl->first()->posting_date)) }}</time>
                                         </p>
 
-
                                     </div>
+                                    <form wire:submit.prevent="print('{{ $tl->first()->voucher_no }}','true')">
+                                    <button type="submit"
 
-                                    <div>
-                                        <a href="{{ url('accounts/accountant/journal/edit').'/'.$tl->first()->voucher_no }}"
-                                           class="font-medium  py-1 px-2 rounded-md text-indigo-600 hover:text-indigo-800 hover:bg-indigo-100">
-                                            Edit
-                                        </a>
+                                            class="font-medium  py-1 px-2 rounded-md text-indigo-600 hover:text-indigo-800 hover:bg-indigo-100">
+                                        Print
+                                    </button>
+                                    </form>
 
-                                        <a href="#" wire:click="deleteTempEntry('{{ $tl->first()->voucher_no }}')"
-                                           class="font-medium  py-1 px-2 rounded-md text-red-600 hover:text-red-800 hover:bg-red-100">
-                                            Delete
-                                        </a>
-
-
-                                    </div>
                                 </div>
                             </th>
                             <th class="px-2 bg-gray-100 text-right  border-r text-sm text-gray-500">
@@ -312,33 +388,15 @@
                             </th>
                             <th></th>
                         </tr>
-
-
                         </tbody>
                     </table>
-                    <div class="p-3 flex  justify-between ">
 
-
-                        <button type="button" wire:click="approveTempEntry('{{ $tl->first()->voucher_no }}')"
-                                wire:loading.attr="disabled"
-                                class="inline-flex  items-center px-4 py-2 border border-green-700 text-sm font-medium rounded-md text-green-700  hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                            Approve Only
-                        </button>
-
-                        <button type="button" wire:click="approveTempEntry('{{ $tl->first()->voucher_no }}','true')"
-                                wire:loading.attr="disabled"
-                                class="inline-flex   items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                            Print and Approve
-                        </button>
-                    </div>
                 </div>
 
             </div>
         @endforeach
     @endif
 </div>
-
-
 <script>
     window.addEventListener('print-voucher', event => {
         var url = "/accounts/journal/voucher/print/" + event.detail.voucher_no + "/" + event.detail.print;
@@ -348,5 +406,22 @@
         }
         return false;
     })
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+<script>
+    let from_date = new Pikaday({
+        field: document.getElementById('from'),
+        format: "DD MMM YYYY"
+    });
+
+    let to_date = new Pikaday({
+        field: document.getElementById('to'),
+        format: "DD MMM YYYY"
+    });
+
+    from_date.setDate(new Date('{{ $from }}'));
+    to_date.setDate(new Date('{{ $to }}'));
 </script>
 
