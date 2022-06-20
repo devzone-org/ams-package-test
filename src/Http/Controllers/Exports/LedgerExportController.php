@@ -102,11 +102,12 @@ class LedgerExportController
                     $balance = $balance + $en['debit'] - $en['credit'];
                 }
             }
+            $reference = !empty($en['reference']) ? ucwords($en['reference']) : '';
 
             $data[] = [
                 'voucher_no' => $en['voucher_no'],
                 'posting_date' => $en['posting_date'],
-                'description' => !empty($en['reference']) ?? '' . $en['description'],
+                'description' => $reference . ' ' . $en['description'],
                 'debit' => $en['debit'],
                 'credit' => $en['credit'],
                 'balance' => $balance,
