@@ -60,7 +60,6 @@ class TraceVoucher extends Component
 
     public function print($voucher_no, $print = null)
     {
-
         if (!empty($print) && !empty($voucher_no)) {
             $this->dispatchBrowserEvent('print-voucher', ['voucher_no' => $voucher_no, 'print' => 'true']);
         }

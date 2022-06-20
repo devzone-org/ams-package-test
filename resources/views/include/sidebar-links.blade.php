@@ -44,6 +44,15 @@
             </a>
         </div>
 
+        <div x-show="isExpanded" class="space-y-1">
+
+            <a href="{{ url('accounts/accountant/trace-voucher') }}"
+               class="{{ (Request::segment(3)=='trace-voucher')? $a_current : $a_default }} group rounded-md pr-2 pl-11 pl-3 py-2 flex items-center text-sm font-normal"
+            >
+                Trace Voucher
+            </a>
+        </div>
+
         <div x-show="isExpanded" class="space-y-1"
         >
             <a href="{{ url('accounts/accountant/ledger') }}"
