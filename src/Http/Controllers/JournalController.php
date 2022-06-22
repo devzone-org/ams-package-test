@@ -24,4 +24,5 @@ class JournalController extends Controller
 
         return view('ams::journal.print-voucher', compact('ledger','print'));
     }
+
 }

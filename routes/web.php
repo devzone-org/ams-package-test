@@ -40,6 +40,13 @@ Route::group(['middleware' => ['permission:2.day.closing']], function () {
     });
 });
 
+Route::group(['middleware' => ['permission:3.trace-voucher']], function () {
+    Route::get('accountant/trace-voucher', function () {
+        return view('ams::journal.trace-voucher');
+    });
+});
+
+
 Route::group(['middleware' => ['permission:2.payments.any|2.payments.own']], function () {
     Route::get('accountant/payments', function () {
         return view('ams::journal.payments.list');
@@ -110,3 +117,5 @@ Route::group(['middleware' => ['permission:3.day-closing']], function () {
 Route::group(['middleware' => ['permission:2.view.ledger']], function () {
     Route::get('journal/voucher/print/{voucher_no}/{print?}', [JournalController::class, 'printVoucher']);
 });
+
+

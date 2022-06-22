@@ -8,6 +8,7 @@ use Devzone\Ams\Http\Livewire\ChartOfAccount\Listing;
 use Devzone\Ams\Http\Livewire\Journal\Close;
 use Devzone\Ams\Http\Livewire\Journal\Edit;
 use Devzone\Ams\Http\Livewire\Journal\TempList;
+use Devzone\Ams\Http\Livewire\Journal\TraceVoucher;
 use Devzone\Ams\Http\Livewire\Post\Show;
 use Devzone\Ams\Http\Livewire\Reports\BalanceSheet;
 use Devzone\Ams\Http\Livewire\Reports\DayClosing;
@@ -69,6 +70,7 @@ class AmsServiceProvider extends ServiceProvider
         Livewire::component('journal.add', \Devzone\Ams\Http\Livewire\Journal\Add::class);
         Livewire::component('journal.edit', Edit::class);
         Livewire::component('journal.temp-list', TempList::class);
+        Livewire::component('journal.trace-voucher', TraceVoucher::class);
         Livewire::component('reports.ledger', Ledger::class);
         Livewire::component('reports.trial', Trial::class);
         Livewire::component('reports.profit-loss', ProfitLoss::class);
