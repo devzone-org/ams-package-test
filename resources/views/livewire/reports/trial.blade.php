@@ -58,13 +58,14 @@
                 <tbody class="bg-white divide-y divide-gray-200">
 
                 @foreach($ledger as $key => $en)
-
                     <tr class="{{ $loop->even ? 'bg-gray-50' :'' }}">
                         <td class="px-2   py-2   border-r text-sm   text-gray-500">
                             {{ $en['type'] }}
                         </td>
+
                         <td class="px-2   py-2    border-r text-sm text-gray-500">
-                            {{ $en['code'] }} - {{ $en['account_name'] }}
+                            <a target="_blank" class="hover:text-gray-900" href="{{url('accounts/accountant/ledger') }}?account_id={{$en['id']}}">
+                                {{ $en['code'] }} - {{ $en['account_name'] }}</a>
                         </td>
 
                         <td class="px-2  py-2  text-right  border-r text-sm text-gray-500">

@@ -36,7 +36,7 @@ class Trial extends Component
                 ->where('l.posting_date','>=',$this->formatDate($this->from_date))
                 ->where('l.posting_date','<=',$this->formatDate($this->to_date))
                 ->whereIn('coa.type', ['Expenses', 'Income'])
-                ->select(DB::raw('sum(debit) as debit'), DB::raw('sum(credit) as credit'), 'coa.type', 'coa.name','coa.code', 'coa.nature', 'coa.is_contra')
+                ->select(DB::raw('sum(debit) as debit'), DB::raw('sum(credit) as credit'), 'coa.id','coa.type', 'coa.name','coa.code', 'coa.nature', 'coa.is_contra')
                 ->groupBy('l.account_id')
                 ->orderByRaw('FIELD(coa.type,"Income","Expenses")')
                 ->get();
@@ -46,7 +46,7 @@ class Trial extends Component
                 ->where('l.is_approve', 't')
                 ->where('l.posting_date','<=',$this->formatDate($this->to_date))
                 ->whereIn('coa.type', ['Assets', 'Liabilities','Equity'])
-                ->select(DB::raw('sum(debit) as debit'), DB::raw('sum(credit) as credit'), 'coa.type', 'coa.name','coa.code', 'coa.nature', 'coa.is_contra')
+                ->select(DB::raw('sum(debit) as debit'), DB::raw('sum(credit) as credit'), 'coa.id','coa.type', 'coa.name','coa.code', 'coa.nature', 'coa.is_contra')
                 ->groupBy('l.account_id')
                 ->orderByRaw('FIELD(coa.type,"Assets","Liabilities","Equity")')
                 ->get();
@@ -72,7 +72,7 @@ class Trial extends Component
                 if (empty($debit) && empty($credit)) {
                     continue;
                 }
-                $ledger[] = ['type' => $pl['type'], 'code' => $pl['code'], 'account_name' => $pl['name'], 'debit' => $debit, 'credit' => $credit];
+                $ledger[] = ['id'=>$pl['id'],'type' => $pl['type'], 'code' => $pl['code'], 'account_name' => $pl['name'], 'debit' => $debit, 'credit' => $credit];
             }
 
 
@@ -96,7 +96,7 @@ class Trial extends Component
                 if (empty($debit) && empty($credit)) {
                     continue;
                 }
-                $ledger[] = ['type' => $pl['type'], 'code' => $pl['code'], 'account_name' => $pl['name'], 'debit' => $debit, 'credit' => $credit];
+                $ledger[] = ['id'=>$pl['id'],'type' => $pl['type'], 'code' => $pl['code'], 'account_name' => $pl['name'], 'debit' => $debit, 'credit' => $credit];
             }
         }
 
