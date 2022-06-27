@@ -124,7 +124,10 @@
                             {{ date('d M, Y',strtotime($en['posting_date'])) }}
                         </td>
                         <td class="px-2    py-2    border-r  text-sm text-gray-500">
-                         @if(!empty($en['reference']))  <strong>{{ ucwords($en['reference']) }}</strong>  @endif   {{ $en['description'] }}
+
+                        @if(is_null(env('LEDGER_REFERENCE_DESCRIPTION')) || !empty(env('LEDGER_REFERENCE_DESCRIPTION')))
+                                @if(!empty($en['reference']))  <strong>{{ ucwords($en['reference']) }}</strong>   @endif
+                            @endif   {{ $en['description'] }}
                         </td>
                         <td class="px-2  py-2  text-right  border-r text-sm text-gray-500">
                             {{ number_format($en['debit'],2) }}
