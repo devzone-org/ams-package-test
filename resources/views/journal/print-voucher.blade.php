@@ -18,7 +18,7 @@
         <div class="col-span-7 sm:col-span-6 lg:col-span-6">
 
             <div>
-                <h3 class="text-lg leading-6 text-center font-medium text-gray-900">{{ env('APP_NAME') }}  {{(!empty(env('BRANCH_NAME')) ? ' - ' . env('BRANCH_NAME') : '' )}}</h3>
+                <h3 class="text-lg leading-6 text-center font-medium text-gray-900">{{ env('APP_NAME') }}  {{(!empty(env('CLIENT_BRANCH')) ? ' - ' . env('CLIENT_BRANCH') : '' )}}</h3>
                 <p class="mt-1 text-sm text-center text-gray-500">Voucher Print Date
                     Time: {{ date('d M Y h:i:s A') }}</p>
             </div>
