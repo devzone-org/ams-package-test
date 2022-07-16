@@ -12,13 +12,23 @@
 
 <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
     <div class="grid grid-cols-7 gap-6">
+        @php
+            $size = '';
+                if (!empty(env('CLIENT_BRANCH'))  ){
+                      $size = 138;
+                }else{
+                      $size =130;
+                }
+        @endphp
         <div class="col-span-7 sm:col-span-1 lg:col-span-1">
-            {{\SimpleSoftwareIO\QrCode\Facades\QrCode::size(130)->generate(url('/accounts/journal/voucher/print/'. $voucher_no))}}
+            {{\SimpleSoftwareIO\QrCode\Facades\QrCode::size($size)->generate(url('/accounts/journal/voucher/print/'. $voucher_no))}}
         </div>
         <div class="col-span-7 sm:col-span-6 lg:col-span-6">
 
             <div>
-                <h3 class="text-lg leading-6 text-center font-medium text-gray-900">{{ env('APP_NAME') }}  {{(!empty(env('CLIENT_BRANCH')) ? ' - ' . env('CLIENT_BRANCH') : '' )}}</h3>
+                <h3 class="text-lg leading-6 text-center font-medium text-gray-900">{{ env('APP_NAME') }} <br>
+                    <span class="text-sm" style="font-weight: normal"> {{(!empty(env('CLIENT_BRANCH')) ?  env('CLIENT_BRANCH') : '' )}} </span>
+                </h3>
                 <p class="mt-1 text-sm text-center text-gray-500">Voucher Print Date
                     Time: {{ date('d M Y h:i:s A') }}</p>
             </div>
