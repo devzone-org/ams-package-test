@@ -14,7 +14,7 @@
     <div class="grid grid-cols-7 gap-6">
         @php
             $size = '';
-                if (!empty(env('CLIENT_BRANCH'))  ){
+                if (!empty(env('CLIENT_BRANCH'))){
                       $size = 138;
                 }else{
                       $size =130;
