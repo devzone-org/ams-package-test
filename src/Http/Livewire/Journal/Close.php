@@ -75,11 +75,33 @@ class Close extends Component
 
 
             if (!empty($closing)) {
-                $opening_balance = Ledger::where('account_id', $value)
-                    ->where('posting_date', '<=', $closing['date'])
-                    ->where('voucher_no', '<=', $closing['voucher_no'])
-                    ->select(DB::raw('sum(debit-credit) as balance'))->first();
-                $this->opening_balance = $opening_balance['balance'];
+
+                $opening = Ledger::where('is_approve', 't')
+                    ->where('posting_date', '<', $closing['date'])
+                    ->where('account_id', $value)
+                    ->select(DB::raw('sum(debit) as debit'), DB::raw('sum(credit) as credit'))
+                    ->first();
+
+                $ledger = Ledger::where('is_approve', 't')
+                    ->where('posting_date', $closing['date'])
+                    ->where('account_id', $value)
+                    ->select('voucher_no', 'reference', 'posting_date', 'description', 'debit', 'credit', 'account_id')
+                    ->orderBy('posting_date')->orderBy('voucher_no')
+                    ->get()->toArray();
+
+                $opening_balance = $opening['debit'] - $opening['credit'];
+
+                foreach ($ledger as $l) {
+
+                    $opening_balance = $opening_balance + $l['debit'] - $l['credit'];
+
+                    if ($l['reference'] == 'day close') {
+                        break;
+                    }
+                }
+
+
+                $this->opening_balance = $opening_balance;
                 $this->opening_balance_date = $closing['date'];
             }
 
