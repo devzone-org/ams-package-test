@@ -13,6 +13,7 @@ use Devzone\Ams\Models\Ledger;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use function Couchbase\defaultDecoder;
 
 
 class Close extends Component
@@ -105,14 +106,12 @@ class Close extends Component
                 $this->opening_balance_date = $closing['date'];
             }
 
-
             $closing_balance = Ledger::where('account_id', $value)
                 ->when(!empty($closing), function ($q) use ($closing) {
                     return $q->where('posting_date', '>=', $closing['date'])->where('voucher_no', '>', $closing['voucher_no']);
                 })->select(DB::raw('sum(debit-credit) as balance'), 'reference')
                 ->groupBy('reference')->get();
             $this->closing_balance = $closing_balance->toArray();
-
             $this->closing_balance_heads = $closing_balance->pluck('reference')->toArray();
 
         }
@@ -145,7 +144,20 @@ class Close extends Component
             if ((collect($this->closing_balance)->sum('balance') + $this->opening_balance) < -1000) {
                 throw new \Exception('Closing Balance should be greater than -1000.');
             }
+            $closing = DayClosing::where('account_id', $this->user_account_id)->orderBy('id', 'desc')->first();
+            $closing_balance = Ledger::where('account_id', $this->user_account_id)
+                ->when(!empty($closing), function ($q) use ($closing) {
+                    return $q->where('posting_date', '>=', $closing['date'])->where('voucher_no', '>', $closing['voucher_no']);
+                })->select(DB::raw('sum(debit-credit) as balance'), 'reference')
+                ->groupBy('reference')->get()->toArray();
+
+            $new_c_balance = collect($closing_balance)->sum('balance') + $this->opening_balance;
+            $old_c_balance = collect($this->closing_balance)->sum('balance') + $this->opening_balance;
+            if ($new_c_balance != $old_c_balance) {
+                throw new \Exception('Day closing balance does not match with ledger closing balance.');
+            }
             DB::beginTransaction();
+
             $total_denomination = collect($this->denomination_counting)->sum('total');
             $transfer_amount = $total_denomination - $this->retained_cash;
             $description = "[TILL CLOSING: " . date('d M Y h:i A') . "]; [Teller: " . $this->current_user['name'] .
@@ -165,7 +177,7 @@ class Close extends Component
                     }
                 } else if ($this->difference > 0) {
 
-                    $description .= " Surplus PKR " . number_format($this->difference, 2)."/-";
+                    $description .= " Surplus PKR " . number_format($this->difference, 2) . "/-";
                     GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
                         ->date(date('Y-m-d'))->approve()->description($description)->execute();
                     GeneralJournal::instance()->account(67)->credit($this->difference)->voucherNo($vno)
@@ -182,7 +194,7 @@ class Close extends Component
 
 
                 } else if ($this->difference < 0) {
-                    $description .= " Shortage PKR " . number_format(abs($this->difference), 2)."/-";
+                    $description .= " Shortage PKR " . number_format(abs($this->difference), 2) . "/-";
                     GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
                         ->date(date('Y-m-d'))->approve()->description($description)->execute();
 
