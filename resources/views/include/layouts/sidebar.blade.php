@@ -39,6 +39,9 @@
 <div class="h-screen flex overflow-hidden bg-gray-100 " x-data="{sidebar:false}" x-cloak>
 
     @include('ams::include.sidebar')
+    @if(!empty(env('PAYMENT_DUE_MODAL')))
+        @include('include.payment-due-modal')
+    @endif
 
 
     <div class="flex flex-col w-0 flex-1 overflow-hidden">
