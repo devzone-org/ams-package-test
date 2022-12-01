@@ -24,6 +24,7 @@ class Close extends Component
     public $denomination_counting = [];
     public $opening_balance;
     public $opening_balance_date;
+    public $closing_voucher;
     public $closing_balance = [];
     public $closing_balance_heads = [];
     public $difference;
@@ -76,39 +77,16 @@ class Close extends Component
 
             if (!empty($closing)) {
 
-                $opening = Ledger::where('is_approve', 't')
-                    ->where('posting_date', '<', $closing['date'])
-                    ->where('account_id', $value)
-                    ->select(DB::raw('sum(debit) as debit'), DB::raw('sum(credit) as credit'))
-                    ->first();
 
-                $ledger = Ledger::where('is_approve', 't')
-                    ->where('posting_date', $closing['date'])
-                    ->where('account_id', $value)
-                    ->select('voucher_no', 'reference', 'posting_date', 'description', 'debit', 'credit', 'account_id')
-                    ->orderBy('posting_date')->orderBy('voucher_no')
-                    ->get()->toArray();
-
-                $opening_balance = $opening['debit'] - $opening['credit'];
-
-                foreach ($ledger as $l) {
-
-                    $opening_balance = $opening_balance + $l['debit'] - $l['credit'];
-
-                    if ($l['reference'] == 'day close') {
-                        break;
-                    }
-                }
-
-
-                $this->opening_balance = $opening_balance;
+                $this->opening_balance = $closing['cash_retained'];
                 $this->opening_balance_date = $closing['date'];
+                $this->closing_voucher = $closing['voucher_no'];
             }
 
 
             $closing_balance = Ledger::where('account_id', $value)
                 ->when(!empty($closing), function ($q) use ($closing) {
-                    return $q->where('posting_date', '>=', $closing['date'])->where('voucher_no', '>', $closing['voucher_no']);
+                    return $q->where('voucher_no', '>', $closing['voucher_no']);
                 })->select(DB::raw('sum(debit-credit) as balance'), 'reference')
                 ->groupBy('reference')->get();
             $this->closing_balance = $closing_balance->toArray();
@@ -145,6 +123,17 @@ class Close extends Component
             if ((collect($this->closing_balance)->sum('balance') + $this->opening_balance) < -1000) {
                 throw new \Exception('Closing Balance should be greater than -1000.');
             }
+
+            $closing_balance = Ledger::where('account_id', $this->user_account_id)
+                ->select(DB::raw('sum(debit-credit) as balance'))
+                ->first();
+
+
+            if (round(collect($this->closing_balance)->sum('balance') + $this->opening_balance, 2) != round($closing_balance['balance'], 2)) {
+                throw new \Exception('Closing Balance has been changed please refresh the page and logout the Closing ID.');
+            }
+
+
             DB::beginTransaction();
             $total_denomination = collect($this->denomination_counting)->sum('total');
             $transfer_amount = $total_denomination - $this->retained_cash;
@@ -165,7 +154,7 @@ class Close extends Component
                     }
                 } else if ($this->difference > 0) {
 
-                    $description .= " Surplus PKR " . number_format($this->difference, 2)."/-";
+                    $description .= " Surplus PKR " . number_format($this->difference, 2) . "/-";
                     GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
                         ->date(date('Y-m-d'))->approve()->description($description)->execute();
                     GeneralJournal::instance()->account(67)->credit($this->difference)->voucherNo($vno)
@@ -182,7 +171,7 @@ class Close extends Component
 
 
                 } else if ($this->difference < 0) {
-                    $description .= " Shortage PKR " . number_format(abs($this->difference), 2)."/-";
+                    $description .= " Shortage PKR " . number_format(abs($this->difference), 2) . "/-";
                     GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
                         ->date(date('Y-m-d'))->approve()->description($description)->execute();
 

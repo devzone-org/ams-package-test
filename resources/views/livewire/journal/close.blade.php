@@ -5,6 +5,7 @@
                 <h3 class="text-lg leading-6 font-medium text-gray-900">Day Closing</h3>
             </div>
 
+
             <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 sm:col-span-2">
                     <label for="user_account" class="block text-sm font-medium text-gray-700">ID to be closed</label>
@@ -396,7 +397,13 @@
                     to {{ collect($transfers)->firstWhere('id',$transfer_id)['name'] ?? '' }}
                     from {{ $current_user['name'] ?? '' }}
                     <br>
-                    Press <strong>Y</strong> to confirm
+                    <form wire:submit.prevent="proceedClosing">
+                        <button type="submit"
+                                class="mt-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Proceed
+                        </button>
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -404,15 +411,3 @@
 
 </div>
 
-
-<script>
-
-    document.addEventListener("keydown", event => {
-        if (event.keyCode == 89) {
-            event.preventDefault();
-            event.stopPropagation();
-            window.livewire.emit('proceedClosing');
-        }
-
-    });
-</script>
