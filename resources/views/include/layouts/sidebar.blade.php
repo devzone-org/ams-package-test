@@ -31,13 +31,12 @@
 
 
 </head>
-<body>
+<body onload="startTime()">
 
 
 {{--@include('ams::include.header')--}}
 
-<div class="h-screen flex overflow-hidden bg-gray-100 " x-data="{sidebar:false}" x-cloak>
-
+<div class="h-screen flex overflow-hidden bg-gray-100 bg-slate-800  " x-data="{sidebar:false}" x-cloak>
     @include('ams::include.sidebar')
     @if(!empty(env('PAYMENT_DUE_MODAL')))
         @include('include.payment-due-modal')
@@ -50,9 +49,10 @@
 
             <!-- Search bar -->
             <div class="flex-1 px-4 flex justify-between ">
-                <div class="flex-1 flex">
-                    <span class=" inline-flex items-center px-4 py-2 border border-transparent text-lg font-medium rounded-md text-indigo-700 ">  </span>
-                </div>
+                <div id="txt" class="font-medium mt-5 ml-2"></div>
+{{--                <div class="flex-1 flex">--}}
+{{--                    <span class=" inline-flex items-center px-4 py-2 border border-transparent text-lg font-medium rounded-md text-indigo-700 ">  </span>--}}
+{{--                </div>--}}
                 <div class="ml-4 flex items-center md:ml-6">
 
                     <!-- Profile dropdown -->
@@ -88,8 +88,34 @@
         </main>
 
     </div>
+    </div>
 @yield('script')
+    <script>
+        function startTime() {
 
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const today = new Date();
+            let D = today.getDay();
+            let M = today.getMonth();
+            let Y = today.getFullYear();
+            let h = today.getHours();
+            let m = today.getMinutes();
+            let s = today.getSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+            let month = months[M];
+            document.getElementById('txt').innerHTML = D + " " + month + " " + Y + " " + h + ":" + m + ":" + s;
+            setTimeout(startTime, 1000);
+        }
+
+        function checkTime(i) {
+            if (i < 10) {
+                i = "0" + i
+            }
+            ;  // add zero in front of numbers < 10
+            return i;
+        }
+    </script>
 </body>
 </html>
 
