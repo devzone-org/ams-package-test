@@ -16,6 +16,7 @@ use Devzone\Ams\Http\Livewire\Reports\Ledger;
 use Devzone\Ams\Http\Livewire\Reports\ProfitLoss;
 use Devzone\Ams\Http\Livewire\Reports\ProfitLossDateWise;
 use Devzone\Ams\Http\Livewire\Reports\Trial;
+use Devzone\Ams\Http\Livewire\Sidebar\SidebarLinks;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -77,10 +78,11 @@ class AmsServiceProvider extends ServiceProvider
 
         Livewire::component('reports.profit-loss-datewise', ProfitLossDateWise::class);
         Livewire::component('reports.day-closing', DayClosing::class);
-        Livewire::component('reports.balance-sheet',BalanceSheet::class);
+        Livewire::component('reports.balance-sheet', BalanceSheet::class);
         Livewire::component('journal.close', Close::class);
         Livewire::component('journal.payments.listing', \Devzone\Ams\Http\Livewire\Journal\Payment\Listing::class);
         Livewire::component('journal.payments.add', \Devzone\Ams\Http\Livewire\Journal\Payment\Add::class);
+        Livewire::component('sidebar.sidebar-links', SidebarLinks::class);
     }
 
     /**
