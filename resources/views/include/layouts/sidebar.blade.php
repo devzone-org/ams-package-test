@@ -71,7 +71,8 @@
                                   d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
                         </svg>
                     </div>
-                    <div id="txt" class="font-medium mt-5 ml-2"></div>
+                    <div id="txt" class="font-medium text-xl mt-4"></div>
+
                 @else
                     <div></div>
                     <div></div>
@@ -148,13 +149,14 @@
         let D = today.getDay();
         let M = today.getMonth();
         let Y = today.getFullYear();
-        let h = today.getHours();
-        let m = today.getMinutes();
+        let h = today.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true});
+        // let m = today.getMinutes();
+
         let s = today.getSeconds();
-        m = checkTime(m);
-        s = checkTime(s);
+        // m = checkTime(m);
+        // s = checkTime(s);
         let month = months[M];
-        document.getElementById('txt').innerHTML = D + " " + month + " " + Y + " " + h + ":" + m + ":" + s;
+        document.getElementById('txt').innerHTML = D + " " + month + " " + Y + " " + h;
         setTimeout(startTime, 1000);
     }
 
