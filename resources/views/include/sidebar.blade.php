@@ -55,8 +55,8 @@
 <div class="hidden lg:flex md:flex-shrink-0">
     <div class="flex flex-col w-60">
         <!-- Sidebar component, swap this element with another sidebar if you like -->
-        <div class="flex flex-col h-0 flex-1 border-r border-gray-200 bg-slate-800 bg-white "
-             @if(env('SIDEBAR_NAME') == 'pos') style="background-color:rgb(30 41 59 / var(--tw-bg-opacity)); @endif">
+        <div class="flex flex-col h-0 flex-1 border-gray-200 bg-slate-800 bg-white "
+             @if(env('SIDEBAR_NAME') == 'pos') style="background-color:rgb(30 41 59);" @endif>
             <div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
                 <div class="flex-shrink-0 flex items-center px-4 mx-auto">
                     <a href="{{ url('/') }}">
@@ -67,7 +67,6 @@
                 @livewire('sidebar.sidebar-links')
                 @else
                     @include('ams::include.sidebar-links')
-
                 @endif
 
             </div>
