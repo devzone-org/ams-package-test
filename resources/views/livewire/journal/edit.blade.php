@@ -117,7 +117,8 @@
                     </th>
                     <th scope="col" wire:click="addEntry()"
                         class="w-10 cursor-pointer px-2 py-2   border-r text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        <svg class="w-6 h-6  " fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <svg class="w-6 h-6  " fill="currentColor" viewBox="0 0 20 20"
+                             xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
                                   d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                                   clip-rule="evenodd"></path>
@@ -134,7 +135,8 @@
                         <td class="px-2     border-r text-sm text-gray-500">
                             <input wire:click="searchAccounts('{{ $key }}')" type="text" readonly
                                    wire:model.lazy="entries.{{$key}}.account_name"
-                                   class="p-0 focus:ring-0 block w-full  text-left text-sm border-0  " autocomplete="off">
+                                   class="p-0 focus:ring-0 block w-full  text-left text-sm border-0  "
+                                   autocomplete="off">
                         </td>
                         <td class="px-2      border-r  text-sm text-gray-500">
                     <textarea wire:ignore.self cols="30" rows="1" wire:model.lazy="entries.{{$key}}.description"
@@ -204,10 +206,6 @@
             </table>
 
 
-
-
-
-
         </div>
     </div>
 
@@ -253,7 +251,8 @@
                         {{ $loop->iteration }}
                     </td>
                     <td class="px-2     border-r text-sm text-gray-500">
-                        <select id="{{$key}}-account_id" name="" wire:model="attachment_entries.{{$key}}.account_id" id="ref_account" class="p-0 focus:ring-0 block w-full  text-sm border-0  ">
+                        <select id="{{$key}}-account_id" name="" wire:model="attachment_entries.{{$key}}.account_id"
+                                id="ref_account" class="p-0 focus:ring-0 block w-full  text-sm border-0  ">
                             <option value=""></option>
                             @foreach($entries as $e)
                                 <option value="{{ $e['account_id'] }}">{{ $e['account_name'] }}</option>
@@ -262,13 +261,14 @@
                     </td>
                     <td class="px-2      border-r  text-sm text-gray-500">
                         @if(!isset($en['id']))
-                        <input id="{{$key}}-file"  type="file" wire:model="attachment_entries.{{$key}}.file" >
-                            @else
-                            <a class="font-medium text-indigo-600 hover:text-indigo-500" href="{{ env('AWS_URL').$en['attachment'] }}" target="_blank">View Attachment</a>
+                            <input id="{{$key}}-file" type="file" wire:model="attachment_entries.{{$key}}.file">
+                        @else
+                            <a class="font-medium text-indigo-600 hover:text-indigo-500"
+                               href="{{ env('AWS_URL').$en['attachment'] }}" target="_blank">View Attachment</a>
                         @endif
                     </td>
 
-                    <td  wire:click="removeAttachmentEntry('{{ $key }}')"
+                    <td wire:click="removeAttachmentEntry('{{ $key }}')"
                         class="  w-10 cursor-pointer px-2 py-3   border-r text-right text-xs font-medium text-red-700  tracking-wider  ">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                              xmlns="http://www.w3.org/2000/svg">
@@ -288,13 +288,17 @@
 
     <div class="py-5 border-b border-gray-200 sm:flex sm:items-center sm:justify-between">
         <p class="text-sm leading-6 font-medium text-gray-900">
-{{--            <button type="button" wire:click="deleteAll"--}}
-{{--                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500  sm:w-auto sm:text-sm">--}}
-{{--                Delete All--}}
-{{--            </button>--}}
+            {{--            <button type="button" wire:click="deleteAll"--}}
+            {{--                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500  sm:w-auto sm:text-sm">--}}
+            {{--                Delete All--}}
+            {{--            </button>--}}
         </p>
         <div class="mt-3 flex sm:mt-0 sm:ml-4">
 
+            <a href="{{url('/accounts/accountant/journal')}}"
+               class="ml-1 inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md shadow-sm disabled:opacity-25 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Go Back
+            </a>
             @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
                 <button type="button" wire:click="draft" wire:loading.attr="disabled"
                         class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -304,7 +308,6 @@
             @endif
         </div>
     </div>
-
 
 
     <div x-data="{ open: @entangle('search_accounts_modal') }" x-cloak x-show="open"
@@ -339,9 +342,12 @@
                                wire:keydown.arrow-up="decrementHighlight"
                                wire:keydown.arrow-down="incrementHighlight"
                                wire:keydown.enter="selectionAccount"
-                               id="search" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"   autocomplete="off">
+                               id="search"
+                               class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                               autocomplete="off">
                     </div>
-                    <p class="mt-2 text-sm text-gray-400" id="search-description">You can search accounts by Name, Code and Type.</p>
+                    <p class="mt-2 text-sm text-gray-400" id="search-description">You can search accounts by Name, Code
+                        and Type.</p>
 
 
                 </div>
@@ -419,7 +425,6 @@
             field: document.getElementById('posting_date'),
             format: "DD MMM YYYY"
         });
-
 
 
         from_date.setDate(new Date('{{ $posting_date }}'));
