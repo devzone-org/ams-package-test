@@ -35,13 +35,18 @@
                     </svg>
                 </button>
             </div>
-            <div class="flex-1 h-0 pt-5  pb-4 overflow-y-auto">
+            <div class="flex-1 h-0 pt-5  pb-4 overflow-y-auto"
+                 @if(env('SIDEBAR_NAME') == 'pos') style="background-color:rgb(30 41 59);" @endif>
 
                 <div class="flex-shrink-0 flex items-center px-4 mx-auto">
                     <img class=" w-auto" src="{{ url(env('CLIENT_LOGO')) }}" alt="Logo">
                 </div>
 
-                @include('ams::include.sidebar-links')
+                @if(env('SIDEBAR_NAME') == 'pos')
+                    @livewire('sidebar.sidebar-links')
+                @else
+                    @include('ams::include.sidebar-links')
+                @endif
             </div>
 
         </div>
@@ -63,8 +68,8 @@
                         <img class=" w-auto h-22" src="{{ url(env('CLIENT_LOGO')) }}" alt="Logo">
                     </a>
                 </div>
-                @if(env('SIDEBAR_NAME') == 'pos'){
-                @livewire('sidebar.sidebar-links')
+                @if(env('SIDEBAR_NAME') == 'pos')
+                    @livewire('sidebar.sidebar-links')
                 @else
                     @include('ams::include.sidebar-links')
                 @endif

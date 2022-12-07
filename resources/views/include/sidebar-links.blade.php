@@ -32,7 +32,7 @@
                 <svg :class="{ 'text-gray-400 rotate-90': isExpanded, 'text-gray-300': !isExpanded }"
                      x-state:on="Expanded"
                      x-state:off="Collapsed"
-                     class="w-5 h-5 ml-3 text-gray-300 transition-colors duration-150 ease-in-out transform group-hover:text-gray-400"
+                     class="w-5 h-5 text-gray-300 transition-colors duration-150 ease-in-out transform group-hover:text-gray-400"
                      viewBox="0 0 20 20" aria-hidden="true">
                     <path d="M6 6L14 10L6 14V6Z" fill="currentColor"></path>
                 </svg>
@@ -144,7 +144,7 @@
                 <svg :class="{ 'text-gray-400 rotate-90': isExpanded, 'text-gray-300': !isExpanded }"
                      x-state:on="Expanded"
                      x-state:off="Collapsed"
-                     class="w-5 h-5 ml-3 text-gray-300 transition-colors duration-150 ease-in-out transform group-hover:text-gray-400"
+                     class="w-5 h-5 text-gray-300 transition-colors duration-150 ease-in-out transform group-hover:text-gray-400"
                      viewBox="0 0 20 20" aria-hidden="true">
                     <path d="M6 6L14 10L6 14V6Z" fill="currentColor"></path>
                 </svg>

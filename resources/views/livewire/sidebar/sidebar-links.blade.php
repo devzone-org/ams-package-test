@@ -23,7 +23,7 @@ $favourite = [];
          @endif x-cloak
          class="space-y-1">
         <button
-                class="flex items-center w-full py-2 pl-2 pr-1 text-sm font-medium  text-gray-200   rounded-md group   focus:outline-none "
+                class="flex items-center w-full py-2 pr-1 text-sm font-medium  text-gray-200   rounded-md group   focus:outline-none "
                 @click.prevent="isExpanded = !isExpanded" x-bind:aria-expanded="isExpanded">
             @if(!env('SIDEBAR_NAME') == 'pos')
                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +36,7 @@ $favourite = [];
                 <svg :class="{ 'text-gray-400 rotate-90': isExpanded, 'text-gray-300': !isExpanded }"
                      x-state:on="Expanded"
                      x-state:off="Collapsed"
-                     class="w-5 h-5 mr-3 text-gray-300 transition-colors duration-150 ease-in-out transform group-hover:text-gray-400"
+                     class="w-5 h-5 mr-2 text-gray-300 transition-colors duration-150 ease-in-out transform group-hover:text-gray-400"
                      viewBox="0 0 20 20" aria-hidden="true">
                     <path d="M6 6L14 10L6 14V6Z" fill="currentColor"></path>
                 </svg>
@@ -313,7 +313,7 @@ $favourite = [];
              @endif x-cloak
              class="space-y-1">
             <button
-                    class="flex items-center w-full py-2 pl-2 pr-1 text-sm font-medium  text-gray-200 rounded-md group   focus:outline-none "
+                    class="flex items-center w-full py-2 pr-1 text-sm font-medium  text-gray-200 rounded-md group   focus:outline-none "
                     @click.prevent="isExpanded = !isExpanded" x-bind:aria-expanded="isExpanded">
 
                 @if(!env('SIDEBAR_NAME') == 'pos')
@@ -327,7 +327,7 @@ $favourite = [];
                     <svg :class="{ 'text-gray-400 rotate-90': isExpanded, 'text-gray-300': !isExpanded }"
                          x-state:on="Expanded"
                          x-state:off="Collapsed"
-                         class="w-5 h-5  mr-3 text-gray-300 transition-colors duration-150 ease-in-out transform group-hover:text-gray-400"
+                         class="w-5 h-5  mr-2 text-gray-300 transition-colors duration-150 ease-in-out transform group-hover:text-gray-400"
                          viewBox="0 0 20 20" aria-hidden="true">
                         <path d="M6 6L14 10L6 14V6Z" fill="currentColor"></path>
                     </svg>

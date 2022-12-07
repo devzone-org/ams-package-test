@@ -64,15 +64,16 @@
             <div class="flex-1 px-4 flex justify-between ">
                 @if(env('SIDEBAR_NAME') == 'pos')
 
-                    <div class="ml-2 cursor-pointer" @click=" sidebar = !sidebar">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                             stroke="currentColor" class="w-6 h-6 mt-5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
-                        </svg>
+                    <div class="flex items-center ml-1">
+                        <div class="ml-1 cursor-pointer" @click=" sidebar = !sidebar">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                 stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                            </svg>
+                        </div>
+                        <div id="txt" class="font-medium text-xl ml-2"></div>
                     </div>
-                    <div id="txt" class="font-medium text-xl mt-4"></div>
-
                 @else
                     <div></div>
                     <div></div>
@@ -139,35 +140,42 @@
         </main>
 
     </div>
-</div>
-@yield('script')
-<script>
-    function startTime() {
+    @yield('script')
+    <script>
+        function startTime() {
 
-        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        const today = new Date();
-        let D = today.getDay();
-        let M = today.getMonth();
-        let Y = today.getFullYear();
-        let h = today.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true});
-        // let m = today.getMinutes();
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const today = new Date();
+            let D = today.getDate();
+            let d = today.getDay();
+            let M = today.getMonth();
+            let Y = today.getFullYear();
+            let h = today.toLocaleString('en-US', {
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                hour12: true
+            });
+            // let m = today.getMinutes();
 
-        let s = today.getSeconds();
-        // m = checkTime(m);
-        // s = checkTime(s);
-        let month = months[M];
-        document.getElementById('txt').innerHTML = D + " " + month + " " + Y + " " + h;
-        setTimeout(startTime, 1000);
-    }
-
-    function checkTime(i) {
-        if (i < 10) {
-            i = "0" + i
+            let s = today.getSeconds();
+            // m = checkTime(m);
+            // s = checkTime(s);
+            let month = months[M];
+            let day = days[d];
+            document.getElementById('txt').innerHTML = day + ", " + D + " " + month + ", " + Y + " " + h;
+            setTimeout(startTime, 1000);
         }
-        ;  // add zero in front of numbers < 10
-        return i;
-    }
-</script>
+
+        function checkTime(i) {
+            if (i < 10) {
+                i = "0" + i
+            }
+            ;  // add zero in front of numbers < 10
+            return i;
+        }
+    </script>
 </body>
 </html>
 
