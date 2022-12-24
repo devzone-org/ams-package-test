@@ -245,7 +245,7 @@ class Edit extends Component
                     ]);
                 } else {
                     //created
-                    Ledger::create([
+                    Ledger::create([ 
                         'account_id' => !empty($entry['account_id']) ? $entry['account_id'] : null,
                         'voucher_no' => $this->voucher_no,
                         'debit' => $entry['debit'],
