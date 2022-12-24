@@ -110,9 +110,11 @@ class DumpMasterData extends Command
         ChartOfAccount::updateOrCreate(['id' => '66'], ['name' => 'Surplus Income', 'type' => 'Income', 'sub_account' => '38', 'level' => '4', 'nature' => 'c']);
         ChartOfAccount::updateOrCreate(['id' => '75'], ['name' => 'Trade Payable', 'type' => 'Liabilities', 'sub_account' => '23', 'level' => '3', 'nature' => 'c']);
         ChartOfAccount::updateOrCreate(['id' => '76'], ['name' => 'Trade Payable', 'type' => 'Liabilities', 'sub_account' => '75', 'level' => '4', 'nature' => 'c']);
-        ChartOfAccount::updateOrCreate(['reference' => 'customer - receivable - 4'], ['name' => 'Customers Receivable', 'type' => 'Assets', 'sub_account' => '10', 'level' => '4', 'nature' => 'd']);
-        ChartOfAccount::updateOrCreate(['id' => '77'], ['name' => 'Cost of Sales', 'reference' => 'cost - of - sales - 3', 'type' => 'Expenses', 'sub_account' => '42', 'level' => '3', 'nature' => 'd']);
-        ChartOfAccount::updateOrCreate(['id' => '78'], ['name' => 'Cost of Sales', 'reference' => 'cost - of - sales - 4', 'type' => 'Expenses', 'sub_account' => '77', 'level' => '4', 'nature' => 'd']);
+        ChartOfAccount::updateOrCreate(['id' => '77'], ['name' => 'Cost of Sales', 'reference' => 'cost-of-sales-3', 'type' => 'Expenses', 'sub_account' => '42', 'level' => '3', 'nature' => 'd']);
+        ChartOfAccount::updateOrCreate(['id' => '78'], ['name' => 'Cost of Sales', 'reference' => 'cost-of-sales-4', 'type' => 'Expenses', 'sub_account' => '77', 'level' => '4', 'nature' => 'd']);
+
+        ChartOfAccount::updateOrCreate(['id' => '79'], ['name' => 'Customers Receivable', 'type' => 'Assets', 'reference' => 'commission-receivable-4', 'sub_account' => '10', 'level' => '4', 'nature' => 'd']);
+        ChartOfAccount::updateOrCreate(['reference' => 'customer-receivable-4'], ['name' => 'Customers Receivable', 'type' => 'Assets', 'sub_account' => '10', 'level' => '4', 'nature' => 'd']);
 
         if (env('IS_HOSPITAL', false)) {
 
@@ -147,20 +149,21 @@ class DumpMasterData extends Command
         }
 
         if (env('IS_DISTRIBUTION_POS', false)) {
-            ChartOfAccount::updateOrCreate(['reference' => 'inventory - 5'], ['name' => 'Inventory', 'type' => 'Assets', 'sub_account' => '59', 'level' => '5', 'nature' => 'd']);
-            ChartOfAccount::updateOrCreate(['reference' => 'sales - tax - paid - on - purchase - 5'], ['name' => 'Sales Tax Paid On Purchases', 'type' => 'Assets', 'sub_account' => '18', 'level' => '5', 'nature' => 'd']);
-            ChartOfAccount::updateOrCreate(['reference' => 'advance - tax - paid - on - purchase - 5'], ['name' => 'Advance Tax Paid On Purchases', 'type' => 'Assets', 'sub_account' => '18', 'level' => '5', 'nature' => 'd']);
-            ChartOfAccount::updateOrCreate(['reference' => 'fed - paid - on - purchase - 5'], ['name' => 'FED Paid On Purchases', 'type' => 'Assets', 'sub_account' => '18', 'level' => '5', 'nature' => 'd']);
-            ChartOfAccount::updateOrCreate(['reference' => 'income - discount - 5'], ['name' => 'Income Discount', 'type' => 'Liabilities', 'sub_account' => '28', 'level' => '5', 'nature' => 'c']);
-            ChartOfAccount::updateOrCreate(['reference' => 'allowances - mfr - 5'], ['name' => 'Allowances MFR', 'type' => 'Liabilities', 'sub_account' => '28', 'level' => '5', 'nature' => 'c']);
+            ChartOfAccount::updateOrCreate(['reference' => 'inventory-5'], ['name' => 'Inventory', 'type' => 'Assets', 'sub_account' => '59', 'level' => '5', 'nature' => 'd']);
+            ChartOfAccount::updateOrCreate(['reference' => 'sales-tax-paid-on-purchase-5'], ['name' => 'Sales Tax Paid On Purchases', 'type' => 'Assets', 'sub_account' => '18', 'level' => '5', 'nature' => 'd']);
+            ChartOfAccount::updateOrCreate(['reference' => 'advance-tax-paid-on-purchase-5'], ['name' => 'Advance Tax Paid On Purchases', 'type' => 'Assets', 'sub_account' => '18', 'level' => '5', 'nature' => 'd']);
+            ChartOfAccount::updateOrCreate(['reference' => 'fed-paid-on-purchase-5'], ['name' => 'FED Paid On Purchases', 'type' => 'Assets', 'sub_account' => '18', 'level' => '5', 'nature' => 'd']);
+            ChartOfAccount::updateOrCreate(['reference' => 'income-discount-5'], ['name' => 'Income Discount', 'type' => 'Liabilities', 'sub_account' => '28', 'level' => '5', 'nature' => 'c']);
+            ChartOfAccount::updateOrCreate(['reference' => 'allowances-mfr-5'], ['name' => 'Allowances MFR', 'type' => 'Liabilities', 'sub_account' => '28', 'level' => '5', 'nature' => 'c']);
 
 
-            ChartOfAccount::updateOrCreate(['reference' => 'cost - of - sales - 5'], ['name' => 'Cost of Sales', 'type' => 'Expenses', 'sub_account' => '78', 'level' => '5', 'nature' => 'd']);
-            ChartOfAccount::updateOrCreate(['reference' => 'expenses - disc - granted - 5'], ['name' => 'Expense Discount Granted', 'type' => 'Expenses', 'sub_account' => '68', 'level' => '5', 'nature' => 'd']);
+            ChartOfAccount::updateOrCreate(['reference' => 'cost-of-sales-5'], ['name' => 'Cost of Sales', 'type' => 'Expenses', 'sub_account' => '78', 'level' => '5', 'nature' => 'd']);
+            ChartOfAccount::updateOrCreate(['reference' => 'expenses-disc-granted-5'], ['name' => 'Expense Discount Granted', 'type' => 'Expenses', 'sub_account' => '68', 'level' => '5', 'nature' => 'd']);
 
-            ChartOfAccount::updateOrCreate(['reference' => 'advance - tax - received - on - sale - 5'], ['name' => 'Advance Tax Received On Sale', 'type' => 'Liabilities', 'sub_account' => '25', 'level' => '5', 'nature' => 'c']);
-            ChartOfAccount::updateOrCreate(['reference' => 'sales - 5'], ['name' => 'Sales', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c']);
-            ChartOfAccount::updateOrCreate(['reference' => 'sale - tax - received - on - sale - 5'], ['name' => 'Sales Tax Received On Sale', 'type' => 'Liabilities', 'sub_account' => '25', 'level' => '5', 'nature' => 'c']);
+            ChartOfAccount::updateOrCreate(['reference' => 'advance-tax-received-on-sale-5'], ['name' => 'Advance Tax Received On Sale', 'type' => 'Liabilities', 'sub_account' => '25', 'level' => '5', 'nature' => 'c']);
+            ChartOfAccount::updateOrCreate(['reference' => 'sales-5'], ['name' => 'Sales', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c']);
+            ChartOfAccount::updateOrCreate(['reference' => 'income-commission-5'], ['name' => 'Income Commission', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c']);
+            ChartOfAccount::updateOrCreate(['reference' => 'sale-tax-received-on-sale-5'], ['name' => 'Sales Tax Received On Sale', 'type' => 'Liabilities', 'sub_account' => '25', 'level' => '5', 'nature' => 'c']);
         }
         $this->info('Dumping Chart of Accounts Finished...');
 
