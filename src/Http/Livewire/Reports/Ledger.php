@@ -42,15 +42,15 @@ class Ledger extends Component
             $this->account_name = $this->account_details['name'];
             $this->dispatchBrowserEvent('title', ['name' => $this->account_name]);
 
-            if(!empty(request()->query('date'))){
-                $this->from_date = date('d M Y',strtotime(request()->query('date')));
-                $this->to_date = date('d M Y',strtotime(request()->query('date')));
+            if (!empty(request()->query('date'))) {
+                $this->from_date = date('d M Y', strtotime(request()->query('date')));
+                $this->to_date = date('d M Y', strtotime(request()->query('date')));
                 $this->from_d = $this->from_date;
                 $this->to_d = $this->to_date;
             }
-            if(!empty(request()->query('from')) && !empty(request()->query('to'))){
-                $this->from_date = date('d M Y',strtotime(request()->query('from')));
-                $this->to_date = date('d M Y',strtotime(request()->query('to')));
+            if (!empty(request()->query('from')) && !empty(request()->query('to'))) {
+                $this->from_date = date('d M Y', strtotime(request()->query('from')));
+                $this->to_date = date('d M Y', strtotime(request()->query('to')));
                 $this->from_d = $this->from_date;
                 $this->to_d = $this->to_date;
             }
@@ -58,6 +58,7 @@ class Ledger extends Component
         }
 
     }
+
     private function formatDate($date)
     {
 
@@ -65,6 +66,7 @@ class Ledger extends Component
             ->format('Y-m-d');
 
     }
+
     public function search()
     {
         $this->account_name_s = $this->account_name;
@@ -76,14 +78,14 @@ class Ledger extends Component
                 ->where('posting_date', '>=', $this->formatDate($this->from_date))
                 ->where('posting_date', '<=', $this->formatDate($this->to_date))
                 ->where('account_id', $this->account_id)
-                ->select('voucher_no','reference', 'posting_date', 'description', 'debit', 'credit', 'account_id')
+                ->select('voucher_no', 'reference', 'posting_date', 'description', 'debit', 'credit', 'account_id')
                 ->orderBy('posting_date')->orderBy('voucher_no')
                 ->get()->toArray();
             $opening = \Devzone\Ams\Models\Ledger::where('is_approve', 't')
                 ->where('posting_date', '<', $this->formatDate($this->from_date))
                 ->where('account_id', $this->account_id)
                 ->select(DB::raw('sum(debit) as debit'), DB::raw('sum(credit) as credit'))
-                 ->first();
+                ->first();
             if ($this->account_details['nature'] == 'd') {
                 if ($this->account_details['is_contra'] == 'f') {
                     $this->opening_balance = $opening['debit'] - $opening['credit'];
