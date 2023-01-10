@@ -17,6 +17,7 @@ use Devzone\Ams\Http\Livewire\Reports\ProfitLoss;
 use Devzone\Ams\Http\Livewire\Reports\ProfitLossDateWise;
 use Devzone\Ams\Http\Livewire\Reports\Trial;
 use Devzone\Ams\Http\Livewire\Sidebar\SidebarLinks;
+use Devzone\Ams\Http\Livewire\PettyExpenses;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -83,6 +84,8 @@ class AmsServiceProvider extends ServiceProvider
         Livewire::component('journal.payments.listing', \Devzone\Ams\Http\Livewire\Journal\Payment\Listing::class);
         Livewire::component('journal.payments.add', \Devzone\Ams\Http\Livewire\Journal\Payment\Add::class);
         Livewire::component('sidebar.sidebar-links', SidebarLinks::class);
+        Livewire::component('petty-expenses.add-petty-expenses', PettyExpenses\AddPettyExpenses::class);
+        Livewire::component('petty-expenses.unclaimed-petty-expenses', PettyExpenses\UnclaimPettyExpenses::class);
     }
 
     /**

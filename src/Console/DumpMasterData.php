@@ -176,7 +176,7 @@ class DumpMasterData extends Command
         Permission::updateOrCreate(['name' => '2.create . transfer . any - date'], ['guard_name' => 'web', 'description' => 'create journal entry any date', 'portal' => 'accounts', 'section' => 'accounts']);
         Permission::updateOrCreate(['name' => '2.delete . transfer . unapproved'], ['guard_name' => 'web', 'description' => 'delete transfer entry before approval', 'portal' => 'accounts', 'section' => 'accounts']);
         Permission::updateOrCreate(['name' => '2.edit . transfer . unapproved'], ['guard_name' => 'web', 'description' => 'edit transfer entry before approval', 'portal' => 'accounts', 'section' => 'accounts']);
-        Permission::updateOrCreate(['name' => '2.post . unapprove'], ['guard_name' => 'web', 'description' => 'post un approve journals', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.post. unapprove'], ['guard_name' => 'web', 'description' => 'post un approve journals', 'portal' => 'accounts', 'section' => 'accounts']);
         Permission::updateOrCreate(['name' => '2.view . ledger'], ['guard_name' => 'web', 'description' => 'view ledger', 'portal' => 'accounts', 'section' => 'accounts']);
         Permission::updateOrCreate(['name' => '2.day . closing'], ['guard_name' => 'web', 'description' => 'day closing', 'portal' => 'accounts', 'section' => 'accounts']);
         Permission::updateOrCreate(['name' => '2.payments . any'], ['guard_name' => 'web', 'description' => 'create payment and receiving transaction - any till', 'portal' => 'accounts', 'section' => 'accounts']);
