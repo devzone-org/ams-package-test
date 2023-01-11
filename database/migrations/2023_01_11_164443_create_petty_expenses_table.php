@@ -20,6 +20,7 @@ class CreatePettyExpensesTable extends Migration
             $table->string('contact_no', 20);
             $table->string('attachment')->nullable();
             $table->integer('account_head_id');
+            $table->integer('paid_by_account_id')->nullable();
             $table->decimal('amount');
             $table->text('description')->nullable();
             $table->integer('created_by');
@@ -29,6 +30,10 @@ class CreatePettyExpensesTable extends Migration
             $table->integer('approved_by')->nullable();
             $table->dateTime('approved_at')->nullable();
             $table->integer('voucher_no')->nullable();
+            $table->integer('reversal_voucher_no')->nullable();
+            $table->text('reversal_description')->nullable();
+            $table->integer('reversal_by')->nullable();
+            $table->datetime('reversal_at')->nullable();
             $table->timestamps();
         });
     }

@@ -1,7 +1,7 @@
 <div>
     <div class="mb-54 shadow sm:rounded-md sm:overflow-hidden bg-white">
         @if ($errors->any())
-            <div class="p-6">
+            <div class="px-6 pt-6">
                 <div class="p-4 rounded-md bg-red-50">
                     <div class="flex">
                         <div class="flex-shrink-0">
@@ -32,7 +32,7 @@
         @endif
 
         @if(!empty($success) || session()->has('success'))
-            <div class="p-6">
+            <div class="px-6 pt-6">
                 <div class="p-4  rounded-md bg-green-50">
                     <div class="flex">
                         <div class="flex-shrink-0">
@@ -74,7 +74,7 @@
             </div>
         @endif
         @if (session()->has('error'))
-            <div class="p-6">
+            <div class="px-6 pt-6">
                 <div class="p-4 rounded-md bg-red-50">
                     <div class="flex">
                         <div class="flex-shrink-0">
@@ -99,7 +99,7 @@
         @endif
 
         <div class="py-6 px-4 sm:p-6 flex justify-between border-b">
-            <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">Add Petty Expenses</h3>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">{{$is_edit?'Update':'Add'}} Petty Expenses</h3>
         </div>
         <form wire:submit.prevent="save">
             <div class="py-6 px-4 space-y-6 sm:p-6">
@@ -124,7 +124,7 @@
                     </div>
                     <div class="col-span-6 sm:col-span-1">
                         <label class="block text-sm font-medium text-gray-700">Attachment </label>
-                        <input type="file" wire:model.lazy="petty_expenses.attachment" autocomplete="off"
+                        <input type="file" wire:model.lazy="attachment" autocomplete="off"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
 
@@ -143,7 +143,7 @@
                     <div class="col-span-6 sm:col-span-1">
                         <label class="block text-sm font-medium text-gray-700">Amount <span
                                     class="text-red-500">*</span></label>
-                        <input type="text" wire:model.lazy="petty_expenses.amount" autocomplete="off"
+                        <input type="number" step="0.1" wire:model.lazy="petty_expenses.amount" autocomplete="off"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
                 </div>
@@ -158,12 +158,12 @@
                 <div class="w-full flex justify-end">
                     <div>
                         <button type="submit" wire:loading.attr="disabled"
-                                class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            Save
+                                class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            {{$is_edit?'Update':'Save'}}
                         </button>
 
                         <button type="button" wire:click="clear" wire:loading.attr="disabled"
-                                class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                             Reset
                         </button>
                     </div>

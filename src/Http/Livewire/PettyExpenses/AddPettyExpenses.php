@@ -2,6 +2,7 @@
 
 namespace Devzone\Ams\Http\Livewire\PettyExpenses;
 
+use Illuminate\Support\Facades\Auth;
 use Devzone\Ams\Models\ChartOfAccount;
 use Devzone\Ams\Models\PettyExpenses;
 use Livewire\Component;
@@ -12,14 +13,15 @@ class AddPettyExpenses extends Component
     use WithFileUploads;
 
     public $petty_expenses = [];
+    public $attachment;
 
     protected $rules = [
         'petty_expenses.invoice_date' => 'required|date',
         'petty_expenses.name' => 'required',
         'petty_expenses.contact_no' => 'required|max:15',
-        'petty_expenses.attachment' => 'nullable',
+        'attachment' => 'nullable',
         'petty_expenses.account_head_id' => 'required|integer',
-        'petty_expenses.amount' => 'required|numeric',
+        'petty_expenses.amount' => 'required|numeric|min:1',
         'petty_expenses.description' => 'required',
     ];
 
@@ -27,7 +29,7 @@ class AddPettyExpenses extends Component
         'petty_expenses.invoice_date' => 'Invoice Date',
         'petty_expenses.name' => 'Name',
         'petty_expenses.contact_no' => 'Contact #',
-        'petty_expenses.attachment' => 'Attachment',
+        'attachment' => 'Attachment',
         'petty_expenses.account_head_id' => 'Account Head',
         'petty_expenses.amount' => 'Amount',
         'petty_expenses.description' => 'Description',
@@ -56,11 +58,11 @@ class AddPettyExpenses extends Component
     {
         $this->validate();
         try {
-            if (!empty($this->petty_expenses['attachment'])) {
-                $this->petty_expenses['attachment'] = $this->petty_expenses['attachment']->storePublicly(config('app.aws_folder') . 'petty_expenses', 's3');
+            if (!empty($this->attachment)) {
+                $this->petty_expenses['attachment'] = $this->attachment->storePublicly(config('app.aws_folder') . 'petty_expenses', 's3');
             }
-            $exists = ChartOfAccount::where('id',$this->petty_expenses['account_head_id'])->exists();
-            if (!$exists){
+            $exists = ChartOfAccount::where('id', $this->petty_expenses['account_head_id'])->exists();
+            if (!$exists) {
                 throw new \Exception('Account Head not found.');
             }
 
@@ -68,6 +70,7 @@ class AddPettyExpenses extends Component
                 $this->petty_expenses['created_by'] = Auth::id();
                 PettyExpenses::create($this->petty_expenses);
                 $this->success = 'Record Created Successfully';
+                $this->clear();
             } else {
                 $this->petty_expenses['updated_by'] = Auth::id();
                 $found = PettyExpenses::find($this->petty_expenses['id']);
@@ -77,7 +80,6 @@ class AddPettyExpenses extends Component
                 $found->update($this->petty_expenses);
                 $this->success = 'Record Updated Successfully.';
             }
-            $this->clear();
         } catch (\Exception $ex) {
             $this->addError('error', $ex->getMessage());
         }
@@ -86,7 +88,14 @@ class AddPettyExpenses extends Component
     public function clear()
     {
         $this->resetErrorBag();
-        $this->petty_expenses = [];
+        if (!empty($this->petty_expenses['id'])) {
+            $id = $this->petty_expenses['id'];
+        };
+        $this->reset('petty_expenses');
+        if (!empty($id)) {
+            $this->petty_expenses['id'] = $id;
+        }
+        $this->petty_expenses['attachment'] = null;
     }
 
 

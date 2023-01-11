@@ -121,8 +121,8 @@ Route::group(['middleware' => ['permission:2.view.ledger']], function () {
 Route::get('petty-expenses/{id?}', function () {
     return view('ams::petty-expenses.add-petty-expenses');
 });
-Route::get('unclaimed-petty-expenses', function () {
-    return view('ams::petty-expenses.unclaim-petty-expenses');
+Route::get('petty-expenses-list/{type}', function () {
+    return view('ams::petty-expenses.petty-expenses-list');
 });
 
 
