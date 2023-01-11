@@ -118,7 +118,7 @@ Route::group(['middleware' => ['permission:2.view.ledger']], function () {
     Route::get('journal/voucher/print/{voucher_no}/{print?}', [JournalController::class, 'printVoucher']);
 });
 
-Route::get('petty-expenses', function () {
+Route::get('petty-expenses/{id?}', function () {
     return view('ams::petty-expenses.add-petty-expenses');
 });
 Route::get('unclaimed-petty-expenses', function () {
