@@ -128,13 +128,13 @@ class ClaimedPettyExpensesList extends Component
                     throw new \Exception('account not found.');
                 }
 
-                $petty_pay = collect($this->petty_expenses_list)->where('id', $id)->first()['account_head_id'];
+                $petty_pay = collect($this->petty_expenses_list)->where('id', $id)->first();
                 $account_head_id = $petty_pay['account_head_id'];
                 $amount = $petty_pay['amount'];
                 $date = Carbon::now()->toDateString();
 
                 $expense_head = ChartOfAccount::find($account_head_id);
-                if (!empty($expense_head)) {
+                if (empty($expense_head)) {
                     throw new \Exception('Expense Head Account Not Found.');
                 }
 
@@ -143,7 +143,7 @@ class ClaimedPettyExpensesList extends Component
 
                 GeneralJournal::instance()->account($account_id)->credit($amount)->voucherNo($vno)
                     ->date($date)->approve()->reference('petty-expenses')->description($desc)->execute();
-                GeneralJournal::instance()->account($account_id)->debit($amount)->voucherNo($vno)
+                GeneralJournal::instance()->account($account_head_id)->debit($amount)->voucherNo($vno)
                     ->date($date)->approve()->reference('petty-expenses')->description($desc)->execute();
 
                 $found->update([
