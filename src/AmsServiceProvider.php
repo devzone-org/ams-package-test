@@ -3,6 +3,7 @@
 namespace Devzone\Ams;
 
 use Devzone\Ams\Console\DumpMasterData;
+use Devzone\Ams\Console\DumpMasterDataPermissions;
 use Devzone\Ams\Http\Livewire\ChartOfAccount\Add;
 use Devzone\Ams\Http\Livewire\ChartOfAccount\Listing;
 use Devzone\Ams\Http\Livewire\Journal\Close;
@@ -121,6 +122,7 @@ class AmsServiceProvider extends ServiceProvider
         // Registering package commands.
         $this->commands([
             DumpMasterData::class,
+            DumpMasterDataPermissions::class,
         ]);
     }
 
