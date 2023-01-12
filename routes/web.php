@@ -121,8 +121,15 @@ Route::group(['middleware' => ['permission:2.view.ledger']], function () {
 Route::get('petty-expenses/{id?}', function () {
     return view('ams::petty-expenses.add-petty-expenses');
 });
-Route::get('petty-expenses-list/{type}', function () {
+Route::get('petty-expenses-list/unclaimed', function () {
     return view('ams::petty-expenses.petty-expenses-list');
 });
+Route::get('petty-expenses-list/claimed', function () {
+    return view('ams::petty-expenses.claimed-petty-expenses-list');
+});
+Route::get('petty-expenses-list/approved', function () {
+    return view('ams::petty-expenses.approved-petty-expenses-list');
+});
+
 
 

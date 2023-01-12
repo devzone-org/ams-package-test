@@ -160,10 +160,10 @@
 
     </div>
     <div class="shadow rounded-md">
-        <form wire:submit.prevent="claim">
+        <form wire:submit.prevent="approve">
             <div class="bg-white  mb-5 rounded-md overflow-hidden">
                 <div class="py-6 px-4 sm:p-6 flex justify-between">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">Unclaimed Petty
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">Claimed Petty
                         Expenses</h3>
                 </div>
                 <table class="min-w-full table-fixed  ">
@@ -179,8 +179,9 @@
                             class="w-7 px-2 bg-gray-100 border-t border-r py-2 text-left text-sm font-bold text-gray-500  tracking-wider">
                             #
                         </th>
-                        <th scope="col" style="width: 110px;"
-                            class="px-2 py-2   bg-gray-100 border-t border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
+                        <th scope="col"
+                            class="px-2 py-2   bg-gray-100 border-t border-r text-left  text-sm font-bold text-gray-500  tracking-wider"
+                            style="width: 110px;">
                             Invoice Date
                         </th>
                         <th scope="col"
@@ -200,18 +201,19 @@
                             class="px-2 py-2   border-t bg-gray-100 border-r text-right  text-sm font-bold text-gray-500  tracking-wider">
                             Amount
                         </th>
-                        <th scope="col" style="width: 110px;"
-                            class="px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Status
+                        <th scope="col"
+                            class="px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider" style="width: 170px;">
+                            Claimed By
                         </th>
-                        <th scope="col" style="width: 150px;"
+{{--                        <th scope="col" style="width: 90px;"--}}
+{{--                            class="px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">--}}
+{{--                            Status--}}
+{{--                        </th>--}}
+                        <th scope="col"
                             class="px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
                             Attachment
                         </th>
 
-                        <th scope="col"
-                            class="rounded-tr-md cursor-pointer bg-gray-100    border-t px-2 py-2     text-left  text-sm font-bold text-gray-500 uppercase tracking-wider">
-                        </th>
                     </tr>
                     </thead>
                     <tbody class="bg-white  ">
@@ -243,9 +245,13 @@
                                 {{ number_format($pe['amount'],2) }}
                             </td>
                             <td class="px-2 py-2 border-r text-left text-sm text-gray-500">
-                                <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">Unclaimed</span>
+                                {{ucwords($pe['claimed_by'])}}<br>
+                                @ {{date('d M, Y',strtotime($pe['claimed_at']))}}
                             </td>
-                            <td class="px-2 py-2 border-r text-sm text-gray-500">
+{{--                            <td class="px-2 py-2 border-r text-left text-sm text-gray-500">--}}
+{{--                                <span class="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">Claimed</span>--}}
+{{--                            </td>--}}
+                            <td class="px-2 py-2 border-r text-sm text-gray-500" style="width: 150px;">
                                 @if(empty($pe['attachment']))
                                     -
                                 @else
@@ -256,37 +262,24 @@
                                 @endif
                             </td>
 
-
-                            <td class="px-2 py-2 border-r text-sm text-gray-500">
-                                <a href="/accounts/petty-expenses/{{$pe['id']}}"
-                                   class="text-indigo-500 font-medium" target="_blank">
-                                    Edit
-                                </a>
-                                |
-                                <button wire:click.prevent="openDeleteModal({{$pe['id']}})"
-                                        class="text-red-500 font-medium">
-                                    Delete
-                                </button>
-                            </td>
-
                         </tr>
                         <tr class="{{ $loop->first ? 'border-t': '' }}   border-b">
-                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="6">
+                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="7">
                             </td>
-                            <td class="px-2 py-2 border-r text-left text-sm text-gray-500" colspan="2">
+                            <td class="px-2 py-2 border-r text-left text-sm text-gray-500" colspan="1">
                                 <b>Total Selected Records</b>
                             </td>
-                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="2">
+                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="1">
                                 <b>{{number_format(count(array_filter(array_keys($checked_petty_expenses))))}}</b>
                             </td>
                         </tr>
                         <tr class="{{ $loop->first ? 'border-t': '' }}  border-b">
-                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="6">
+                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="7">
                             </td>
-                            <td class="px-2 py-2 border-r text-left text-sm text-gray-500" colspan="2">
+                            <td class="px-2 py-2 border-r text-left text-sm text-gray-500" colspan="1">
                                 <b>Total Selected Amount</b>
                             </td>
-                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="2">
+                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="1">
                                 @php
                                     $amount = collect($petty_expenses_list)->whereIn('id',array_keys(array_filter($checked_petty_expenses)))->sum('amount');
                                 @endphp
@@ -295,7 +288,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="10" class="text-sm text-red-500 rounded-md overflow-hidden">
+                            <td colspan="9" class="text-sm text-red-500 rounded-md overflow-hidden">
                                 <div class="flex items-center justify-center py-5">
                                     <div class="flex justify-between">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
@@ -321,7 +314,12 @@
                         <div class="p-4">
                             <button type="submit" wire:loading.attr="disabled"
                                     class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                Claim
+                                Approve
+                            </button>
+
+                            <button type="button" wire:click="reject" wire:loading.attr="disabled"
+                                    class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                Reject
                             </button>
                         </div>
                     </div>
@@ -329,5 +327,4 @@
             </div>
         </form>
     </div>
-    @include('include.delete-modal')
 </div>

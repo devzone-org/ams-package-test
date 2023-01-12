@@ -160,21 +160,15 @@
 
     </div>
     <div class="shadow rounded-md">
-        <form wire:submit.prevent="claim">
+        <form>
             <div class="bg-white  mb-5 rounded-md overflow-hidden">
                 <div class="py-6 px-4 sm:p-6 flex justify-between">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">Unclaimed Petty
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">Approved Petty
                         Expenses</h3>
                 </div>
                 <table class="min-w-full table-fixed  ">
                     <thead class="">
                     <tr class="">
-                        <th scope="col"
-                            class="w-7 px-2 bg-gray-100 border-t border-r py-2 text-left text-sm font-bold text-gray-500  tracking-wider">
-                            <input type="checkbox"
-                                   wire:model="checked_all"
-                                   class="cursor-pointer relative w-5 h-5 border rounded border-gray-400 bg-white text-indigo-500 focus:outline-none focus:ring-2  focus:ring-indigo-500"/>
-                        </th>
                         <th scope="col"
                             class="w-7 px-2 bg-gray-100 border-t border-r py-2 text-left text-sm font-bold text-gray-500  tracking-wider">
                             #
@@ -200,29 +194,25 @@
                             class="px-2 py-2   border-t bg-gray-100 border-r text-right  text-sm font-bold text-gray-500  tracking-wider">
                             Amount
                         </th>
-                        <th scope="col" style="width: 110px;"
+                        <th scope="col"
                             class="px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Status
+                            Claimed By
                         </th>
-                        <th scope="col" style="width: 150px;"
+                        <th scope="col"
+                            class="px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
+                            Approved By
+                        </th>
+                        <th scope="col"
                             class="px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
                             Attachment
                         </th>
 
-                        <th scope="col"
-                            class="rounded-tr-md cursor-pointer bg-gray-100    border-t px-2 py-2     text-left  text-sm font-bold text-gray-500 uppercase tracking-wider">
-                        </th>
                     </tr>
                     </thead>
                     <tbody class="bg-white  ">
 
                     @forelse($petty_expenses_list as $pe)
                         <tr class="{{ $loop->first ? 'border-t': '' }}   border-b">
-                            <td class="px-2 py-2  border-r text-sm text-gray-500">
-                                <input type="checkbox"
-                                       wire:model="checked_petty_expenses.{{$pe['id']}}"
-                                       class="cursor-pointer relative w-5 h-5 border rounded border-gray-400 bg-white text-indigo-500 focus:outline-none focus:ring-2  focus:ring-indigo-500"/>
-                            </td>
                             <td class="px-2 py-2  border-r text-sm text-gray-500">
                                 {{ $loop->iteration }}
                             </td>
@@ -243,7 +233,12 @@
                                 {{ number_format($pe['amount'],2) }}
                             </td>
                             <td class="px-2 py-2 border-r text-left text-sm text-gray-500">
-                                <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">Unclaimed</span>
+                                {{ucwords($pe['claimed_by'])}}<br>
+                                @ {{ date('d M, Y',strtotime($pe['claimed_at'])) }}
+                            </td>
+                            <td class="px-2 py-2 border-r text-left text-sm text-gray-500">
+                                {{ucwords($pe['approved_by'])}}<br>
+                                @ {{ date('d M, Y',strtotime($pe['approved_at'])) }}
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
                                 @if(empty($pe['attachment']))
@@ -256,46 +251,10 @@
                                 @endif
                             </td>
 
-
-                            <td class="px-2 py-2 border-r text-sm text-gray-500">
-                                <a href="/accounts/petty-expenses/{{$pe['id']}}"
-                                   class="text-indigo-500 font-medium" target="_blank">
-                                    Edit
-                                </a>
-                                |
-                                <button wire:click.prevent="openDeleteModal({{$pe['id']}})"
-                                        class="text-red-500 font-medium">
-                                    Delete
-                                </button>
-                            </td>
-
-                        </tr>
-                        <tr class="{{ $loop->first ? 'border-t': '' }}   border-b">
-                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="6">
-                            </td>
-                            <td class="px-2 py-2 border-r text-left text-sm text-gray-500" colspan="2">
-                                <b>Total Selected Records</b>
-                            </td>
-                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="2">
-                                <b>{{number_format(count(array_filter(array_keys($checked_petty_expenses))))}}</b>
-                            </td>
-                        </tr>
-                        <tr class="{{ $loop->first ? 'border-t': '' }}  border-b">
-                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="6">
-                            </td>
-                            <td class="px-2 py-2 border-r text-left text-sm text-gray-500" colspan="2">
-                                <b>Total Selected Amount</b>
-                            </td>
-                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="2">
-                                @php
-                                    $amount = collect($petty_expenses_list)->whereIn('id',array_keys(array_filter($checked_petty_expenses)))->sum('amount');
-                                @endphp
-                                <b>{{number_format($amount,2)}}</b>
-                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="10" class="text-sm text-red-500 rounded-md overflow-hidden">
+                            <td colspan="9" class="text-sm text-red-500 rounded-md overflow-hidden">
                                 <div class="flex items-center justify-center py-5">
                                     <div class="flex justify-between">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
@@ -315,19 +274,7 @@
 
                     </tbody>
                 </table>
-
-                @if(count(array_filter($checked_petty_expenses)) > 0)
-                    <div class="w-full flex justify-end">
-                        <div class="p-4">
-                            <button type="submit" wire:loading.attr="disabled"
-                                    class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                Claim
-                            </button>
-                        </div>
-                    </div>
-                @endif
             </div>
         </form>
     </div>
-    @include('include.delete-modal')
 </div>

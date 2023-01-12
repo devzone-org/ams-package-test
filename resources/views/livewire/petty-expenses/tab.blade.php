@@ -5,6 +5,7 @@
             $a_current = "text-indigo-600 border-b-2 border-indigo-500";
             $svg_default = "text-gray-400 group-hover:text-gray-500";
             $svg_current = "text-indigo-500 group-hover:text-gray-500";
+            $type = Request::segment(3);
         @endphp
 
         <h3 class="text-lg font-medium leading-6 text-gray-900">
@@ -28,11 +29,11 @@
                            class="{{ $type == 'unclaimed'? $a_current : $a_default }} inline-flex items-center px-1 py-4 text-sm font-medium">
                             <span>Unclaimed</span>
                         </a>
-                        <a href="/accounts/petty-expenses-list/unclaimed"
+                        <a href="/accounts/petty-expenses-list/claimed"
                            class="{{ $type == 'claimed'? $a_current : $a_default }} inline-flex items-center px-1 py-4 text-sm font-medium">
                             <span>Claimed</span>
                         </a>
-                        <a href="/accounts/petty-expenses-list/unclaimed"
+                        <a href="/accounts/petty-expenses-list/approved"
                            class="{{ $type == 'approved'? $a_current : $a_default }} inline-flex items-center px-1 py-4 text-sm font-medium">
                             <span>Approved</span>
                         </a>

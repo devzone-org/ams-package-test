@@ -99,7 +99,8 @@
         @endif
 
         <div class="py-6 px-4 sm:p-6 flex justify-between border-b">
-            <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">{{$is_edit?'Update':'Add'}} Petty Expenses</h3>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">{{$is_edit?'Update':'Add'}} Petty
+                Expenses</h3>
         </div>
         <form wire:submit.prevent="save">
             <div class="py-6 px-4 space-y-6 sm:p-6">
@@ -111,15 +112,16 @@
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
                     <div class="col-span-6 sm:col-span-1">
-                        <label class="block text-sm font-medium text-gray-700">Name <span class="text-red-500">*</span></label>
-                        <input type="text" wire:model.lazy="petty_expenses.name" autocomplete="off"
+                        <label class="block text-sm font-medium text-gray-700">Vendor Name <span
+                                    class="text-red-500">*</span></label>
+                        <input type="text" wire:model.lazy="petty_expenses.vendor_name" autocomplete="off"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
 
                     <div class="col-span-6 sm:col-span-1">
-                        <label class="block text-sm font-medium text-gray-700">Contact # <span
+                        <label class="block text-sm font-medium text-gray-700">Vendor Contact # <span
                                     class="text-red-500">*</span></label>
-                        <input type="text" wire:model.lazy="petty_expenses.contact_no" autocomplete="off"
+                        <input type="text" wire:model.lazy="petty_expenses.vendor_contact_no" autocomplete="off"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
                     <div class="col-span-6 sm:col-span-1">

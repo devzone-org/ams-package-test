@@ -17,8 +17,8 @@ class AddPettyExpenses extends Component
 
     protected $rules = [
         'petty_expenses.invoice_date' => 'required|date',
-        'petty_expenses.name' => 'required',
-        'petty_expenses.contact_no' => 'required|max:15',
+        'petty_expenses.vendor_name' => 'required',
+        'petty_expenses.vendor_contact_no' => 'required|max:15',
         'attachment' => 'nullable',
         'petty_expenses.account_head_id' => 'required|integer',
         'petty_expenses.amount' => 'required|numeric|min:1',
@@ -27,8 +27,8 @@ class AddPettyExpenses extends Component
 
     protected $validationAttributes = [
         'petty_expenses.invoice_date' => 'Invoice Date',
-        'petty_expenses.name' => 'Name',
-        'petty_expenses.contact_no' => 'Contact #',
+        'petty_expenses.vendor_name' => 'Vendor Name',
+        'petty_expenses.vendor_contact_no' => 'Vendor Contact #',
         'attachment' => 'Attachment',
         'petty_expenses.account_head_id' => 'Account Head',
         'petty_expenses.amount' => 'Amount',
@@ -66,17 +66,21 @@ class AddPettyExpenses extends Component
                 throw new \Exception('Account Head not found.');
             }
 
+            $this->petty_expenses['created_by'] = Auth::id();
             if (!$this->is_edit) {
-                $this->petty_expenses['created_by'] = Auth::id();
                 PettyExpenses::create($this->petty_expenses);
                 $this->success = 'Record Created Successfully';
                 $this->clear();
             } else {
-                $this->petty_expenses['updated_by'] = Auth::id();
                 $found = PettyExpenses::find($this->petty_expenses['id']);
                 if (empty($found)) {
                     throw new \Exception('No Record Found.');
                 }
+
+                if (!empty($found['claimed_by'])) {
+                    throw new \Exception("This record has already been claimed.You can't edit.");
+                }
+
                 $found->update($this->petty_expenses);
                 $this->success = 'Record Updated Successfully.';
             }
