@@ -9,6 +9,7 @@ use Devzone\Ams\Models\PettyExpenses;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ClaimedPettyExpensesList extends Component
 {
@@ -63,7 +64,7 @@ class ClaimedPettyExpensesList extends Component
                 return $q->where('petty_expenses.vendor_contact_no', 'Like', '%' . $this->filter['contact_no'] . '%');
             })
             ->when(!empty($this->filter['account_head_id']), function ($q) {
-                return $q->where('petty_expenses.account_head_id',  $this->filter['account_head_id']);
+                return $q->where('petty_expenses.account_head_id', $this->filter['account_head_id']);
             })
             ->select('petty_expenses.*', 'coa.name as account_head', 'u.name as claimed_by')
             ->orderBy('petty_expenses.invoice_date', 'asc')
@@ -90,6 +91,9 @@ class ClaimedPettyExpensesList extends Component
     public function reject()
     {
         try {
+            if (!Auth::user()->can('3.reject.petty-expenses')) {
+                throw new \Exception(env('PERMISSION_ERROR'));
+            }
             DB::beginTransaction();
             if (empty(array_filter($this->checked_petty_expenses))) {
                 throw new \Exception('Please select any record to proceed.');
@@ -122,6 +126,9 @@ class ClaimedPettyExpensesList extends Component
     public function approve()
     {
         try {
+            if (!Auth::user()->can('3.approve.petty-expenses')){
+                throw new \Exception(env('PERMISSION_ERROR'));
+            }
             DB::beginTransaction();
             if (empty(array_filter($this->checked_petty_expenses))) {
                 throw new \Exception('Please select any record to proceed.');
@@ -182,7 +189,8 @@ class ClaimedPettyExpensesList extends Component
         }
     }
 
-    public function clear(){
+    public function clear()
+    {
         $this->reset('filter');
     }
 

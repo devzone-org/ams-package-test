@@ -68,10 +68,16 @@ class AddPettyExpenses extends Component
 
             $this->petty_expenses['created_by'] = Auth::id();
             if (!$this->is_edit) {
+                if (!Auth::user()->can('3.add.petty-expenses')) {
+                    throw new \Exception(env('PERMISSION_ERROR'));
+                }
                 PettyExpenses::create($this->petty_expenses);
                 $this->success = 'Record Created Successfully';
                 $this->clear();
             } else {
+                if (!Auth::user()->can('3.edit.petty-expenses')) {
+                    throw new \Exception(env('PERMISSION_ERROR'));
+                }
                 $found = PettyExpenses::find($this->petty_expenses['id']);
                 if (empty($found)) {
                     throw new \Exception('No Record Found.');
