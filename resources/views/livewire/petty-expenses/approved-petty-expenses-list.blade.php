@@ -204,7 +204,6 @@
                         </th>
                         <th scope="col"
                             class="px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Attachment
                         </th>
 
                     </tr>

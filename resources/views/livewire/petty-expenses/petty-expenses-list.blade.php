@@ -169,12 +169,14 @@
                 <table class="min-w-full table-fixed  ">
                     <thead class="">
                     <tr class="">
-                        <th scope="col"
-                            class="w-7 px-2 bg-gray-100 border-t border-r py-2 text-left text-sm font-bold text-gray-500  tracking-wider">
-                            <input type="checkbox"
-                                   wire:model="checked_all"
-                                   class="cursor-pointer relative w-5 h-5 border rounded border-gray-400 bg-white text-indigo-500 focus:outline-none focus:ring-2  focus:ring-indigo-500"/>
-                        </th>
+                        @if(!empty($petty_expenses_list))
+                            <th scope="col"
+                                class="w-7 px-2 bg-gray-100 border-t border-r py-2 text-left text-sm font-bold text-gray-500  tracking-wider">
+                                <input type="checkbox"
+                                       wire:model="checked_all"
+                                       class="cursor-pointer relative w-5 h-5 border rounded border-gray-400 bg-white text-indigo-500 focus:outline-none focus:ring-2  focus:ring-indigo-500"/>
+                            </th>
+                        @endif
                         <th scope="col"
                             class="w-7 px-2 bg-gray-100 border-t border-r py-2 text-left text-sm font-bold text-gray-500  tracking-wider">
                             #
@@ -200,16 +202,8 @@
                             class="px-2 py-2   border-t bg-gray-100 border-r text-right  text-sm font-bold text-gray-500  tracking-wider">
                             Amount
                         </th>
-                        <th scope="col" style="width: 110px;"
-                            class="px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Status
-                        </th>
-                        <th scope="col" style="width: 150px;"
-                            class="px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Attachment
-                        </th>
 
-                        <th scope="col"
+                        <th scope="col" style="width: 140px;"
                             class="rounded-tr-md cursor-pointer bg-gray-100    border-t px-2 py-2     text-left  text-sm font-bold text-gray-500 uppercase tracking-wider">
                         </th>
                     </tr>
@@ -242,19 +236,6 @@
                             <td class="px-2 py-2 border-r text-right text-sm text-gray-500">
                                 {{ number_format($pe['amount'],2) }}
                             </td>
-                            <td class="px-2 py-2 border-r text-left text-sm text-gray-500">
-                                <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">Unclaimed</span>
-                            </td>
-                            <td class="px-2 py-2 border-r text-sm text-gray-500">
-                                @if(empty($pe['attachment']))
-                                    -
-                                @else
-                                    <a href="{{ env('AWS_URL').$pe['attachment'] }}"
-                                       class="text-yellow-500 font-medium" target="_blank">
-                                        View Attachment
-                                    </a>
-                                @endif
-                            </td>
 
 
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
@@ -267,26 +248,33 @@
                                         class="text-red-500 font-medium">
                                     Delete
                                 </button>
+                                @if(!empty($pe['attachment']))
+                                    <br>
+                                    <a href="{{ env('AWS_URL').$pe['attachment'] }}"
+                                       class="text-yellow-500 font-medium" target="_blank">
+                                        View Attachment
+                                    </a>
+                                @endif
                             </td>
 
                         </tr>
                         <tr class="{{ $loop->first ? 'border-t': '' }}   border-b">
                             <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="6">
                             </td>
-                            <td class="px-2 py-2 border-r text-left text-sm text-gray-500" colspan="2">
-                                <b>Total Selected Records</b>
+                            <td class="px-2 py-2 border-r text-left text-sm text-gray-500" colspan="1">
+                                <b>Selected Bills</b>
                             </td>
-                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="2">
+                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="1">
                                 <b>{{number_format(count(array_filter(array_keys($checked_petty_expenses))))}}</b>
                             </td>
                         </tr>
                         <tr class="{{ $loop->first ? 'border-t': '' }}  border-b">
                             <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="6">
                             </td>
-                            <td class="px-2 py-2 border-r text-left text-sm text-gray-500" colspan="2">
-                                <b>Total Selected Amount</b>
+                            <td class="px-2 py-2 border-r text-left text-sm text-gray-500" colspan="1">
+                                <b>Selected Amount</b>
                             </td>
-                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="2">
+                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="1">
                                 @php
                                     $amount = collect($petty_expenses_list)->whereIn('id',array_keys(array_filter($checked_petty_expenses)))->sum('amount');
                                 @endphp
