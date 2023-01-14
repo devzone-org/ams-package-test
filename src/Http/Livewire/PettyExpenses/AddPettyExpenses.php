@@ -61,6 +61,7 @@ class AddPettyExpenses extends Component
             if (!empty($this->attachment)) {
                 $this->petty_expenses['attachment'] = $this->attachment->storePublicly(config('app.aws_folder') . 'petty_expenses', 's3');
             }
+
             $exists = ChartOfAccount::where('id', $this->petty_expenses['account_head_id'])->exists();
             if (!$exists) {
                 throw new \Exception('Account Head not found.');
@@ -71,6 +72,19 @@ class AddPettyExpenses extends Component
                 if (!Auth::user()->can('3.add.petty-expenses')) {
                     throw new \Exception(env('PERMISSION_ERROR'));
                 }
+
+                $account_id = auth()->user()->account_id;
+                if (empty($account_id)) {
+                    throw new \Exception('account not found.');
+                }
+
+                $exists = ChartOfAccount::where('id', $account_id)->exists();
+                if (!$exists) {
+                    throw new \Exception('account not found.');
+                }
+
+                $this->petty_expenses['paid_by_account_id'] = $account_id;
+
                 PettyExpenses::create($this->petty_expenses);
                 $this->success = 'Record Created Successfully';
                 $this->clear();

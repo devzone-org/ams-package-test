@@ -126,7 +126,7 @@ class ClaimedPettyExpensesList extends Component
     public function approve()
     {
         try {
-            if (!Auth::user()->can('3.approve.petty-expenses')){
+            if (!Auth::user()->can('3.approve.petty-expenses')) {
                 throw new \Exception(env('PERMISSION_ERROR'));
             }
             DB::beginTransaction();
@@ -142,7 +142,7 @@ class ClaimedPettyExpensesList extends Component
                 }
                 $vno = Voucher::instance()->voucher()->get();
 
-                $account_id = auth()->user()->account_id;
+                $account_id = PettyExpenses::find($id)->paid_by_account_id;
                 if (empty($account_id)) {
                     throw new \Exception('account not found.');
                 }
@@ -174,7 +174,6 @@ class ClaimedPettyExpensesList extends Component
                     'approved_by' => auth()->id(),
                     'approved_at' => Carbon::now()->toDateTimeString(),
                     'voucher_no' => $vno,
-                    'account_head_id' => $account_head_id
                 ]);
             }
 
