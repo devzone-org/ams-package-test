@@ -10,6 +10,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class ClaimedPettyExpensesList extends Component
 {
@@ -125,65 +126,71 @@ class ClaimedPettyExpensesList extends Component
 
     public function approve()
     {
+        $lock = Cache::lock('petty-expenses', 60);
         try {
-            if (!Auth::user()->can('3.approve.petty-expenses')) {
-                throw new \Exception(env('PERMISSION_ERROR'));
-            }
-            DB::beginTransaction();
-            if (empty(array_filter($this->checked_petty_expenses))) {
-                throw new \Exception('Please select any record to proceed.');
-            }
-
-            foreach (array_keys(array_filter($this->checked_petty_expenses)) as $id) {
-                $found = PettyExpenses::find($id);
-                if (!empty($found['approved_by'])) {
-                    $this->search();
-                    throw new \Exception('Petty expenses has already been approved. Please select again.');
+            if ($lock->get()) {
+                if (!Auth::user()->can('3.approve.petty-expenses')) {
+                    throw new \Exception(env('PERMISSION_ERROR'));
                 }
-                $vno = Voucher::instance()->voucher()->get();
-
-                $account_id = PettyExpenses::find($id)->paid_by_account_id;
-                if (empty($account_id)) {
-                    throw new \Exception('account not found.');
+                DB::beginTransaction();
+                if (empty(array_filter($this->checked_petty_expenses))) {
+                    throw new \Exception('Please select any record to proceed.');
                 }
 
-                $exists = ChartOfAccount::where('id', $account_id)->exists();
-                if (!$exists) {
-                    throw new \Exception('account not found.');
-                }
 
-                $petty_pay = collect($this->petty_expenses_list)->where('id', $id)->first();
-                $account_head_id = $petty_pay['account_head_id'];
-                $amount = $petty_pay['amount'];
-                $date = Carbon::now()->toDateString();
+                foreach (array_keys(array_filter($this->checked_petty_expenses)) as $id) {
+                    $found = PettyExpenses::find($id);
+                    if (!empty($found['approved_by'])) {
+                        $this->search();
+                        throw new \Exception('Petty expenses has already been approved. Please select again.');
+                    }
+                    $vno = Voucher::instance()->voucher()->get();
 
-                $expense_head = ChartOfAccount::find($account_head_id);
-                if (empty($expense_head)) {
-                    throw new \Exception('Expense Head Account Not Found.');
-                }
+                    $account_id = PettyExpenses::find($id)->paid_by_account_id;
+                    if (empty($account_id)) {
+                        throw new \Exception('account not found.');
+                    }
 
-                $desc = 'Petty Payment of Amount PKR ' . $amount . '/- approved by ' . auth()->user()->name . ' at ' . date('d M, Y h:ia', strtotime(Carbon::now()->toDateTimeString())) . '
+                    $exists = ChartOfAccount::where('id', $account_id)->exists();
+                    if (!$exists) {
+                        throw new \Exception('account not found.');
+                    }
+
+                    $petty_pay = collect($this->petty_expenses_list)->where('id', $id)->first();
+                    $account_head_id = $petty_pay['account_head_id'];
+                    $amount = $petty_pay['amount'];
+                    $date = Carbon::now()->toDateString();
+
+                    $expense_head = ChartOfAccount::find($account_head_id);
+                    if (empty($expense_head)) {
+                        throw new \Exception('Expense Head Account Not Found.');
+                    }
+
+                    $desc = 'Petty Payment of Amount PKR ' . $amount . '/- approved by ' . auth()->user()->name . ' at ' . date('d M, Y h:ia', strtotime(Carbon::now()->toDateTimeString())) . '
                 against Voucher# ' . $vno . ' To ' . $expense_head['name'] . '.';
 
-                GeneralJournal::instance()->account($account_id)->credit($amount)->voucherNo($vno)
-                    ->date($date)->approve()->reference('petty-expenses')->description($desc)->execute();
-                GeneralJournal::instance()->account($account_head_id)->debit($amount)->voucherNo($vno)
-                    ->date($date)->approve()->reference('petty-expenses')->description($desc)->execute();
+                    GeneralJournal::instance()->account($account_id)->credit($amount)->voucherNo($vno)
+                        ->date($date)->approve()->reference('petty-expenses')->description($desc)->execute();
+                    GeneralJournal::instance()->account($account_head_id)->debit($amount)->voucherNo($vno)
+                        ->date($date)->approve()->reference('petty-expenses')->description($desc)->execute();
 
-                $found->update([
-                    'approved_by' => auth()->id(),
-                    'approved_at' => Carbon::now()->toDateTimeString(),
-                    'voucher_no' => $vno,
-                ]);
+                    $found->update([
+                        'approved_by' => auth()->id(),
+                        'approved_at' => Carbon::now()->toDateTimeString(),
+                        'voucher_no' => $vno,
+                    ]);
+                }
+
+                $this->success = 'Petty Expenses Approved Successfully.';
+                $this->search();
+
+
+                DB::commit();
+                $lock->release();
             }
-
-            $this->success = 'Petty Expenses Approved Successfully.';
-            $this->search();
-
-
-            DB::commit();
         } catch (\Exception $ex) {
             DB::rollBack();
+            $lock->release();
             $this->addError('error', $ex->getMessage());
         }
     }
