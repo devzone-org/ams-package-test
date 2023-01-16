@@ -3,6 +3,7 @@
 namespace Devzone\Ams;
 
 use Devzone\Ams\Console\DumpMasterData;
+use Devzone\Ams\Console\DumpMasterDataPermissions;
 use Devzone\Ams\Http\Livewire\ChartOfAccount\Add;
 use Devzone\Ams\Http\Livewire\ChartOfAccount\Listing;
 use Devzone\Ams\Http\Livewire\Journal\Close;
@@ -17,6 +18,7 @@ use Devzone\Ams\Http\Livewire\Reports\ProfitLoss;
 use Devzone\Ams\Http\Livewire\Reports\ProfitLossDateWise;
 use Devzone\Ams\Http\Livewire\Reports\Trial;
 use Devzone\Ams\Http\Livewire\Sidebar\SidebarLinks;
+use Devzone\Ams\Http\Livewire\PettyExpenses;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -83,6 +85,11 @@ class AmsServiceProvider extends ServiceProvider
         Livewire::component('journal.payments.listing', \Devzone\Ams\Http\Livewire\Journal\Payment\Listing::class);
         Livewire::component('journal.payments.add', \Devzone\Ams\Http\Livewire\Journal\Payment\Add::class);
         Livewire::component('sidebar.sidebar-links', SidebarLinks::class);
+        Livewire::component('petty-expenses.add-petty-expenses', PettyExpenses\AddPettyExpenses::class);
+        Livewire::component('petty-expenses.petty-expenses-list', PettyExpenses\PettyExpensesList::class);
+        Livewire::component('petty-expenses.claimed-petty-expenses-list', PettyExpenses\ClaimedPettyExpensesList::class);
+        Livewire::component('petty-expenses.approved-petty-expenses-list', PettyExpenses\ApprovedPettyExpensesList::class);
+        Livewire::component('petty-expenses.tab', PettyExpenses\Tab::class);
     }
 
     /**
@@ -115,6 +122,7 @@ class AmsServiceProvider extends ServiceProvider
         // Registering package commands.
         $this->commands([
             DumpMasterData::class,
+            DumpMasterDataPermissions::class,
         ]);
     }
 
