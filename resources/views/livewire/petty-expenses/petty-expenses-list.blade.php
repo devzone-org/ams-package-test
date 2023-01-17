@@ -99,11 +99,9 @@
         @endif
         <div class="p-4 px-6 flex justify-between border-b">
             <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">Search Filters</h3>
-            <a href="/accounts/petty-expenses">
-                <button type="button" wire:click="resetSearch" wire:loading.attr="disabled"
-                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
-                    Add Petty Expenses
-                </button>
+            <a href="/accounts/petty-expenses"
+               class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                Add Petty Expenses
             </a>
         </div>
         <form wire:submit.prevent="search">
@@ -195,6 +193,10 @@
                         </th>
                         <th scope="col"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
+                            Expense Head
+                        </th>
+                        <th scope="col"
+                            class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
                             Description
                         </th>
 
@@ -228,6 +230,9 @@
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
                                 {{ ucwords($pe['account_head']) }}
+                            </td>
+                            <td class="px-2 py-2 border-r text-sm text-gray-500">
+                                {{ ucwords($pe['expense_head']) }}
                             </td>
                             <td class=" px-2 py-2 border-r text-sm text-gray-500 whitespace-initial"
                                 style="width: 400px !important;">

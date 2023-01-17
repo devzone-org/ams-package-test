@@ -295,7 +295,7 @@
                             </td>
                             <td class="  px-6 py-2 font-medium   text-lg text-gray-900">
                                 <input type="number" wire:model.lazy="retained_cash"
-                                       class=" w-36 bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                       class="  w-60 bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             </td>
                         </tr>
 
@@ -310,12 +310,12 @@
 
 
                         <tr class="">
-                            <td class="     px-6 py-2   text-lg font-medium text-gray-900">
+                            <td class="px-6 py-2   text-lg font-medium text-gray-900">
                                 Transfer To
                             </td>
                             <td class="  px-6 py-2 font-medium   text-lg text-gray-900">
                                 <select wire:model="transfer_id"
-                                        class=" w-36 bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        class="  w-60 bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                     <option></option>
                                     @foreach($transfers as $t)
                                         @if($t['id']==$user_account_id)
@@ -328,6 +328,26 @@
                         </tr>
 
                         <tr class="">
+                            <td class="     px-6 py-2   text-lg font-medium text-gray-900">
+                                Attachment
+                            </td>
+                            <td class="  px-6 py-2 font-medium   text-lg text-gray-900">
+                                <input type="file" wire:model.lazy="attachment"
+                                       class="  w-60 bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class="     px-6 py-2   text-lg font-medium text-gray-900">
+                                Description
+                            </td>
+                            <td class="  px-6 py-2 font-medium   text-lg text-gray-900 h-24">
+                                <textarea wire:model.lazy="description"
+                                          rows="7"
+                                          class=" w-60 bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                            </td>
+                        </tr>
+
+                        <tr class="">
                             <td colspan="2" class="px-6 py-2 text-center bg-gray-50  text-lg font-sm text-gray-900">
                                 Transfer to "{{ collect($transfers)->firstWhere('id',$transfer_id)['name'] ?? '' }}"
                             </td>
@@ -335,8 +355,11 @@
                         </tbody>
                     </table>
                     @if(!empty($transfer_id))
-                        <button type="button" wire:click="$set('confirm_popup','true')" wire:loading.attr="disabled"
-                                class="mt-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <button type="button" wire:click="$set('confirm_popup','true')"
+                                wire:loading.attr="disabled"
+                                class="mt-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm
+                                        text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
+                                        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Proceed Closing
                         </button>
                     @endif

@@ -25,8 +25,9 @@ class ApprovedPettyExpensesList extends Component
     public function search()
     {
         $this->petty_expenses_list = PettyExpenses::join('chart_of_accounts as coa', 'coa.id', 'petty_expenses.account_head_id')
-            ->leftJoin('users as cu','cu.id','petty_expenses.claimed_by')
-            ->leftJoin('users as au','au.id','petty_expenses.approved_by')
+            ->join('chart_of_accounts as ecoa', 'ecoa.id', 'petty_expenses.paid_by_account_id')
+            ->leftJoin('users as cu', 'cu.id', 'petty_expenses.claimed_by')
+            ->leftJoin('users as au', 'au.id', 'petty_expenses.approved_by')
             ->whereNotNull('petty_expenses.claimed_by')->whereNotNull('petty_expenses.approved_by')
             ->when(!empty($this->filter['invoice_date']), function ($q) {
                 return $q->where('petty_expenses.invoice_date', $this->filter['invoice_date']);
@@ -38,14 +39,15 @@ class ApprovedPettyExpensesList extends Component
                 return $q->where('petty_expenses.vendor_contact_no', 'Like', '%' . $this->filter['contact_no'] . '%');
             })
             ->when(!empty($this->filter['account_head_id']), function ($q) {
-                return $q->where('petty_expenses.account_head_id',  $this->filter['account_head_id']);
+                return $q->where('petty_expenses.account_head_id', $this->filter['account_head_id']);
             })
-            ->select('petty_expenses.*', 'coa.name as account_head','cu.name as claimed_by','au.name as approved_by')
+            ->select('petty_expenses.*', 'coa.name as account_head', 'cu.name as claimed_by', 'au.name as approved_by', 'ecoa.name as expense_head')
             ->orderBy('petty_expenses.invoice_date', 'asc')
             ->get()->toArray();
     }
 
-    public function clear(){
+    public function clear()
+    {
         $this->reset('filter');
     }
 

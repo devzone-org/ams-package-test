@@ -51,6 +51,7 @@ class PettyExpensesList extends Component
     public function search()
     {
         $this->petty_expenses_list = PettyExpenses::join('chart_of_accounts as coa', 'coa.id', 'petty_expenses.account_head_id')
+            ->join('chart_of_accounts as ecoa', 'ecoa.id', 'petty_expenses.paid_by_account_id')
             ->whereNull('petty_expenses.claimed_by')
             ->whereNull('petty_expenses.approved_by')
             ->when(!empty($this->filter['invoice_date']), function ($q) {
@@ -65,7 +66,7 @@ class PettyExpensesList extends Component
             ->when(!empty($this->filter['account_head_id']), function ($q) {
                 return $q->where('petty_expenses.account_head_id', $this->filter['account_head_id']);
             })
-            ->select('petty_expenses.*', 'coa.name as account_head')
+            ->select('petty_expenses.*', 'coa.name as account_head', 'ecoa.name as expense_head')
             ->orderBy('petty_expenses.invoice_date', 'asc')
             ->get()->toArray();
 
@@ -116,7 +117,7 @@ class PettyExpensesList extends Component
     public function claim()
     {
         try {
-            if (!Auth::user()->can('3.claim.petty-expenses')){
+            if (!Auth::user()->can('3.claim.petty-expenses')) {
                 throw new \Exception(env('PERMISSION_ERROR'));
             }
             DB::beginTransaction();

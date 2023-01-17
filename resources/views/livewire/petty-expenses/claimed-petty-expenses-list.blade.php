@@ -99,11 +99,9 @@
         @endif
         <div class="p-4 px-6 flex justify-between border-b">
             <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">Search Filters</h3>
-            <a href="/accounts/petty-expenses">
-                <button type="button" wire:click="resetSearch" wire:loading.attr="disabled"
-                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
-                    Add Petty Expenses
-                </button>
+            <a href="/accounts/petty-expenses"
+               class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                Add Petty Expenses
             </a>
         </div>
         <form wire:submit.prevent="search">
@@ -196,6 +194,10 @@
                         </th>
                         <th scope="col"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
+                            Expense Head
+                        </th>
+                        <th scope="col"
+                            class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
                             Description
                         </th>
 
@@ -239,6 +241,9 @@
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
                                 {{ ucwords($pe['account_head']) }}
+                            </td>
+                            <td class="px-2 py-2 border-r text-sm text-gray-500">
+                                {{ ucwords($pe['expense_head']) }}
                             </td>
                             <td class=" px-2 py-2 border-r text-sm text-gray-500 whitespace-initial"
                                 style="width: 400px !important;">
@@ -390,6 +395,77 @@
                     </div>
                 </div>
 
+                <div x-data="{ open: @entangle('reject_modal') }" x-show="open"
+                     class="fixed z-10 inset-0 overflow-y-auto"
+                     aria-labelledby="modal-title" x-ref="dialog" aria-modal="true">
+                    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+
+                        <div x-show="open" x-transition:enter="ease-out duration-300"
+                             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                             x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100"
+                             x-transition:leave-end="opacity-0"
+                             x-description="Background overlay, show/hide based on modal state."
+                             class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+                             aria-hidden="true"></div>
+
+
+                        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">​</span>
+
+                        <div x-show="open" x-transition:enter="ease-out duration-300"
+                             x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                             x-transition:leave="ease-in duration-200"
+                             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                             x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                             x-description="Modal panel, show/hide based on modal state."
+                             class="inline-block align-bottom bg-white rounded-lg px-4 sm:p-6 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                            <div class="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
+                                <button type="button" wire:click="closeRejectModal" wire:loading.attr="disabled"
+                                        class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                        @click="open = false">
+                                    <span class="sr-only">Close</span>
+                                    <svg class="h-6 w-6" x-description="Heroicon name: outline/x"
+                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            @if($reject_modal)
+                                <div class="sm:flex sm:items-start" style="width: 100%;">
+                                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left" style="width: 100%;">
+                                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                                Reject Reason
+                                            </h3>
+                                        <div class="mt-2">
+                                            {{--                                            <p class="text-sm text-gray-500">--}}
+                                            {{--                                                {{ $reject_modal_msg }}--}}
+                                            {{--                                            </p>--}}
+                                            <textarea wire:model.lazy="reject_reason" placeholder="Reject Reason"
+                                                      rows="3"
+                                                      class="mt-2 w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                                    <button type="button" wire:click="reject" wire:loading.attr="disabled"
+                                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                                            @click="open = false">
+                                        Reject
+                                    </button>
+                                    <button type="button" wire:click="closeRejectModal" wire:loading.attr="disabled"
+                                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+                                            @click="open = false">
+                                        Cancel
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
 
                 @if(count(array_filter($checked_petty_expenses)) > 0)
                     <div class="w-full flex justify-end">
@@ -399,7 +475,7 @@
                                 Approve
                             </button>
 
-                            <button type="button" wire:click="reject" wire:loading.attr="disabled"
+                            <button type="button" wire:click="openRejectModal" wire:loading.attr="disabled"
                                     class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                                 Reject
                             </button>
