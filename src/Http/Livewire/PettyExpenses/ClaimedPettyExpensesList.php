@@ -184,6 +184,24 @@ class ClaimedPettyExpensesList extends Component
                     $amount = $petty_pay['amount'];
                     $date = $petty_pay['expense_date'];
 
+                    if (auth()->user()->can('2.create.transfer.restricted-date')) {
+                        if (Carbon::now()->toDateString() > $date) {
+                            $diff_in_days = Carbon::parse($date)->diffInDays(Carbon::now());
+
+                            if (empty(env("AMS_RESTRICT_DATE"))) {
+                                $restrict_days = 3;
+                            } else {
+                                $restrict_days = env("AMS_RESTRICT_DATE");
+                            }
+
+                            if ($diff_in_days > $restrict_days) {
+                                throw new \Exception("You can't approve the record after " . ($restrict_days == 1 ? $restrict_days . " day" : $restrict_days . " days") . " of expense date.");
+                            }
+                        }
+
+
+                    }
+
                     $expense_head = ChartOfAccount::find($account_head_id);
                     if (empty($expense_head)) {
                         throw new \Exception('Expense Head Account Not Found.');
