@@ -1,4 +1,5 @@
 <div>
+    <script src="https://unpkg.com/imask"></script>
     <div class="mb-54 shadow sm:rounded-md sm:overflow-hidden bg-white">
         @if ($errors->any())
             <div class="px-6 pt-6">
@@ -124,10 +125,12 @@
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
 
-                    <div class="col-span-6 sm:col-span-1">
+                    <div class="col-span-6 sm:col-span-1" x-data="{ mask: '0000-0000000' }"
+                         x-init="IMask($refs.mobile, { mask })">
                         <label class="block text-sm font-medium text-gray-700">Vendor Contact # <span
                                     class="text-red-500">*</span></label>
-                        <input type="text" wire:model.lazy="petty_expenses.vendor_contact_no" autocomplete="off"
+                        <input type="text" wire:model.lazy="petty_expenses.vendor_contact_no" autocomplete="off" x-ref="mobile"
+                               placeholder="0300-1234567"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
                     <div class="col-span-6 sm:col-span-1">

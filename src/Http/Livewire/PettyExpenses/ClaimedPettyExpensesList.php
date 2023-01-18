@@ -25,7 +25,7 @@ class ClaimedPettyExpensesList extends Component
     public $approve_modal = false;
     public $approve_modal_msg;
     public $reject_modal = false;
-    public $reject_modal_msg;
+    public $reject_reason;
 
 
     public function mount()
@@ -91,7 +91,6 @@ class ClaimedPettyExpensesList extends Component
     {
         $this->success = null;
         $this->resetErrorBag();
-        $this->reject_modal_msg = "Are You Sure You wanted to Reject? This can't be undone";
         $this->reject_modal = true;
     }
 
@@ -103,12 +102,17 @@ class ClaimedPettyExpensesList extends Component
 
     public function closeRejectModal()
     {
-        $this->reject_modal_msg = null;
+        $this->resetErrorBag();
         $this->reject_modal = false;
     }
 
     public function reject()
     {
+        $this->validate([
+            'reject_reason' => 'required',
+        ], [], [
+            'reject_reason' => 'Reject Reason',
+        ]);
         try {
             if (!Auth::user()->can('3.reject.petty-expenses')) {
                 throw new \Exception(env('PERMISSION_ERROR'));
@@ -127,14 +131,15 @@ class ClaimedPettyExpensesList extends Component
 
                 $found->update([
                     'claimed_by' => null,
-                    'claimed_at' => null
+                    'claimed_at' => null,
+                    'reject_by' => auth()->id(),
+                    'reject_reason' => $this->reject_reason
                 ]);
             }
 
             $this->success = 'Petty Expenses Rejected Successfully.';
             $this->search();
-
-
+            $this->closeRejectModal();
             DB::commit();
         } catch (\Exception $ex) {
             DB::rollBack();

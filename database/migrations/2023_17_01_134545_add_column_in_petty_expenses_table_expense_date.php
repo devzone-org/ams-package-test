@@ -15,7 +15,8 @@ class AddColumnInPettyExpensesTableExpenseDate extends Migration
     {
         Schema::table('petty_expenses', function (Blueprint $table) {
             $table->date('expense_date')->after('invoice_date')->nullable();
-            $table->text('reject_reason')->after('description')->nullable();
+            $table->integer('reject_by')->after('description')->nullable();
+            $table->text('reject_reason')->after('reject_by')->nullable();
         });
     }
 
@@ -27,7 +28,7 @@ class AddColumnInPettyExpensesTableExpenseDate extends Migration
     public function down()
     {
         Schema::table('petty_expenses', function (Blueprint $table) {
-            $table->dropColumn('expense_date', 'reject_reason');
+            $table->dropColumn('expense_date', 'reject_reason', 'reject_by');
         });
     }
 }

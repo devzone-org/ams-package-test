@@ -263,29 +263,31 @@
                             </td>
 
                         </tr>
-                        <tr class="{{ $loop->first ? 'border-t': '' }}   border-b">
-                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="6">
-                            </td>
-                            <td class="px-2 py-2 border-r text-left text-sm text-gray-500" colspan="1">
-                                <b>Selected Bills</b>
-                            </td>
-                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="1">
-                                <b>{{number_format(count(array_filter(array_keys($checked_petty_expenses))))}}</b>
-                            </td>
-                        </tr>
-                        <tr class="{{ $loop->first ? 'border-t': '' }}  border-b">
-                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="6">
-                            </td>
-                            <td class="px-2 py-2 border-r text-left text-sm text-gray-500" colspan="1">
-                                <b>Selected Amount</b>
-                            </td>
-                            <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="1">
-                                @php
-                                    $amount = collect($petty_expenses_list)->whereIn('id',array_keys(array_filter($checked_petty_expenses)))->sum('amount');
-                                @endphp
-                                <b>{{number_format($amount,2)}}</b>
-                            </td>
-                        </tr>
+                        @if($loop->last)
+                            <tr class="{{ $loop->first ? 'border-t': '' }}   border-b">
+                                <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="6">
+                                </td>
+                                <td class="px-2 py-2 border-r text-left text-sm text-gray-500" colspan="1">
+                                    <b>Selected Bills</b>
+                                </td>
+                                <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="1">
+                                    <b>{{number_format(count(array_filter(array_keys($checked_petty_expenses))))}}</b>
+                                </td>
+                            </tr>
+                            <tr class="{{ $loop->first ? 'border-t': '' }}  border-b">
+                                <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="6">
+                                </td>
+                                <td class="px-2 py-2 border-r text-left text-sm text-gray-500" colspan="1">
+                                    <b>Selected Amount</b>
+                                </td>
+                                <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="1">
+                                    @php
+                                        $amount = collect($petty_expenses_list)->whereIn('id',array_keys(array_filter($checked_petty_expenses)))->sum('amount');
+                                    @endphp
+                                    <b>{{number_format($amount,2)}}</b>
+                                </td>
+                            </tr>
+                        @endif
                     @empty
                         <tr>
                             <td colspan="10" class="text-sm text-red-500 rounded-md overflow-hidden">
