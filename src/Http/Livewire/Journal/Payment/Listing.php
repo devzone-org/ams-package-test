@@ -101,7 +101,7 @@ class Listing extends Component
 
                 unset($data['id'], $data['created_at'], $data['updated_at']);
                 $data['approved_at'] = date('Y-m-d H:i:s');
-                $data['description'] = "REVERSAL ENTRY AGAINST VOUCHER # ".$data['voucher_no']." " . $data['description'];
+                $data['description'] = "REVERSAL ENTRY AGAINST VOUCHER # " . $data['voucher_no'] . " " . $data['description'];
                 $data['debit'] = $credit;
                 $data['credit'] = $debit;
                 $data['voucher_no'] = $vno;
@@ -158,6 +158,24 @@ class Listing extends Component
             $created = User::find($payment['added_by']);
             $description .= " Created by " . $created->name . " @ " . date('d M, Y h:i A', strtotime($payment['created_at']));
             $description .= ". Approved by " . Auth::user()->name . " @ " . date('d M, Y h:i A');
+
+            if (auth()->user()->can('2.create.transfer.restricted-date')) {
+                if (Carbon::now()->toDateString() > $payment['posting_date']) {
+                    $diff_in_days = Carbon::parse($payment['posting_date'])->diffInDays(Carbon::now());
+
+                    if (empty(env("AMS_RESTRICT_DATE"))) {
+                        $restrict_days = 3;
+                    } else {
+                        $restrict_days = env("AMS_RESTRICT_DATE");
+                    }
+
+                    if ($diff_in_days > $restrict_days) {
+                        throw new \Exception("You can't approve the record after " . ($restrict_days == 1 ? $restrict_days . " day" : $restrict_days . " days") . " of transaction  date.");
+                    }
+                }
+            }
+
+
             if ($payment['nature'] == 'receive') {
                 GeneralJournal::instance()->account($payment['first_account_id'])
                     ->credit($payment['amount'])->voucherNo($vno)->reference('payment')
@@ -194,7 +212,8 @@ class Listing extends Component
 
 
             DB::commit();
-        } catch (\Exception $e) {
+        } catch
+        (\Exception $e) {
             DB::rollBack();
             $this->addError('success', $e->getMessage());
         }
