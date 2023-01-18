@@ -307,7 +307,7 @@ class Add extends Component
             DB::beginTransaction();
 
             if (Ledger::where('voucher_no', $this->voucher_no)
-                 ->where('is_approve', 'f')->exists()) {
+                ->where('is_approve', 'f')->exists()) {
                 $this->addError('voucher_no', 'Voucher # ' . $this->voucher_no . ' already in use. System have updated to new one kindly try again.');
                 $this->voucher_no = Voucher::instance()->tempVoucherOnly();
                 return false;
@@ -332,6 +332,22 @@ class Add extends Component
 
                     if ($date > $this->formatDate($this->posting_date)) {
                         throw new \Exception('Posting date must be equal or greater than ' . date('d M, Y', strtotime($date)));
+                    }
+                }
+
+                if (auth()->user()->can('2.create.transfer.restricted-date')) {
+                    if (Carbon::now()->toDateString() > $this->posting_date) {
+                        $diff_in_days = Carbon::parse($this->posting_date)->diffInDays(Carbon::now());
+
+                        if (empty(env("AMS_RESTRICT_DATE"))) {
+                            $restrict_days = 3;
+                        } else {
+                            $restrict_days = env("AMS_RESTRICT_DATE");
+                        }
+
+                        if ($diff_in_days > $restrict_days) {
+                            throw new \Exception("You can't approve the record after " . ($restrict_days == 1 ? $restrict_days . " day" : $restrict_days . " days") . " of posting  date.");
+                        }
                     }
                 }
 
