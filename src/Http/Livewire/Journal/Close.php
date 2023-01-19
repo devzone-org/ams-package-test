@@ -93,6 +93,7 @@ class Close extends Component
                 ->when(!empty($closing), function ($q) use ($closing) {
                     return $q->where('voucher_no', '>', $closing['voucher_no']);
                 })->select(DB::raw('sum(debit-credit) as balance'), 'reference')
+                ->where('is_approve','t')
                 ->groupBy('reference')->get();
             $this->closing_balance = $closing_balance->toArray();
 
@@ -132,6 +133,7 @@ class Close extends Component
                 }
 
                 $closing_balance = Ledger::where('account_id', $this->user_account_id)
+                    ->where('is_approve','t')
                     ->select(DB::raw('sum(debit-credit) as balance'))
                     ->first();
 
