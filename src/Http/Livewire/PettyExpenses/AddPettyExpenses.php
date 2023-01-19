@@ -17,6 +17,7 @@ class AddPettyExpenses extends Component
 
     protected $rules = [
         'petty_expenses.invoice_date' => 'required|date',
+        'petty_expenses.expense_date' => 'required|date',
         'petty_expenses.vendor_name' => 'required',
         'petty_expenses.vendor_contact_no' => 'required|max:15',
         'attachment' => 'nullable',
@@ -27,6 +28,7 @@ class AddPettyExpenses extends Component
 
     protected $validationAttributes = [
         'petty_expenses.invoice_date' => 'Invoice Date',
+        'petty_expenses.expense_date' => 'Expense Date',
         'petty_expenses.vendor_name' => 'Vendor Name',
         'petty_expenses.vendor_contact_no' => 'Vendor Contact #',
         'attachment' => 'Attachment',

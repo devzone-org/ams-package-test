@@ -1,4 +1,5 @@
 <div>
+    <script src="https://unpkg.com/imask"></script>
     <div class="mb-54 shadow sm:rounded-md sm:overflow-hidden bg-white">
         @if ($errors->any())
             <div class="px-6 pt-6">
@@ -112,16 +113,23 @@
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
                     <div class="col-span-6 sm:col-span-1">
+                        <label class="block text-sm font-medium text-gray-700">Expense Date <span
+                                    class="text-red-500">*</span></label>
+                        <input type="date" wire:model.lazy="petty_expenses.expense_date" autocomplete="off"
+                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                    <div class="col-span-6 sm:col-span-1">
                         <label class="block text-sm font-medium text-gray-700">Vendor Name <span
                                     class="text-red-500">*</span></label>
                         <input type="text" wire:model.lazy="petty_expenses.vendor_name" autocomplete="off"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
 
-                    <div class="col-span-6 sm:col-span-1">
+                    <div class="col-span-6 sm:col-span-1" x-data="{ mask: '0000-0000000' }"
+                         x-init="IMask($refs.mobile, { mask })">
                         <label class="block text-sm font-medium text-gray-700">Vendor Contact # <span
                                     class="text-red-500">*</span></label>
-                        <input type="text" wire:model.lazy="petty_expenses.vendor_contact_no" autocomplete="off"
+                        <input type="text" wire:model.lazy="petty_expenses.vendor_contact_no" autocomplete="off" x-ref="mobile"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
                     <div class="col-span-6 sm:col-span-1">
@@ -168,6 +176,10 @@
                                 class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                             Reset
                         </button>
+                        <a href="{{url('/accounts/petty-expenses-list/unclaimed')}}"
+                           class="ml-1 inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md shadow-sm disabled:opacity-25 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Go Back
+                        </a>
                     </div>
 
                 </div>

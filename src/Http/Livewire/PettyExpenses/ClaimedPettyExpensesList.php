@@ -21,8 +21,11 @@ class ClaimedPettyExpensesList extends Component
     public $success;
     public $checked_petty_expenses = [];
     public $checked_all;
+
     public $approve_modal = false;
     public $approve_modal_msg;
+    public $reject_modal = false;
+    public $reject_reason;
 
 
     public function mount()
@@ -54,6 +57,7 @@ class ClaimedPettyExpensesList extends Component
     {
         $this->petty_expenses_list = PettyExpenses::join('chart_of_accounts as coa', 'coa.id', 'petty_expenses.account_head_id')
             ->leftJoin('users as u', 'u.id', 'petty_expenses.claimed_by')
+            ->join('chart_of_accounts as ecoa', 'ecoa.id', 'petty_expenses.paid_by_account_id')
             ->whereNotNull('petty_expenses.claimed_by')->whereNull('petty_expenses.approved_by')
             ->when(!empty($this->filter['invoice_date']), function ($q) {
                 return $q->where('petty_expenses.invoice_date', $this->filter['invoice_date']);
@@ -67,7 +71,7 @@ class ClaimedPettyExpensesList extends Component
             ->when(!empty($this->filter['account_head_id']), function ($q) {
                 return $q->where('petty_expenses.account_head_id', $this->filter['account_head_id']);
             })
-            ->select('petty_expenses.*', 'coa.name as account_head', 'u.name as claimed_by')
+            ->select('petty_expenses.*', 'coa.name as account_head', 'u.name as claimed_by', 'ecoa.name as expense_head')
             ->orderBy('petty_expenses.invoice_date', 'asc')
             ->get()->toArray();
 
@@ -83,14 +87,32 @@ class ClaimedPettyExpensesList extends Component
         $this->approve_modal = true;
     }
 
+    public function openRejectModal()
+    {
+        $this->success = null;
+        $this->resetErrorBag();
+        $this->reject_modal = true;
+    }
+
     public function closeApproveModal()
     {
         $this->approve_modal_msg = null;
         $this->approve_modal = false;
     }
 
+    public function closeRejectModal()
+    {
+        $this->resetErrorBag();
+        $this->reject_modal = false;
+    }
+
     public function reject()
     {
+        $this->validate([
+            'reject_reason' => 'required',
+        ], [], [
+            'reject_reason' => 'Reject Reason',
+        ]);
         try {
             if (!Auth::user()->can('3.reject.petty-expenses')) {
                 throw new \Exception(env('PERMISSION_ERROR'));
@@ -109,14 +131,15 @@ class ClaimedPettyExpensesList extends Component
 
                 $found->update([
                     'claimed_by' => null,
-                    'claimed_at' => null
+                    'claimed_at' => null,
+                    'reject_by' => auth()->id(),
+                    'reject_reason' => $this->reject_reason
                 ]);
             }
 
             $this->success = 'Petty Expenses Rejected Successfully.';
             $this->search();
-
-
+            $this->closeRejectModal();
             DB::commit();
         } catch (\Exception $ex) {
             DB::rollBack();
@@ -126,7 +149,7 @@ class ClaimedPettyExpensesList extends Component
 
     public function approve()
     {
-        $lock = Cache::lock('petty-expenses', 60);
+        $lock = Cache::lock('petty-expenses' . auth()->id(), 60);
         try {
             if ($lock->get()) {
                 if (!Auth::user()->can('3.approve.petty-expenses')) {
@@ -159,7 +182,25 @@ class ClaimedPettyExpensesList extends Component
                     $petty_pay = collect($this->petty_expenses_list)->where('id', $id)->first();
                     $account_head_id = $petty_pay['account_head_id'];
                     $amount = $petty_pay['amount'];
-                    $date = Carbon::now()->toDateString();
+                    $date = $petty_pay['expense_date'];
+
+                    if (auth()->user()->can('2.create.transfer.restricted-date')) {
+                        if (Carbon::now()->toDateString() > $date) {
+                            $diff_in_days = Carbon::parse($date)->diffInDays(Carbon::now());
+
+                            if (empty(env("AMS_RESTRICT_DATE"))) {
+                                $restrict_days = 3;
+                            } else {
+                                $restrict_days = env("AMS_RESTRICT_DATE");
+                            }
+
+                            if ($diff_in_days > $restrict_days) {
+                                throw new \Exception("You can't approve the record after " . ($restrict_days == 1 ? $restrict_days . " day" : $restrict_days . " days") . " of expense date.");
+                            }
+                        }
+
+
+                    }
 
                     $expense_head = ChartOfAccount::find($account_head_id);
                     if (empty($expense_head)) {

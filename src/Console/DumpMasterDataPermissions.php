@@ -43,7 +43,7 @@ class DumpMasterDataPermissions extends Command
         Permission::updateOrCreate(['name' => '3.delete.petty-expenses'], ['guard_name' => 'web', 'description' => 'Delete Petty Expenses', 'portal' => 'accounts', 'section' => 'accounts']);
         Permission::updateOrCreate(['name' => '3.claim.petty-expenses'], ['guard_name' => 'web', 'description' => 'Claim Petty Expenses', 'portal' => 'accounts', 'section' => 'accounts']);
         Permission::updateOrCreate(['name' => '3.approve.petty-expenses'], ['guard_name' => 'web', 'description' => 'Approve Petty Expenses', 'portal' => 'accounts', 'section' => 'accounts']);
-        Permission::updateOrCreate(['name' => '3.reject.petty-expenses'], ['guard_name' => 'web', 'description' => 'Approve Petty Expenses', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '3.reject.petty-expenses'], ['guard_name' => 'web', 'description' => 'Reject Petty Expenses', 'portal' => 'accounts', 'section' => 'accounts']);
         Permission::updateOrCreate(['name' => '3.view.petty-expenses'], ['guard_name' => 'web', 'description' => 'View Petty Expenses', 'portal' => 'accounts', 'section' => 'accounts']);
 
 

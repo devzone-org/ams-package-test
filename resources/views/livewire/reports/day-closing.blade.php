@@ -36,7 +36,8 @@
                             Reset
                         </button>
                         @if(!empty($report))
-                            <a href="{{'day-closing/export'}}?id={{$user_account_id}}&from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}" target="_blank"
+                            <a href="{{'day-closing/export'}}?id={{$user_account_id}}&from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}"
+                               target="_blank"
                                class="ml-3 disabled:opacity-30 bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none ">
                                 Export.csv
                             </a>
@@ -109,19 +110,24 @@
                         class=" px-2 py-2   border-r text-center text-sm font-bold text-gray-500  tracking-wider">
                         Transfer To
                     </th>
+                    <th scope="col"
+                        class=" px-2 py-2   border-r text-center text-sm font-bold text-gray-500  tracking-wider">
+                        Attachment
+                    </th>
 
 
                 </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
 
-                @foreach($report as $r)
+                @forelse($report as $r)
                     <tr class="">
                         <td class="px-2  text-center py-2   border-r text-sm   text-gray-500">
                             {{ date('d M Y',strtotime($r['created_at'])) }}
                         </td>
                         <td class="px-2 text-center py-2   border-r text-sm   text-gray-500">
-                            <a class="font-medium text-indigo-600 hover:text-indigo-500" href="javascript:void(0);" onclick="window.open('{{ url('accounts/journal/voucher/print').'/'.$r['voucher_no'] }}','voucher-print-{{$r['voucher_no']}}','height=500,width=800');">{{ $r['voucher_no'] }}</a>
+                            <a class="font-medium text-indigo-600 hover:text-indigo-500" href="javascript:void(0);"
+                               onclick="window.open('{{ url('accounts/journal/voucher/print').'/'.$r['voucher_no'] }}','voucher-print-{{$r['voucher_no']}}','height=500,width=800');">{{ $r['voucher_no'] }}</a>
                         </td>
                         <td class="px-2  text-center py-2    border-r text-sm text-gray-500">
                             {{ $r['user_id'] }}
@@ -146,9 +152,9 @@
 
                         <td class="px-2   py-2 text-center border-r text-sm text-gray-500">
                             @if($r['closing_balance'] - $r['physical_cash']<=0)
-                            {{ number_format(abs($r['closing_balance'] - $r['physical_cash']),2) }}
-                                @else
-                                ({{number_format(abs($r['closing_balance'] - $r['physical_cash']),2) }})
+                                {{ number_format(abs($r['closing_balance'] - $r['physical_cash']),2) }}
+                            @else
+                            ({{number_format(abs($r['closing_balance'] - $r['physical_cash']),2) }})
                             @endif
                         </td>
 
@@ -159,10 +165,35 @@
                         <td class="px-2   py-2 text-center border-r text-sm text-gray-500">
                             {{ $r['transfer_name'] }}
                         </td>
+                        <td class="px-2   py-2 text-center border-r text-sm text-gray-500">
+                            @if(!empty($r['attachment']))
+                                <a href="{{ env('AWS_URL').$r['attachment'] }}"
+                                   class="text-yellow-500 font-medium" target="_blank">
+                                    View Attachment
+                                </a>
+                            @endif
+                        </td>
 
 
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="12" class="text-sm text-red-500 rounded-md overflow-hidden">
+                            <div class="flex items-center justify-center py-5">
+                                <div class="flex justify-between">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                         viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                              clip-rule="evenodd"/>
+                                    </svg>
+                                    <span class="ml-2">No Records Yet!</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                @endforelse
                 </tbody>
             </table>
         </div>
