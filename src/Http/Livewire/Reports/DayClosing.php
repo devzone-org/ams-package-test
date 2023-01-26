@@ -40,7 +40,7 @@ class DayClosing extends Component
     {
         $this->report = \Devzone\Ams\Models\DayClosing::from('day_closing as dc')
             ->join('users as u', 'u.account_id', '=', 'dc.account_id')
-            ->join('users as t', 't.account_id', '=', 'dc.transfer_to')
+            ->join('chart_of_accounts as t', 't.id', '=', 'dc.transfer_to')
             ->join('users as c', 'c.id', '=', 'dc.close_by')
             ->select('dc.*', 'u.name as user_id', 't.name as transfer_name', 'c.name as close_by')
             ->where('dc.account_id', $this->user_account_id)
