@@ -24,9 +24,7 @@ Route::group(['middleware' => ['permission:2.create.coa.all|2.create.coa.level5'
 });
 
 
-Route::get('accountant/chart-of-accounts/add', function () {
-    return view('ams::coa.add');
-});
+
 
 Route::group(['middleware' => ['permission:2.create.transfer.any-date|2.create.transfer.restricted-date']], function () {
     Route::get('accountant/journal', function () {
