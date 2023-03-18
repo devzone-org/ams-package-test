@@ -148,15 +148,23 @@
                                     {{ $l5['name'] }}
                                 </td>
                                 <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-500">
-                                    <a href="{{ url('accounts/accountant/ledger') }}?account_id={{ $l5['id'] }}&from={{date('d M Y',strtotime("-2 months".$asat))}}&to={{date('d M Y',strtotime($asat))}}"
-                                       target="_blank">
-                                        @if($l5['balance']>=0)
-                                            {{ number_format($l5['balance'],2) }}
-                                        @else
-                                        ({{ number_format(abs($l5['balance']),2) }})
-                                        @endif
 
-                                    </a>
+                                    @if($l5['type'] != 'Equity')
+                                        <a href="{{ url('accounts/accountant/ledger') }}?account_id={{ $l5['id'] }}&from={{date('d M Y',strtotime("-2 months".$asat))}}&to={{date('d M Y',strtotime($asat))}}"
+                                           target="_blank"
+                                        >
+                                            @endif
+
+
+
+                                            @if($l5['balance']>=0)
+                                                {{ number_format($l5['balance'],2) }}
+                                            @else
+                                            ({{ number_format(abs($l5['balance']),2) }})
+                                            @endif
+                                            @if($l5['type'] != 'Equity')
+                                        </a>
+                                    @endif
                                 </td>
                                 <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-500">
 

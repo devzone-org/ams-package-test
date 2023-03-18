@@ -6,6 +6,7 @@ namespace Devzone\Ams\Http\Livewire\Reports;
 
 use Carbon\Carbon;
 use Devzone\Ams\Models\ChartOfAccount;
+use Devzone\Ams\Models\EquityRatio;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -48,7 +49,7 @@ class BalanceSheet extends Component
     public function search()
     {
 
-        $this->reset('level3','level4','level5','data','pnl');
+        $this->reset('level3', 'level4', 'level5', 'data', 'pnl');
         $report = \Devzone\Ams\Models\Ledger::from('ledgers as l')
             ->join('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
             ->select(
@@ -70,7 +71,7 @@ class BalanceSheet extends Component
             ->orderBy('coa.name', 'asc')
             ->get();
 
-        $this->calculateProfit($report);
+        $this->calculateProfit();
 
         $l4 = array_unique($report->pluck('sub_account')->toArray());
         $l4_accounts = ChartOfAccount::whereIn('id', $l4)->get();
@@ -106,7 +107,12 @@ class BalanceSheet extends Component
                         }
                     }
                     if ($r->type == 'Equity') {
-                        $balance = $balance + $this->pnl;
+
+                        $acc = EquityRatio::where('account_id', $r->id)->first();
+                        $draw = $report->firstWhere('id', $acc->drawing_account_id);
+                        $drawings = $draw['debit'] - $draw['credit'];
+                        $balance = $balance + ($this->pnl * $acc->ratio) - $drawings;
+
                     }
                     $balance_v4 += $balance;
                     $this->level5[] = [
@@ -148,7 +154,7 @@ class BalanceSheet extends Component
         $this->data = json_encode($this->data);
     }
 
-    private function calculateProfit($report)
+    private function calculateProfit()
     {
         $pnl = \Devzone\Ams\Models\Ledger::from('ledgers as l')
             ->join('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
@@ -173,10 +179,8 @@ class BalanceSheet extends Component
             $total_income = $income['credit'] - $income['debit'];
         }
 
-        $total_partner = $report->where('type', 'Equity')->where('level', '5')->count();
-        if (empty($total_partner)) {
-            $total_partner = 1;
-        }
-        $this->pnl = ($total_income - $total_expense) / $total_partner;
+
+        $this->pnl = ($total_income - $total_expense);
+
     }
 }
