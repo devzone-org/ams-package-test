@@ -65,6 +65,7 @@
             @foreach(collect($level3)->groupBy('type')->toArray() as $type => $lvl3)
                 <tr class="bg-white">
                     <th colspan="3" class=" text-left  underline  px-2 py-1">
+
                         {{ $type }}
                     </th>
                 </tr>
@@ -105,6 +106,9 @@
                         </td>
                     </tr>
                     @foreach(collect($level4)->where('sub_account',$l3['id']) as $l4)
+                        @if ($l4['name']  == 'Drawings')
+                            @continue
+                        @endif
                         <tr class="bg-white hover:bg-gray-100" x-show="l3{{$l3['id']}}"
                         >
                             <td class="pl-20 px-2 py-1 whitespace-nowrap text-sm font-medium  text-gray-900 flex">
