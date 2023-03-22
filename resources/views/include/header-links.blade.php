@@ -198,7 +198,7 @@
 
                         <div class="ml-4">
                             <p class="text-base font-medium text-gray-900">
-                                Equity Ratio
+                                Equity Sharing Ratio
                             </p>
                             <p class="mt-1 text-sm text-gray-500">
                                 Equity ratio of accounts.
