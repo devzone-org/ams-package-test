@@ -24,6 +24,17 @@ Route::group(['middleware' => ['permission:2.create.coa.all|2.create.coa.level5'
 });
 
 
+//Route::group(['middleware' => ['permission:2.coa.equity-ratio']], function () {
+//    Route::get('accountant/equity-ratio', function () {
+//        return view('ams::coa.equity-ratio');
+//    });
+//});
+
+Route::get('accountant/equity-ratio', function () {
+    return view('ams::coa.equity-ratio');
+});
+
+
 
 
 Route::group(['middleware' => ['permission:2.create.transfer.any-date|2.create.transfer.restricted-date']], function () {

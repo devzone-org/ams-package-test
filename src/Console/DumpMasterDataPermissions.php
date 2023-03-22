@@ -47,6 +47,9 @@ class DumpMasterDataPermissions extends Command
         Permission::updateOrCreate(['name' => '3.view.petty-expenses'], ['guard_name' => 'web', 'description' => 'View Petty Expenses', 'portal' => 'accounts', 'section' => 'accounts']);
 
 
+        Permission::updateOrCreate(['name' => '2.coa.equity-ratio'], ['guard_name' => 'web', 'description' => 'Equity Ratio ', 'portal' => 'accounts', 'section' => 'accounts']);
+
+
         $this->info('Dumping Permissions Finished...');
     }
 }

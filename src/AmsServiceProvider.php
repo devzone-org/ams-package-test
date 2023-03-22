@@ -5,6 +5,7 @@ namespace Devzone\Ams;
 use Devzone\Ams\Console\DumpMasterData;
 use Devzone\Ams\Console\DumpMasterDataPermissions;
 use Devzone\Ams\Http\Livewire\ChartOfAccount\Add;
+use Devzone\Ams\Http\Livewire\ChartOfAccount\EquityRatio;
 use Devzone\Ams\Http\Livewire\ChartOfAccount\Listing;
 use Devzone\Ams\Http\Livewire\Journal\Close;
 use Devzone\Ams\Http\Livewire\Journal\Edit;
@@ -90,6 +91,8 @@ class AmsServiceProvider extends ServiceProvider
         Livewire::component('petty-expenses.claimed-petty-expenses-list', PettyExpenses\ClaimedPettyExpensesList::class);
         Livewire::component('petty-expenses.approved-petty-expenses-list', PettyExpenses\ApprovedPettyExpensesList::class);
         Livewire::component('petty-expenses.tab', PettyExpenses\Tab::class);
+
+        Livewire::component('chart-of-accounts.equity-ratio', EquityRatio::class);
     }
 
     /**
