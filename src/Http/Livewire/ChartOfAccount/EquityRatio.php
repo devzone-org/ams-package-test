@@ -18,8 +18,8 @@ class EquityRatio extends Component
     {
         try {
             $this->equity_data = \Devzone\Ams\Models\EquityRatio::from('equity_ratio as er')
-                ->join('chart_of_accounts as coa1', 'coa1.id', 'er.account_id')
-                ->join('chart_of_accounts as coa2', 'coa2.id', 'er.drawing_account_id')
+                ->leftjoin('chart_of_accounts as coa1', 'coa1.id', 'er.account_id')
+                ->leftjoin('chart_of_accounts as coa2', 'coa2.id', 'er.drawing_account_id')
                 ->select('er.partner_name', 'er.ratio', 'coa1.name as account_name', 'coa2.name as drawing_account_name')
                 ->get()
                 ->toArray();

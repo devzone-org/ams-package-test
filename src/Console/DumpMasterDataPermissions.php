@@ -49,6 +49,8 @@ class DumpMasterDataPermissions extends Command
 
         Permission::updateOrCreate(['name' => '2.coa.equity-ratio'], ['guard_name' => 'web', 'description' => 'Equity Ratio ', 'portal' => 'accounts', 'section' => 'accounts']);
 
+        Permission::updateOrCreate(['name' => '2.closing-fiscal-year'], ['guard_name' => 'web', 'description' => 'Closing Fiscal Year ', 'portal' => 'accounts', 'section' => 'accounts']);
+
 
         $this->info('Dumping Permissions Finished...');
     }

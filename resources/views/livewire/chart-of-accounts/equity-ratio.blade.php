@@ -72,10 +72,18 @@
                             {{number_format($data['ratio']*100, 2)}} %
                         </td>
                         <td class="px-6 py-4  text-sm text-gray-500">
-                            {{ucwords($data['account_name'])}}
+                            @if($data['account_name'])
+                                {{ucwords($data['account_name'])}}
+                            @else
+                                -
+                            @endif
                         </td>
                         <td class="px-6 py-4  text-sm text-gray-500">
-                            {{ucwords($data['drawing_account_name'])}}
+                            @if($data['drawing_account_name'])
+                                {{ucwords($data['drawing_account_name'])}}
+                            @else
+                                -
+                            @endif
                         </td>
                     </tr>
                 @endforeach
