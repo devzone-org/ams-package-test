@@ -101,7 +101,6 @@ class ClosingFiscalYear extends Component
                 ->orderBy('l.posting_date', 'asc')
                 ->groupBy('l.account_id')
                 ->get();
-
         }
     }
 
@@ -146,73 +145,73 @@ class ClosingFiscalYear extends Component
 
             $this->checkAndGetRecord();
 
-            DB::beginTransaction();
+                DB::beginTransaction();
 
-            $debit_voucher_id = $this->getAndUpdateVoucher();
-            $credit_voucher_id = $this->getAndUpdateVoucher();
-            $equity_voucher_id = $this->getAndUpdateVoucher();
+                $debit_voucher_id = $this->getAndUpdateVoucher();
+                $credit_voucher_id = $this->getAndUpdateVoucher();
+                $equity_voucher_id = $this->getAndUpdateVoucher();
 
-            foreach ($this->closing_data as $data) {
+                foreach ($this->closing_data as $data) {
 
-                $this->closingSummaryAccount($data, ['dvid' => $debit_voucher_id, 'cvid' => $credit_voucher_id], $this->selected_year);
+                    $this->closingSummaryAccount($data, ['dvid' => $debit_voucher_id, 'cvid' => $credit_voucher_id], $this->selected_year);
 
-                $debit = 0;
-                $credit = 0;
+                    $debit = 0;
+                    $credit = 0;
 
-                if ($data->type == 'Expenses') {
+                    if ($data->type == 'Expenses') {
 
-                    $debit = $data->debit - $data->credit;
-                    $voucher_id = $debit_voucher_id;
+                        $debit = $data->debit - $data->credit;
+                        $voucher_id = $debit_voucher_id;
 
-                } elseif ($data->type == 'Income') {
+                    } elseif ($data->type == 'Income') {
 
-                    $credit = $data->credit - $data->debit;
-                    $voucher_id = $credit_voucher_id;
+                        $credit = $data->credit - $data->debit;
+                        $voucher_id = $credit_voucher_id;
+
+                    }
+
+                    Ledger::create([
+                        'account_id' => $data->account_id,
+                        'voucher_no' => $voucher_id,
+                        'type' => $data->type,
+                        'debit' => $debit,
+                        'credit' => $credit,
+                        'description' => 'Fiscal Year  ' . $this->selected_year['year'] . ' Closed to Summary Account.',
+                        'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
+                        'posted_by' => \Auth::user()->id,
+                        'is_approve' => 't',
+                        'approved_at' => date('Y-m-d'),
+                        'approved_by' => \Auth::user()->id
+                    ]);
+                }
+
+                $details = $this->closingEquityEntries($this->closing_data);
+                $coa = ChartOfAccount::where('type', 'Equity')
+                    ->where('level', '5')
+                    ->where('is_contra', 'f')
+                    ->get();
+
+                $total_partner = $coa->count();
+
+                foreach ($coa as $data) {
+
+                    Ledger::create([
+                        'account_id' => $data->id,
+                        'voucher_no' => $equity_voucher_id,
+                        'type' => $data->type,
+                        'debit' => $details['debit'] > 0 ? ($details['debit'] / $total_partner) : 0,
+                        'credit' => $details['credit'] > 0 ? ($details['credit'] / $total_partner) : 0,
+                        'description' => 'Fiscal Year  ' . $this->selected_year['year'] . ' Closed to Summary Account.',
+                        'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
+                        'posted_by' => \Auth::user()->id,
+                        'is_approve' => 't',
+                        'approved_at' => date('Y-m-d'),
+                        'approved_by' => \Auth::user()->id
+                    ]);
 
                 }
 
-                Ledger::create([
-                    'account_id' => $data->account_id,
-                    'voucher_no' => $voucher_id,
-                    'type' => $data->type,
-                    'debit' => $debit,
-                    'credit' => $credit,
-                    'description' => 'Fiscal Year  ' . $this->selected_year['year'] . ' Closed to Summary Account.',
-                    'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
-                    'posted_by' => \Auth::user()->id,
-                    'is_approve' => 't',
-                    'approved_at' => date('Y-m-d'),
-                    'approved_by' => \Auth::user()->id
-                ]);
-            }
-
-            $details = $this->closingEquityEntries($this->closing_data);
-            $coa = ChartOfAccount::where('type', 'Equity')
-                ->where('level', '5')
-                ->where('is_contra', 'f')
-                ->get();
-
-            $total_partner = $coa->count();
-
-            foreach ($coa as $data) {
-
-                Ledger::create([
-                    'account_id' => $data->id,
-                    'voucher_no' => $equity_voucher_id,
-                    'type' => $data->type,
-                    'debit' => $details['debit'] > 0 ? ($details['debit'] / $total_partner) : 0,
-                    'credit' => $details['credit'] > 0 ? ($details['credit'] / $total_partner) : 0,
-                    'description' => 'Fiscal Year  ' . $this->selected_year['year'] . ' Closed to Summary Account.',
-                    'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
-                    'posted_by' => \Auth::user()->id,
-                    'is_approve' => 't',
-                    'approved_at' => date('Y-m-d'),
-                    'approved_by' => \Auth::user()->id
-                ]);
-
-            }
-
-            DB::commit();
+                DB::commit();
 
             $this->success = 'Fiscal Year  ' . $this->selected_year['year'] . ' has been closed successfully.';
             $this->closing_data = null;

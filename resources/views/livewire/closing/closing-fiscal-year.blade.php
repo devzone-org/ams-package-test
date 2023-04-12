@@ -32,7 +32,10 @@
                                             $account =  $summary_account->where('fiscal_year',$year['year'])->first();
                                         @endphp
 
-                                        <option @if(!empty($account)) disabled @endif value="{{ $year['year'] }}"> {{ $year['year'] }} @if(!empty($account)) (Already Closed Voucher No is: {{ $account['voucher_no'] }}) @endif </option>
+                                        <option @if(!empty($account)) disabled
+                                                @endif value="{{ $year['year'] }}"> {{ $year['year'] }} @if(!empty($account))
+                                                (Already Closed Voucher No is: {{ $account['voucher_no'] }})
+                                            @endif </option>
 
                                     @endforeach
                                 </select>
@@ -46,9 +49,8 @@
                             </div>
                             <div class="">
                                 <small class="text-gray-500">
-                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus expedita
-                                    voluptatum mollitia nulla sapiente quas soluta sed temporibus necessitatibus,
-                                    veritatis inventore corrupti amet sint repellendus unde modi ipsa, tempore quos.
+                                    Please confirm that you have done all the entries of the fiscal
+                                    year {{$closing_year}} before moving to the next step.
                                 </small>
                             </div>
                             <div class="py-3 text-right">
@@ -60,90 +62,90 @@
                             </div>
 
                             <div class="min-w-full flex justify-center">
-                            <table class="mt-4 w-2/3 divide-y divide-gray-200 rounded-md">
-                                <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 tracking-wider border-r border-gray-200">
-                                        Dr
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 tracking-wider">
-                                        Cr
-                                    </th>
-                                </tr>
-                                </thead>
-
-                                @if(collect($closing_data)->isNotEmpty())
-                                    <tbody class="bg-white divide-y divide-gray-200  rounded-md">
+                                <table class="mt-4 w-2/3 divide-y divide-gray-200 rounded-md">
+                                    <thead class="bg-gray-50">
                                     <tr>
-                                        @php
-                                            $total_credit = 0;
-                                            $total_debit = 0;
-                                        @endphp
-                                        <td class="px-6 py-4 text-center text-sm font-medium text-gray-500 border-r border-gray-200">
-                                            @foreach($closing_data->where('type', 'Expenses') as $d)
-                                                @php
-                                                    $debit = ($d->debit - $d->credit);
-                                                    $total_debit = $total_debit + $debit;
-                                                    $record = $d->name.' - PKR '.number_format($debit,2);
-                                                @endphp
-                                                {{$record}}
-                                                <br>
-                                            @endforeach
-                                        </td>
-                                        <td class="px-6 py-4 text-center text-sm font-medium text-gray-500">
-                                            @foreach($closing_data->where('type', 'Income') as $c)
-                                                @php
-                                                    $credit = ($c->credit - $c->debit);
-                                                    $total_credit = $total_credit + $credit;
-                                                    $record = $c->name.' - PKR '.number_format($credit,2);
-                                                @endphp
-                                                {{$record}}
-                                                <br>
-                                            @endforeach
-                                        </td>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-center text-xs font-medium text-gray-500 tracking-wider border-r border-gray-200">
+                                            Dr
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-center text-xs font-medium text-gray-500 tracking-wider">
+                                            Cr
+                                        </th>
                                     </tr>
-                                    </tbody>
-                                    <tfoot class="bg-gray-50 divide-y divide-gray-200 rounded-md">
-                                    <tr>
-                                        <td class="bold px-6 py-4 text-center text-sm font-medium text-gray-900 border-r border-gray-200">
-                                            <strong>
-                                                {{'PKR ' . number_format($total_debit,2)}}
-                                            </strong>
-                                        </td>
-                                        <td class="bold px-6 py-4 text-center text-sm font-medium text-gray-900">
-                                            <strong>
-                                                {{'PKR ' . number_format($total_credit,2)}}
-                                            </strong>
-                                        </td>
-                                    </tr>
+                                    </thead>
 
-                                    <tr>
-                                        @if($total_debit > $total_credit)
-                                            <td class="bg-red-50 bold px-6 py-4 text-center text-sm font-medium text-red-900">
+                                    @if(collect($closing_data)->isNotEmpty())
+                                        <tbody class="bg-white divide-y divide-gray-200  rounded-md">
+                                        <tr>
+                                            @php
+                                                $total_credit = 0;
+                                                $total_debit = 0;
+                                            @endphp
+                                            <td class="px-6 py-4 text-center text-sm font-medium text-gray-500 border-r border-gray-200">
+                                                @foreach($closing_data->where('type', 'Expenses') as $d)
+                                                    @php
+                                                        $debit = ($d->debit - $d->credit);
+                                                        $total_debit = $total_debit + $debit;
+                                                        $record = $d->name.' - PKR '.number_format($debit,2);
+                                                    @endphp
+                                                    {{$record}}
+                                                    <br>
+                                                @endforeach
+                                            </td>
+                                            <td class="px-6 py-4 text-center text-sm font-medium text-gray-500">
+                                                @foreach($closing_data->where('type', 'Income') as $c)
+                                                    @php
+                                                        $credit = ($c->credit - $c->debit);
+                                                        $total_credit = $total_credit + $credit;
+                                                        $record = $c->name.' - PKR '.number_format($credit,2);
+                                                    @endphp
+                                                    {{$record}}
+                                                    <br>
+                                                @endforeach
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot class="bg-gray-50 divide-y divide-gray-200 rounded-md">
+                                        <tr>
+                                            <td class="bold px-6 py-4 text-center text-sm font-medium text-gray-900 border-r border-gray-200">
                                                 <strong>
-                                                    Loss: {{'PKR ' . number_format(($total_debit - $total_credit),2)}}
+                                                    {{'PKR ' . number_format($total_debit,2)}}
                                                 </strong>
                                             </td>
-                                            <td class="bg-white bold px-6 py-4 text-center text-sm font-medium text-gray-900">
-
-                                            </td>
-                                        @elseif($total_debit < $total_credit)
-                                            <td class="bg-white bold px-6 py-4 text-center text-sm font-medium text-gray-900">
-
-                                            </td>
-                                            <td class="bg-green-50 bold px-6 py-4 text-center text-sm font-medium text-green-900">
+                                            <td class="bold px-6 py-4 text-center text-sm font-medium text-gray-900">
                                                 <strong>
-                                                    Profit: {{'PKR ' . number_format(($total_credit - $total_debit),2)}}
+                                                    {{'PKR ' . number_format($total_credit,2)}}
                                                 </strong>
                                             </td>
-                                        @endif
-                                    </tr>
-                                    </tfoot>
-                                @endif
+                                        </tr>
 
-                            </table>
+                                        <tr>
+                                            @if($total_debit > $total_credit)
+                                                <td class="bg-red-50 bold px-6 py-4 text-center text-sm font-medium text-red-900">
+                                                    <strong>
+                                                        Loss: {{'PKR ' . number_format(($total_debit - $total_credit),2)}}
+                                                    </strong>
+                                                </td>
+                                                <td class="bg-white bold px-6 py-4 text-center text-sm font-medium text-gray-900">
+
+                                                </td>
+                                            @elseif($total_debit < $total_credit)
+                                                <td class="bg-white bold px-6 py-4 text-center text-sm font-medium text-gray-900">
+
+                                                </td>
+                                                <td class="bg-green-50 bold px-6 py-4 text-center text-sm font-medium text-green-900">
+                                                    <strong>
+                                                        Profit: {{'PKR ' . number_format(($total_credit - $total_debit),2)}}
+                                                    </strong>
+                                                </td>
+                                            @endif
+                                        </tr>
+                                        </tfoot>
+                                    @endif
+
+                                </table>
                             </div>
 
                             <div class="mt-4">
@@ -155,9 +157,8 @@
                             </div>
                             <div class="">
                                 <small class="text-gray-500">
-                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus expedita
-                                    voluptatum mollitia nulla sapiente quas soluta sed temporibus necessitatibus,
-                                    veritatis inventore corrupti amet sint repellendus unde modi ipsa, tempore quos.
+                                    You need to agree with all the details in order to close the fiscal
+                                    year {{$closing_year}}.
                                 </small>
                             </div>
                             <div class="py-3 text-right">
@@ -173,8 +174,6 @@
             </div>
         </form>
 
-
     </div>
-
 
 </div>
