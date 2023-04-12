@@ -10,7 +10,7 @@
                 </div>
             </div>
         </div>
-        <div class="container">
+        <div class="content">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col">
@@ -42,7 +42,7 @@
                                             <div class="col-xs-12 col-sm-4">
                                                 <div class="form-group">
                                                     <label>Posting Date</label>
-                                                    <input type="text" readonly wire:model.lazy="posting_date"
+                                                    <input type="text" wire:model.lazy="posting_date"
                                                            id="posting_date" autocomplete="off"
                                                            class="form-control  @error('posting_date')  is-invalid @enderror">
                                                 </div>
@@ -59,24 +59,15 @@
                                         </div>
                                     </div>
                                 </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="card card-primary card-outline">
-                            <div class="card-body table-responsive p-0">
-                                <table class="table table-striped table-sm">
-                                    <thead>
-                                    <tr>
-                                        <th style="width: 10%">#</th>
-                                        <th>Accounts</th>
-                                        <th>Description</th>
-                                        <th>Debit</th>
-                                        <th>Credit</th>
-                                        <th>
+                                <div class="card-body table-responsive p-0">
+                                    <table class="table table-bordered border-0">
+                                        <thead class="text-nowrap">
+                                        <th class="text-center add-services-table" style="width: 25px;">#</th>
+                                        <th class="add-services-table text-center">Accounts</th>
+                                        <th class="add-services-table text-center">Description</th>
+                                        <th class="add-services-table text-center">Debit</th>
+                                        <th class="add-services-table text-center">Credit</th>
+                                        <th class="text-center add-services-table">
                                             <button class="outline-none border-0 p-0"
                                                     wire:click="addEntry()"
                                             >
@@ -89,86 +80,144 @@
                                                 </svg>
                                             </button>
                                         </th>
+                                        </thead>
+                                        <tbody class="text-nowrap">
+                                        @foreach($entries as $key => $en)
+                                            <tr>
+                                                <td class="add-services-table text-center"
+                                                    style="width: 25px;">{{ $loop->iteration }}</td>
+                                                <td class="add-services-table col-3">
+                                                    <input wire:click="searchAccounts('{{ $key }}')" type="text"
+                                                           readonly
+                                                           wire:model.lazy="entries.{{$key}}.account_name"
+                                                           class="border-0 w-100 pt-2" id="searchbox"
+                                                           autocomplete="off" style="outline: none;">
+                                                </td>
+                                                <td class="add-services-table col-6">
+                                                 <textarea wire:ignore.self
+                                                           wire:model.lazy="entries.{{$key}}.description"
+                                                           class="border-0 w-100 pt-2"
+                                                           style="outline: none;height: 35px"></textarea>
+                                                </td>
+                                                <td class="add-services-table">
+                                                    <input type="number" step="0.01"
+                                                           wire:model.lazy="entries.{{$key}}.debit"
+                                                           class="text-center p-0 border-0 w-100 pt-2"
+                                                           onclick="this.select()"
+                                                           autocomplete="off" style="outline: none; width: 25px">
+                                                </td>
+                                                <td class="add-services-table">
+                                                    <input type="number" step="0.01"
+                                                           wire:model.lazy="entries.{{$key}}.credit"
+                                                           onclick="this.select()"
+                                                           class="p-0 text-center border-0 w-100 pt-2"
+                                                           autocomplete="off" style="outline: none; width: 25px">
+                                                </td>
+                                                <td class="text-center add-services-table ">
+                                                    <button class="outline-none border-0 p-0 mt-2" type="button"
+                                                            wire:click="removeEntry('{{ $key }}')">
+                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                             viewBox="0 0 24 24" fill="currentColor"
+                                                             class="text-danger" style="width: 20px;">
+                                                            <path fill-rule="evenodd"
+                                                                  d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
+                                                                  clip-rule="evenodd"/>
+                                                        </svg>
+                                                    </button>
 
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($entries as $key => $en)
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>
-                                                <input wire:click="searchAccounts('{{ $key }}')" type="text" readonly
-                                                       wire:model.lazy="entries.{{$key}}.account_name"
-                                                       class="border-0" id="searchbox"
-                                                       autocomplete="off">
-                                            </td>
-                                            <td>
-                                                 <textarea wire:ignore.self cols="30" rows="1" wire:model.lazy="entries.{{$key}}.description"
-                                                           class="p-0 w-full  text-sm border-0  text-left "></textarea>
-                                            </td>
-                                            <td>
-                                                <input type="number" step="0.01" wire:model.lazy="entries.{{$key}}.debit"
-                                                       class="text-center p-0 w-full text-sm border-0"
-                                                       onclick="this.select()"
-                                                       autocomplete="off">
-                                            </td>
-                                            <td>
-                                                <input type="number" step="0.01" wire:model.lazy="entries.{{$key}}.credit"
-                                                       onclick="this.select()"
-                                                       class="p-0 text-center w-full text-sm border-0"
-                                                       autocomplete="off">
-                                            </td>
-                                            <td wire:click="removeEntry('{{ $key }}')"
-                                                class="">
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                     viewBox="0 0 24 24" fill="currentColor"
-                                                     class="text-danger" style="width: 20px;">
-                                                    <path fill-rule="evenodd"
-                                                          d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
-                                                          clip-rule="evenodd"/>
-                                                </svg>
+                                            <th colspan="3" class="text-right align-middle">Total</th>
+                                            <td colspan="1">{{ number_format(collect($entries)->sum('debit'),2) }}</td>
+                                            <td colspan="1">{{ number_format(collect($entries)->sum('credit'),2) }}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr class="">
+                                            <th colspan="3" class="text-right align-middle">Total</th>
+                                            <td colspan="2"> {{ number_format(abs(collect($entries)->sum('debit') - collect($entries)->sum('credit')),2) }}</td>
+                                            <td></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
 
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h5 class="card-title">Attachments</h5>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-bordered border-0">
+                                    <thead class="text-nowrap">
+                                    <th class="text-center add-services-table" style="width: 25px;">#</th>
+                                    <th class="add-services-table col-3">Reference Account</th>
+                                    <th class="add-services-table col-8">Choose File</th>
+                                    <th class="text-center add-services-table" style="width: 25px;">
+                                        <button class="outline-none border-0 p-0" wire:click="addAttachmentEntry()">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                 viewBox="0 0 24 24"
+                                                 stroke-width="1.5" stroke="currentColor" class=""
+                                                 style="width: 20px;">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                      d="M12 4.5v15m7.5-7.5h-15"/>
+                                            </svg>
+                                        </button>
+                                    </th>
+                                    </thead>
+                                    <tbody class="text-nowrap">
+                                    @foreach($attachment_entries as $key => $en)
+                                        <tr>
+                                            <td class="add-services-table text-center pt-2"
+                                                style="width: 15px">{{ $loop->iteration }}</td>
+                                            <td class="add-services-table col-3">
+                                                <select id="{{$key}}-account_id" name=""
+                                                        wire:model="attachment_entries.{{$key}}.account_id"
+                                                        id="ref_account" class="p-0 border-0 w-100 mt-2"
+                                                        style="outline: none">
+                                                    <option value=""></option>
+                                                    @foreach($entries as $e)
+                                                        <option value="{{ $e['account_id'] }}">{{ $e['account_name'] }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td class="add-services-table col-8">
+                                                @if(!isset($en['id']))
+                                                    <input id="{{$key}}-file" type="file"
+                                                           wire:model="attachment_entries.{{$key}}.file" class="mt-2">
+                                                @else
+                                                    <a class="font-medium text-indigo-600 hover:text-indigo-500 pt-2"
+                                                       href="{{ env('AWS_URL').$en['attachment'] }}" target="_blank">View
+                                                        Attachment</a>
+                                                @endif
+                                            </td>
+                                            <td class="text-center add-services-table" style="width: 25px;">
+                                                <button class="outline-none border-0 p-0 mt-2" type="button"
+                                                        wire:click="removeAttachmentEntry('{{ $key }}')">
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                         viewBox="0 0 24 24" fill="currentColor"
+                                                         class="text-danger" style="width: 20px;">
+                                                        <path fill-rule="evenodd"
+                                                              d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
+                                                              clip-rule="evenodd"/>
+                                                    </svg>
+                                                </button>
                                             </td>
                                         </tr>
                                     @endforeach
-                                    <tr>
-                                        <td class="px-2  text-sm font-medium text-gray-900">
-
-                                        </td>
-                                        <td class="px-2     text-sm text-gray-500">
-
-                                        </td>
-                                        <th class="px-2    text-right  border-r  text-sm text-gray-900">
-                                            Total
-                                        </th>
-                                        <th class="px-2    border-r text-center text-sm text-gray-900">
-                                            {{ number_format(collect($entries)->sum('debit'),2) }}
-                                        </th>
-                                        <th class="px-2   border-r text-center text-sm text-gray-900">
-                                            {{ number_format(collect($entries)->sum('credit'),2) }}
-                                        </th>
-                                        <td class="  w-10 cursor-pointer px-2 py-3 py-3   border-r text-center text-xs font-medium text-red-700  tracking-wider  ">
-                                            &nbsp;
-                                        </td>
-                                    </tr>
-                                    <tr class="">
-                                        <td class="px-2  text-sm font-medium text-gray-900">
-
-                                        </td>
-                                        <td class="px-2     text-sm text-gray-500">
-
-                                        </td>
-                                        <th class="px-2    text-right  border-r  text-sm text-gray-900">
-                                            Difference
-                                        </th>
-                                        <th colspan="2" class="px-2    border-r text-center text-sm text-gray-900">
-                                            {{ number_format(abs(collect($entries)->sum('debit') - collect($entries)->sum('credit')),2) }}
-                                        </th>
-
-                                        <td class="  w-10 cursor-pointer px-2 py-3 py-3   border-r text-right text-xs font-medium text-red-700  tracking-wider  ">
-                                            &nbsp;
-                                        </td>
-                                    </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -177,7 +226,104 @@
                 </div>
             </div>
         </div>
+        <div class="d-flex  justify-content-between px-4">
+            <div>
+                <button type="button" wire:click="deleteAll" wire:loading.attr="disabled"
+                        class="btn btn-danger">
+                    Delete All
+                </button>
+            </div>
+            <div>
+                @if((!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
+                    <button type="button" wire:click="draft" wire:loading.attr="disabled"
+                            class="btn btn-secondary">
+                        <span wire:loading.remove wire:target="draft">Save as Draft</span>
+                        <span wire:loading wire:target="draft">Saving...</span>
+                    </button>
+                @endif
+                @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
+                    <button type="button" wire:click="posted" wire:loading.attr="disabled"
+                            class="btn btn-secondary">
+                        <span wire:loading.remove wire:target="posted">Post for Approval</span>
+                        <span wire:loading wire:target="posted">Posting...</span>
+                    </button>
+                @endif
+            </div>
+        </div>
+
+        <div class="modal fade" id="searchmodal" wire:ignore.self tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content advance-modal-width">
+                    {{--                    <div class="card-header">--}}
+                    {{--                        <button type="button" class="close" data-dismiss="modal"--}}
+                    {{--                                aria-label="Close"><span--}}
+                    {{--                                    aria-hidden="true">&times;</span></button>--}}
+                    {{--                        <h4 class="modal-title" id="exampleModalLabel">Received Advance Details</h4>--}}
+                    {{--                    </div>--}}
+                    <div class="modal-body">
+
+                        <div class="px-2 pt-2 pb-2">
+                            <div class="">
+                                <input type="text"
+                                       wire:model.debounce.500ms="search_accounts"
+                                       wire:keydown.arrow-up="decrementHighlight"
+                                       wire:keydown.arrow-down="incrementHighlight"
+                                       wire:keydown.enter="selectionAccount"
+                                       id="search"
+                                       class=""
+                                       autocomplete="off">
+                            </div>
+                            <p class="mt-2 text-sm text-gray-400" id="search-description">You can search accounts by
+                                Name,
+                                Code and Type.</p>
+                        </div>
+                        @if(!empty($accounts))
+                            <table class="table table-bordered border-0">
+                                <thead class="text-nowrap">
+                                <th>Name</th>
+                                <th>Type</th>
+                                </thead>
+                                <tbody class="text-nowrap">
+                                @foreach($accounts as $key=> $a)
+                                    <tr wire:click="chooseAccount('{{ $a['id'] }}','{{$a['name'] }}')">
+                                        <td>{{ $a['code'] }} - {{ $a['name'] }}</td>
+                                        <td>{{ $a['type'] }}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        @else
+                            @if(strlen($search_accounts) < 2)
+                                <p class="text-sm opacity-25 pt-0 p-3 ">Please enter {{ 2 - strlen($search_accounts) }}
+                                    or more
+                                    {{ (2 - strlen($search_accounts)) > 1 ? 'characters' : 'character' }}</p>
+                            @else
+                                <p class="text-sm opacity-25 pt-0 p-3">{{ empty($accounts) ? 'No Record Found': '' }}</p>
+                            @endif
+                        @endif
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
+    @push('js')
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+        <script>
+            let from_date = new Pikaday({
+                field: document.getElementById('posting_date'),
+                format: "DD MMM YYYY"
+            });
+
+
+            from_date.setDate(new Date('{{ $posting_date }}'));
+        </script>
+    @endpush
+
 @else
     <div>
 
