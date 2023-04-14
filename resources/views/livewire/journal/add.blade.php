@@ -84,7 +84,7 @@
                                         <tbody class="text-nowrap">
                                         @foreach($entries as $key => $en)
                                             <tr>
-                                                <td class="add-services-table text-center"
+                                                <td class="add-services-table text-center align-middle"
                                                     style="width: 25px;">{{ $loop->iteration }}</td>
                                                 <td class="add-services-table col-3">
                                                     <input wire:click="searchAccounts('{{ $key }}')" type="text"
@@ -271,16 +271,16 @@
                                        wire:keydown.arrow-up="decrementHighlight"
                                        wire:keydown.arrow-down="incrementHighlight"
                                        wire:keydown.enter="selectionAccount"
-                                       id="search"
-                                       class=""
-                                       autocomplete="off">
+                                       id="searchableField"
+                                       class="" style="width: 550px"
+                                       autocomplete="off" autofocus>
                             </div>
-                            <p class="mt-2 text-sm text-gray-400" id="search-description">You can search accounts by
+                            <p class="mt-2" id="search-description">You can search accounts by
                                 Name,
                                 Code and Type.</p>
                         </div>
                         @if(!empty($accounts))
-                            <table class="table table-bordered border-0">
+                            <table class="table table-bordered border-0 table-hover">
                                 <thead class="text-nowrap">
                                 <th>Name</th>
                                 <th>Type</th>
@@ -296,11 +296,11 @@
                             </table>
                         @else
                             @if(strlen($search_accounts) < 2)
-                                <p class="text-sm opacity-25 pt-0 p-3 ">Please enter {{ 2 - strlen($search_accounts) }}
+                                <p class="pt-0 p-3 ">Please enter {{ 2 - strlen($search_accounts) }}
                                     or more
                                     {{ (2 - strlen($search_accounts)) > 1 ? 'characters' : 'character' }}</p>
                             @else
-                                <p class="text-sm opacity-25 pt-0 p-3">{{ empty($accounts) ? 'No Record Found': '' }}</p>
+                                <p class="pt-0 p-3">{{ empty($accounts) ? 'No Record Found': '' }}</p>
                             @endif
                         @endif
                     </div>
@@ -314,6 +314,15 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
         <script>
+            document.addEventListener('open-modal', function () {
+                $('#searchmodal').modal('show');
+                setTimeout(function() {
+                    $("#searchableField").focus();
+                }, 500);
+            })
+            document.addEventListener('close-modal', function () {
+                $('#searchmodal').modal('hide');
+            })
             let from_date = new Pikaday({
                 field: document.getElementById('posting_date'),
                 format: "DD MMM YYYY"
@@ -323,7 +332,6 @@
             from_date.setDate(new Date('{{ $posting_date }}'));
         </script>
     @endpush
-
 @else
     <div>
 
@@ -645,6 +653,86 @@
         </div>
 
 
+        <div class="modal fade" id="search-account-modal" wire:ignore.self tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content advance-modal-width">
+                    <div class="card-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">Received Advance Details</h4>
+                    </div>
+                    <div class="modal-body">
+
+
+                        <div class="  px-2 pt-2 pb-2">
+
+
+                            <div class="">
+                                <input type="text"
+                                       wire:model.debounce.500ms="search_accounts"
+                                       wire:keydown.arrow-up="decrementHighlight"
+                                       wire:keydown.arrow-down="incrementHighlight"
+                                       wire:keydown.enter="selectionAccount"
+                                       id="search"
+                                       class="form-control"
+                                       autocomplete="off">
+                            </div>
+                            <p class="mt-2" id="search-description">You can search accounts by Name,
+                                Code and Type.</p>
+
+
+                        </div>
+
+                        @if(!empty($accounts))
+                            <table class="table table-bordered border-0">
+                                <thead class="text-nowrap">
+                                <th scope="col"
+                                    class="px-2 py-2 text-left">
+                                    Name
+                                </th>
+
+                                <th scope="col"
+                                    class="px-2 py-2 text-left">
+                                    Type
+                                </th>
+                                </thead>
+                                <tbody class="text-nowrap">
+                                @foreach($accounts as $key=> $a)
+                                    <tr class=""
+                                        wire:click="chooseAccount('{{ $a['id'] }}','{{$a['name'] }}')">
+
+                                        <td class="px-2 py-2">
+                                            {{ $a['code'] }} - {{ $a['name'] }}
+                                        </td>
+                                        <td class="px-2 py-2">
+                                            {{ $a['type'] }}
+                                        </td>
+
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        @else
+                            <div class="">
+                                @if(strlen($search_accounts) < 2)
+                                    <p class="pt-0 p-3">Please enter {{ 2 - strlen($search_accounts) }}
+                                        or more
+                                        {{ (2 - strlen($search_accounts)) > 1 ? 'characters' : 'character' }}</p>
+                                @else
+                                    <p class="pt-0 p-3">{{ empty($accounts) ? 'No Record Found': '' }}</p>
+                                @endif
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
         <div x-data="{ open: @entangle('search_accounts_modal') }" x-cloak x-show="open"
              class="fixed z-40 inset-0 overflow-y-auto">
             <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -738,31 +826,32 @@
             </div>
         </div>
     </div>
-@endif
 
 
-<script>
-    document.addEventListener('livewire:load', () => {
-        Livewire.on('focusInput', postId => {
-            setTimeout(() => {
-                document.getElementById('search').focus();
-            }, 300);
-        })
-    });
-</script>
-
-@section('script')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
     <script>
-        let from_date = new Pikaday({
-            field: document.getElementById('posting_date'),
-            format: "DD MMM YYYY"
-        });
-
-
-        from_date.setDate(new Date('{{ $posting_date }}'));
-
-
+        // document.addEventListener('livewire:load', () => {
+        //     Livewire.on('focusInput', postId => {
+        //         console.log('asd');
+        //         setTimeout(() => {
+        //             document.getElementById('search').focus();
+        //         }, 300);
+        //     })
+        // });
     </script>
-@endsection
+
+    @section('script')
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+        <script>
+            let from_date = new Pikaday({
+                field: document.getElementById('posting_date'),
+                format: "DD MMM YYYY"
+            });
+
+
+            from_date.setDate(new Date('{{ $posting_date }}'));
+
+
+        </script>
+    @endsection
+@endif

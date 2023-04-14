@@ -1,13 +1,13 @@
 @if(env('AMS_BOOTSTRAP') == 'true')
     <div class="content-wrapper">
         <div class="content-header">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col">
-                        <h1>Trace Voucher</h1>
-                    </div>
-                </div>
-            </div>
+{{--            <div class="container-fluid">--}}
+{{--                <div class="row">--}}
+{{--                    <div class="col">--}}
+{{--                        <h1>Trace Voucher</h1>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
         </div>
         <div class="content">
             <div class="container-fluid">
@@ -94,13 +94,13 @@
                                             </div>
                                         </div>
                                         {{--                                        @if($date_range)--}}
-                                        <div class=" col-xs-6 col-sm-4">
+                                        <div class=" col-xs-6 col-sm-4 @if(!$date_range) d-none @endif">
                                             <label for="from">From</label>
                                             <input type="text" wire:model.lazy="from" autocomplete="off" id="from"
                                                    class="form-control  @error('from')  is-invalid @enderror">
                                         </div>
 
-                                        <div class=" col-xs-6 col-sm-4">
+                                        <div class=" col-xs-6 col-sm-4  @if(!$date_range) d-none @endif">
                                             <label for="to">To</label>
                                             <input type="text" wire:model.lazy="to" autocomplete="off" id="to"
                                                    class="form-control  @error('to')  is-invalid @enderror">
@@ -123,7 +123,8 @@
                                                         Search
                                                     </div>
                                                 </button>
-                                                <button class="btn btn-danger" type="button" wire:click="resetSearch" wire:loading.attr="disabled">Reset
+                                                <button class="btn btn-danger" type="button" wire:click="resetSearch"
+                                                        wire:loading.attr="disabled">Reset
                                                 </button>
                                             </div>
                                         </div>
@@ -159,7 +160,7 @@
                                         </div>
                                         <div class="card-body">
                                             <table class="table table-bordered border-0">
-                                                <thead class="">
+                                                <thead class="text-nowrap">
                                                 <th class="text-center add-services-table" style="width: 25px;">#</th>
                                                 <th class="add-services-table text-center">Voucher #</th>
                                                 <th class="add-services-table text-center">Account Name</th>
@@ -171,24 +172,24 @@
                                                 <tbody class="">
                                                 @foreach($tl->where('debit','>',0) as $t)
                                                     <tr>
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>
+                                                        <td class="align-middle">{{ $loop->iteration }}</td>
+                                                        <td class="align-middle">
                                                             @if($loop->first)
                                                                 {{ $t->voucher_no }}
                                                             @endif
                                                         </td>
-                                                        <td>
+                                                        <td class="align-middle">
                                                             {{ $t->name }}
                                                         </td>
                                                         <td>
                                                             {{ $t->description }}
                                                         </td>
-                                                        <td>
+                                                        <td class="align-middle">
                                                             @if($t->debit>0)
                                                                 {{ number_format($t->debit,2) }}
                                                             @endif
                                                         </td>
-                                                        <td>
+                                                        <td class="align-middle">
                                                             @if($t->credit>0)
                                                                 {{ number_format($t->credit,2) }}
                                                             @endif
@@ -202,24 +203,24 @@
                                                 @endforeach
                                                 @foreach($tl->where('credit','>',0) as $t)
                                                     <tr>
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>
+                                                        <td class="align-middle">{{ $loop->iteration }}</td>
+                                                        <td class="align-middle">
                                                             @if($loop->first)
                                                                 {{ $t->voucher_no }}
                                                             @endif
                                                         </td>
-                                                        <td>
+                                                        <td class="align-middle">
                                                             {{ $t->name }}
                                                         </td>
                                                         <td>
                                                             {{ $t->description }}
                                                         </td>
-                                                        <td>
+                                                        <td class="align-middle">
                                                             @if($t->debit>0)
                                                                 {{ number_format($t->debit,2) }}
                                                             @endif
                                                         </td>
-                                                        <td>
+                                                        <td class="align-middle">
                                                             @if($t->credit>0)
                                                                 {{ number_format($t->credit,2) }}
                                                             @endif
@@ -280,22 +281,27 @@
 
         <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
         <script>
+            window.addEventListener('print-voucher', event => {
+                var url = "/accounts/journal/voucher/print/" + event.detail.voucher_no + "/" + event.detail.print;
+                newwindow = window.open(url, 'voucher-print', 'height=500,width=800');
+                if (window.focus) {
+                    newwindow.focus()
+                }
+                return false;
+            })
 
+            let from_date = new Pikaday({
+                field: document.getElementById('from'),
+                format: "DD MMM YYYY"
+            });
 
-            {{--$('#select2_dropdown').on('change', function (e) {--}}
-            {{--    let from_date = new Pikaday({--}}
-            {{--        field: document.getElementById('from'),--}}
-            {{--        format: "DD MMM YYYY"--}}
-            {{--    });--}}
+            let to_date = new Pikaday({
+                field: document.getElementById('to'),
+                format: "DD MMM YYYY"
+            });
 
-            {{--    let to_date = new Pikaday({--}}
-            {{--        field: document.getElementById('to'),--}}
-            {{--        format: "DD MMM YYYY"--}}
-            {{--    });--}}
-
-            {{--    from_date.setDate(new Date('{{ $from }}'));--}}
-            {{--    to_date.setDate(new Date('{{ $to }}'));--}}
-            {{--})--}}
+            from_date.setDate(new Date('{{ $from }}'));
+            to_date.setDate(new Date('{{ $to }}'));
 
         </script>
     @endpush
@@ -634,33 +640,33 @@
             @endforeach
         @endif
     </div>
+
+    <script>
+        window.addEventListener('print-voucher', event => {
+            var url = "/accounts/journal/voucher/print/" + event.detail.voucher_no + "/" + event.detail.print;
+            newwindow = window.open(url, 'voucher-print', 'height=500,width=800');
+            if (window.focus) {
+                newwindow.focus()
+            }
+            return false;
+        })
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+    <script>
+        let from_date = new Pikaday({
+            field: document.getElementById('from'),
+            format: "DD MMM YYYY"
+        });
+
+        let to_date = new Pikaday({
+            field: document.getElementById('to'),
+            format: "DD MMM YYYY"
+        });
+
+        from_date.setDate(new Date('{{ $from }}'));
+        to_date.setDate(new Date('{{ $to }}'));
+    </script>
+
 @endif
-
-<script>
-    window.addEventListener('print-voucher', event => {
-        var url = "/accounts/journal/voucher/print/" + event.detail.voucher_no + "/" + event.detail.print;
-        newwindow = window.open(url, 'voucher-print', 'height=500,width=800');
-        if (window.focus) {
-            newwindow.focus()
-        }
-        return false;
-    })
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-<script>
-    let from_date = new Pikaday({
-        field: document.getElementById('from'),
-        format: "DD MMM YYYY"
-    });
-
-    let to_date = new Pikaday({
-        field: document.getElementById('to'),
-        format: "DD MMM YYYY"
-    });
-
-    from_date.setDate(new Date('{{ $from }}'));
-    to_date.setDate(new Date('{{ $to }}'));
-</script>
-

@@ -25,7 +25,7 @@
                                                        class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-12 pt-3">
+                                        <div class="col-xs-6 col-sm-4" style="margin-top: 32px">
                                             <div class="form-group">
                                                 <button type="button" wire:click="search" wire:loading.attr="disabled"
                                                         class="btn btn-primary">
@@ -48,17 +48,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-header">
-                                    <h4 class="d-flex justify-content-center">Profit and Loss (P&L)</h4>
-                                    <p class="text-center">{{ env('APP_NAME') }}</p>
-                                    <p class="text-center">Statement
+                                <div class="card-header p-0">
+                                    <h4 class="d-flex justify-content-center p-0 m-0">Profit and Loss (P&L)</h4>
+                                    <p class="text-center p-0 m-0">{{ env('APP_NAME') }}</p>
+                                    <p class="text-center p-0 m-0">Statement
                                         Period {{ date('d M, Y',strtotime($from_date)) }}
                                         to {{ date('d M, Y',strtotime($to_date)) }} </p>
                                 </div>
 
-                                <div class="card-body">
+                                <div class="card-body p-0">
                                     @if(!empty($heading))
-
                                         <table class="table table-bordered border-0">
                                             <thead class="">
                                             <tr>
@@ -129,7 +128,7 @@
                                             </tr>
 
                                             <tr>
-                                                <th colspan="{{ 2+count($heading) }}">&nbsp;</th>
+                                                <th colspan="{{ 2+count($heading) }}" class="bg-white">&nbsp;</th>
                                             </tr>
 
 
@@ -190,7 +189,7 @@
 
 
                                             <tr>
-                                                <th colspan="{{ 2+count($heading) }}">&nbsp;</th>
+                                                <th colspan="{{ 2+count($heading) }}" class="bg-white">&nbsp;</th>
                                             </tr>
 
 
@@ -216,7 +215,7 @@
                                             </tr>
 
                                             <tr>
-                                                <th colspan="{{ 2+count($heading) }}">&nbsp;</th>
+                                                <th colspan="{{ 2+count($heading) }}" class="bg-white">&nbsp;</th>
                                             </tr>
 
 
@@ -278,7 +277,7 @@
 
 
                                             <tr>
-                                                <th colspan="{{ 2+count($heading) }}">&nbsp;</th>
+                                                <th colspan="{{ 2+count($heading) }}" class="bg-white">&nbsp;</th>
                                             </tr>
 
                                             <tr>
@@ -470,7 +469,7 @@
                         </tr>
 
                         <tr>
-                            <th colspan="{{ 2+count($heading) }}">&nbsp;</th>
+                            <th colspan="{{ 2+count($heading) }}" class="bg-white">&nbsp;</th>
                         </tr>
 
 
@@ -533,7 +532,7 @@
 
 
                         <tr>
-                            <th colspan="{{ 2+count($heading) }}">&nbsp;</th>
+                            <th colspan="{{ 2+count($heading) }}" class="bg-white">&nbsp;</th>
                         </tr>
 
 
@@ -559,7 +558,7 @@
                         </tr>
 
                         <tr>
-                            <th colspan="{{ 2+count($heading) }}">&nbsp;</th>
+                            <th colspan="{{ 2+count($heading) }}" class="bg-white">&nbsp;</th>
                         </tr>
 
 
@@ -622,7 +621,7 @@
 
 
                         <tr>
-                            <th colspan="{{ 2+count($heading) }}">&nbsp;</th>
+                            <th colspan="{{ 2+count($heading) }}" class="bg-white">&nbsp;</th>
                         </tr>
 
                         <tr>

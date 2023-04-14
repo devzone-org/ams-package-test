@@ -226,7 +226,9 @@
                 </div>
             </div>
         </div>
-{{--        @include("ams::include.searchable")--}}
+
+
+        @include("ams::include.searchable")
         <script>
             document.addEventListener('livewire:load', () => {
                 Livewire.on('focusInput', postId => {
@@ -495,41 +497,41 @@
     </div>
 @endif
 
-<script>
-    document.addEventListener('livewire:load', () => {
-        Livewire.on('focusInput', postId => {
-            setTimeout(() => {
-                document.getElementById('searchable_query').focus();
-            }, 300);
-        });
+{{--<script>--}}
+{{--    document.addEventListener('livewire:load', () => {--}}
+{{--        Livewire.on('focusInput', postId => {--}}
+{{--            setTimeout(() => {--}}
+{{--                document.getElementById('searchable_query').focus();--}}
+{{--            }, 300);--}}
+{{--        });--}}
 
 
-    });
+{{--    });--}}
 
-    window.addEventListener('title', event => {
-        document.title = "GL: " + event.detail.name;
-    })
-</script>
+{{--    window.addEventListener('title', event => {--}}
+{{--        document.title = "GL: " + event.detail.name;--}}
+{{--    })--}}
+{{--</script>--}}
 
 
 
-@section('script')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-    <script>
-        let from_date = new Pikaday({
-            field: document.getElementById('from_date'),
-            format: "DD MMM YYYY"
-        });
+{{--@section('script')--}}
+{{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>--}}
+{{--    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>--}}
+{{--    <script>--}}
+{{--        let from_date = new Pikaday({--}}
+{{--            field: document.getElementById('from_date'),--}}
+{{--            format: "DD MMM YYYY"--}}
+{{--        });--}}
 
-        let to_date = new Pikaday({
-            field: document.getElementById('to_date'),
-            format: "DD MMM YYYY"
-        });
+{{--        let to_date = new Pikaday({--}}
+{{--            field: document.getElementById('to_date'),--}}
+{{--            format: "DD MMM YYYY"--}}
+{{--        });--}}
 
-        from_date.setDate(new Date('{{ $from_date }}'));
-        to_date.setDate(new Date('{{ $to_date }}'));
+{{--        from_date.setDate(new Date('{{ $from_date }}'));--}}
+{{--        to_date.setDate(new Date('{{ $to_date }}'));--}}
 
-    </script>
-@endsection
+{{--    </script>--}}
+{{--@endsection--}}
 
