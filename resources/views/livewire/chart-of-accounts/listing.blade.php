@@ -43,32 +43,32 @@
                                     <tbody>
                                     @foreach($coa->where('level','1') as $one)
                                         <tr>
-                                            <td class="" colspan="6">
+                                            <td class="add-services-table align-middle" colspan="6">
                                                 {{ $one->name }}
                                             </td>
                                         </tr>
                                         @foreach($coa->where('sub_account',$one->id) as $two)
                                             <tr>
-                                                <td class="" colspan="6">
+                                                <td class="add-services-table align-middle" colspan="6">
                                                     {!! str_repeat('&nbsp;', 6) !!} {{ $two->name }}
                                                 </td>
                                             </tr>
                                             @foreach($coa->where('sub_account',$two->id) as $three)
                                                 <tr>
-                                                    <td class="" colspan="6">
+                                                    <td class="add-services-table align-middle" colspan="6">
                                                         {!! str_repeat('&nbsp;', 12) !!} {{ $three->name }}
                                                     </td>
                                                 </tr>
                                                 @foreach($coa->where('sub_account',$three->id) as $four)
                                                     <tr>
-                                                        <td class="" colspan="6">
+                                                        <td class="add-services-table align-middle" colspan="6">
                                                             {!! str_repeat('&nbsp;', 18) !!} {{ $four->name }}
                                                         </td>
                                                     </tr>
                                                     @foreach($coa->where('sub_account',$four->id) as $five)
                                                         <tr>
                                                             <td title="This is contra account"
-                                                                class="">
+                                                                class="add-services-table align-middle">
                                                                 <div class="d-flex flex-wrap justify-content-center items-center">
                                                                     <span>{!! str_repeat('&nbsp;', 24) !!}</span>
                                                                     @if($five->is_contra == 't')
@@ -85,8 +85,8 @@
 
                                                                 </div>
                                                             </td>
-                                                            <td class="">{{ $five->code }}</td>
-                                                            <td class="">
+                                                            <td class="add-services-table align-middle">{{ $five->code }}</td>
+                                                            <td class="add-services-table align-middle">
                                                                 @php
                                                                     $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
                                                                     if($clo<0){
@@ -96,22 +96,43 @@
                                                                     }
                                                                 @endphp
                                                             </td>
-                                                            <td class="">
+                                                            <td class="add-services-table align-middle">
                                                                 @if(!empty($five->posting_date))
                                                                     {{date('d M, Y',strtotime($five->posting_date))}}
                                                                 @endif</td>
 
-                                                            <td class="">
-                                                                <a
-                                                                        href="{{ url('accounts/accountant/ledger') }}?account_id={{$five->id}}"
-                                                                        target="_blank"
-                                                                        class="btn btn-success btn-sm"> View Ledger </a>
-                                                                <button type="button"
-                                                                        wire:click="changeStatus('{{ $five->id }}')"
-                                                                        class="btn btn-primary btn-sm"
-                                                                >
-                                                                    Mark Inactive
-                                                                </button>
+                                                            <td class="add-services-table align-middle">
+
+                                                                <div class="nav-item dropdown">
+                                                                    <div class="user-panel mb-2 d-flex nav-link" data-toggle="dropdown" >
+                                                                        <div class="info">
+                                                                            <a href="#" class="d-block">Details</a>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                                                                        <a href="{{ url('accounts/accountant/ledger') }}?account_id={{$five->id}}" class="dropdown-item" target="_blank">
+                                                                             View Ledger
+                                                                        </a>
+                                                                        <div class="dropdown-divider"></div>
+                                                                        <a type="button"
+                                                                                wire:click="changeStatus('{{ $five->id }}')"
+                                                                                class="text-dark mx-3"> Mark Inactive </a>
+                                                                        <div class="dropdown-divider"></div>
+
+                                                                    </div>
+                                                                </div>
+
+
+{{--                                                                <a--}}
+{{--                                                                        href="{{ url('accounts/accountant/ledger') }}?account_id={{$five->id}}"--}}
+{{--                                                                        target="_blank"--}}
+{{--                                                                        class="btn btn-success btn-sm"> View Ledger </a>--}}
+{{--                                                                <button type="button"--}}
+{{--                                                                        wire:click="changeStatus('{{ $five->id }}')"--}}
+{{--                                                                        class="btn btn-primary btn-sm"--}}
+{{--                                                                >--}}
+{{--                                                                    Mark Inactive--}}
+{{--                                                                </button>--}}
                                                             </td>
                                                         </tr>
                                                     @endforeach

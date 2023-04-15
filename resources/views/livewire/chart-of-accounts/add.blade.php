@@ -11,6 +11,17 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
+                                        @if(!empty($success))
+                                            <div class="col-12">
+                                                <div class="alert alert-success alert-dismissible">
+                                                    <button type="button" class="close" data-dismiss="alert"
+                                                            aria-hidden="true">
+                                                        ×
+                                                    </button>
+                                                    {{ $success }}
+                                                </div>
+                                            </div>
+                                        @endif
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
                                                 <label for="at_level" class="">Choose Level</label>

@@ -322,7 +322,7 @@
                                                 Transfer To
                                             </td>
                                             <td class="  px-6 py-2">
-                                                <select wire:model="transfer_id"
+                                                <select wire:model="transfer_id" id="transfer_to"
                                                         class="form-control">
                                                     <option></option>
                                                     @foreach($transfers as $t)
@@ -339,9 +339,9 @@
                                             <td class="px-6 py-2">
                                                 Attachment
                                             </td>
-                                            <td class="px-6 py-2">
+                                            <td class="px-6 py-2 ">
                                                 <input type="file" wire:model.lazy="attachment"
-                                                       class="form-control">
+                                                       class="form-control p-0 m-0 pt-1 px-1">
                                             </td>
                                         </tr>
                                         <tr class="">
@@ -380,8 +380,8 @@
 
                                                 <div class=" ">
 
-                                                    <div class="mt-2 text-danger">
-                                                        <ul class="list-disc pl-5 space-y-1">
+                                                    <div class="mt-2 text-white">
+                                                        <ul class="pl-5 ">
 
                                                             @foreach ($errors->all() as $error)
                                                                 <li>{{ $error }}</li>
@@ -401,53 +401,72 @@
                 </div>
             </div>
         </div>
-    </div>
+        <div class="modal show" id="confirmationModal" wire:ignore.self="" tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body" id="std_form">
+                        <div class="p-4">
+                            Are you sure you want to transfer
+                            PKR {{ number_format(collect($denomination_counting)->sum('total') - $retained_cash ,2) }}
+                            to {{ collect($transfers)->firstWhere('id',$transfer_id)['name'] ?? '' }}
+                            from {{ $current_user['name'] ?? '' }}
+                            <br>
+                            <div class="pt-3">
+                                <form wire:submit.prevent="proceedClosing">
+                                    <button type="submit"
+                                            class="btn btn-success">
+                                        Proceed
+                                    </button>
+                                    <button type="button" id="closeButton"
+                                            class="btn btn-danger">
+                                        Close
+                                    </button>
+                                </form>
+                            </div>
 
-    <div class="modal fade" id="confirmationModal" wire:ignore.self="" tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body" id="std_form">
-                    <div class="p-4">
-                        Are you sure you want to transfer
-                        PKR {{ number_format(collect($denomination_counting)->sum('total') - $retained_cash ,2) }}
-                        to {{ collect($transfers)->firstWhere('id',$transfer_id)['name'] ?? '' }}
-                        from {{ $current_user['name'] ?? '' }}
-                        <br>
-                        <form wire:submit.prevent="proceedClosing">
-                            <button type="submit"
-                                    class="btn btn-success">
-                                Proceed
-                            </button>
-                        </form>
-
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+
+
     </div>
 
     @push('js')
         <script>
-            $(document).ready(function () {
-                $("#proceedingBtn").click(function () {
-                    $("#confirmationModal").show();
-                });
 
-                // // Close the modal when the close button is clicked
-                // $(".close").click(function() {
-                //     $("#myModal").hide();
-                // });
-                //
-                // // Close the modal when the user clicks outside the modal
-                // $(window).click(function(event) {
-                //     if (event.target == $("#myModal")[0]) {
-                //         $("#myModal").hide();
-                //     }
-                // });
-            });
+            const id_to_be_closed = document.querySelector("#user_account");
+
+            id_to_be_closed.addEventListener("change", () => {
+                if (id_to_be_closed.value != null && id_to_be_closed.value != "") {
+                    setTimeout(() => {
+                        let transfer_to = document.querySelector("#transfer_to");
+                        transfer_to.addEventListener("change", () => {
+                            if (transfer_to.value != null && transfer_to.value != "") {
+                                setTimeout(() => {
+                                    let proceedingBtn = document.querySelector('#proceedingBtn')
+                                    proceedingBtn.addEventListener('click', function () {
+                                        let confirmationModal = document.querySelector('#confirmationModal');
+                                        confirmationModal.style.display = 'block';
+                                        let closeButton = document.querySelector('#closeButton');
+                                        closeButton.addEventListener('click', function(){
+                                            let confirmationModal = document.querySelector('#confirmationModal');
+                                            confirmationModal.style.display = 'none';
+                                        })
+
+                                    });
+                                }, 700);
+                            }
+                        })
+                    }, 700);
+
+
+                }
+            })
         </script>
     @endpush
 @else

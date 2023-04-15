@@ -6,7 +6,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="card card-primary card-outline">
-                                <div class="card-body">
+                                <div class="card-body py-0 pt-2">
                                     <div class="row">
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
@@ -58,15 +58,15 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-header">
-                                    <h4 class="d-flex justify-content-center">Day Closing Report</h4>
-                                    <p class="text-center">{{ env('APP_NAME') }}</p>
+                                <div class="card-header p-0 m-0">
+                                    <h4 class="d-flex justify-content-center p-0 m-0">Day Closing Report</h4>
+                                    <p class="text-center p-0 m-0">{{ env('APP_NAME') }}</p>
                                     <p class="text-center">Statement
                                         Period {{ date('d M, Y',strtotime($from_date)) }}
                                         to {{ date('d M, Y',strtotime($to_date)) }} </p>
                                 </div>
 
-                                <div class="card-body overflow-auto">
+                                <div class="card-body overflow-auto p-0 m-0">
                                     <table class="table table-bordered border-0">
                                         <thead class="text-nowrap">
                                         <tr>

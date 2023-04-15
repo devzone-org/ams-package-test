@@ -6,7 +6,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="card card-primary card-outline">
-                                <div class="card-body">
+                                <div class="card-body ">
                                     <div class="row">
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
@@ -16,7 +16,8 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 pt-3">
+                                        <div class="col-xs-6 col-sm-4 mt-4" style="padding-top: 8px">
+
                                             <div class="form-group">
                                                 <button type="button" wire:click="search" wire:loading.attr="disabled"
                                                         class="btn btn-primary">
@@ -36,8 +37,8 @@
                                     </div>
                                 </div>
                                 <div class="card-header">
-                                    <h4 class="d-flex justify-content-center">Statement of Financial Position</h4>
-                                    <p class="text-center">{{ env('APP_NAME') }}</p>
+                                    <h4 class="d-flex justify-content-center p-0 m-0">Statement of Financial Position</h4>
+                                    <p class="text-center p-0 m-0">{{ env('APP_NAME') }}</p>
                                     <p class="text-center">As At {{ date('d F Y',strtotime($asat)) }} </p>
                                 </div>
 
@@ -45,9 +46,9 @@
                                     <table class="table table-bordered border-0">
                                         <thead class="">
                                         <tr>
-                                            <td></td>
-                                            <td>{{ env('CURRENCY','PKR') }}</td>
-                                            <td>{{ env('CURRENCY','PKR') }}</td>
+                                            <td class="col-8"></td>
+                                            <td class="col-2">{{ env('CURRENCY','PKR') }}</td>
+                                            <td class="col-2">{{ env('CURRENCY','PKR') }}</td>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -61,36 +62,17 @@
                                             @foreach($lvl3 as $l3)
                                                 @foreach($lvl3 as $l3)
                                                     <tr class="">
-                                                        <td class="" >
-{{--                                                            <div @click="l3{{$l3['id']}} = ! l3{{$l3['id']}}" class="">--}}
-{{--                                                                <template x-if="! l3{{$l3['id']}}">--}}
-{{--                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"--}}
-{{--                                                                         fill="currentColor">--}}
-{{--                                                                        <path fill-rule="evenodd"--}}
-{{--                                                                              d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"--}}
-{{--                                                                              clip-rule="evenodd"/>--}}
-{{--                                                                    </svg>--}}
-{{--                                                                </template>--}}
-{{--                                                                <template x-if=" l3{{$l3['id']}}">--}}
-
-{{--                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"--}}
-{{--                                                                         fill="currentColor">--}}
-{{--                                                                        <path fill-rule="evenodd"--}}
-{{--                                                                              d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"--}}
-{{--                                                                              clip-rule="evenodd"/>--}}
-{{--                                                                    </svg>--}}
-{{--                                                                </template>--}}
-{{--                                                            </div>--}}
+                                                        <td class="">
                                                             <div>
-                                                                <button class="outline-none border-0 p-0">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                         viewBox="0 0 24 24"
-                                                                         stroke-width="1.5" stroke="currentColor" class=""
-                                                                         style="width: 20px;">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                                              d="M12 4.5v15m7.5-7.5h-15"/>
-                                                                    </svg>
-                                                                </button>
+{{--                                                                <button class="outline-none border-0 p-0">--}}
+{{--                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"--}}
+{{--                                                                         viewBox="0 0 24 24"--}}
+{{--                                                                         stroke-width="1.5" stroke="currentColor" class=""--}}
+{{--                                                                         style="width: 15px;">--}}
+{{--                                                                        <path stroke-linecap="round" stroke-linejoin="round"--}}
+{{--                                                                              d="M12 4.5v15m7.5-7.5h-15"/>--}}
+{{--                                                                    </svg>--}}
+{{--                                                                </button>--}}
                                                                  {{ $l3['name'] }}
                                                             </div>
                                                         </td>
@@ -105,42 +87,26 @@
                                                             @endif
                                                         </td>
                                                     </tr>
-                                                    @foreach(collect($level4)->where('sub_account',$l3['id']) as $l4)
+                                                    @foreach(collect($level4)->where('sub_account',$l3['id']) as $key => $l4)
                                                         @if ($l4['name']  == 'Drawings')
+
                                                             @continue
                                                         @endif
-                                                        <tr class="" x-show="l3{{$l3['id']}}">
-                                                            <td class="">
-{{--                                                                <div @click="l4{{$l4['id']}} = ! l4{{$l4['id']}}" class="cursor-pointer">--}}
-{{--                                                                    <template x-if="! l4{{$l4['id']}}">--}}
-{{--                                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"--}}
-{{--                                                                             fill="currentColor">--}}
-{{--                                                                            <path fill-rule="evenodd"--}}
-{{--                                                                                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"--}}
-{{--                                                                                  clip-rule="evenodd"/>--}}
-{{--                                                                        </svg>--}}
-{{--                                                                    </template>--}}
-{{--                                                                    <template x-if="l4{{$l4['id']}}">--}}
-
-{{--                                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"--}}
-{{--                                                                             fill="currentColor">--}}
-{{--                                                                            <path fill-rule="evenodd"--}}
-{{--                                                                                  d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"--}}
-{{--                                                                                  clip-rule="evenodd"/>--}}
-{{--                                                                        </svg>--}}
-{{--                                                                    </template>--}}
-{{--                                                                </div>--}}
+                                                        <tr class="">
+                                                            <td class="" onclick="showHideRow('expandable-details{{str_replace(' ', '', $key)}}');">
                                                                 <div>
-                                                                    <button class="outline-none border-0 p-0">
+                                                                    <span class="mx-3">
+                                                                        <button class="outline-none border-0 p-0" id="">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                              viewBox="0 0 24 24"
                                                                              stroke-width="1.5" stroke="currentColor" class=""
-                                                                             style="width: 20px;">
+                                                                             style="width: 15px;">
                                                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                                                   d="M12 4.5v15m7.5-7.5h-15"/>
                                                                         </svg>
                                                                     </button>
-                                                                    {{ $l4['name'] }}
+                                                                     {{ $l4['name'] }}
+                                                                    </span>
                                                                 </div>
                                                             </td>
                                                             <td class="">
@@ -155,9 +121,10 @@
                                                             </td>
                                                         </tr>
                                                         @foreach(collect($level5)->where('sub_account',$l4['id']) as $l5)
-                                                            <tr class="" x-show="l4{{$l4['id']}} && l3{{$l3['id']}}">
+                                                            <tr class="expandable-details@php echo str_replace(' ', '', $key); @endphp">
                                                                 <td class="">
-                                                                    {{ $l5['name'] }}
+                                                                    <span class="mx-5">{{ $l5['name'] }}</span>
+
                                                                 </td>
                                                                 <td class="">
 
@@ -220,6 +187,26 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
         <script>
+            $(document).ready(function() {
+
+                $('tr[class^="expandable-details"]').hide();
+            });
+            function showHideRow(row) {
+                $("." + row).toggle();
+
+            }
+
+            // $("#buttontoshowdata").click(function(){
+            //     $("#selecteddara").toggle();
+            // });
+
+            // $('.qwert').click(function() {
+            //     // Select all of the elements generated by the foreach loop and hide them
+            //     $('.abcdef').each(function() {
+            //         $(this).toggle();
+            //     });
+            // });
+
             let from_date = new Pikaday({
                 field: document.getElementById('from_date'),
                 format: "DD MMM YYYY"

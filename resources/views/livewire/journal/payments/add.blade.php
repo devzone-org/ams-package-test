@@ -30,62 +30,62 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                @if ($errors->any())
+{{--                                @if ($errors->any())--}}
 
-                                    <div class="col-12">
-                                        <div>
-                                            <h3 class="ml-3">
-                                                @php
-                                                    $count = count($errors->all());
-                                                @endphp
-                                                There {{ $count > 1 ? "were {$count} errors": "was {$count} error" }}
-                                                with your
-                                                submission
-                                            </h3>
-                                        </div>
-                                        <div class="mt-2">
-                                            <ul class="pl-5">
+{{--                                    <div class="col-12">--}}
+{{--                                        <div>--}}
+{{--                                            <h3 class="ml-3">--}}
+{{--                                                @php--}}
+{{--                                                    $count = count($errors->all());--}}
+{{--                                                @endphp--}}
+{{--                                                There {{ $count > 1 ? "were {$count} errors": "was {$count} error" }}--}}
+{{--                                                with your--}}
+{{--                                                submission--}}
+{{--                                            </h3>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="mt-2">--}}
+{{--                                            <ul class="pl-5">--}}
 
-                                                @foreach ($errors->all() as $error)
-                                                    <li>{{ $error }}</li>
-                                                @endforeach
+{{--                                                @foreach ($errors->all() as $error)--}}
+{{--                                                    <li>{{ $error }}</li>--}}
+{{--                                                @endforeach--}}
 
-                                            </ul>
-                                        </div>
+{{--                                            </ul>--}}
+{{--                                        </div>--}}
 
-                                    </div>
-                                    <div class="flex">
-                                        <div class="flex-shrink-0">
-                                            <!-- Heroicon name: x-circle -->
-                                            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg"
-                                                 viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                <path fill-rule="evenodd"
-                                                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                                      clip-rule="evenodd"/>
-                                            </svg>
-                                        </div>
-                                        <div class="ml-3">
-                                            <h3 class="text-sm font-medium text-red-800">
-                                                @php
-                                                    $count = count($errors->all());
-                                                @endphp
-                                                There {{ $count > 1 ? "were {$count} errors": "was {$count} error" }}
-                                                with your
-                                                submission
-                                            </h3>
-                                            <div class="mt-2 text-sm text-red-700">
-                                                <ul class="list-disc pl-5 space-y-1">
+{{--                                    </div>--}}
+{{--                                    <div class="flex">--}}
+{{--                                        <div class="flex-shrink-0">--}}
+{{--                                            <!-- Heroicon name: x-circle -->--}}
+{{--                                            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg"--}}
+{{--                                                 viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">--}}
+{{--                                                <path fill-rule="evenodd"--}}
+{{--                                                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"--}}
+{{--                                                      clip-rule="evenodd"/>--}}
+{{--                                            </svg>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="ml-3">--}}
+{{--                                            <h3 class="text-sm font-medium text-red-800">--}}
+{{--                                                @php--}}
+{{--                                                    $count = count($errors->all());--}}
+{{--                                                @endphp--}}
+{{--                                                There {{ $count > 1 ? "were {$count} errors": "was {$count} error" }}--}}
+{{--                                                with your--}}
+{{--                                                submission--}}
+{{--                                            </h3>--}}
+{{--                                            <div class="mt-2 text-sm text-red-700">--}}
+{{--                                                <ul class="list-disc pl-5 space-y-1">--}}
 
-                                                    @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
-                                                    @endforeach
+{{--                                                    @foreach ($errors->all() as $error)--}}
+{{--                                                        <li>{{ $error }}</li>--}}
+{{--                                                    @endforeach--}}
 
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                            </div>
-                            @endif
+{{--                                                </ul>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                            </div>--}}
+{{--                            @endif--}}
                             @if(!empty($success))
                                 <div class="col-12">
                                     <div class="alert alert-success alert-dismissible">
@@ -103,21 +103,21 @@
 
                                         <label for="nature" class="">Nature</label>
                                         <select id="nature" wire:model="nature"
-                                                class="form-control">
+                                                class="form-control @error('nature')  is-invalid @enderror">
                                             <option value=""></option>
                                             <option value="pay">Amount Pay to Anyone</option>
                                             <option value="receive">Receive Amount from Anyone</option>
                                         </select>
                                     </div>
                                 </div>
-                                @if(!empty($nature))
                                     <div class="col-xs-6 col-sm-4">
-                                        <div class="form-group">
+                                        <div class="form-group @if(!$nature) d-none @endif">
                                             <label for="date" class="">Transaction Date</label>
                                             <input type="text" wire:model.lazy="posting_date" id="posting_date"
-                                                   class="form-control">
+                                                   class="form-control @error('posting_date')  is-invalid @enderror">
                                         </div>
                                     </div>
+                                @if(!empty($nature))
 
                                     <div class="col-xs-6 col-sm-4">
                                         <div class="form-group">
@@ -132,7 +132,7 @@
                                             <input type="text"
                                                    wire:click="searchableOpenModal('first_account_id','first_account_name','accounts')"
                                                    wire:model="first_account_name"
-                                                   class="form-control">
+                                                   class="form-control @error('first_account_name')  is-invalid @enderror">
                                         </div>
                                     </div>
 
@@ -146,7 +146,7 @@
                                                 @endif
                                             </label>
                                             <input type="number" wire:model.defer="amount"
-                                                   class="form-control">
+                                                   class="form-control @error('amount')  is-invalid @enderror">
                                         </div>
                                     </div>
 
@@ -156,7 +156,7 @@
                                                 Description
                                             </label>
                                             <textarea wire:model.defer="description" cols="30" rows="5"
-                                                      class="form-control"></textarea>
+                                                      class="form-control @error('description')  is-invalid @enderror"></textarea>
                                         </div>
                                     </div>
 
@@ -173,11 +173,11 @@
                                                 <input type="text"
                                                        wire:click="searchableOpenModal('second_account_id','second_account_name','accounts')"
                                                        wire:model="second_account_name"
-                                                       class="form-control">
+                                                       class="form-control @error('second_account_name')  is-invalid @enderror">
                                             @else
                                                 <input type="text"
                                                        wire:model="second_account_name"
-                                                       class="form-control">
+                                                       class="form-control @error('second_account_name')  is-invalid @enderror">
                                             @endif
                                         </div>
                                     </div>
@@ -186,7 +186,7 @@
                                         <div class="form-group">
                                             <label for="mode" class="">Mode of Payment</label>
                                             <select id="mode" wire:model="mode"
-                                                    class="form-control">
+                                                    class="form-control @error('mode')  is-invalid @enderror">
                                                 <option value=""></option>
                                                 <option value="cash">Cash</option>
                                                 <option value="cheque">Cheque</option>
@@ -201,7 +201,7 @@
                                                     Instrument #
                                                 </label>
                                                 <input type="text" wire:model.defer="instrument_no"
-                                                       class="form-control">
+                                                       class="form-control @error('instrument_no')  is-invalid @enderror">
                                             @endif
                                         </div>
                                     </div>
@@ -210,7 +210,7 @@
                                         <div class="form-group">
                                             <label for="attachment" class="">Attachment</label>
                                             <input
-                                                    class="form-control p-0 py-1 px-1"
+                                                    class="form-control p-0 py-1 px-1 attachment"
                                                     type="file" wire:model="attachment">
                                         </div>
                                     </div>
@@ -462,32 +462,33 @@
 
         @include("ams::include.searchable")
     </div>
+    <script>
+
+        document.addEventListener('livewire:load', () => {
+            Livewire.on('focusInput', postId => {
+                setTimeout(() => {
+                    document.getElementById('searchable_query').focus();
+                }, 300);
+            });
+
+
+        });
+
+    </script>
+
+    @section('script')
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+        <script>
+            let from_date = new Pikaday({
+                field: document.getElementById('posting_date'),
+                format: "DD MMM YYYY"
+            });
+
+
+        </script>
+    @endsection
 @endif
 
 
-<script>
 
-    document.addEventListener('livewire:load', () => {
-        Livewire.on('focusInput', postId => {
-            setTimeout(() => {
-                document.getElementById('searchable_query').focus();
-            }, 300);
-        });
-
-
-    });
-
-</script>
-
-@section('script')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-    <script>
-        let from_date = new Pikaday({
-            field: document.getElementById('posting_date'),
-            format: "DD MMM YYYY"
-        });
-
-
-    </script>
-@endsection
