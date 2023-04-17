@@ -85,8 +85,8 @@
 
                                                                 </div>
                                                             </td>
-                                                            <td class="add-services-table align-middle">{{ $five->code }}</td>
-                                                            <td class="add-services-table align-middle">
+                                                            <td class="add-services-table align-middle col-1">{{ $five->code }}</td>
+                                                            <td class="add-services-table align-middle col-2">
                                                                 @php
                                                                     $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
                                                                     if($clo<0){
@@ -96,15 +96,15 @@
                                                                     }
                                                                 @endphp
                                                             </td>
-                                                            <td class="add-services-table align-middle">
+                                                            <td class="add-services-table align-middle col-1">
                                                                 @if(!empty($five->posting_date))
                                                                     {{date('d M, Y',strtotime($five->posting_date))}}
                                                                 @endif</td>
 
-                                                            <td class="add-services-table align-middle">
+                                                            <td class="add-services-table align-middle col-1">
 
                                                                 <div class="nav-item dropdown">
-                                                                    <div class="user-panel mb-2 d-flex nav-link" data-toggle="dropdown" >
+                                                                    <div class="user-panel d-flex nav-link m-0 p-0" data-toggle="dropdown" >
                                                                         <div class="info">
                                                                             <a href="#" class="d-block">Details</a>
                                                                         </div>

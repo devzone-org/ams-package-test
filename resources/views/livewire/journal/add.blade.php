@@ -25,6 +25,33 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
+                                    @if ($errors->any())
+
+                                        <div class="rounded-md bg-red-50 p-4 mb-4">
+                                            <div class="flex">
+
+                                                <div class="ml-3">
+                                                    <h3 class="text-sm  text-danger">
+                                                        @php
+                                                            $count = count($errors->all());
+                                                        @endphp
+                                                        There {{ $count > 1 ? "were {$count} errors": "was {$count} error" }}
+                                                        with your
+                                                        submission
+                                                    </h3>
+                                                    <div class="mt-2 text-sm text-danger">
+                                                        <ul class="list-disc pl-5 space-y-1">
+
+                                                            @foreach ($errors->all() as $error)
+                                                                <li>{{ $error }}</li>
+                                                            @endforeach
+
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
                                     @if(!empty($success))
                                         <div class="col-12">
                                             <div class="alert alert-success alert-dismissible">
@@ -88,10 +115,11 @@
                                                     style="width: 25px;">{{ $loop->iteration }}</td>
                                                 <td class="add-services-table col-3">
                                                     <input wire:click="searchAccounts('{{ $key }}')" type="text"
-                                                           readonly
                                                            wire:model.lazy="entries.{{$key}}.account_name"
                                                            class="border-0 w-100 pt-2" id="searchbox"
-                                                           autocomplete="off" style="outline: none;">
+                                                           autocomplete="off" style="outline: none;"
+                                                           wire:key="'searchbox-' . {{$key}}"
+                                                    >
                                                 </td>
                                                 <td class="add-services-table col-6">
                                                  <textarea wire:ignore.self
@@ -243,7 +271,7 @@
                 @endif
                 @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
                     <button type="button" wire:click="posted" wire:loading.attr="disabled"
-                            class="btn btn-secondary">
+                            class="btn btn-success">
                         <span wire:loading.remove wire:target="posted">Post for Approval</span>
                         <span wire:loading wire:target="posted">Posting...</span>
                     </button>
@@ -316,7 +344,7 @@
         <script>
             document.addEventListener('open-modal', function () {
                 $('#searchmodal').modal('show');
-                setTimeout(function() {
+                setTimeout(function () {
                     $("#searchableField").focus();
                 }, 500);
             })

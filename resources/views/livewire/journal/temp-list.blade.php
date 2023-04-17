@@ -53,13 +53,13 @@
                                         <div class="card-body table-responsive p-0">
                                             <table class="table table-bordered border-0">
                                                 <thead class="text-nowrap">
-                                                <th class="text-center add-services-table" style="width: 25px;">#</th>
-                                                <th class="add-services-table text-center">Voucher #</th>
-                                                <th class="add-services-table text-center">Account Name</th>
+                                                <th class="text-center add-services-table col-1" style="width: 25px;">#</th>
+                                                <th class="add-services-table text-center col-1">Voucher #</th>
+                                                <th class="add-services-table text-center col-1">Account Name</th>
                                                 <th class="add-services-table text-center">Description</th>
-                                                <th class="add-services-table text-center">Debit</th>
-                                                <th class="add-services-table text-center">Credit</th>
-                                                <th class="text-center add-services-table"></th>
+                                                <th class="add-services-table text-center col-1">Debit</th>
+                                                <th class="add-services-table text-center col-1">Credit</th>
+                                                <th class="text-center add-services-table col-1"></th>
                                                 </thead>
                                                 <tbody class="">
                                                 @foreach($tl->where('debit','>',0) as $t)
