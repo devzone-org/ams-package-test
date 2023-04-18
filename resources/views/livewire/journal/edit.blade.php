@@ -27,8 +27,8 @@
                                 <div class="row">
                                     @if ($errors->any())
 
-                                        <div class="rounded-md bg-red-50 p-4 mb-4">
-                                            <div class="flex">
+                                        <div class="p-4 mb-4">
+                                            <div class="d-flex">
 
                                                 <div class="ml-3">
                                                     <h3 class="text-sm  text-danger">
@@ -40,7 +40,7 @@
                                                         submission
                                                     </h3>
                                                     <div class="mt-2 text-sm text-danger">
-                                                        <ul class="list-disc pl-5 space-y-1">
+                                                        <ul class="list-disc pl-5">
 
                                                             @foreach ($errors->all() as $error)
                                                                 <li>{{ $error }}</li>
@@ -65,7 +65,6 @@
                                     @endif
                                     <div class="col-sm-10 col-xs-12 no-padding">
                                         <div class="row">
-
                                             <div class="col-xs-12 col-sm-4">
                                                 <div class="form-group">
                                                     <label>Posting Date</label>
@@ -77,7 +76,8 @@
                                             <div class="col-xs-12 col-sm-4">
                                                 <div class="form-group">
                                                     <label>Temp Voucher #</label>
-                                                    <input type="text" value="{{ $voucher_no }}" readonly id="voucher_no" autocomplete="off"
+                                                    <input type="text" value="{{ $voucher_no }}" readonly
+                                                           id="voucher_no" autocomplete="off"
                                                            class="form-control">
                                                 </div>
                                             </div>
@@ -123,7 +123,7 @@
                                                  <textarea wire:ignore.self
                                                            wire:model.lazy="entries.{{$key}}.description"
                                                            class="border-0 w-100 pt-2"
-                                                           style="outline: none;height: 35px"></textarea>
+                                                           style="outline: none;height: 35px;overflow:hidden"></textarea>
                                                 </td>
                                                 <td class="add-services-table">
                                                     <input type="number" step="0.01"
@@ -254,10 +254,10 @@
         </div>
         <div class="d-flex  justify-content-between px-4">
             <div>
-{{--                <button type="button" wire:click="deleteAll" wire:loading.attr="disabled"--}}
-{{--                        class="btn btn-danger">--}}
-{{--                    Delete All--}}
-{{--                </button>--}}
+                {{--                <button type="button" wire:click="deleteAll" wire:loading.attr="disabled"--}}
+                {{--                        class="btn btn-danger">--}}
+                {{--                    Delete All--}}
+                {{--                </button>--}}
             </div>
             <div>
 
@@ -356,7 +356,6 @@
             from_date.setDate(new Date('{{ $posting_date }}'));
         </script>
     @endpush
-
 
 @else
     <div>

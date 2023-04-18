@@ -125,7 +125,7 @@
                                                  <textarea wire:ignore.self
                                                            wire:model.lazy="entries.{{$key}}.description"
                                                            class="border-0 w-100 pt-2"
-                                                           style="outline: none;height: 35px"></textarea>
+                                                           style="outline: none;height: 35px; overflow:hidden"></textarea>
                                                 </td>
                                                 <td class="add-services-table">
                                                     <input type="number" step="0.01"
