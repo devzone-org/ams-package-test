@@ -49,7 +49,7 @@
                                     </div>
                                 </div>
 
-                                <div class="card-header p-0">
+                                <div class="card-header pt-0">
                                     <h4 class="d-flex justify-content-center p-0 m-0">Profit and Loss (P&L) Date
                                         Wise</h4>
                                     <p class="text-center p-0 m-0">{{ env('APP_NAME') }}</p>

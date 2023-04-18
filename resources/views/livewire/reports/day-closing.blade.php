@@ -58,7 +58,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-header p-0 m-0">
+                                <div class="card-header pt-0 m-0">
                                     <h4 class="d-flex justify-content-center p-0 m-0">Day Closing Report</h4>
                                     <p class="text-center p-0 m-0">{{ env('APP_NAME') }}</p>
                                     <p class="text-center">Statement
@@ -70,18 +70,18 @@
                                     <table class="table table-bordered border-0">
                                         <thead class="text-nowrap">
                                         <tr>
-                                            <td>Closing Date</td>
-                                            <td>Voucher</td>
-                                            <td>User ID</td>
-                                            <td>Closed By</td>
-                                            <td>Close At</td>
-                                            <td>System Cash</td>
-                                            <td>Physical Cash</td>
-                                            <td>Amount Retained</td>
-                                            <td>Adjustment</td>
-                                            <td>Amount Transferred</td>
-                                            <td>Transfer To</td>
-                                            <td>Attachment</td>
+                                            <th>Closing Date</th>
+                                            <th>Voucher</th>
+                                            <th>User ID</th>
+                                            <th>Closed By</th>
+                                            <th>Close At</th>
+                                            <th>System Cash</th>
+                                            <th>Physical Cash</th>
+                                            <th>Amount Retained</th>
+                                            <th>Adjustment</th>
+                                            <th>Amount Transferred</th>
+                                            <th>Transfer To</th>
+                                            <th>Attachment</th>
                                         </tr>
                                         </thead>
                                         <tbody class="text-nowrap">

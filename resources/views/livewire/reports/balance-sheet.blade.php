@@ -6,7 +6,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="card card-primary card-outline">
-                                <div class="card-body ">
+                                <div class="card-body p-0 px-4 pt-3">
                                     <div class="row">
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
@@ -36,7 +36,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-header">
+                                <div class="card-header pt-0">
                                     <h4 class="d-flex justify-content-center p-0 m-0">Statement of Financial Position</h4>
                                     <p class="text-center p-0 m-0">{{ env('APP_NAME') }}</p>
                                     <p class="text-center">As At {{ date('d F Y',strtotime($asat)) }} </p>

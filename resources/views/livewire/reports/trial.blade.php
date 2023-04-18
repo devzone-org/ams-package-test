@@ -9,7 +9,7 @@
                                 <div class="card-header">
                                     <h4 class="">Trial Balance</h4>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body m-0 p-0 p-2">
                                     <div class="row">
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
@@ -45,7 +45,7 @@
                                         <div class="col">
                                             <div class="card-header">
                                             </div>
-                                            <div class="card-body">
+                                            <div class="card-body p-0">
                                                 <table class="table table-bordered border-0">
                                                     <thead class="">
                                                     <tr>

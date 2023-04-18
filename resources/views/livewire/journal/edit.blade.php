@@ -286,9 +286,9 @@
                     {{--                                    aria-hidden="true">&times;</span></button>--}}
                     {{--                        <h4 class="modal-title" id="exampleModalLabel">Received Advance Details</h4>--}}
                     {{--                    </div>--}}
-                    <div class="modal-body">
+                    <div class="modal-body p-0">
 
-                        <div class="px-2 pt-2 pb-2">
+                        <div class="px-2 pb-2 pt-2">
                             <div class="">
                                 <input type="text"
                                        wire:model.debounce.500ms="search_accounts"
@@ -296,7 +296,7 @@
                                        wire:keydown.arrow-down="incrementHighlight"
                                        wire:keydown.enter="selectionAccount"
                                        id="searchableField"
-                                       class="" style="width: 550px"
+                                       class="rounded searchable_query" style="width: 580px;"
                                        autocomplete="off" autofocus>
                             </div>
                             <p class="mt-2" id="search-description">You can search accounts by
@@ -304,16 +304,16 @@
                                 Code and Type.</p>
                         </div>
                         @if(!empty($accounts))
-                            <table class="table table-bordered border-0 table-hover">
+                            <table class="table border-0 table-hover p-0 m-0">
                                 <thead class="text-nowrap">
-                                <th>Name</th>
-                                <th>Type</th>
+                                <th style="padding: 7px;border-top: none;">Name</th>
+                                <th class="col-1" style="padding: 7px;border-top: none;">Type</th>
                                 </thead>
                                 <tbody class="text-nowrap">
                                 @foreach($accounts as $key=> $a)
-                                    <tr wire:click="chooseAccount('{{ $a['id'] }}','{{$a['name'] }}')">
-                                        <td>{{ $a['code'] }} - {{ $a['name'] }}</td>
-                                        <td>{{ $a['type'] }}</td>
+                                    <tr style="cursor: pointer;"  wire:click="chooseAccount('{{ $a['id'] }}','{{$a['name'] }}')" onmouseover="this.style.backgroundColor='#3d40e0';this.style.color='#ffffff';" onmouseout="this.style.backgroundColor='#ffffff'; this.style.color='#000000';">
+                                            <td style="padding: 7px;border-top: none;">{{ $a['code'] }} - {{ $a['name'] }}</td>
+                                            <td class="col-1" style="padding: 7px;border-top: none;">{{ $a['type'] }}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
