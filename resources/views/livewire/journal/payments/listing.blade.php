@@ -85,57 +85,19 @@
                                 @if ($errors->any())
 
                                     <div class="col-12">
-                                        <div>
-                                            <h3 class="ml-3">
-                                                @php
-                                                    $count = count($errors->all());
-                                                @endphp
-                                                There {{ $count > 1 ? "were {$count} errors": "was {$count} error" }}
-                                                with your
-                                                submission
-                                            </h3>
-                                        </div>
+
                                         <div class="mt-2">
                                             <ul class="pl-5">
 
                                                 @foreach ($errors->all() as $error)
-                                                    <li>{{ $error }}</li>
+                                                    <li class="text-danger">{{ $error }}</li>
                                                 @endforeach
 
                                             </ul>
                                         </div>
 
                                     </div>
-                                    <div class="flex">
-                                        <div class="flex-shrink-0">
-                                            <!-- Heroicon name: x-circle -->
-                                            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg"
-                                                 viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                <path fill-rule="evenodd"
-                                                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                                      clip-rule="evenodd"/>
-                                            </svg>
-                                        </div>
-                                        <div class="ml-3">
-                                            <h3 class="text-sm font-medium text-red-800">
-                                                @php
-                                                    $count = count($errors->all());
-                                                @endphp
-                                                There {{ $count > 1 ? "were {$count} errors": "was {$count} error" }}
-                                                with your
-                                                submission
-                                            </h3>
-                                            <div class="mt-2 text-sm text-red-700">
-                                                <ul class="list-disc pl-5 space-y-1">
 
-                                                    @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
-                                                    @endforeach
-
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
                                 @endif
                                 @if(!empty($success))
                                     <div class="col-12">
@@ -163,22 +125,22 @@
                                     <tbody>
                                     @foreach($entries as $e)
                                         <tr>
-                                            <td>{{ $loop -> iteration }}</td>
-                                            <td>
+                                            <td class="align-middle">{{ $loop -> iteration }}</td>
+                                            <td class="align-middle">
                                                 @if($e->nature=='pay')
-                                                    <span class="">Payment</span>
+                                                    <span class="text-success">Payment</span>
                                                 @else
-                                                    <span class="">Received</span>
+                                                    <span class="text-success">Received</span>
                                                 @endif
                                                 @if($e->reversal == 't')
                                                     <br>
-                                                    <span class="">Reversed</span>
+                                                    <span class="text-danger">Reversed</span>
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td class="align-middle">
                                                 {{ date('d M, Y',strtotime($e->posting_date)) }}
                                             </td>
-                                            <td>
+                                            <td class="align-middle">
                                                 <a class=""
                                                    href="{{ url('accounts/accountant/ledger') }}?account_id={{$e -> first_account_id}}&date={{$e->posting_date}}"
                                                    target="_blank">{{ $e->nature=='pay' ? 'Dr':'Cr' }}
@@ -189,77 +151,60 @@
                                                    target="_blank">{{ $e->nature!='pay' ? 'Dr':'Cr' }}
                                                     - {{ $e -> second_account_name }}</a>
                                             </td>
-                                            <td>
+                                            <td class="align-middle">
                                                 {{ $e -> description }}
                                             </td>
-                                            <td>
+                                            <td class="align-middle">
                                                 {{ number_format($e->amount,2)  }}
                                             </td>
-                                            <td>
+                                            <td class="align-middle">
                                                 {{ $e->added_by }} <br>
                                                 {{ date('d M, Y h:i A',strtotime($e->created_at)) }}
                                             </td>
-                                            <td>
+                                            <td class="align-middle">
                                                 @if(!empty($e->approved_at))
                                                     {{ $e->approved_by_name }} <br>
                                                     {{ date('d M, Y h:i: A',strtotime($e->approved_at)) }}
                                                 @endif
                                             </td>
-                                            <td>
-                                                {{--                                            <div class="relative inline-block text-left" x-data="{open:false}">--}}
-                                                {{--                                                <div>--}}
-                                                {{--                                                    <button type="button" x-on:click="open=true;" @click.away="open=false;"--}}
-                                                {{--                                                            class="  rounded-full flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"--}}
-                                                {{--                                                            id="menu-button" aria-expanded="true" aria-haspopup="true">--}}
-                                                {{--                                                        <span class="sr-only">Open options</span>--}}
-                                                {{--                                                        <!-- Heroicon name: solid/dots-vertical -->--}}
-                                                {{--                                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"--}}
-                                                {{--                                                             fill="currentColor" aria-hidden="true">--}}
-                                                {{--                                                            <path--}}
-                                                {{--                                                                    d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>--}}
-                                                {{--                                                        </svg>--}}
-                                                {{--                                                    </button>--}}
-                                                {{--                                                </div>--}}
+                                            <td class="align-middle" style="width: 50px;">
 
-
-                                                {{--                                                <div x-show="open"--}}
-                                                {{--                                                     class="origin-top-right absolute right-0 mt-2 w-56 z-10 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"--}}
-                                                {{--                                                     role="menu" aria-orientation="vertical" aria-labelledby="menu-button"--}}
-                                                {{--                                                     tabindex="-1">--}}
-                                                {{--                                                    <div class="py-1" role="none">--}}
-
-                                                {{--                                                        @if(empty($e->approved_at))--}}
-
-                                                {{--                                                            <a href="#" wire:click="approve('{{ $e->id }}')"--}}
-                                                {{--                                                               class="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"--}}
-                                                {{--                                                               role="menuitem" tabindex="-1">Approve</a>--}}
-
-
-                                                {{--                                                            <a href="#" wire:click="delete('{{ $e->id }}')"--}}
-                                                {{--                                                               class="text-red-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"--}}
-                                                {{--                                                               role="menuitem" tabindex="-1">Delete</a>--}}
-
-                                                {{--                                                        @else--}}
-                                                {{--                                                            <a href="javascript:void(0);"--}}
-                                                {{--                                                               onclick="window.open('{{ url('accounts/journal/voucher/print').'/'.$e->voucher_no }}','voucher-print-{{$e->voucher_no}}','height=500,width=800');"--}}
-                                                {{--                                                               class="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"--}}
-                                                {{--                                                               role="menuitem" tabindex="-1">View Voucher</a>--}}
-
-                                                {{--                                                            @if($e->reversal=='f' && auth()->user()->can('2.payments.reversal'))--}}
-                                                {{--                                                                <button type="button" wire:click="openReverseModal('{{ $e->id }}')"--}}
-
-                                                {{--                                                                        class="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"--}}
-                                                {{--                                                                        role="menuitem" tabindex="-1">--}}
-                                                {{--                                                                    Reverse Entry--}}
-                                                {{--                                                                </button>--}}
-                                                {{--                                                            @endif--}}
-
-                                                {{--                                                        @endif--}}
-
-
-                                                {{--                                                    </div>--}}
-                                                {{--                                                </div>--}}
-                                                {{--                                            </div>--}}
+                                                <div class="nav-item dropdown">
+                                                    <div class="user-panel d-flex nav-link m-0 p-0"
+                                                         data-toggle="dropdown">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                             viewBox="0 0 24 24" stroke-width="1.5"
+                                                             stroke="currentColor" class="w-6 h-6">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                                                        </svg>
+                                                    </div>
+                                                    <div class="dropdown-menu  dropdown-menu-right">
+                                                        @if(empty($e->approved_at))
+                                                            <a wire:click="approve('{{ $e->id }}')"
+                                                               class="dropdown-item" target="_blank">
+                                                                Approve
+                                                            </a>
+                                                            <div class="dropdown-divider"></div>
+                                                            <a type="button"
+                                                               wire:click="delete('{{ $e->id }}')"
+                                                               class="text-dark mx-3"> Delete </a>
+                                                        @else
+                                                            <a href="javascript:void(0);" --}}
+                                                               onclick="window.open('{{ url('accounts/journal/voucher/print').'/'.$e->voucher_no }}','voucher-print-{{$e->voucher_no}}','height=500,width=800');"
+                                                               class="dropdown-item"
+                                                               role="menuitem" tabindex="-1">View Voucher</a>
+                                                            @if($e->reversal=='f' && auth()->user()->can('2.payments.reversal'))
+                                                                <a type="button"
+                                                                        wire:click="openReverseModal('{{ $e->id }}')"
+                                                                        class="text-dark mx-3"
+                                                                        role="menuitem" tabindex="-1">
+                                                                    Reverse Entry
+                                                                </a>
+                                                            @endif
+                                                        @endif
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -275,88 +220,49 @@
                     </div>
                 </div>
             </div>
-            {{--        <div x-data="{ open: @entangle('reverse_modal') }" x-show="open" class="fixed z-10 inset-0 overflow-y-auto"--}}
-            {{--             aria-labelledby="modal-title" x-ref="dialog" aria-modal="true">--}}
-            {{--            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">--}}
+        </div>
 
-            {{--                <div x-show="open" x-transition:enter="ease-out duration-300"--}}
-            {{--                     x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"--}}
-            {{--                     x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100"--}}
-            {{--                     x-transition:leave-end="opacity-0"--}}
-            {{--                     x-description="Background overlay, show/hide based on modal state."--}}
-            {{--                     class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="open = false"--}}
-            {{--                     aria-hidden="true"></div>--}}
+        <div class="modal fade" id="reverseEntry" wire:ignore.self tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form wire:submit.prevent="deleteService">
 
+                        <div class="modal-header">
+                            <h2 class="modal-title" id="exampleModalLabel">Attention</h2>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                        </div>
 
-            {{--                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">​</span>--}}
-
-            {{--                <div x-show="open" x-transition:enter="ease-out duration-300"--}}
-            {{--                     x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"--}}
-            {{--                     x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"--}}
-            {{--                     x-transition:leave="ease-in duration-200"--}}
-            {{--                     x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"--}}
-            {{--                     x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"--}}
-            {{--                     x-description="Modal panel, show/hide based on modal state."--}}
-            {{--                     class="inline-block align-bottom bg-white rounded-lg px-4 sm:p-6 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">--}}
-            {{--                    <div class="hidden sm:block absolute top-0 right-0 pt-4 pr-4">--}}
-            {{--                        <button type="button"--}}
-            {{--                                class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"--}}
-            {{--                                @click="open = false">--}}
-            {{--                            <span class="sr-only">Close</span>--}}
-            {{--                            <svg class="h-6 w-6" x-description="Heroicon name: outline/x"--}}
-            {{--                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"--}}
-            {{--                                 stroke="currentColor" aria-hidden="true">--}}
-            {{--                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"--}}
-            {{--                                      d="M6 18L18 6M6 6l12 12"></path>--}}
-            {{--                            </svg>--}}
-            {{--                        </button>--}}
-            {{--                    </div>--}}
-            {{--                    @if($reverse_modal == true)--}}
-
-            {{--                        <div class="sm:flex sm:items-start">--}}
-            {{--                            <div--}}
-            {{--                                    class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">--}}
-            {{--                                <svg class="h-6 w-6 text-red-600" x-description="Heroicon name: outline/exclamation"--}}
-            {{--                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"--}}
-            {{--                                     stroke="currentColor" aria-hidden="true">--}}
-            {{--                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"--}}
-            {{--                                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>--}}
-            {{--                                </svg>--}}
-            {{--                            </div>--}}
-            {{--                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">--}}
-            {{--                                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">--}}
-            {{--                                    Attention !--}}
-            {{--                                </h3>--}}
-            {{--                                <div class="mt-2">--}}
-            {{--                                    <p class="text-sm text-gray-500">--}}
-            {{--                                        Are you sure you want to reverse the entry? This--}}
-            {{--                                        can't be undone.--}}
-            {{--                                    </p>--}}
-
-            {{--                                </div>--}}
-            {{--                            </div>--}}
-            {{--                        </div>--}}
-            {{--                        <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">--}}
-            {{--                            <button type="button" wire:click="reverseEntry"--}}
-            {{--                                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"--}}
-            {{--                                    @click="open = false">--}}
-            {{--                            <span wire:loading.remove wire:target="reverseEntry">--}}
-            {{--                                Reverse Entry--}}
-            {{--                            </span>--}}
-            {{--                                <span wire:loading wire:target="reverseEntry">--}}
-            {{--                                Please Wait...--}}
-            {{--                            </span>--}}
-            {{--                            </button>--}}
-            {{--                            <button type="button" wire:loading.attr="disabled"--}}
-            {{--                                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"--}}
-            {{--                                    @click="open = false">--}}
-            {{--                                Cancel--}}
-            {{--                            </button>--}}
-            {{--                        </div>--}}
-            {{--                    @endif--}}
-            {{--                </div>--}}
-            {{--            </div>--}}
-            {{--        </div>--}}
+                        <div class="modal-body" id="std_form">
+                            <div class="mt-2">
+                                <p class="text-sm">
+                                    Are you sure you want to reverse the entry? This
+                                    can't be undone.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" wire:click="reverseEntry"
+                                    class="btn btn-primary">
+                            <span wire:loading.remove wire:target="reverseEntry">
+                                Reverse Entry
+                            </span>
+                                <span wire:loading wire:target="reverseEntry">
+                                Please Wait...
+                            </span>
+                            </button>
+                            <button type="button" wire:loading.attr="disabled"
+                                    class="btn btn-danger"
+                                    data-dismiss="modal">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -364,6 +270,12 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
         <script>
+            window.addEventListener('close-reverse-modal', event => {
+                $('#reverseEntry').modal('hide');
+            });
+            window.addEventListener('open-reverse-modal', event => {
+                $('#reverseEntry').modal('show');
+            });
             let from_date = new Pikaday({
                 field: document.getElementById('from'),
                 format: "DD MMM YYYY"

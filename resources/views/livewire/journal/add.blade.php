@@ -163,7 +163,7 @@
                                             <td></td>
                                         </tr>
                                         <tr class="">
-                                            <th colspan="3" class="text-right align-middle">Total</th>
+                                            <th colspan="3" class="text-right align-middle">Difference</th>
                                             <td colspan="2"> {{ number_format(abs(collect($entries)->sum('debit') - collect($entries)->sum('credit')),2) }}</td>
                                             <td></td>
                                         </tr>

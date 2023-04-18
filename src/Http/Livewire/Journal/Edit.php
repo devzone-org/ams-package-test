@@ -130,6 +130,11 @@ class Edit extends Component
 
     public function searchAccounts($key)
     {
+        if(env('AMS_BOOTSTRAP') == 'true')
+        {
+            $this->success = '';
+            $this->dispatchBrowserEvent('open-modal');
+        }
         $this->accounts = $this->account_list;
         $this->search_accounts_modal = true;
         $this->key_id = $key;
@@ -153,6 +158,9 @@ class Edit extends Component
         $this->accounts = $this->account_list;
         $this->search_accounts = '';
         $this->entries[$this->key_id]['description'] = $this->entries[0]['description'];
+        if(env('AMS_BOOTSTRAP') == 'true'){
+            $this->dispatchBrowserEvent('close-modal');
+        }
     }
 
     public function updatedSearchAccounts($value)

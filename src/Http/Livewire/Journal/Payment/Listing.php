@@ -68,6 +68,7 @@ class Listing extends Component
 
     public function openReverseModal($id)
     {
+        $this->dispatchBrowserEvent('open-reverse-modal');
         $this->reversal_id = $id;
         $this->reverse_modal = true;
     }
@@ -114,6 +115,7 @@ class Listing extends Component
             ]);
 
             DB::commit();
+            $this->dispatchBrowserEvent('close-reverse-modal');
         } catch (\Exception $e) {
 
             $this->addError('status', $e->getMessage());

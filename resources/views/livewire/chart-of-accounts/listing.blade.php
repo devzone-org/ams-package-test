@@ -101,15 +101,15 @@
                                                                     {{date('d M, Y',strtotime($five->posting_date))}}
                                                                 @endif</td>
 
-                                                            <td class="add-services-table align-middle col-1">
+                                                            <td class="add-services-table align-middle" style="width:40px">
 
                                                                 <div class="nav-item dropdown">
                                                                     <div class="user-panel d-flex nav-link m-0 p-0" data-toggle="dropdown" >
-                                                                        <div class="info">
-                                                                            <a href="#" class="d-block">Details</a>
-                                                                        </div>
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                                                                        </svg>
                                                                     </div>
-                                                                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                                                                    <div class="dropdown-menu dropdown-menu-right">
                                                                         <a href="{{ url('accounts/accountant/ledger') }}?account_id={{$five->id}}" class="dropdown-item" target="_blank">
                                                                              View Ledger
                                                                         </a>
@@ -117,8 +117,6 @@
                                                                         <a type="button"
                                                                                 wire:click="changeStatus('{{ $five->id }}')"
                                                                                 class="text-dark mx-3"> Mark Inactive </a>
-                                                                        <div class="dropdown-divider"></div>
-
                                                                     </div>
                                                                 </div>
 
