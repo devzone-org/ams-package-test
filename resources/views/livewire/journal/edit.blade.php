@@ -207,12 +207,12 @@
                                     <tbody class="text-nowrap">
                                     @foreach($attachment_entries as $key => $en)
                                         <tr>
-                                            <td class="add-services-table text-center pt-2"
+                                            <td class="add-services-table text-center pt-2 align-middle"
                                                 style="width: 15px">{{ $loop->iteration }}</td>
                                             <td class="add-services-table col-3">
                                                 <select id="{{$key}}-account_id" name=""
                                                         wire:model="attachment_entries.{{$key}}.account_id"
-                                                        id="ref_account" class="p-0 border-0 w-100 mt-2"
+                                                        id="ref_account" class="p-0 border-0 w-100 mt-1"
                                                         style="outline: none">
                                                     <option value=""></option>
                                                     @foreach($entries as $e)
@@ -225,7 +225,7 @@
                                                     <input id="{{$key}}-file" type="file"
                                                            wire:model="attachment_entries.{{$key}}.file" class="mt-2">
                                                 @else
-                                                    <a class="font-medium text-indigo-600 hover:text-indigo-500 pt-2"
+                                                    <a class="mt-2"
                                                        href="{{ env('AWS_URL').$en['attachment'] }}" target="_blank">View
                                                         Attachment</a>
                                                 @endif

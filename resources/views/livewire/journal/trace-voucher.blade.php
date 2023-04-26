@@ -167,7 +167,7 @@
                                                 <th class="add-services-table text-center">Description</th>
                                                 <th class="add-services-table text-center col-1">Debit</th>
                                                 <th class="add-services-table text-center col-1">Credit</th>
-                                                <th class="text-center add-services-table col-1"></th>
+                                                <th class="text-center add-services-table " style="width: 25px"></th>
                                                 </thead>
                                                 <tbody class="">
                                                 @foreach($tl->where('debit','>',0) as $t)
