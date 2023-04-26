@@ -495,25 +495,27 @@
 
         @include("ams::include.searchable")
     </div>
-    @push('js')
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-        <script>
-            let from_date = new Pikaday({
-                field: document.getElementById('from_date'),
-                format: "DD MMM YYYY"
-            });
 
-            let to_date = new Pikaday({
-                field: document.getElementById('to_date'),
-                format: "DD MMM YYYY"
-            });
+@section('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+    <script>
+        let from_date = new Pikaday({
+            field: document.getElementById('from_date'),
+            format: "DD MMM YYYY"
+        });
 
-            from_date.setDate(new Date('{{ $from_date }}'));
-            to_date.setDate(new Date('{{ $to_date }}'));
+        let to_date = new Pikaday({
+            field: document.getElementById('to_date'),
+            format: "DD MMM YYYY"
+        });
 
-        </script>
-    @endpush
+        from_date.setDate(new Date('{{ $from_date }}'));
+        to_date.setDate(new Date('{{ $to_date }}'));
+
+    </script>
+@endsection
+
 @endif
 
 {{--<script>--}}
@@ -533,24 +535,4 @@
 {{--</script>--}}
 
 
-
-{{--@section('script')--}}
-{{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>--}}
-{{--    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>--}}
-{{--    <script>--}}
-{{--        let from_date = new Pikaday({--}}
-{{--            field: document.getElementById('from_date'),--}}
-{{--            format: "DD MMM YYYY"--}}
-{{--        });--}}
-
-{{--        let to_date = new Pikaday({--}}
-{{--            field: document.getElementById('to_date'),--}}
-{{--            format: "DD MMM YYYY"--}}
-{{--        });--}}
-
-{{--        from_date.setDate(new Date('{{ $from_date }}'));--}}
-{{--        to_date.setDate(new Date('{{ $to_date }}'));--}}
-
-{{--    </script>--}}
-{{--@endsection--}}
 
