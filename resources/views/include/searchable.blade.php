@@ -43,10 +43,12 @@
                                             </thead>
                                             <tbody class="bg-white">
                                             @foreach($searchable_data as $key=> $a)
-                                                <tr class="" style="cursor: pointer;" onmouseover="this.style.backgroundColor='#3d40e0';this.style.color='#ffffff';" onmouseout="this.style.backgroundColor='#ffffff'; this.style.color='#000000';"
+                                                <tr class="" style="cursor: pointer;"
+                                                    onmouseover="this.style.backgroundColor='#3d40e0';this.style.color='#ffffff';"
+                                                    onmouseout="this.style.backgroundColor='#ffffff'; this.style.color='#000000';"
                                                     wire:click="searchableSelection('{{ $key }}')">
                                                     @foreach($searchable_column[$searchable_type] as $c)
-                                                        <td class="px-2 py-2 text-dark">
+                                                        <td style="padding: 7px;border-top: none;">
                                                             {{ $a[$c] }}
                                                         </td>
                                                     @endforeach

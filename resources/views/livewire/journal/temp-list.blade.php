@@ -59,36 +59,36 @@
                                                 <th class="add-services-table text-center">Description</th>
                                                 <th class="add-services-table text-center col-1">Debit</th>
                                                 <th class="add-services-table text-center col-1">Credit</th>
-                                                <th class="text-center add-services-table col-1"></th>
+                                                <th class="text-center add-services-table"></th>
                                                 </thead>
                                                 <tbody class="">
                                                 @foreach($tl->where('debit','>',0) as $t)
                                                     <tr>
-                                                        <td>
+                                                        <td class="align-middle">
                                                             {{$loop->iteration}}
                                                         </td>
-                                                        <td>
+                                                        <td class="align-middle">
                                                             @if($loop->first)
                                                                 {{ $t->voucher_no }}
                                                             @endif
                                                         </td>
-                                                        <td>
+                                                        <td class="align-middle">
                                                             {{ $t->name }}
                                                         </td>
                                                         <td>
                                                             {{ $t->description }}
                                                         </td>
-                                                        <td>
+                                                        <td class="align-middle">
                                                             @if($t->debit>0)
                                                                 {{ number_format($t->debit,2) }}
                                                             @endif
                                                         </td>
-                                                        <td>
+                                                        <td class="align-middle">
                                                             @if($t->credit>0)
                                                                 {{ number_format($t->credit,2) }}
                                                             @endif
                                                         </td>
-                                                        <td>
+                                                        <td style="width: 15px">
                                                             @php
                                                                 $att = $t->attachments->where('type','0');
                                                             @endphp
@@ -97,28 +97,28 @@
                                                 @endforeach
                                                 @foreach($tl->where('credit','>',0) as $t)
                                                     <tr>
-                                                        <td>
+                                                        <td class="align-middle">
                                                             {{$loop->iteration}}
                                                         </td>
-                                                        <td>
+                                                        <td class="align-middle">
                                                         </td>
-                                                        <td>
+                                                        <td class="align-middle">
                                                             {{ $t->name }}
                                                         </td>
                                                         <td>
                                                             {{ $t->description }}
                                                         </td>
-                                                        <td>
+                                                        <td class="align-middle">
                                                             @if($t->debit>0)
                                                                 {{ number_format($t->debit,2) }}
                                                             @endif
                                                         </td>
-                                                        <td>
+                                                        <td class="align-middle">
                                                             @if($t->credit>0)
                                                                 {{ number_format($t->credit,2) }}
                                                             @endif
                                                         </td>
-                                                        <td>
+                                                        <td style="width: 15px">
                                                             @php
                                                                 $att = $t->attachments->where('type','0');
                                                             @endphp

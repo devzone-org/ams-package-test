@@ -53,7 +53,8 @@
 
                                     <div class="col-12 pt-3">
                                         <div class="form-group">
-                                            <button type="button" class="btn btn-primary" wire:click="search"
+                                            <button type="button" class="btn btn-primary"
+{{--                                                    wire:click="search"--}}
                                                     wire:loading.attr="disabled">
                                                 <span wire:loading wire:target="search">Searching ...</span>
                                                 <span wire:loading.remove wire:target="search">Search</span>
