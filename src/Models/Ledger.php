@@ -32,7 +32,6 @@ class Ledger extends Model
             static::updating(function ($model) use ($posting_date) {
                 if ($model->posting_date <= $posting_date) {
                     throw new \Exception('The fiscal year of this posting date has been closed. Posting date must be greater than ' . date('d M, Y', strtotime($posting_date)));
-
                 }
             });
         }
