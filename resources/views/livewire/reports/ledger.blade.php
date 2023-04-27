@@ -123,11 +123,11 @@
                                             }
                                         @endphp
                                         <tr class="">
-                                            <td class="px-2 py-2">
+                                            <td class="align-middle px-2 py-2">
                                                 <a class="" href="javascript:void(0);"
                                                    onclick="window.open('{{ url('accounts/journal/voucher/print').'/'.$en['voucher_no'] }}','voucher-print-{{$en['voucher_no']}}','height=500,width=800');">{{ $en['voucher_no'] }}</a>
                                             </td>
-                                            <td class="px-2 py-2">
+                                            <td class="align-middle px-2 py-2">
                                                 {{ date('d M, Y',strtotime($en['posting_date'])) }}
                                             </td>
                                             <td class="px-2 py-2">
@@ -138,18 +138,18 @@
                                                     @endif
                                                 @endif   {{ $en['description'] }}
                                             </td>
-                                            <td class="px-2 py-2 text-right">
+                                            <td class="align-middle px-2 py-2 text-right">
                                                 {{ number_format($en['debit'],2) }}
                                             </td>
-                                            <td class="px-2 py-2 text-right">
+                                            <td class=" align-middle px-2 py-2 text-right">
                                                 {{ number_format($en['credit'],2) }}
                                             </td>
                                             <td
-                                                    class="px-2 py-2 text-right">
+                                                    class=" align-middle px-2 py-2 text-right">
                                                 {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($balance) }}
                                             </td>
                                             <td
-                                                    class="px-2 py-2 text-right">
+                                                    class=" align-middle px-2 py-2 text-right">
                                                 @php
 
                                                     $att = \Devzone\Ams\Models\LedgerAttachment::where('voucher_no',$en['voucher_no'])->where('type','1')->get();
@@ -495,6 +495,16 @@
 
         @include("ams::include.searchable")
     </div>
+    
+
+{{--<script>--}}
+{{--    document.addEventListener('livewire:load', () => {--}}
+{{--        Livewire.on('focusInput', postId => {--}}
+{{--            setTimeout(() => {--}}
+{{--                document.getElementById('searchable_query').focus();--}}
+{{--            }, 300);--}}
+{{--        });--}}
+ 
 
     @section('script')
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
@@ -521,6 +531,7 @@
                 });
 
 
+ 
             });
 
             window.addEventListener('title', event => {
@@ -532,3 +543,4 @@
 
 
 @endif
+ 

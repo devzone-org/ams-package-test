@@ -66,7 +66,7 @@
                                     <div class="col-sm-10 col-xs-12 no-padding">
                                         <div class="row">
 
-                                            <div class="col-xs-12 col-sm-4">
+                                            <div class="col-xs-12 col-sm-6">
                                                 <div class="form-group">
                                                     <label>Posting Date</label>
                                                     <input type="text" wire:model.lazy="posting_date"
@@ -74,7 +74,7 @@
                                                            class="form-control  @error('posting_date')  is-invalid @enderror">
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-sm-4">
+                                            <div class="col-xs-12 col-sm-6">
                                                 <div class="form-group">
                                                     <label>Temp Voucher #</label>
                                                     <input
@@ -89,9 +89,9 @@
                                 <div class="card-body table-responsive p-0">
                                     <table class="table table-bordered border-0">
                                         <thead class="text-nowrap">
-                                        <th class="text-center add-services-table" style="width: 25px;">#</th>
-                                        <th class="add-services-table text-center">Accounts</th>
-                                        <th class="add-services-table text-center">Description</th>
+                                        <th class="text-center add-services-table" style="width: 35px;">#</th>
+                                        <th class="add-services-table text-center col-3">Accounts</th>
+                                        <th class="add-services-table text-center col-6">Description</th>
                                         <th class="add-services-table text-center">Debit</th>
                                         <th class="add-services-table text-center">Credit</th>
                                         <th class="text-center add-services-table">
@@ -157,10 +157,10 @@
                                             </tr>
                                         @endforeach
                                         <tr>
-                                            <th colspan="3" class="text-right align-middle">Total</th>
-                                            <td colspan="1">{{ number_format(collect($entries)->sum('debit'),2) }}</td>
-                                            <td colspan="1">{{ number_format(collect($entries)->sum('credit'),2) }}</td>
-                                            <td></td>
+                                            <th colspan="3" class="text-right align-middle col-9">Total</th>
+                                            <td>{{ number_format(collect($entries)->sum('debit'),2) }}</td>
+                                            <td>{{ number_format(collect($entries)->sum('credit'),2) }}</td>
+                                            <td style="width: 35px"></td>
                                         </tr>
                                         <tr class="">
                                             <th colspan="3" class="text-right align-middle">Difference</th>
@@ -209,7 +209,7 @@
                                     <tbody class="text-nowrap">
                                     @foreach($attachment_entries as $key => $en)
                                         <tr>
-                                            <td class="add-services-table text-center pt-2"
+                                            <td class="add-services-table text-center pt-2 align-middle"
                                                 style="width: 15px">{{ $loop->iteration }}</td>
                                             <td class="add-services-table col-3">
                                                 <select id="{{$key}}-account_id" name=""
