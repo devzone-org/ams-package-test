@@ -7,14 +7,14 @@
                         <div class="col">
                             <div class="card card-primary card-outline">
                                 <div class="card-header">
-                                    <h3>Add Petty Expenses</h3>
+                                    <h3 class="card-title"><b>Add Petty Expenses</b></h3>
                                 </div>
                                 <div class="card-body">
                                     <form wire:submit.prevent="save">
                                         <div class="row">
                                             <div class="col-xs-6 col-sm-4">
                                                 <div class="form-group">
-                                                    <label class="">Invoice Date<span
+                                                    <label class="font-weight-normal">Invoice Date<span
                                                                 class="text-danger">*</span> </label>
                                                     <input type="date" wire:model.lazy="petty_expenses.invoice_date"
                                                            autocomplete="off"
@@ -24,7 +24,7 @@
 
                                             <div class="col-xs-6 col-sm-4">
                                                 <div class="form-group">
-                                                    <label class="">Expense Date <span
+                                                    <label class="font-weight-normal">Expense Date <span
                                                                 class="text-danger">*</span></label>
                                                     <input type="date" wire:model.lazy="petty_expenses.expense_date"
                                                            autocomplete="off"
@@ -34,7 +34,7 @@
 
                                             <div class="col-xs-6 col-sm-4">
                                                 <div class="form-group">
-                                                    <label class="">Vendor Name <span
+                                                    <label class="font-weight-normal">Vendor Name <span
                                                                 class="text-danger">*</span></label>
                                                     <input type="text" wire:model.lazy="petty_expenses.vendor_name"
                                                            autocomplete="off"
@@ -44,7 +44,7 @@
 
                                             <div class="col-xs-6 col-sm-4">
                                                 <div class="form-group">
-                                                    <label class="">Vendor Contact # <span
+                                                    <label class="font-weight-normal">Vendor Contact # <span
                                                                 class="text-danger">*</span></label>
                                                     <input type="text" id="contact_no"
                                                            wire:model.lazy="petty_expenses.vendor_contact_no"
@@ -55,14 +55,14 @@
 
                                             <div class="col-xs-6 col-sm-4">
                                                 <div class="form-group">
-                                                    <label class="">Attachment </label>
+                                                    <label class="font-weight-normal">Attachment </label>
                                                     <input type="file" wire:model.lazy="attachment" autocomplete="off"
                                                            class="form-control p-0 m-0 pt-1 px-1">
                                                 </div>
                                             </div>
                                             <div class="col-xs-6 col-sm-4">
                                                 <div class="form-group">
-                                                    <label class="">Account Head <span
+                                                    <label class="font-weight-normal">Account Head <span
                                                                 class="text-danger">*</span></label>
                                                     <select wire:model.defer="petty_expenses.account_head_id"
                                                             class="form-control @error('petty_expenses.account_head_id')  is-invalid @enderror">
@@ -76,7 +76,7 @@
 
                                             <div class="col-xs-6 col-sm-4">
                                                 <div class="form-group">
-                                                    <label class="">Amount <span
+                                                    <label class="font-weight-normal">Amount <span
                                                                 class="text-danger">*</span></label>
                                                     <input type="number" step="0.1"
                                                            wire:model.lazy="petty_expenses.amount" autocomplete="off"
@@ -87,7 +87,7 @@
                                             <div class="col-12 pt-3">
 
                                                 <div class="form-group">
-                                                    <label class="">Description <span
+                                                    <label class="font-weight-normal">Description <span
                                                                 class="text-danger">*</span></label>
                                                     <textarea wire:model.lazy="petty_expenses.description"
                                                               autocomplete="off" rows="5"

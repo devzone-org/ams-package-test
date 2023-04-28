@@ -3,11 +3,6 @@
     <div class="content-wrapper">
         <div class="content-header">
             <div class="container-fluid">
-                <div class="row">
-                    <div class="col">
-                        <h1>Add Journal Entry</h1>
-                    </div>
-                </div>
             </div>
         </div>
         <div class="content">
@@ -16,41 +11,27 @@
                     <div class="col">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <h5 class="card-title">Add Journal Entry</h5>
+                                <h4 class="card-title"><b>Add Journal Entry</b></h4>
                                 <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
+
                                 </div>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     @if ($errors->any())
+                                        <div class="col-12">
+                                            @foreach ($errors->all() as $error)
 
-                                        <div class="p-4 mb-4">
-                                            <div class="d-flex">
-
-                                                <div class="ml-3">
-                                                    <h3 class="text-sm  text-danger">
-                                                        @php
-                                                            $count = count($errors->all());
-                                                        @endphp
-                                                        There {{ $count > 1 ? "were {$count} errors": "was {$count} error" }}
-                                                        with your
-                                                        submission
-                                                    </h3>
-                                                    <div class="mt-2 text-sm text-danger">
-                                                        <ul class="list-disc pl-5">
-
-                                                            @foreach ($errors->all() as $error)
-                                                                <li>{{ $error }}</li>
-                                                            @endforeach
-
-                                                        </ul>
-                                                    </div>
+                                                <div class="alert alert-danger alert-dismissible">
+                                                    <button type="button" class="close" data-dismiss="alert"
+                                                            aria-hidden="true">
+                                                        ×
+                                                    </button>
+                                                    <li>{{ $error }}</li>
                                                 </div>
-                                            </div>
+                                            @endforeach
                                         </div>
+
                                     @endif
                                     @if(!empty($success))
                                         <div class="col-12">
@@ -65,17 +46,17 @@
                                     @endif
                                     <div class="col-sm-10 col-xs-12 no-padding">
                                         <div class="row">
-                                            <div class="col-xs-12 col-sm-4">
+                                            <div class="col-xs-12 col-sm-6">
                                                 <div class="form-group">
-                                                    <label>Posting Date</label>
+                                                    <label class="font-weight-normal">Posting Date</label>
                                                     <input type="text" wire:model.lazy="posting_date"
                                                            id="posting_date" autocomplete="off"
                                                            class="form-control  @error('posting_date')  is-invalid @enderror">
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-sm-4">
+                                            <div class="col-xs-12 col-sm-6">
                                                 <div class="form-group">
-                                                    <label>Temp Voucher #</label>
+                                                    <label class="font-weight-normal">Temp Voucher #</label>
                                                     <input type="text" value="{{ $voucher_no }}" readonly
                                                            id="voucher_no" autocomplete="off"
                                                            class="form-control">
@@ -87,12 +68,12 @@
                                 <div class="card-body table-responsive p-0">
                                     <table class="table table-bordered border-0">
                                         <thead class="text-nowrap">
-                                        <th class="text-center add-services-table" style="width: 25px;">#</th>
-                                        <th class="add-services-table text-center">Accounts</th>
-                                        <th class="add-services-table text-center">Description</th>
-                                        <th class="add-services-table text-center">Debit</th>
-                                        <th class="add-services-table text-center">Credit</th>
-                                        <th class="text-center add-services-table">
+                                        <th class="text-center add-services-table text-muted" style="width: 35px;">#</th>
+                                        <th class="add-services-table text-center text-muted">Accounts</th>
+                                        <th class="add-services-table text-center text-muted">Description</th>
+                                        <th class="add-services-table text-center text-muted">Debit</th>
+                                        <th class="add-services-table text-center text-muted">Credit</th>
+                                        <th class="text-center add-services-table text-muted">
                                             <button class="outline-none border-0 p-0"
                                                     wire:click="addEntry()"
                                             >
@@ -140,7 +121,7 @@
                                                            autocomplete="off" style="outline: none; width: 25px">
                                                 </td>
                                                 <td class="text-center add-services-table ">
-                                                    <button class="outline-none border-0 p-0 mt-2" type="button"
+                                                    <button class="outline-none border-0 p-0 mt-2 bg-white" type="button"
                                                             wire:click="removeEntry('{{ $key }}')">
                                                         <svg xmlns="http://www.w3.org/2000/svg"
                                                              viewBox="0 0 24 24" fill="currentColor"
@@ -155,13 +136,13 @@
                                             </tr>
                                         @endforeach
                                         <tr>
-                                            <th colspan="3" class="text-right align-middle">Total</th>
+                                            <th colspan="3" class="text-right align-middle bg-white">Total</th>
                                             <td colspan="1">{{ number_format(collect($entries)->sum('debit'),2) }}</td>
                                             <td colspan="1">{{ number_format(collect($entries)->sum('credit'),2) }}</td>
                                             <td></td>
                                         </tr>
                                         <tr class="">
-                                            <th colspan="3" class="text-right align-middle">Difference</th>
+                                            <th colspan="3" class="text-right align-middle bg-white">Difference</th>
                                             <td colspan="2">  {{ number_format(abs(collect($entries)->sum('debit') - collect($entries)->sum('credit')),2) }}</td>
                                             <td></td>
                                         </tr>
@@ -179,20 +160,18 @@
                     <div class="col">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <h5 class="card-title">Attachments</h5>
+                                <h5 class="card-title"><b>Attachments</b></h5>
                                 <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
+
                                 </div>
                             </div>
                             <div class="card-body table-responsive p-0">
                                 <table class="table table-bordered border-0">
                                     <thead class="text-nowrap">
-                                    <th class="text-center add-services-table" style="width: 25px;">#</th>
-                                    <th class="add-services-table col-3">Reference Account</th>
-                                    <th class="add-services-table col-8">Choose File</th>
-                                    <th class="text-center add-services-table" style="width: 25px;">
+                                    <th class="text-center add-services-table text-muted" style="width: 25px;">#</th>
+                                    <th class="add-services-table col-3 text-muted">Reference Account</th>
+                                    <th class="add-services-table col-8 text-muted">Choose File</th>
+                                    <th class="text-center add-services-table text-muted" style="width: 25px;">
                                         <button class="outline-none border-0 p-0" wire:click="addAttachmentEntry()">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                  viewBox="0 0 24 24"
@@ -212,7 +191,7 @@
                                             <td class="add-services-table col-3">
                                                 <select id="{{$key}}-account_id" name=""
                                                         wire:model="attachment_entries.{{$key}}.account_id"
-                                                        id="ref_account" class="p-0 border-0 w-100 mt-1"
+                                                        id="ref_account" class="p-0 border-0 w-100 mt-2 pt-2"
                                                         style="outline: none">
                                                     <option value=""></option>
                                                     @foreach($entries as $e)
@@ -223,7 +202,7 @@
                                             <td class="add-services-table col-8">
                                                 @if(!isset($en['id']))
                                                     <input id="{{$key}}-file" type="file"
-                                                           wire:model="attachment_entries.{{$key}}.file" class="mt-2">
+                                                           wire:model="attachment_entries.{{$key}}.file" class="mt-2 mb-2 mx-2">
                                                 @else
                                                     <a class="mt-2"
                                                        href="{{ env('AWS_URL').$en['attachment'] }}" target="_blank">View
@@ -231,7 +210,7 @@
                                                 @endif
                                             </td>
                                             <td class="text-center add-services-table" style="width: 25px;">
-                                                <button class="outline-none border-0 p-0 mt-2" type="button"
+                                                <button class="outline-none border-0 p-0 mt-2 bg-white" type="button"
                                                         wire:click="removeAttachmentEntry('{{ $key }}')">
                                                     <svg xmlns="http://www.w3.org/2000/svg"
                                                          viewBox="0 0 24 24" fill="currentColor"
@@ -278,7 +257,7 @@
         <div class="modal fade" id="searchmodal" wire:ignore.self tabindex="-1" role="dialog"
              aria-labelledby="exampleModalLabel"
              aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered  " role="document">
                 <div class="modal-content advance-modal-width">
                     {{--                    <div class="card-header">--}}
                     {{--                        <button type="button" class="close" data-dismiss="modal"--}}
@@ -288,7 +267,7 @@
                     {{--                    </div>--}}
                     <div class="modal-body p-0">
 
-                        <div class="px-2 pb-2 pt-2">
+                        <div class="px-2  pt-2">
                             <div class="">
                                 <input type="text"
                                        wire:model.debounce.500ms="search_accounts"
@@ -320,7 +299,7 @@
                             </table>
                         @else
                             @if(strlen($search_accounts) < 2)
-                                <p class="pt-0 p-3 ">Please enter {{ 2 - strlen($search_accounts) }}
+                                <p class="px-3">Please enter {{ 2 - strlen($search_accounts) }}
                                     or more
                                     {{ (2 - strlen($search_accounts)) > 1 ? 'characters' : 'character' }}</p>
                             @else

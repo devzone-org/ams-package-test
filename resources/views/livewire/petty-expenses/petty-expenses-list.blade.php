@@ -6,7 +6,7 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header">
                             <div class="d-flex justify-content-between">
-                                <h5 class="card-title">Search Filters</h5>
+                                <p class="card-title pt-1"><b>Search Filters</b></p>
                                 <a href="{{  url('/accounts/petty-expenses') }}"
                                    class="btn btn-primary">
                                     Add Petty Expenses
@@ -15,59 +15,19 @@
                         </div>
                         <div class="card-body">
                             @if ($errors->any())
-
                                 <div class="col-12">
-                                    <div>
-                                        <h3 class="ml-3">
-                                            @php
-                                                $count = count($errors->all());
-                                            @endphp
-                                            There {{ $count > 1 ? "were {$count} errors": "was {$count} error" }}
-                                            with your
-                                            submission
-                                        </h3>
-                                    </div>
-                                    <div class="mt-2">
-                                        <ul class="pl-5">
+                                    @foreach ($errors->all() as $error)
 
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-
-                                        </ul>
-                                    </div>
-
-                                </div>
-                                <div class="flex">
-                                    <div class="flex-shrink-0">
-                                        <!-- Heroicon name: x-circle -->
-                                        <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg"
-                                             viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                                  clip-rule="evenodd"/>
-                                        </svg>
-                                    </div>
-                                    <div class="ml-3">
-                                        <h3 class="text-sm font-medium text-red-800">
-                                            @php
-                                                $count = count($errors->all());
-                                            @endphp
-                                            There {{ $count > 1 ? "were {$count} errors": "was {$count} error" }}
-                                            with your
-                                            submission
-                                        </h3>
-                                        <div class="mt-2 text-sm text-red-700">
-                                            <ul class="list-disc pl-5 space-y-1">
-
-                                                @foreach ($errors->all() as $error)
-                                                    <li>{{ $error }}</li>
-                                                @endforeach
-
-                                            </ul>
+                                        <div class="alert alert-danger alert-dismissible">
+                                            <button type="button" class="close" data-dismiss="alert"
+                                                    aria-hidden="true">
+                                                ×
+                                            </button>
+                                            <li>{{ $error }}</li>
                                         </div>
-                                    </div>
+                                    @endforeach
                                 </div>
+
                             @endif
                             @if(!empty($success))
                                 <div class="col-12">
@@ -84,7 +44,7 @@
                                 <div class="row">
                                     <div class="col-xs-6 col-sm-4">
                                         <div class="form-group">
-                                            <label class="">Invoice Date </label>
+                                            <label class="font-weight-normal">Invoice Date </label>
                                             <input type="date" wire:model.lazy="filter.invoice_date" autocomplete="off"
                                                    class="form-control">
                                         </div>
@@ -92,14 +52,14 @@
 
                                     <div class="col-xs-6 col-sm-4">
                                         <div class="form-group">
-                                            <label class="">Name </label>
+                                            <label class="font-weight-normal">Name </label>
                                             <input type="text" wire:model.lazy="filter.name" autocomplete="off"
                                                    class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-xs-6 col-sm-4">
                                         <div class="form-group">
-                                            <label class="">Contact # </label>
+                                            <label class="font-weight-normal">Contact # </label>
                                             <input type="text" wire:model.lazy="filter.contact_no" autocomplete="off"
                                                    class="form-control">
                                         </div>
@@ -107,7 +67,7 @@
 
                                     <div class="col-xs-6 col-sm-4">
                                         <div class="form-group">
-                                            <label class="">Account Head </label>
+                                            <label class="font-weight-normal">Account Head </label>
                                             <select wire:model.defer="filter.account_head_id"
                                                     class="form-control">
                                                 <option value=""></option>
@@ -118,7 +78,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-12 pt-3">
+                                    <div class="col-xs-6 col-sm-4 pt-4 mt-2">
                                         <div class="form-group">
                                             <button type="submit" wire:loading.attr="disabled" class="btn btn-primary">
                                                 Search
@@ -152,14 +112,14 @@
                                                    class=""/>
                                         </th>
                                     @endif
-                                    <th class="add-services-table">#</th>
-                                    <th class="add-services-table">Invoice Date</th>
-                                    <th class="add-services-table text-left">Vendor</th>
-                                    <th class="add-services-table text-left">Account Head</th>
-                                    <th class="add-services-table text-left">Expense Head</th>
-                                    <th class="add-services-table text-left">Description</th>
-                                    <th class="add-services-table text-right">Amount</th>
-                                    <th class="text-center add-services-table" style="width: 20px;"></th>
+                                    <th class="add-services-table text-muted">#</th>
+                                    <th class="add-services-table text-muted">Invoice Date</th>
+                                    <th class="add-services-table text-left text-muted">Vendor</th>
+                                    <th class="add-services-table text-left text-muted">Account Head</th>
+                                    <th class="add-services-table text-left text-muted">Expense Head</th>
+                                    <th class="add-services-table text-left text-muted">Description</th>
+                                    <th class="add-services-table text-right text-muted">Amount</th>
+                                    <th class="text-center add-services-table text-muted" style="width: 20px;"></th>
                                     </thead>
                                     <tbody class="">
                                     @forelse($petty_expenses_list as $pe)

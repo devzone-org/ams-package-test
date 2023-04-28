@@ -7,13 +7,13 @@
                         <div class="col">
                             <div class="card card-primary card-outline">
                                 <div class="card-header">
-                                    <h4 class="">Trial Balance</h4>
+                                    <h4 class="card-title"><b>Trial Balance</b></h4>
                                 </div>
-                                <div class="card-body m-0 p-0 p-2">
+                                <div class="card-body m-0 p-0 p-2 px-3">
                                     <div class="row">
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
-                                                <label for="from_date" class="">From Date</label>
+                                                <label for="from_date" class="font-weight-normal">From Date</label>
                                                 <input type="text" wire:model.lazy="from_date" id="from_date"
                                                        autocomplete="off"
                                                        class="form-control">
@@ -22,7 +22,7 @@
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
 
-                                                <label for="to_date" class="">To Date</label>
+                                                <label for="to_date" class="font-weight-normal">To Date</label>
                                                 <input type="text" wire:model.lazy="to_date" id="to_date"
                                                        autocomplete="off"
                                                        class="form-control">
@@ -49,25 +49,25 @@
                                                 <table class="table table-bordered border-0">
                                                     <thead class="">
                                                     <tr>
-                                                        <th class="col-2">Type</th>
-                                                        <th class="col-8">Account Name</th>
-                                                        <th class="col-1 text-right">Dr</th>
-                                                        <th class="col-1 text-right">Cr</th>
+                                                        <th class="add-services-table col-2 text-muted">Type</th>
+                                                        <th class="add-services-table col-8 text-muted">Account Name</th>
+                                                        <th class="add-services-table col-1 text-right text-muted">Dr</th>
+                                                        <th class="add-services-table col-1 text-right text-muted">Cr</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
                                                     @foreach($ledger as $key => $en)
                                                         <tr>
-                                                            <td>{{ $en['type'] }}</td>
-                                                            <td>
+                                                            <td class="add-services-table">{{ $en['type'] }}</td>
+                                                            <td class="add-services-table">
                                                                 <a target="_blank" class="text-dark"
                                                                    href="{{url('accounts/accountant/ledger') }}?account_id={{$en['id']}}">
                                                                     {{ $en['code'] }} - {{ $en['account_name'] }}</a>
                                                             </td>
-                                                            <td class="text-right">
+                                                            <td class=" add-services-table text-right">
                                                                 {{ $en['debit']>=0 ? number_format($en['debit'],2) : '('.number_format(abs($en['debit']),2).')' }}
                                                             </td>
-                                                            <td class="text-right">
+                                                            <td class="add-services-table text-right">
                                                                 {{ $en['credit']>=0 ? number_format($en['credit'],2) : '('.number_format(abs($en['credit']),2).')' }}
                                                             </td>
                                                         </tr>
@@ -78,24 +78,24 @@
 
                                                     @endphp
                                                     <tr>
-                                                        <th class="px-2 py-2 text-right" colspan="2">
-                                                            Total
+                                                        <th class="px-2 py-2 text-right bg-white add-services-table" colspan="2">
+                                                            <span class="text-muted">Total</span>
                                                         </th>
-                                                        <th class="px-2  py-2  text-right">
-                                                            {{ $debit>0 ? number_format($debit,2) : '('.number_format(abs($debit),2).')' }}
+                                                        <th class="px-2  py-2  text-right bg-white add-services-table">
+                                                            <span class="text-muted">{{ $debit>0 ? number_format($debit,2) : '('.number_format(abs($debit),2).')' }}</span>
                                                         </th>
-                                                        <th class="px-2   py-2 text-right">
-                                                            {{ $credit>0 ? number_format($credit,2) : '('.number_format(abs($credit),2).')' }}
+                                                        <th class="px-2   py-2 text-right bg-white add-services-table">
+                                                            <span class="text-muted">{{ $credit>0 ? number_format($credit,2) : '('.number_format(abs($credit),2).')' }}</span>
                                                         </th>
                                                     </tr>
 
                                                     <tr>
-                                                        <th class="px-2   py-2 text-right " colspan="2">
-                                                            Difference
+                                                        <th class="px-2   py-2 text-right bg-white add-services-table" colspan="2">
+                                                            <span class="text-muted">Difference</span>
                                                         </th>
 
-                                                        <th colspan="2" class="px-2   py-2 text-right">
-                                                            {{ number_format(abs($debit-$credit),2) }}
+                                                        <th colspan="2" class="px-2   py-2 text-right bg-white add-services-table">
+                                                            <span class="text-muted">{{ number_format(abs($debit-$credit),2) }}</span>
                                                         </th>
                                                     </tr>
                                                     </tbody>

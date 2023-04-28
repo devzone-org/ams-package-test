@@ -2,18 +2,28 @@
     <div class="content-wrapper">
         <div class="content-header">
             <div class="container-fluid">
-                <div class="row">
-                    <div class="col">
-                        <h1>Temporary Journal Entries</h1>
-                    </div>
-                </div>
+
             </div>
         </div>
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col">
-                        {{--            Error Add--}}
+                        @if ($errors->any())
+                            <div class="col-12">
+                                @foreach ($errors->all() as $error)
+
+                                    <div class="alert alert-danger alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert"
+                                                aria-hidden="true">
+                                            ×
+                                        </button>
+                                        <li>{{ $error }}</li>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                        @endif
                         @if(!empty($success))
                             <div class="col-12">
                                 <div class="alert alert-success alert-dismissible">
@@ -41,7 +51,7 @@
                                         @if($loop->first)
 
                                             <div class="card-header">
-                                                <h5 class="card-title">Temporary Journal Entries</h5>
+                                                <h4 class="card-title"><b>Temporary Journal Entries</b></h4>
                                                 <div class="card-tools">
 {{--                                                    <button type="button" class="btn btn-tool"--}}
 {{--                                                            data-card-widget="collapse">--}}
@@ -53,12 +63,12 @@
                                         <div class="card-body table-responsive p-0">
                                             <table class="table table-bordered border-0">
                                                 <thead class="text-nowrap">
-                                                <th class="text-center add-services-table col-1" style="width: 25px;">#</th>
-                                                <th class="add-services-table text-center col-1">Voucher #</th>
-                                                <th class="add-services-table text-center col-1">Account Name</th>
-                                                <th class="add-services-table text-center">Description</th>
-                                                <th class="add-services-table text-center col-1">Debit</th>
-                                                <th class="add-services-table text-center col-1">Credit</th>
+                                                <th class="text-center add-services-table col-1 text-muted" style="width: 25px;">#</th>
+                                                <th class="add-services-table text-center col-1 text-muted">Voucher #</th>
+                                                <th class="add-services-table text-center col-1 text-muted">Account Name</th>
+                                                <th class="add-services-table text-center text-muted">Description</th>
+                                                <th class="add-services-table text-center col-1 text-muted">Debit</th>
+                                                <th class="add-services-table text-center col-1 text-muted">Credit</th>
                                                 <th class="text-center add-services-table"></th>
                                                 </thead>
                                                 <tbody class="">
@@ -72,7 +82,7 @@
                                                                 {{ $t->voucher_no }}
                                                             @endif
                                                         </td>
-                                                        <td class="align-middle">
+                                                        <td class="align-middle text-nowrap">
                                                             {{ $t->name }}
                                                         </td>
                                                         <td>
@@ -126,11 +136,11 @@
                                                     </tr>
                                                 @endforeach
                                                 <tr>
-                                                    <th colspan="4" class="text-right align-middle pb-0">
+                                                    <th colspan="4" class="text-right align-middle pb-0 bg-white">
                                                         <div class="d-flex justify-content-between">
 
                                                             <div class="">
-                                                                <p class="">
+                                                                <p class="font-weight-normal">
                                                                     Posted by {{ $tl->first()->posting }} on
                                                                     <time
                                                                             datetime="{{ $tl->first()->posting_date }}">{{ date('d M, Y',strtotime($tl->first()->posting_date)) }}</time>
@@ -159,7 +169,7 @@
                                                     <th class="">
                                                         {{ number_format($tl->sum('credit'),2) }}
                                                     </th>
-                                                    <th></th>
+                                                    <th class="bg-white"></th>
                                                 </tr>
                                                 </tbody>
                                             </table>
