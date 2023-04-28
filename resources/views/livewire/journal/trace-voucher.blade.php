@@ -1,13 +1,6 @@
 @if(env('AMS_BOOTSTRAP') == 'true')
     <div class="content-wrapper">
         <div class="content-header">
-{{--            <div class="container-fluid">--}}
-{{--                <div class="row">--}}
-{{--                    <div class="col">--}}
-{{--                        <h1>Trace Voucher</h1>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
         </div>
         <div class="content">
             <div class="container-fluid">
@@ -40,7 +33,7 @@
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
 
-                                                <label for="salesman"> Search Type</label>
+                                                <label class="font-weight-normal" for="salesman"> Search Type</label>
                                                 <select wire:model.lazy="type"
                                                         class="custom-select  @error('type')  is-invalid @enderror">
                                                     <option value=""></option>
@@ -53,7 +46,7 @@
                                         @if($type == 'voucher' || empty($type))
                                             <div class="col-xs-6 col-sm-4">
                                                 <div class="form-group">
-                                                    <label for="doctor">Voucher #</label>
+                                                    <label class="font-weight-normal" for="doctor">Voucher #</label>
                                                     <input type="text" wire:model.lazy="voucher_no"
                                                            class="form-control  @error('voucher_no')  is-invalid @enderror">
                                                 </div>
@@ -63,7 +56,7 @@
                                         @if($type == 'voucher_range')
                                             <div class="col-xs-6 col-sm-4">
                                                 <div class="form-group">
-                                                    <label for="doctor">Voucher from</label>
+                                                    <label class="font-weight-normal" for="doctor">Voucher from</label>
                                                     <input type="text" wire:model.lazy="voucher_from"
                                                            class="form-control  @error('voucher_from')  is-invalid @enderror">
                                                 </div>
@@ -71,7 +64,7 @@
 
                                             <div class="col-xs-6 col-sm-4">
                                                 <div class="form-group">
-                                                    <label for="doctor">Voucher
+                                                    <label class="font-weight-normal" for="doctor">Voucher
                                                         to</label>
                                                     <input type="text" wire:model.lazy="voucher_to"
                                                            class="form-control  @error('voucher_to')  is-invalid @enderror">
@@ -81,7 +74,7 @@
 
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
-                                                <label for="salesman">Date
+                                                <label class="font-weight-normal" for="salesman">Date
                                                     Range</label>
                                                 <select wire:model="range"
                                                         class="form-control  @error('range')  is-invalid @enderror">
@@ -95,13 +88,13 @@
                                         </div>
                                         {{--                                        @if($date_range)--}}
                                         <div class=" col-xs-6 col-sm-4 @if(!$date_range) d-none @endif">
-                                            <label for="from">From</label>
+                                            <label class="font-weight-normal" for="from">From</label>
                                             <input type="text" wire:model.lazy="from" autocomplete="off" id="from"
                                                    class="form-control  @error('from')  is-invalid @enderror">
                                         </div>
 
                                         <div class=" col-xs-6 col-sm-4  @if(!$date_range) d-none @endif">
-                                            <label for="to">To</label>
+                                            <label class="font-weight-normal" for="to">To</label>
                                             <input type="text" wire:model.lazy="to" autocomplete="off" id="to"
                                                    class="form-control  @error('to')  is-invalid @enderror">
                                         </div>
@@ -149,25 +142,22 @@
 
                                         <div class="card-header">
                                             @if($loop->first)
-                                                <h5 class="card-title">Trace Voucher Entries</h5>
+                                                <h5 class="card-title"><b>Trace Voucher Entries</b></h5>
                                                 <div class="card-tools">
-                                                    <button type="button" class="btn btn-tool"
-                                                            data-card-widget="collapse">
-                                                        <i class="fas fa-minus"></i>
-                                                    </button>
+
                                                 </div>
                                             @endif
                                         </div>
                                         <div class="card-body">
                                             <table class="table table-bordered border-0">
                                                 <thead class="text-nowrap">
-                                                <th class="text-center add-services-table col-1" style="width: 25px;">#</th>
-                                                <th class="add-services-table text-center col-1">Voucher #</th>
-                                                <th class="add-services-table text-center col-1">Account Name</th>
-                                                <th class="add-services-table text-center">Description</th>
-                                                <th class="add-services-table text-center col-1">Debit</th>
-                                                <th class="add-services-table text-center col-1">Credit</th>
-                                                <th class="text-center add-services-table " style="width: 25px"></th>
+                                                <th class="text-center add-services-table col-1 text-muted" style="width: 25px;">#</th>
+                                                <th class="add-services-table text-center col-1 text-muted">Voucher #</th>
+                                                <th class="add-services-table text-center col-1 text-muted">Account Name</th>
+                                                <th class="add-services-table text-center text-muted">Description</th>
+                                                <th class="add-services-table text-center col-1 text-muted">Debit</th>
+                                                <th class="add-services-table text-center col-1 text-muted">Credit</th>
+                                                <th class="text-center add-services-table  text-muted" style="width: 25px"></th>
                                                 </thead>
                                                 <tbody class="">
                                                 @foreach($tl->where('debit','>',0) as $t)
@@ -178,7 +168,7 @@
                                                                 {{ $t->voucher_no }}
                                                             @endif
                                                         </td>
-                                                        <td class="align-middle">
+                                                        <td class="align-middle text-nowrap">
                                                             {{ $t->name }}
                                                         </td>
                                                         <td>
@@ -209,7 +199,7 @@
                                                                 {{ $t->voucher_no }}
                                                             @endif
                                                         </td>
-                                                        <td class="align-middle">
+                                                        <td class="align-middle text-nowrap">
                                                             {{ $t->name }}
                                                         </td>
                                                         <td>
@@ -233,12 +223,12 @@
                                                     </tr>
                                                 @endforeach
                                                 <tr>
-                                                    <th colspan="4" class="text-right align-middle pb-0">
+                                                    <th colspan="4" class="text-right align-middle pb-0 bg-white">
                                                         <div class="d-flex justify-content-between"
                                                         >
 
                                                             <div class="">
-                                                                <p class="">
+                                                                <p class="font-weight-normal">
                                                                     Posted by {{ $tl->first()->posting }} on
                                                                     <time
                                                                             datetime="{{ $tl->first()->posting_date }}">{{ date('d M, Y',strtotime($tl->first()->posting_date)) }}</time>
@@ -261,7 +251,7 @@
                                                     <th class="">
                                                         {{ number_format($tl->sum('credit'),2) }}
                                                     </th>
-                                                    <th></th>
+                                                    <th class="bg-white"></th>
                                                 </tr>
                                                 </tbody>
                                             </table>

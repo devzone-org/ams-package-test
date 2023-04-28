@@ -7,7 +7,7 @@
                         <div class="col">
                             <div class="card card-primary card-outline">
                                 <div class="card-header">
-                                    <h2 class="">Add New Account</h2>
+                                    <h4 class="card-title"><b>Add New Account</b></h4>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
@@ -24,7 +24,7 @@
                                         @endif
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
-                                                <label for="at_level" class="">Choose Level</label>
+                                                <label for="at_level" class="font-weight-normal">Choose Level</label>
                                                 <select id="at_level" wire:model="at_level"
                                                         class="form-control @error('at_level')  is-invalid @enderror">
                                                     <option value=""></option>
@@ -36,7 +36,7 @@
 
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
-                                                <label for="account_type" class="">Account Type</label>
+                                                <label for="account_type" class="font-weight-normal">Account Type</label>
                                                 <select id="account_type" wire:model="account_type"
                                                         class="form-control @error('account_type')  is-invalid @enderror">
                                                     <option value=""></option>
@@ -51,7 +51,7 @@
 
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
-                                                <label for="parent_account" class="">Parent
+                                                <label for="parent_account" class="font-weight-normal">Parent
                                                     Account</label>
                                                 <select id="parent_account" wire:model="parent_account"
                                                         class="form-control @error('parent_account')  is-invalid @enderror">
@@ -64,7 +64,7 @@
                                         </div>
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
-                                                <label for="account_name" class="">Account Name</label>
+                                                <label for="account_name" class="font-weight-normal">Account Name</label>
                                                 <input type="text" wire:model="account_name" id="account_name"
                                                        autocomplete="off"
                                                        class="form-control @error('account_name')  is-invalid @enderror">
@@ -75,7 +75,7 @@
                                             <div class="col-xs-6 col-sm-4">
                                                 <div class="form-group">
                                                     <label for="opening_balance"
-                                                           class="">Opening
+                                                           class="font-weight-normal">Opening
                                                         Balance</label>
                                                     <input type="number" step="0.01" wire:model="opening_balance"
                                                            id="opening_balance"
@@ -86,7 +86,7 @@
 
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
-                                                <label for="date" class="">Date</label>
+                                                <label for="date" class="font-weight-normal">Date</label>
                                                 <input type="text" wire:model.lazy="date" id="date"
                                                        class="form-control @error('date')  is-invalid @enderror">
                                             </div>
@@ -96,15 +96,15 @@
                                                 <div class="h-5 flex items-center">
                                                     <input wire:model="is_contra" id="is_contra" name="is_contra" type="checkbox"
                                                            class="">
-                                                    <label for="is_contra" class="px-2">Is Contra?</label>
+                                                    <label for="is_contra" class="px-2 py-0 font-weight-normal">Is Contra?</label>
 
                                                 </div>
                                                 <div class="ml-3 text-sm">
-                                                    <p class="">The behaviour of account will be treated as inverse.</p>
+                                                    <p class="text-muted">The behaviour of account will be treated as inverse.</p>
                                             </div>
                                         </div>
 
-                                        <div class="col-12 pt-3">
+                                        <div class="col-12 pt-3 d-flex justify-content-end">
                                             <div class="form-group">
                                                 <button type="submit" class="btn btn-primary" >
                                                     Create

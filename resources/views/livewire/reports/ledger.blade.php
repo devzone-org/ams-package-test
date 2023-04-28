@@ -2,17 +2,7 @@
     <div class="content-wrapper">
         <div class="content-header">
             <div class="container-fluid">
-                <div class="row">
-                    <div class="col">
-                        <h1 class="d-flex justify-content-center">{{ $account_name_s ?? 'General Ledger' }}</h1>
-                        <p class="d-flex justify-content-center">{{ env('APP_NAME') }}</p>
-                        @if(!empty($from_d) && !empty($to_d))
-                            <p class="d-flex justify-content-center">Statement
-                                Period {{ date('d M, Y',strtotime($from_d)) }}
-                                to {{ date('d M, Y',strtotime($to_d)) }} </p>
-                        @endif
-                    </div>
-                </div>
+
             </div>
         </div>
 
@@ -23,9 +13,20 @@
                         <div class="card card-primary card-outline">
                             <div class="card-body">
                                 <div class="row">
+                                    <div class="col">
+                                        <h4 class="d-flex justify-content-center">{{ $account_name_s ?? 'General Ledger' }}</h4>
+                                        <p class="d-flex justify-content-center text-muted">{{ env('APP_NAME') }}</p>
+                                        @if(!empty($from_d) && !empty($to_d))
+                                            <p class="d-flex justify-content-center">Statement
+                                                Period {{ date('d M, Y',strtotime($from_d)) }}
+                                                to {{ date('d M, Y',strtotime($to_d)) }} </p>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-xs-6 col-sm-4">
                                         <div class="form-group">
-                                            <label for="account" class="">Account Name</label>
+                                            <label for="account" class="font-weight-normal">Account Name</label>
                                             <input type="text"
                                                    wire:click="searchableOpenModal('account_id','account_name','accounts')"
                                                    wire:model="account_name" id="account"
@@ -36,15 +37,15 @@
                                     <div class="col-xs-6 col-sm-4">
                                         <div class="form-group">
 
-                                            <label for="from_date" class="">From Date</label>
-                                            <input type="text"  wire:model.lazy="from_date" id="from_date"
+                                            <label for="from_date" class="font-weight-normal">From Date</label>
+                                            <input type="text" wire:model.lazy="from_date" id="from_date"
                                                    autocomplete="off"
                                                    class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-xs-6 col-sm-4">
                                         <div class="form-group">
-                                            <label for="to_date" class="">To Date</label>
+                                            <label for="to_date" class="font-weight-normal">To Date</label>
                                             <input type="text" wire:model.lazy="to_date" id="to_date"
                                                    autocomplete="off"
                                                    class="form-control">
@@ -72,35 +73,26 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        <div class="card card-primary card-outline">
-                            <div class="card-header">
-                            </div>
-                            <div class="card-body">
+                            <div class="card-body p-0 m-0">
                                 <table class="table table-bordered border-0">
                                     <thead class="">
-                                    <th class="add-services-table col-1">V. #</th>
-                                    <th class="add-services-table col-2"> Date</th>
-                                    <th class="add-services-table col-6">Description</th>
-                                    <th class="add-services-table text-right col-1">Dr</th>
-                                    <th class="add-services-table text-right col-1">Cr</th>
-                                    <th class="add-services-table text-right col-1">Balance</th>
-                                    <th class="text-center add-services-table" style="width: 20px;"></th>
+                                    <th class="add-services-table col-1 text-muted" style="padding-left: 10px !important;">V. #</th>
+                                    <th class="add-services-table col-2 text-muted"> Date</th>
+                                    <th class="add-services-table col-6 text-muted">Description</th>
+                                    <th class="add-services-table text-right col-1 text-muted">Dr</th>
+                                    <th class="add-services-table text-right col-1 text-muted">Cr</th>
+                                    <th class="add-services-table text-right col-1 text-muted">Balance</th>
+                                    <th class="text-center add-services-table text-muted" style="width: 20px;"></th>
                                     </thead>
                                     <tbody class="">
                                     <tr>
-                                        <th colspan="3" class="px-2 py-2  text-right">
+                                        <th colspan="3" class="px-2 py-2  text-right bg-white border-right-0">
                                             Opening Balance
                                         </th>
-                                        <th></th>
-                                        <th></th>
-                                        <th class="px-2 py-2 text-right">{{ number_format($opening_balance,2) }}</th>
-                                        <th class="px-2 py-2"></th>
+                                        <th class="bg-white border-left-0 border-right-0"></th>
+                                        <th class="bg-white border-left-0 border-right-0"></th>
+                                        <th class="px-2 py-2 text-right bg-white border-left-0 border-right-0">{{ number_format($opening_balance,2) }}</th>
+                                        <th class="px-2 py-2 bg-white border-left-0"></th>
                                     </tr>
                                     @php
                                         $balance = $opening_balance;
@@ -123,7 +115,7 @@
                                             }
                                         @endphp
                                         <tr class="">
-                                            <td class="align-middle px-2 py-2">
+                                            <td class="align-middle px-3 py-2">
                                                 <a class="" href="javascript:void(0);"
                                                    onclick="window.open('{{ url('accounts/journal/voucher/print').'/'.$en['voucher_no'] }}','voucher-print-{{$en['voucher_no']}}','height=500,width=800');">{{ $en['voucher_no'] }}</a>
                                             </td>
@@ -155,75 +147,83 @@
                                                     $att = \Devzone\Ams\Models\LedgerAttachment::where('voucher_no',$en['voucher_no'])->where('type','1')->get();
                                                 @endphp
 
-                                                {{--                                                @if($att->isNotEmpty())--}}
-                                                {{--                                                    <div class="relative inline-block text-left" x-data="{open:false}">--}}
-                                                {{--                                                        <div class="pt-1 pl-0">--}}
-                                                {{--                                                            <svg @click="open=true;" class="w-4 h-4 cursor-pointer" fill="currentColor"--}}
-                                                {{--                                                                 viewBox="0 0 20 20"--}}
-                                                {{--                                                                 xmlns="http://www.w3.org/2000/svg">--}}
-                                                {{--                                                                <path fill-rule="evenodd"--}}
-                                                {{--                                                                      d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"--}}
-                                                {{--                                                                      clip-rule="evenodd"></path>--}}
-                                                {{--                                                            </svg>--}}
-                                                {{--                                                        </div>--}}
+{{--                                                @if($att->isNotEmpty())--}}
+{{--                                                    <div class="relative inline-block text-left" x-data="{open:false}">--}}
+{{--                                                        <div class="pt-1 pl-0">--}}
+{{--                                                            <svg @click="open=true;" class="w-4 h-4 cursor-pointer"--}}
+{{--                                                                 fill="currentColor"--}}
+{{--                                                                 viewBox="0 0 20 20"--}}
+{{--                                                                 xmlns="http://www.w3.org/2000/svg">--}}
+{{--                                                                <path fill-rule="evenodd"--}}
+{{--                                                                      d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"--}}
+{{--                                                                      clip-rule="evenodd"></path>--}}
+{{--                                                            </svg>--}}
+{{--                                                        </div>--}}
 
-                                                {{--                                                        <div @click.away="open=false;" x-show="open"--}}
-                                                {{--                                                             class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10 focus:outline-none"--}}
-                                                {{--                                                             role="menu" aria-orientation="vertical" aria-labelledby="menu-button"--}}
-                                                {{--                                                             tabindex="-1">--}}
-                                                {{--                                                            <div class="" role="none">--}}
-                                                {{--                                                                @foreach($att as $a)--}}
-                                                {{--                                                                    @if(empty($a->account_id) || $en['account_id'] == $a->account_id)--}}
-                                                {{--                                                                        <a @click="open = false;"--}}
-                                                {{--                                                                           href="{{ env('AWS_URL').$a->attachment }}"--}}
-                                                {{--                                                                           target="_blank"--}}
-                                                {{--                                                                           class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"--}}
-                                                {{--                                                                           role="menuitem" tabindex="-1"--}}
-                                                {{--                                                                           id="menu-item-0">{{ $loop->iteration }} Attachment </a>--}}
-                                                {{--                                                                    @endif--}}
-                                                {{--                                                                @endforeach--}}
+{{--                                                        <div @click.away="open=false;" x-show="open"--}}
+{{--                                                             class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10 focus:outline-none"--}}
+{{--                                                             role="menu" aria-orientation="vertical"--}}
+{{--                                                             aria-labelledby="menu-button"--}}
+{{--                                                             tabindex="-1">--}}
+{{--                                                            <div class="" role="none">--}}
+{{--                                                                @foreach($att as $a)--}}
+{{--                                                                    @if(empty($a->account_id) || $en['account_id'] == $a->account_id)--}}
+{{--                                                                        <a @click="open = false;"--}}
+{{--                                                                           href="{{ env('AWS_URL').$a->attachment }}"--}}
+{{--                                                                           target="_blank"--}}
+{{--                                                                           class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"--}}
+{{--                                                                           role="menuitem" tabindex="-1"--}}
+{{--                                                                           id="menu-item-0">{{ $loop->iteration }}--}}
+{{--                                                                            Attachment </a>--}}
+{{--                                                                    @endif--}}
+{{--                                                                @endforeach--}}
 
-                                                {{--                                                            </div>--}}
-                                                {{--                                                        </div>--}}
-                                                {{--                                                    </div>--}}
-                                                {{--                                                @endif--}}
+{{--                                                            </div>--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
+{{--                                                @endif--}}
                                             </td>
                                         </tr>
                                     @endforeach
                                     <tr>
-                                        <th colspan="3" class="px-2 py-2 text-right">
+                                        <th colspan="3" class="px-2 py-2 text-right bg-white border-right-0 border-left-0">
                                             Closing Balance
                                         </th>
-                                        <th></th>
-                                        <th></th>
-                                        <th class="px-2 py-2 text-right">{{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($balance) }}</th>
-                                        <th class="px-2 py-2"></th>
+                                        <th class="bg-white border-right-0 border-left-0"></th>
+                                        <th class="bg-white border-right-0 border-left-0"></th>
+                                        <th class="px-2 py-2 text-right bg-white border-right-0 border-left-0">{{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($balance) }}</th>
+                                        <th class="px-2 py-2 bg-white border-left-0"></th>
                                     </tr>
                                     <tr>
-                                        <th colspan="3" class="px-2 py-2 text-right">
+                                        <th colspan="3" class="px-2 py-2 text-right bg-white border-right-0 border-left-0">
                                             Total Debit & Credit
                                         </th>
-                                        <th class="px-2 py-2 text-right">{{ number_format(collect($ledger)->sum('debit'),2) }}</th>
-                                        <th class="px-2 py-2 text-right">{{ number_format(collect($ledger)->sum('credit'),2) }}</th>
-                                        <th class="px-2 py-2 text-right"></th>
-                                        <th class="px-2 py-2"></th>
+                                        <th class="px-2 py-2 text-right bg-white border-right-0 border-left-0">{{ number_format(collect($ledger)->sum('debit'),2) }}</th>
+                                        <th class="px-2 py-2 text-right bg-white ">{{ number_format(collect($ledger)->sum('credit'),2) }}</th>
+                                        <th class="px-2 py-2 text-right bg-white border-right-0 border-left-0"></th>
+                                        <th class="px-2 py-2 bg-white border-left-0"></th>
                                     </tr>
 
                                     <tr>
-                                        <th colspan="3" class="px-2 py-2 text-right">
+                                        <th colspan="3" class="px-2 py-2 text-right bg-white border-right-0">
                                             Total Number of Transactions
                                         </th>
-                                        <th class="px-2 py-2 text-right">{{ number_format(collect($ledger)->count(),2) }}</th>
-                                        <th class="px-2 py-2 text-right"></th>
-                                        <th class="px-2 py-2 text-right"></th>
-                                        <th class="px-2 py-2"></th>
+                                        <th class="px-2 py-2 text-right bg-white border-left-0">{{ number_format(collect($ledger)->count(),2) }}</th>
+                                        <th class="px-2 py-2 text-right bg-white"></th>
+                                        <th class="px-2 py-2 text-right bg-white border-right-0"></th>
+                                        <th class="px-2 py-2 bg-white border-left-0"></th>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
+
                         </div>
                     </div>
+
+
                 </div>
+
+
             </div>
         </div>
 
@@ -495,16 +495,16 @@
 
         @include("ams::include.searchable")
     </div>
-    
 
-{{--<script>--}}
-{{--    document.addEventListener('livewire:load', () => {--}}
-{{--        Livewire.on('focusInput', postId => {--}}
-{{--            setTimeout(() => {--}}
-{{--                document.getElementById('searchable_query').focus();--}}
-{{--            }, 300);--}}
-{{--        });--}}
- 
+
+    {{--<script>--}}
+    {{--    document.addEventListener('livewire:load', () => {--}}
+    {{--        Livewire.on('focusInput', postId => {--}}
+    {{--            setTimeout(() => {--}}
+    {{--                document.getElementById('searchable_query').focus();--}}
+    {{--            }, 300);--}}
+    {{--        });--}}
+
 
     @section('script')
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
@@ -531,7 +531,6 @@
                 });
 
 
- 
             });
 
             window.addEventListener('title', event => {
@@ -540,7 +539,6 @@
 
         </script>
     @endsection
-
 
 @endif
  

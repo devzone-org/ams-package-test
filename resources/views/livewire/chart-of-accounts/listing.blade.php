@@ -6,9 +6,9 @@
                     <div class="col">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <div class="d-flex justify-content-between">
-                                    <h2 class="">Chart of Accounts</h2>
-                                    <div class="col-xs-6 col-sm-3">
+                                <div class="d-flex justify-content-between mx-2">
+                                    <h4 class="card-title pt-2  mt-1"><b>Chart of Accounts</b></h4>
+                                    <div class="col-xs-6 col-sm-3 mt-1">
                                         <div class="form-group">
                                             <select name="first_name" wire:model="type" id="first_name"
                                                     class="form-control">
@@ -22,20 +22,20 @@
                                         </div>
                                     </div>
                                     <a href="{{'chart-of-accounts/export'}}?type={{$type}}" target="_blank"
-                                       class="btn btn-success" style="height: 35px">
+                                       class="btn btn-primary " style="height: 40px">
                                         Export.csv
                                     </a>
                                 </div>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body p-0 m-0">
                                 <table class="table table-bordered border-0">
                                     <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Code</th>
-                                        <th>Balance</th>
-                                        <th>Date</th>
-                                        <th>
+                                        <th class="text-muted border-0">Name</th>
+                                        <th class="text-muted border-0">Code</th>
+                                        <th class="text-muted border-0">Balance</th>
+                                        <th class="text-muted border-0">Date</th>
+                                        <th class="text-muted border-0">
                                             <span class="sr-only">Edit</span>
                                         </th>
                                     </tr>
@@ -43,34 +43,34 @@
                                     <tbody>
                                     @foreach($coa->where('level','1') as $one)
                                         <tr>
-                                            <td class="add-services-table align-middle" colspan="6">
-                                                {{ $one->name }}
+                                            <td class="add-services-table align-middle text-muted" style="padding-left: 10px !important;" colspan="6">
+                                                {!! str_repeat('&nbsp;', 4) !!}{{ $one->name }}
                                             </td>
                                         </tr>
                                         @foreach($coa->where('sub_account',$one->id) as $two)
                                             <tr>
-                                                <td class="add-services-table align-middle" colspan="6">
-                                                    {!! str_repeat('&nbsp;', 6) !!} {{ $two->name }}
+                                                <td class="add-services-table align-middle text-muted" colspan="6">
+                                                    {!! str_repeat('&nbsp;', 20) !!} {{ $two->name }}
                                                 </td>
                                             </tr>
                                             @foreach($coa->where('sub_account',$two->id) as $three)
                                                 <tr>
-                                                    <td class="add-services-table align-middle" colspan="6">
-                                                        {!! str_repeat('&nbsp;', 12) !!} {{ $three->name }}
+                                                    <td class="add-services-table align-middle text-muted" colspan="6">
+                                                        {!! str_repeat('&nbsp;', 40) !!} {{ $three->name }}
                                                     </td>
                                                 </tr>
                                                 @foreach($coa->where('sub_account',$three->id) as $four)
                                                     <tr>
-                                                        <td class="add-services-table align-middle" colspan="6">
-                                                            {!! str_repeat('&nbsp;', 18) !!} {{ $four->name }}
+                                                        <td class="add-services-table align-middle text-muted" colspan="6">
+                                                            {!! str_repeat('&nbsp;', 60) !!} {{ $four->name }}
                                                         </td>
                                                     </tr>
                                                     @foreach($coa->where('sub_account',$four->id) as $five)
-                                                        <tr>
+                                                        <tr class="{{ $five->status=='f'?'bg-danger':'' }}">
                                                             <td title="This is contra account"
-                                                                class="add-services-table align-middle">
+                                                                class="add-services-table align-middle" style="border-right: none">
                                                                 <div class="d-flex flex-wrap justify-content-center items-center">
-                                                                    <span>{!! str_repeat('&nbsp;', 24) !!}</span>
+                                                                    <span>{!! str_repeat('&nbsp;', 1) !!}</span>
                                                                     @if($five->is_contra == 't')
                                                                         <svg
                                                                                 class="{{ $five->status == 'f' ? 'text-danger' : 'text-success' }}"
@@ -81,42 +81,42 @@
                                                                                   clip-rule="evenodd"></path>
                                                                         </svg>
                                                                     @endif
-                                                                    <span> &nbsp;{{ $five->name }}</span>
+                                                                    <span> &nbsp;<b>{{ $five->name }}</b></span>
 
                                                                 </div>
                                                             </td>
-                                                            <td class="add-services-table align-middle col-1">{{ $five->code }}</td>
-                                                            <td class="add-services-table align-middle col-2">
+                                                            <td class="add-services-table align-middle col-1" style="border-left: none;border-right: none"><b>{{ $five->code }}</b></td>
+                                                            <td class="add-services-table align-middle col-2" style="border-left: none;border-right: none">
                                                                 @php
                                                                     $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
                                                                     if($clo<0){
-                                                                        echo '('.number_format(abs($clo),2).')';
+                                                                        echo '<b>('.number_format(abs($clo),2).')</b>';
                                                                     } else {
-                                                                        echo number_format(abs($clo),2);
+                                                                        echo '<b>' . number_format(abs($clo),2) . '</b>';
                                                                     }
                                                                 @endphp
                                                             </td>
-                                                            <td class="add-services-table align-middle col-1">
+                                                            <td class="add-services-table align-middle col-1" style="border-left: none;border-right: none">
                                                                 @if(!empty($five->posting_date))
-                                                                    {{date('d M, Y',strtotime($five->posting_date))}}
+                                                                    <b>{{date('d M, Y',strtotime($five->posting_date))}}</b>
                                                                 @endif</td>
 
-                                                            <td class="add-services-table align-middle" style="width:40px">
+                                                            <td class="add-services-table align-middle" style="border-left: none;width:50px">
 
                                                                 <div class="nav-item dropdown">
-                                                                    <div class="user-panel d-flex nav-link m-0 p-0" data-toggle="dropdown" >
+                                                                    <div class="user-panel d-flex nav-link m-0 p-0 pr-2" data-toggle="dropdown"  style="cursor: pointer; ">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
                                                                         </svg>
+
                                                                     </div>
                                                                     <div class="dropdown-menu dropdown-menu-right">
                                                                         <a href="{{ url('accounts/accountant/ledger') }}?account_id={{$five->id}}" class="dropdown-item" target="_blank">
                                                                              View Ledger
                                                                         </a>
-                                                                        <div class="dropdown-divider"></div>
                                                                         <a type="button"
                                                                                 wire:click="changeStatus('{{ $five->id }}')"
-                                                                                class="text-dark mx-3"> Mark Inactive </a>
+                                                                                class="text-danger mx-3"> Mark Inactive </a>
                                                                     </div>
                                                                 </div>
 

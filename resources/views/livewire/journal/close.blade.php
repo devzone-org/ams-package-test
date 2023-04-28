@@ -2,11 +2,7 @@
     <div class="content-wrapper">
         <div class="content-header">
             <div class="container-fluid">
-                <div class="row">
-                    <div class="col">
-                        <h1 class="">Day Closing</h1>
-                    </div>
-                </div>
+
             </div>
         </div>
         <div class="container-fluid">
@@ -15,9 +11,14 @@
                     <div class="card card-primary card-outline">
                         <div class="card-body">
                             <div class="row">
+                                <div class="col">
+                                    <h5 class=""><b>Day Closing</b></h5>
+                                </div>
+                            </div>
+                            <div class="row px-2">
                                 <div class="col-xs-6 col-sm-4">
                                     <div class="form-group">
-                                        <label for="user_account" class="">ID to be
+                                        <label for="user_account" class="font-weight-normal">ID to be
                                             closed</label>
                                         <select id="user_account" wire:model="user_account_id"
                                                 class="form-control">
@@ -31,7 +32,7 @@
                                 <div class="col-xs-6 col-sm-4">
                                     <div class="form-group">
 
-                                        <label for="date" class="">Date</label>
+                                        <label for="date" class="font-weight-normal">Date</label>
                                         <input type="text" value="{{ date('d M, Y') }}" readonly
                                                class="form-control">
                                     </div>
@@ -40,7 +41,7 @@
                                 <div class="col-xs-6 col-sm-4">
                                     <div class="form-group">
 
-                                        <label for="date" class="">Time</label>
+                                        <label for="date" class="font-weight-normal">Time</label>
                                         <input wire:poll.60000ms type="text" value="{{ date('h:i A') }}" readonly
                                                class="form-control">
                                     </div>
@@ -48,8 +49,8 @@
                             </div>
                             <div class="">
                                 @if(!empty($current_user))
-                                    <div class="d-flex justify-content-between">
-                                        <div class="row mx-2">
+                                    <div class="d-flex justify-content-between mx-3">
+                                        <div class="row ">
                                             <div class="col">
                                                 @if(!empty($current_user['attachment']))
                                                     <img class="img-circle" width="80px" height="80px"
@@ -115,22 +116,22 @@
                             </div>
                             <div class="row">
                                 @if(!empty($current_user))
-                                    <table class="table table-bordered border-0">
+                                    <table class="table table-bordered border-0 mx-3">
                                         <thead class="">
-                                        <tr>
+                                        <tr >
                                             <th scope="col"
-                                                class="text-center">
+                                                class="text-center text-muted border-right-0">
                                                 Opening Balance
                                             </th>
                                             @foreach($closing_balance_heads as $h)
                                                 @if(empty($h))
                                                     <th scope="col"
-                                                        class="">
+                                                        class="text-center text-muted border-left-0 border-right-0">
                                                         Other
                                                     </th>
                                                 @else
                                                     <th scope="col"
-                                                        class="">
+                                                        class="text-center text-muted border-left-0 border-right-0">
                                                         {{ ucwords(str_replace('-',' ',$h)) }}
                                                     </th>
                                                 @endif
@@ -138,14 +139,14 @@
                                             @endforeach
 
                                             <th scope="col"
-                                                class="text-center">
+                                                class="text-center text-muted border-left-0">
                                                 Closing Balance (CB)
                                             </th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <td class="px-6 py-4 text-center" style="border-right: none">
+                                            <td class="px-6 py-4 text-center border-right-0 text-muted" >
                                                 @if(!empty($opening_balance))
                                                     <div class="">
                                                         PKR {{ number_format($opening_balance) }}
@@ -158,7 +159,7 @@
                                                 @endif
                                             </td>
                                             @foreach($closing_balance_heads as $h)
-                                                <td class="px-6 py-4 text-center">
+                                                <td class="px-6 py-4 text-center border-left-0 border-right-0 text-muted">
                                                     @if(collect($closing_balance)->where('reference',$h)->first()['balance']>0)
                                                         {{ number_format(collect($closing_balance)->where('reference',$h)->first()['balance']) }}
                                                     @else
@@ -166,7 +167,7 @@
                                                     @endif
                                                 </td>
                                             @endforeach
-                                            <td class="px-6 py-4 text-center" style="border-left: none">
+                                            <td class="px-6 py-4 text-center border-left-0 text-muted">
                                                 <div class="">
                                                     PKR {{number_format(collect($closing_balance)->sum('balance') + $opening_balance)}}
                                                 </div>
@@ -180,9 +181,9 @@
                             </div>
 
                             <div class="py-6 px-4">
-                                <h3 class="">
-                                    Denomination Counting (DC)
-                                </h3>
+                                <h5 class="">
+                                    <b>Denomination Counting (DC)</b>
+                                </h5>
                             </div>
 
 
@@ -192,15 +193,15 @@
                                         <thead class="">
                                         <tr>
                                             <th scope="col"
-                                                class="px-6 py-3 text-left">
+                                                class="px-6 py-3 text-left text-muted border-right-0">
                                                 Currency
                                             </th>
                                             <th scope="col"
-                                                class="px-6 py-3 text-left">
+                                                class="px-6 py-3 text-left text-muted border-right-0 border-left-0">
                                                 Count
                                             </th>
                                             <th scope="col"
-                                                class="px-6 py-3 text-left">
+                                                class="px-6 py-3 text-left text-muted border-left-0">
                                                 Total
                                             </th>
                                         </tr>
@@ -208,15 +209,15 @@
                                         <tbody class="">
                                         @foreach($denomination_counting as $key => $dc)
                                             <tr>
-                                                <td class="px-6 py-2">
+                                                <td class="px-6 py-2 align-middle border-right-0">
                                                     {{  number_format($dc['currency']) }}
                                                 </td>
-                                                <td class="px-6 py-2">
+                                                <td class="px-6 py-2 border-right-0 border-left-0">
                                                     <input type="number"
                                                            wire:model.lazy="denomination_counting.{{$key}}.count"
                                                            class="form-control">
                                                 </td>
-                                                <td class="px-6 py-2">
+                                                <td class="px-6 py-2 align-middle border-left-0">
                                                     {{  number_format($dc['total']) }}
                                                 </td>
                                             </tr>
@@ -224,9 +225,9 @@
 
                                         <tr>
                                             <th colspan="2"
-                                                class="px-6 py-3 text-left">Total
+                                                class="px-6 text-left border-right-0 align-middle">Total
                                             </th>
-                                            <th class="px-6 py-3 text-left">
+                                            <th class="px-6 text-left border-left-0 align-middle">
                                                 {{ number_format(collect($denomination_counting)->sum('total')) }}
                                             </th>
                                         </tr>
@@ -238,92 +239,92 @@
                                         <tbody class="">
 
                                         <tr class="">
-                                            <td class="px-6 py-2">
+                                            <th class="px-6 py-2 border-right-0 bg-white">
                                                 CB System Cash
-                                            </td>
-                                            <td class="px-6 py-2">
+                                            </th>
+                                            <th class="px-6 py-2 border-left-0 bg-white">
                                                 PKR {{number_format(collect($closing_balance)->sum('balance') + $opening_balance,2)}}
-                                            </td>
+                                            </th>
                                         </tr>
 
                                         <tr class="">
-                                            <td class="px-6 py-2">
+                                            <th class="px-6 py-2 border-right-0 bg-white">
                                                 DC Physical Cash
-                                            </td>
-                                            <td class="px-6 py-2">
+                                            </th>
+                                            <th class="px-6 py-2 border-left-0 bg-white">
                                                 PKR {{number_format(collect($denomination_counting)->sum('total'),2)}}
-                                            </td>
+                                            </th>
                                         </tr>
                                         @if(!empty($difference))
                                             <tr class="">
-                                                <td class="px-6 py-2">
+                                                <th class="px-6 py-2 border-right-0 bg-white">
                                                     Difference
                                                     @if($difference > 0)
                                                         <span class="text-danger">(Surplus) </span>
                                                     @else
                                                         <span class="text-danger">(Shortage)</span>
                                                     @endif
-                                                </td>
-                                                <td class="px-6 py-2">
+                                                </th>
+                                                <th class="px-6 py-2 border-left-0 bg-white">
                                                     PKR {{number_format(abs(collect($closing_balance)->sum('balance') + $opening_balance - collect($denomination_counting)->sum('total')),2)}}
-                                                </td>
+                                                </th>
                                             </tr>
 
 
                                             <tr class="">
-                                                <td class="px-6 py-2">
+                                                <th class="px-6 py-2 border-right-0 bg-white">
                                                     Adjustment
-                                                </td>
-                                                <td class="px-6 py-2">
+                                                </th>
+                                                <th class="px-6 py-2 border-left-0 bg-white">
                                                     PKR
                                                     @if($difference > 0)
                                                         {{ number_format($difference,2) }}
                                                     @else
                                                         ({{ number_format(abs($difference),2) }})
                                                     @endif
-                                                </td>
+                                                </th>
                                             </tr>
                                         @else
                                             <tr class="">
-                                                <td class="text-success px-6 py-2">
+                                                <th class="text-success px-6 py-2 border-right-0 bg-white">
                                                     Difference
 
-                                                </td>
-                                                <td class=" text-success px-6 py-2">
+                                                </th>
+                                                <th class=" text-success px-6 py-2 border-left-0 bg-white">
                                                     0
-                                                </td>
+                                                </th>
                                             </tr>
                                         @endif
                                         <tr>
                                             <td colspan="2">&nbsp;</td>
                                         </tr>
                                         <tr class="">
-                                            <td class="px-6 py-2">
+                                            <td class="px-6 py-2 border-right-0">
                                                 Cash Retained
                                             </td>
-                                            <td class="px-6 py-2">
+                                            <td class="px-6 py-2 border-left-0">
                                                 <input type="number" wire:model.lazy="retained_cash"
-                                                       class="form-control">
+                                                       class="form-control w-75">
                                             </td>
                                         </tr>
 
                                         <tr class="">
-                                            <td class="px-6 py-2">
+                                            <td class="px-6 py-2 border-right-0">
                                                 Transfer Amount
                                             </td>
-                                            <td class="px-6 py-2">
+                                            <td class="px-6 py-2 border-left-0">
                                                 {{ number_format(collect($denomination_counting)->sum('total') - $retained_cash ,2) }}
                                             </td>
                                         </tr>
 
 
                                         <tr class="">
-                                            <td class="px-6 py-2">
+                                            <td class="px-6 py-2 border-right-0">
                                                 Transfer To
                                             </td>
-                                            <td class="  px-6 py-2">
+                                            <td class="  px-6 py-2 border-left-0">
                                                 <select wire:model="transfer_id" id="transfer_to"
-                                                        class="form-control">
+                                                        class="form-control w-75">
                                                     <option></option>
                                                     @foreach($transfers as $t)
                                                         @if($t['id']==$user_account_id)
@@ -336,22 +337,22 @@
                                         </tr>
 
                                         <tr class="">
-                                            <td class="px-6 py-2">
+                                            <td class="px-6 py-2 border-right-0">
                                                 Attachment
                                             </td>
-                                            <td class="px-6 py-2 ">
+                                            <td class="px-6 py-2 border-left-0">
                                                 <input type="file" wire:model.lazy="attachment"
-                                                       class="form-control p-0 m-0 pt-1 px-1">
+                                                       class="form-control w-75 p-0 m-0 pt-1 px-1">
                                             </td>
                                         </tr>
                                         <tr class="">
-                                            <td class="px-6 py-2">
+                                            <td class="px-6 py-2 border-right-0">
                                                 Description
                                             </td>
-                                            <td class="px-6 py-2">
+                                            <td class="px-6 py-2 border-left-0">
                                     <textarea wire:model.lazy="description"
                                               rows="7"
-                                              class="form-control"></textarea>
+                                              class="form-control w-75"></textarea>
                                             </td>
                                         </tr>
 
@@ -375,23 +376,19 @@
 
 
                                     @if ($errors->any())
-                                        <div class="rounded-md mt-5 bg-danger p-4">
-                                            <div class="d-flex">
+                                        <div class="col-12">
+                                            @foreach ($errors->all() as $error)
 
-                                                <div class=" ">
-
-                                                    <div class="mt-2 text-white">
-                                                        <ul class="pl-5 ">
-
-                                                            @foreach ($errors->all() as $error)
-                                                                <li>{{ $error }}</li>
-                                                            @endforeach
-
-                                                        </ul>
-                                                    </div>
+                                                <div class="alert alert-danger alert-dismissible">
+                                                    <button type="button" class="close" data-dismiss="alert"
+                                                            aria-hidden="true">
+                                                        ×
+                                                    </button>
+                                                    <li>{{ $error }}</li>
                                                 </div>
-                                            </div>
+                                            @endforeach
                                         </div>
+
                                     @endif
                                 </div>
                             </div>

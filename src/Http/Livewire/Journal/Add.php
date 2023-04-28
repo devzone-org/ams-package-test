@@ -137,7 +137,7 @@ class Add extends Component
         {
             $this->dispatchBrowserEvent('open-modal');
         }
-        $this->accounts = $this->account_list;
+        $this->accounts = [];
         $this->search_accounts_modal = true;
         $this->key_id = $key;
         $this->emit('focusInput');
@@ -182,7 +182,7 @@ class Add extends Component
                 $this->accounts = $this->account_list;
             }
         } else {
-            $this->accounts = $this->account_list;
+            $this->accounts = [];
         }
     }
 

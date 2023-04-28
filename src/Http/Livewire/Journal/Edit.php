@@ -135,7 +135,7 @@ class Edit extends Component
             $this->success = '';
             $this->dispatchBrowserEvent('open-modal');
         }
-        $this->accounts = $this->account_list;
+        $this->accounts = [];
         $this->search_accounts_modal = true;
         $this->key_id = $key;
         $this->emit('focusInput');
@@ -155,7 +155,7 @@ class Edit extends Component
         $this->entries[$this->key_id]['account_id'] = $id;
         $this->entries[$this->key_id]['account_name'] = $name;
         $this->search_accounts_modal = false;
-        $this->accounts = $this->account_list;
+        $this->accounts = [];
         $this->search_accounts = '';
         $this->entries[$this->key_id]['description'] = $this->entries[0]['description'];
         if(env('AMS_BOOTSTRAP') == 'true'){
@@ -178,7 +178,7 @@ class Edit extends Component
                 $this->accounts = $this->account_list;
             }
         } else {
-            $this->accounts = $this->account_list;
+            $this->accounts = [];
         }
     }
 

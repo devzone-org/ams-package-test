@@ -1,5 +1,10 @@
 @if(env('AMS_BOOTSTRAP') == 'true')
     <div class="content-wrapper">
+        <div class="content-header">
+            <div class="container-fluid">
+
+            </div>
+        </div>
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
@@ -10,7 +15,7 @@
                                     <div class="col-xs-6 col-sm-4">
                                         <div class="form-group">
 
-                                            <label for="nature" class="">Nature</label>
+                                            <label for="nature" class="font-weight-normal">Nature</label>
                                             <select wire:model.defer="nature"
                                                     class="form-control">
                                                 <option value="">All</option>
@@ -23,7 +28,7 @@
                                     <div class="col-xs-6 col-sm-4">
                                         <div class="form-group">
 
-                                            <label for="status" class="">Status</label>
+                                            <label for="status" class="font-weight-normal">Status</label>
                                             <select wire:model.defer="status"
                                                     class="form-control">
                                                 <option value="">All</option>
@@ -36,7 +41,7 @@
                                     <div class="col-xs-6 col-sm-4">
                                         <div class="form-group">
 
-                                            <label for="from" class="">From</label>
+                                            <label for="from" class="font-weight-normal">From</label>
                                             <input type="text" wire:model.lazy="from" id="from" autocomplete="off"
                                                    class="form-control">
                                         </div>
@@ -45,13 +50,13 @@
                                     <div class="col-xs-6 col-sm-4">
                                         <div class="form-group">
 
-                                            <label for="to" class="">To</label>
+                                            <label for="to" class="font-weight-normal">To</label>
                                             <input type="text" wire:model.lazy="to" id="to" autocomplete="off"
                                                    class="form-control">
                                         </div>
                                     </div>
 
-                                    <div class="col-12 pt-3">
+                                    <div class="col-xs-6 col-sm-4 pt-4 mt-2">
                                         <div class="form-group">
                                             <button type="button" class="btn btn-primary"
 {{--                                                    wire:click="search"--}}
@@ -75,28 +80,26 @@
                         <div class="card card-primary card-outline">
                             <div class="card-header">
                                 <div class="d-flex justify-content-between">
-                                    <h5 class="card-title">Payments & Receiving</h5>
+                                    <p class="card-title pt-1"><b>Payments & Receiving</b></p>
                                     <a href="{{  url('accounts/accountant/payments/add') }}"
                                        class="btn btn-primary">
                                         Create
                                     </a>
                                 </div>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body p-0 m-0">
                                 @if ($errors->any())
-
                                     <div class="col-12">
+                                        @foreach ($errors->all() as $error)
 
-                                        <div class="mt-2">
-                                            <ul class="pl-5">
-
-                                                @foreach ($errors->all() as $error)
-                                                    <li class="text-danger">{{ $error }}</li>
-                                                @endforeach
-
-                                            </ul>
-                                        </div>
-
+                                            <div class="alert alert-danger alert-dismissible">
+                                                <button type="button" class="close" data-dismiss="alert"
+                                                        aria-hidden="true">
+                                                    ×
+                                                </button>
+                                                <li>{{ $error }}</li>
+                                            </div>
+                                        @endforeach
                                     </div>
 
                                 @endif
@@ -113,35 +116,35 @@
                                 @endif
                                 <table class="table table-bordered border-0">
                                     <thead class="">
-                                    <th class="add-services-table text-center">#</th>
-                                    <th class="add-services-table text-center">NATURE</th>
-                                    <th class="add-services-table text-center">DATE</th>
-                                    <th class="add-services-table text-center">ACCOUNTS</th>
-                                    <th class="add-services-table text-center">DESCRIPTION</th>
-                                    <th class="add-services-table text-center">AMOUNT</th>
-                                    <th class="add-services-table text-center">CREATED BY</th>
-                                    <th class="add-services-table text-center">APPROVED BY</th>
-                                    <th class="text-center add-services-table" style="width: 20px;"></th>
+                                    <th class="add-services-table text-center text-muted border-right-0">#</th>
+                                    <th class="add-services-table  text-muted border-left-0 border-right-0">NATURE</th>
+                                    <th class="add-services-table  text-muted border-left-0 border-right-0">DATE</th>
+                                    <th class="add-services-table  text-muted border-left-0 border-right-0">ACCOUNTS</th>
+                                    <th class="add-services-table  text-muted border-left-0 border-right-0">DESCRIPTION</th>
+                                    <th class="add-services-table  text-muted border-left-0 border-right-0">AMOUNT</th>
+                                    <th class="add-services-table  text-muted border-left-0 border-right-0">CREATED BY</th>
+                                    <th class="add-services-table  text-muted border-left-0 border-right-0">APPROVED BY</th>
+                                    <th class="text-center add-services-table text-muted border-left-0" style="width: 20px;"></th>
                                     </thead>
                                     <tbody>
                                     @foreach($entries as $e)
                                         <tr>
-                                            <td class="align-middle">{{ $loop -> iteration }}</td>
-                                            <td class="align-middle">
+                                            <td class="align-middle border-right-0">{{ $loop -> iteration }}</td>
+                                            <td class="align-middle border-right-0 border-left-0">
                                                 @if($e->nature=='pay')
-                                                    <span class="text-success">Payment</span>
+                                                    <span class="badge badge-pill badge-success">Payment</span>
                                                 @else
-                                                    <span class="text-success">Received</span>
+                                                    <span class="badge badge-pill badge-primary">Received</span>
                                                 @endif
                                                 @if($e->reversal == 't')
                                                     <br>
-                                                    <span class="text-danger">Reversed</span>
+                                                    <span class="badge badge-pill badge-danger">Reversed</span>
                                                 @endif
                                             </td>
-                                            <td class="align-middle">
+                                            <td class="align-middle border-right-0 border-left-0">
                                                 {{ date('d M, Y',strtotime($e->posting_date)) }}
                                             </td>
-                                            <td class="align-middle">
+                                            <td class="align-middle border-right-0 border-left-0">
                                                 <a class=""
                                                    href="{{ url('accounts/accountant/ledger') }}?account_id={{$e -> first_account_id}}&date={{$e->posting_date}}"
                                                    target="_blank">{{ $e->nature=='pay' ? 'Dr':'Cr' }}
@@ -152,33 +155,32 @@
                                                    target="_blank">{{ $e->nature!='pay' ? 'Dr':'Cr' }}
                                                     - {{ $e -> second_account_name }}</a>
                                             </td>
-                                            <td class="align-middle">
+                                            <td class="align-middle border-right-0 border-left-0">
                                                 {{ $e -> description }}
                                             </td>
-                                            <td class="align-middle">
+                                            <td class="align-middle border-right-0 border-left-0">
                                                 {{ number_format($e->amount,2)  }}
                                             </td>
-                                            <td class="align-middle">
+                                            <td class="align-middle border-right-0 border-left-0">
                                                 {{ $e->added_by }} <br>
                                                 {{ date('d M, Y h:i A',strtotime($e->created_at)) }}
                                             </td>
-                                            <td class="align-middle">
+                                            <td class="align-middle border-right-0 border-left-0">
                                                 @if(!empty($e->approved_at))
                                                     {{ $e->approved_by_name }} <br>
                                                     {{ date('d M, Y h:i: A',strtotime($e->approved_at)) }}
                                                 @endif
                                             </td>
-                                            <td class="align-middle" style="width: 50px;">
+                                            <td class="align-middle border-left-0" style="width: 50px;">
 
                                                 <div class="nav-item dropdown">
                                                     <div class="user-panel d-flex nav-link m-0 p-0"
-                                                         data-toggle="dropdown">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                             viewBox="0 0 24 24" stroke-width="1.5"
-                                                             stroke="currentColor" class="w-6 h-6">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                                                         data-toggle="dropdown" style="cursor: pointer;">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" style="width: 25px; height: 25px">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
                                                         </svg>
+
+
                                                     </div>
                                                     <div class="dropdown-menu  dropdown-menu-right">
                                                         @if(empty($e->approved_at))
@@ -186,7 +188,7 @@
                                                                class="dropdown-item" target="_blank">
                                                                 Approve
                                                             </a>
-                                                            <div class="dropdown-divider"></div>
+
                                                             <a type="button"
                                                                wire:click="delete('{{ $e->id }}')"
                                                                class="text-dark mx-3"> Delete </a>
