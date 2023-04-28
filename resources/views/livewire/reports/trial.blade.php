@@ -49,25 +49,25 @@
                                                 <table class="table table-bordered border-0">
                                                     <thead class="">
                                                     <tr>
-                                                        <th class="add-services-table col-2 text-muted">Type</th>
-                                                        <th class="add-services-table col-8 text-muted">Account Name</th>
-                                                        <th class="add-services-table col-1 text-right text-muted">Dr</th>
-                                                        <th class="add-services-table col-1 text-right text-muted">Cr</th>
+                                                        <th class="col-2 text-muted px-2 py-1">Type</th>
+                                                        <th class=" col-8 text-muted px-2 py-1">Account Name</th>
+                                                        <th class=" col-1 text-right text-muted px-2 py-1">Dr</th>
+                                                        <th class=" col-1 text-right text-muted px-2 py-1">Cr</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
                                                     @foreach($ledger as $key => $en)
                                                         <tr>
-                                                            <td class="add-services-table">{{ $en['type'] }}</td>
-                                                            <td class="add-services-table">
+                                                            <td class="px-2 py-1">{{ $en['type'] }}</td>
+                                                            <td class="px-2 py-1">
                                                                 <a target="_blank" class="text-dark"
                                                                    href="{{url('accounts/accountant/ledger') }}?account_id={{$en['id']}}">
                                                                     {{ $en['code'] }} - {{ $en['account_name'] }}</a>
                                                             </td>
-                                                            <td class=" add-services-table text-right">
+                                                            <td class=" px-2 py-1 text-right">
                                                                 {{ $en['debit']>=0 ? number_format($en['debit'],2) : '('.number_format(abs($en['debit']),2).')' }}
                                                             </td>
-                                                            <td class="add-services-table text-right">
+                                                            <td class="px-2 py-1 text-right">
                                                                 {{ $en['credit']>=0 ? number_format($en['credit'],2) : '('.number_format(abs($en['credit']),2).')' }}
                                                             </td>
                                                         </tr>
@@ -78,23 +78,23 @@
 
                                                     @endphp
                                                     <tr>
-                                                        <th class="px-2 py-2 text-right bg-white add-services-table" colspan="2">
+                                                        <th class="px-2 py-1 text-right bg-white" colspan="2">
                                                             <span class="text-muted">Total</span>
                                                         </th>
-                                                        <th class="px-2  py-2  text-right bg-white add-services-table">
+                                                        <th class="px-2  py-1  text-right bg-white">
                                                             <span class="text-muted">{{ $debit>0 ? number_format($debit,2) : '('.number_format(abs($debit),2).')' }}</span>
                                                         </th>
-                                                        <th class="px-2   py-2 text-right bg-white add-services-table">
+                                                        <th class="px-2   py-1 text-right bg-white ">
                                                             <span class="text-muted">{{ $credit>0 ? number_format($credit,2) : '('.number_format(abs($credit),2).')' }}</span>
                                                         </th>
                                                     </tr>
 
                                                     <tr>
-                                                        <th class="px-2   py-2 text-right bg-white add-services-table" colspan="2">
+                                                        <th class="px-2   py-1 text-right bg-white " colspan="2">
                                                             <span class="text-muted">Difference</span>
                                                         </th>
 
-                                                        <th colspan="2" class="px-2   py-2 text-right bg-white add-services-table">
+                                                        <th colspan="2" class="px-2   py-1 text-right bg-white ">
                                                             <span class="text-muted">{{ number_format(abs($debit-$credit),2) }}</span>
                                                         </th>
                                                     </tr>

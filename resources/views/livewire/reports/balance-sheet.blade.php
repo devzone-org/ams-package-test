@@ -10,8 +10,9 @@
                                     <div class="row">
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
-                                                <label for="from_date" class="">As At</label>
-                                                <input type="text" wire:model.lazy="asat" id="from_date" autocomplete="off"
+                                                <label for="from_date" class="font-weight-normal">As At</label>
+                                                <input type="text" wire:model.lazy="asat" id="from_date"
+                                                       autocomplete="off"
                                                        class="form-control">
                                             </div>
                                         </div>
@@ -24,7 +25,8 @@
                                                     <span wire:loading wire:target="search">Searching ...</span>
                                                     <span wire:loading.remove wire:target="search">Search</span>
                                                 </button>
-                                                <button type="button" wire:click="resetSearch" wire:loading.attr="disabled"
+                                                <button type="button" wire:click="resetSearch"
+                                                        wire:loading.attr="disabled"
                                                         class="btn btn-danger">
                                                     Reset
                                                 </button>
@@ -37,18 +39,19 @@
                                     </div>
                                 </div>
                                 <div class="card-header pt-0">
-                                    <h4 class="d-flex justify-content-center p-0 m-0">Statement of Financial Position</h4>
-                                    <p class="text-center p-0 m-0">{{ env('APP_NAME') }}</p>
-                                    <p class="text-center">As At {{ date('d F Y',strtotime($asat)) }} </p>
+                                    <h5 class="d-flex justify-content-center p-0 m-0"><b>Statement of Financial
+                                            Position</b></h5>
+                                    <p class="text-center p-0 m-0 text-muted">{{ env('APP_NAME') }}</p>
+                                    <p class="text-center text-muted">As At {{ date('d F Y',strtotime($asat)) }} </p>
                                 </div>
 
-                                <div class="card-body">
+                                <div class="card-body p-0 m-0">
                                     <table class="table table-bordered border-0">
                                         <thead class="">
                                         <tr>
-                                            <td class="col-8"></td>
-                                            <td class="col-2">{{ env('CURRENCY','PKR') }}</td>
-                                            <td class="col-2">{{ env('CURRENCY','PKR') }}</td>
+                                            <td class="col-8 border-right-0 px-2 py-1"></td>
+                                            <td class="col-2 text-muted border-right-0 border-left-0 px-2 py-1">{{ env('CURRENCY','PKR') }}</td>
+                                            <td class="col-2 text-muted border-right-0 border-left-0 px-2 py-1">{{ env('CURRENCY','PKR') }}</td>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -56,111 +59,115 @@
                                             $count=0;
                                         @endphp
                                         @foreach(collect($level3)->groupBy('type')->toArray() as $type => $lvl3)
-                                            <tr>
-                                                <th>{{ $type }}</th>
+                                            <tr class="">
+                                                <th class="bg-white border-0 px-2 py-1"><u>{{ $type }}</u></th>
                                             </tr>
                                             @foreach($lvl3 as $l3)
-                                                @foreach($lvl3 as $l3)
-                                                    <tr class="">
-                                                        <td class="">
-                                                            <div>
-{{--                                                                <button class="outline-none border-0 p-0">--}}
-{{--                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"--}}
-{{--                                                                         viewBox="0 0 24 24"--}}
-{{--                                                                         stroke-width="1.5" stroke="currentColor" class=""--}}
-{{--                                                                         style="width: 15px;">--}}
-{{--                                                                        <path stroke-linecap="round" stroke-linejoin="round"--}}
-{{--                                                                              d="M12 4.5v15m7.5-7.5h-15"/>--}}
-{{--                                                                    </svg>--}}
-{{--                                                                </button>--}}
-                                                                 {{ $l3['name'] }}
-                                                            </div>
-                                                        </td>
-                                                        <td class="">
+                                                <tr class="">
+                                                    <td class="border-0 px-2 py-1">
+                                                        <div>
+                                                            {{--                                                                <button class="outline-none border-0 p-0">--}}
+                                                            {{--                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"--}}
+                                                            {{--                                                                         viewBox="0 0 24 24"--}}
+                                                            {{--                                                                         stroke-width="1.5" stroke="currentColor" class=""--}}
+                                                            {{--                                                                         style="width: 15px;">--}}
+                                                            {{--                                                                        <path stroke-linecap="round" stroke-linejoin="round"--}}
+                                                            {{--                                                                              d="M12 4.5v15m7.5-7.5h-15"/>--}}
+                                                            {{--                                                                    </svg>--}}
+                                                            {{--                                                                </button>--}}
+                                                            {!! str_repeat('&nbsp;', 10) !!} {{ $l3['name'] }}
+                                                        </div>
+                                                    </td>
+                                                    <td class="border-0 px-2 py-1">
 
-                                                        </td>
-                                                        <td class="">
-                                                            @if($l3['balance']>=0)
-                                                                {{ number_format($l3['balance'],2) }}
-                                                            @else
-                                                            ({{ number_format(abs($l3['balance']),2) }})
-                                                            @endif
-                                                        </td>
-                                                    </tr>
-                                                    @foreach(collect($level4)->where('sub_account',$l3['id']) as $key => $l4)
-                                                        @if ($l4['name']  == 'Drawings')
-
-                                                            @continue
+                                                    </td>
+                                                    <td class="border-0 px-2 py-1">
+                                                        @if($l3['balance']>=0)
+                                                            {{ number_format($l3['balance'],2) }}
+                                                        @else
+                                                        ({{ number_format(abs($l3['balance']),2) }})
                                                         @endif
-                                                        <tr class="">
-                                                            <td class="" onclick="showHideRow('expandable-details{{str_replace(' ', '', $key)}}');">
-                                                                <div>
+                                                    </td>
+                                                </tr>
+                                                @foreach(collect($level4)->where('sub_account',$l3['id']) as $key => $l4)
+                                                    @if ($l4['name']  == 'Drawings')
+
+                                                        @continue
+                                                    @endif
+                                                    <tr class="">
+                                                        <td class="border-0 px-2 py-1"
+                                                            onclick="showHideRow('expandable-details{{str_replace(' ', '', $key)}}');">
+                                                            <div>
                                                                     <span class="mx-3">
-                                                                        <button class="outline-none border-0 p-0" id="">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        {!! str_repeat('&nbsp;', 15) !!}<button
+                                                                                class="outline-none border-0 p-0 bg-white"
+                                                                                id="">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                             fill="none"
                                                                              viewBox="0 0 24 24"
-                                                                             stroke-width="1.5" stroke="currentColor" class=""
+                                                                             stroke-width="1.5" stroke="currentColor"
+                                                                             class=""
                                                                              style="width: 15px;">
-                                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                            <path stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
                                                                                   d="M12 4.5v15m7.5-7.5h-15"/>
                                                                         </svg>
                                                                     </button>
-                                                                     {{ $l4['name'] }}
+                                                                      {{ $l4['name'] }}
                                                                     </span>
-                                                                </div>
-                                                            </td>
-                                                            <td class="">
+                                                            </div>
+                                                        </td>
+                                                        <td class="border-0 px-2 py-1">
+
+                                                        </td>
+                                                        <td class="border-0 px-2 py-1">
+                                                            @if($l4['balance']>=0)
+                                                                {{ number_format($l4['balance'],2) }}
+                                                            @else
+                                                            ({{ number_format(abs($l4['balance']),2) }})
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    @foreach(collect($level5)->where('sub_account',$l4['id']) as $l5)
+                                                        <tr class="expandable-details@php echo str_replace(' ', '', $key); @endphp">
+                                                            <td class="border-0 px-2 py-1">
+                                                                <span class="mx-5">{!! str_repeat('&nbsp;', 20) !!}{{ $l5['name'] }}</span>
 
                                                             </td>
-                                                            <td class="">
-                                                                @if($l4['balance']>=0)
-                                                                    {{ number_format($l4['balance'],2) }}
-                                                                @else
-                                                                ({{ number_format(abs($l4['balance']),2) }})
+                                                            <td class="border-0 px-2 py-1">
+
+                                                                @if($l5['type'] != 'Equity')
+                                                                    <a href="{{ url('accounts/accountant/ledger') }}?account_id={{ $l5['id'] }}&from={{date('d M Y',strtotime("-2 months".$asat))}}&to={{date('d M Y',strtotime($asat))}}"
+                                                                       target="_blank"
+                                                                    >
+                                                                        @endif
+
+
+
+                                                                        @if($l5['balance']>=0)
+                                                                            {{ number_format($l5['balance'],2) }}
+                                                                        @else
+                                                                        ({{ number_format(abs($l5['balance']),2) }})
+                                                                        @endif
+                                                                        @if($l5['type'] != 'Equity')
+                                                                    </a>
                                                                 @endif
                                                             </td>
+                                                            <td class="border-0 px-2 py-1">
+
+                                                            </td>
                                                         </tr>
-                                                        @foreach(collect($level5)->where('sub_account',$l4['id']) as $l5)
-                                                            <tr class="expandable-details@php echo str_replace(' ', '', $key); @endphp">
-                                                                <td class="">
-                                                                    <span class="mx-5">{{ $l5['name'] }}</span>
-
-                                                                </td>
-                                                                <td class="">
-
-                                                                    @if($l5['type'] != 'Equity')
-                                                                        <a href="{{ url('accounts/accountant/ledger') }}?account_id={{ $l5['id'] }}&from={{date('d M Y',strtotime("-2 months".$asat))}}&to={{date('d M Y',strtotime($asat))}}"
-                                                                           target="_blank"
-                                                                        >
-                                                                            @endif
-
-
-
-                                                                            @if($l5['balance']>=0)
-                                                                                {{ number_format($l5['balance'],2) }}
-                                                                            @else
-                                                                            ({{ number_format(abs($l5['balance']),2) }})
-                                                                            @endif
-                                                                            @if($l5['type'] != 'Equity')
-                                                                        </a>
-                                                                    @endif
-                                                                </td>
-                                                                <td class="">
-
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
                                                     @endforeach
                                                 @endforeach
                                             @endforeach
                                         @endforeach
 
                                         <tr class="">
-                                            <th colspan="2" class="text-left">
+                                            <th colspan="2" class="text-left px-2 py-1 bg-white border-0">
                                                 Total Liabilities & Equity
                                             </th>
 
-                                            <th class=" text-left">
+                                            <th class=" text-left px-2 py-1 bg-white border-0">
                                                 @php
                                                     $liabilities = collect($level3)->where('type','Liabilities')->sum('balance');
                                                     $equity = collect($level3)->where('type','Equity')->sum('balance');
@@ -187,10 +194,11 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
 
                 $('tr[class^="expandable-details"]').hide();
             });
+
             function showHideRow(row) {
                 $("." + row).toggle();
 
