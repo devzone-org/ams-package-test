@@ -13,7 +13,7 @@
                                     <div class="row">
                                         @if(!empty($success))
                                             <div class="col-12">
-                                                <div class="alert alert-success alert-dismissible">
+                                                <div class="alert alert-success alert-dismissible" style="">
                                                     <button type="button" class="close" data-dismiss="alert"
                                                             aria-hidden="true">
                                                         ×
@@ -88,7 +88,7 @@
                                             <div class="form-group">
                                                 <label for="date" class="font-weight-normal">Date</label>
                                                 <input type="text" wire:model.lazy="date" id="date"
-                                                       class="form-control @error('date')  is-invalid @enderror">
+                                                       class="form-control @error('date')  is-invalid @enderror" autocomplete="off">
                                             </div>
                                         </div>
 
