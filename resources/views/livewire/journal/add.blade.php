@@ -313,7 +313,7 @@
                                     or more
                                     {{ (2 - strlen($search_accounts)) > 1 ? 'characters' : 'character' }}</p>
                             @else
-                                <p class="pt-0 p-3">{{ empty($accounts) ? 'No Record Found': '' }}</p>
+                                <p class="px-3">{{ empty($accounts) ? 'No Record Found': '' }}</p>
                             @endif
                         @endif
                     </div>
