@@ -21,10 +21,16 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div>
+                                    <a href="{{'chart-of-accounts/add'}}?type={{$type}}" target="_blank"
+                                       class="btn btn-primary " style="height: 40px">
+                                        Add
+                                    </a>
                                     <a href="{{'chart-of-accounts/export'}}?type={{$type}}" target="_blank"
                                        class="btn btn-primary " style="height: 40px">
                                         Export.csv
                                     </a>
+                                    </div>
                                 </div>
                             </div>
                             <div class="card-body p-0 m-0">
@@ -72,8 +78,8 @@
                                                             <td title="This is contra account"
                                                                 class="add-services-table align-middle"
                                                                 style="border-right: none">
-                                                                <div class="d-flex flex-wrap justify-content-center items-center">
-                                                                    <span>{!! str_repeat('&nbsp;', 1) !!}</span>
+                                                                <div class=" items-center">
+                                                                    <span >{!! str_repeat('&nbsp;', 90) !!}</span>
                                                                     @if($five->is_contra == 't')
                                                                         <svg
                                                                                 class="{{ $five->status == 'f' ? 'text-danger' : 'text-success' }}"
@@ -84,7 +90,7 @@
                                                                                   clip-rule="evenodd"></path>
                                                                         </svg>
                                                                     @endif
-                                                                    <span> &nbsp;<b>{{ $five->name }}</b></span>
+                                                                    <span > &nbsp;<b>{{ $five->name }}</b></span>
 
                                                                 </div>
                                                             </td>

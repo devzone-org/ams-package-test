@@ -105,6 +105,7 @@ class Add extends Component
             DB::commit();
             $this->success ='Account has been created.';
             $this->reset(['account_name','date','account_type','parent_account','at_level','is_contra','opening_balance','show_opening_balance','sub_accounts']);
+            $this->date = date('d M Y');
         } catch (\Exception $e) {
             DB::rollBack();
             $this->addError('account_name', $e->getMessage());
