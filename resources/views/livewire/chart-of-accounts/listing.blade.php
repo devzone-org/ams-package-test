@@ -43,7 +43,8 @@
                                     <tbody>
                                     @foreach($coa->where('level','1') as $one)
                                         <tr>
-                                            <td class="add-services-table align-middle text-muted" style="padding-left: 10px !important;" colspan="6">
+                                            <td class="add-services-table align-middle text-muted"
+                                                style="padding-left: 10px !important;" colspan="6">
                                                 {!! str_repeat('&nbsp;', 4) !!}{{ $one->name }}
                                             </td>
                                         </tr>
@@ -61,14 +62,16 @@
                                                 </tr>
                                                 @foreach($coa->where('sub_account',$three->id) as $four)
                                                     <tr>
-                                                        <td class="add-services-table align-middle text-muted" colspan="6">
+                                                        <td class="add-services-table align-middle text-muted"
+                                                            colspan="6">
                                                             {!! str_repeat('&nbsp;', 60) !!} {{ $four->name }}
                                                         </td>
                                                     </tr>
                                                     @foreach($coa->where('sub_account',$four->id) as $five)
                                                         <tr class="{{ $five->status=='f'?'bg-danger':'' }}">
                                                             <td title="This is contra account"
-                                                                class="add-services-table align-middle" style="border-right: none">
+                                                                class="add-services-table align-middle"
+                                                                style="border-right: none">
                                                                 <div class="d-flex flex-wrap justify-content-center items-center">
                                                                     <span>{!! str_repeat('&nbsp;', 1) !!}</span>
                                                                     @if($five->is_contra == 't')
@@ -85,52 +88,122 @@
 
                                                                 </div>
                                                             </td>
-                                                            <td class="add-services-table align-middle col-1" style="border-left: none;border-right: none"><b>{{ $five->code }}</b></td>
-                                                            <td class="add-services-table align-middle col-2" style="border-left: none;border-right: none">
-                                                                @php
-                                                                    $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
-                                                                    if($clo<0){
-                                                                        echo '<b>('.number_format(abs($clo),2).')</b>';
-                                                                    } else {
-                                                                        echo '<b>' . number_format(abs($clo),2) . '</b>';
-                                                                    }
-                                                                @endphp
+                                                            <td class="add-services-table align-middle col-1"
+                                                                style="border-left: none;border-right: none">
+                                                                <b>{{ $five->code }}</b></td>
+                                                            <td class="add-services-table align-middle col-2"
+                                                                style="border-left: none;border-right: none">
+                                                                @if($one->name == 'Assets')
+                                                                    @cannot('2.hide-assets')
+                                                                        @php
+                                                                            $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
+                                                                            if($clo<0){
+                                                                                echo '<b>('.number_format(abs($clo),2).')</b>';
+                                                                            } else {
+                                                                                echo '<b>' . number_format(abs($clo),2) . '</b>';
+                                                                            }
+                                                                        @endphp
+                                                                    @endcannot
+                                                                @elseif($one->name == 'Liabilities')
+                                                                    @cannot('2.hide-liabilities')
+                                                                        @php
+                                                                            $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
+                                                                            if($clo<0){
+                                                                                echo '<b>('.number_format(abs($clo),2).')</b>';
+                                                                            } else {
+                                                                                echo '<b>' . number_format(abs($clo),2) . '</b>';
+                                                                            }
+                                                                        @endphp
+                                                                    @endcannot
+                                                                @elseif($one->name == 'Equity')
+                                                                    @cannot('2.hide-equity')
+                                                                        @php
+                                                                            $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
+                                                                            if($clo<0){
+                                                                                echo '<b>('.number_format(abs($clo),2).')</b>';
+                                                                            } else {
+                                                                                echo '<b>' . number_format(abs($clo),2) . '</b>';
+                                                                            }
+                                                                        @endphp
+                                                                    @endcannot
+                                                                @elseif($one->name == 'Income')
+                                                                    @cannot('2.hide-income')
+                                                                        @php
+                                                                            $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
+                                                                            if($clo<0){
+                                                                                echo '<b>('.number_format(abs($clo),2).')</b>';
+                                                                            } else {
+                                                                                echo '<b>' . number_format(abs($clo),2) . '</b>';
+                                                                            }
+                                                                        @endphp
+                                                                    @endcannot
+                                                                @elseif($one->name == 'Expenses')
+                                                                    @cannot('2.hide-expenses')
+                                                                        @php
+                                                                            $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
+                                                                            if($clo<0){
+                                                                                echo '<b>('.number_format(abs($clo),2).')</b>';
+                                                                            } else {
+                                                                                echo '<b>' . number_format(abs($clo),2) . '</b>';
+                                                                            }
+                                                                        @endphp
+                                                                    @endcannot
+                                                                @else
+                                                                    @php
+                                                                        $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
+                                                                        if($clo<0){
+                                                                            echo '<b>('.number_format(abs($clo),2).')</b>';
+                                                                        } else {
+                                                                            echo '<b>' . number_format(abs($clo),2) . '</b>';
+                                                                        }
+                                                                    @endphp
+                                                                @endif
                                                             </td>
-                                                            <td class="add-services-table align-middle col-1" style="border-left: none;border-right: none">
+                                                            <td class="add-services-table align-middle col-1"
+                                                                style="border-left: none;border-right: none">
                                                                 @if(!empty($five->posting_date))
                                                                     <b>{{date('d M, Y',strtotime($five->posting_date))}}</b>
                                                                 @endif</td>
 
-                                                            <td class="add-services-table align-middle" style="border-left: none;width:50px">
+                                                            <td class="add-services-table align-middle"
+                                                                style="border-left: none;width:50px">
 
                                                                 <div class="nav-item dropdown">
-                                                                    <div class="user-panel d-flex nav-link m-0 p-0 pr-2" data-toggle="dropdown"  style="cursor: pointer; ">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                                                                    <div class="user-panel d-flex nav-link m-0 p-0 pr-2"
+                                                                         data-toggle="dropdown"
+                                                                         style="cursor: pointer; ">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                             fill="none" viewBox="0 0 24 24"
+                                                                             stroke-width="1.5" stroke="currentColor"
+                                                                             class="w-6 h-6">
+                                                                            <path stroke-linecap="round"
+                                                                                  stroke-linejoin="round"
+                                                                                  d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/>
                                                                         </svg>
 
                                                                     </div>
                                                                     <div class="dropdown-menu dropdown-menu-right">
-                                                                        <a href="{{ url('accounts/accountant/ledger') }}?account_id={{$five->id}}" class="dropdown-item" target="_blank">
-                                                                             View Ledger
+                                                                        <a href="{{ url('accounts/accountant/ledger') }}?account_id={{$five->id}}"
+                                                                           class="dropdown-item" target="_blank">
+                                                                            View Ledger
                                                                         </a>
                                                                         <a type="button"
-                                                                                wire:click="changeStatus('{{ $five->id }}')"
-                                                                                class="text-danger mx-3"> Mark Inactive </a>
+                                                                           wire:click="changeStatus('{{ $five->id }}')"
+                                                                           class="text-danger mx-3"> Mark Inactive </a>
                                                                     </div>
                                                                 </div>
 
 
-{{--                                                                <a--}}
-{{--                                                                        href="{{ url('accounts/accountant/ledger') }}?account_id={{$five->id}}"--}}
-{{--                                                                        target="_blank"--}}
-{{--                                                                        class="btn btn-success btn-sm"> View Ledger </a>--}}
-{{--                                                                <button type="button"--}}
-{{--                                                                        wire:click="changeStatus('{{ $five->id }}')"--}}
-{{--                                                                        class="btn btn-primary btn-sm"--}}
-{{--                                                                >--}}
-{{--                                                                    Mark Inactive--}}
-{{--                                                                </button>--}}
+                                                                {{--                                                                <a--}}
+                                                                {{--                                                                        href="{{ url('accounts/accountant/ledger') }}?account_id={{$five->id}}"--}}
+                                                                {{--                                                                        target="_blank"--}}
+                                                                {{--                                                                        class="btn btn-success btn-sm"> View Ledger </a>--}}
+                                                                {{--                                                                <button type="button"--}}
+                                                                {{--                                                                        wire:click="changeStatus('{{ $five->id }}')"--}}
+                                                                {{--                                                                        class="btn btn-primary btn-sm"--}}
+                                                                {{--                                                                >--}}
+                                                                {{--                                                                    Mark Inactive--}}
+                                                                {{--                                                                </button>--}}
                                                             </td>
                                                         </tr>
                                                     @endforeach
@@ -237,20 +310,78 @@
                                                     </svg>
                                                 @endif
                                                 <span> &nbsp;{{ $five->name }}</span>
-
                                             </div>
                                         </td>
 
                                         <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{{ $five->code }}</td>
                                         <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            @php
-                                                $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
-                                                if($clo<0){
-                                                    echo '('.number_format(abs($clo),2).')';
-                                                } else {
-                                                    echo number_format(abs($clo),2);
-                                                }
-                                            @endphp
+                                            @if($one->name == 'Assets')
+                                                @cannot('2.hide-assets')
+                                                    @php
+                                                        $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
+                                                        if($clo<0){
+                                                            echo '('.number_format(abs($clo),2).')';
+                                                        } else {
+                                                            echo number_format(abs($clo),2);
+                                                        }
+                                                    @endphp
+                                                @endcannot
+                                            @elseif($one->name == 'Liabilities')
+                                                @cannot('2.hide-liabilities')
+                                                    @php
+                                                        $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
+                                                        if($clo<0){
+                                                            echo '('.number_format(abs($clo),2).')';
+                                                        } else {
+                                                            echo number_format(abs($clo),2);
+                                                        }
+                                                    @endphp
+                                                @endcannot
+                                            @elseif($one->name == 'Equity')
+                                                @cannot('2.hide-equity')
+                                                    @php
+                                                        $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
+                                                        if($clo<0){
+                                                            echo '('.number_format(abs($clo),2).')';
+                                                        } else {
+                                                            echo number_format(abs($clo),2);
+                                                        }
+                                                    @endphp
+                                                @endcannot
+                                            @elseif($one->name == 'Income')
+                                                @cannot('2.hide-income')
+                                                    @php
+                                                        $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
+                                                        if($clo<0){
+                                                            echo '('.number_format(abs($clo),2).')';
+                                                        } else {
+                                                            echo number_format(abs($clo),2);
+                                                        }
+                                                    @endphp
+                                                @endcannot
+                                            @elseif($one->name == 'Expenses')
+                                                @cannot('2.hide-expenses')
+                                                    @php
+                                                        $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
+                                                        if($clo<0){
+                                                            echo '('.number_format(abs($clo),2).')';
+                                                        } else {
+                                                            echo number_format(abs($clo),2);
+                                                        }
+                                                    @endphp
+                                                @endcannot
+                                            @else
+                                                @php
+                                                    $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));
+                                                    if($clo<0){
+                                                        echo '('.number_format(abs($clo),2).')';
+                                                    } else {
+                                                        echo number_format(abs($clo),2);
+                                                    }
+                                                @endphp
+                                            @endif
+
+
                                         </td>
                                         <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
                                             @if(!empty($five->posting_date))

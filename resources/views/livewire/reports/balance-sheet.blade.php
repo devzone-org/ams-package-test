@@ -82,10 +82,54 @@
 
                                                     </td>
                                                     <td class="border-0 px-2 py-1">
-                                                        @if($l3['balance']>=0)
-                                                            {{ number_format($l3['balance'],2) }}
+
+
+                                                        @if($type == 'Assets')
+                                                            @cannot('2.hide-assets')
+                                                                @if($l3['balance']>=0)
+                                                                    {{ number_format($l3['balance'],2) }}
+                                                                @else
+                                                                ({{ number_format(abs($l3['balance']),2) }})
+                                                                @endif
+                                                            @endcannot
+                                                        @elseif($type == 'Liabilities')
+                                                            @cannot('2.hide-liabilities')
+                                                                @if($l3['balance']>=0)
+                                                                    {{ number_format($l3['balance'],2) }}
+                                                                @else
+                                                                ({{ number_format(abs($l3['balance']),2) }})
+                                                                @endif
+                                                            @endcannot
+                                                        @elseif($type == 'Equity')
+                                                            @cannot('2.hide-equity')
+                                                                @if($l3['balance']>=0)
+                                                                    {{ number_format($l3['balance'],2) }}
+                                                                @else
+                                                                ({{ number_format(abs($l3['balance']),2) }})
+                                                                @endif
+                                                            @endcannot
+                                                        @elseif($type == 'Income')
+                                                            @cannot('2.hide-income')
+                                                                @if($l3['balance']>=0)
+                                                                    {{ number_format($l3['balance'],2) }}
+                                                                @else
+                                                                ({{ number_format(abs($l3['balance']),2) }})
+                                                                @endif
+                                                            @endcannot
+                                                        @elseif($type == 'Expenses')
+                                                            @cannot('2.hide-expenses')
+                                                                @if($l3['balance']>=0)
+                                                                    {{ number_format($l3['balance'],2) }}
+                                                                @else
+                                                                ({{ number_format(abs($l3['balance']),2) }})
+                                                                @endif
+                                                            @endcannot
                                                         @else
-                                                        ({{ number_format(abs($l3['balance']),2) }})
+                                                            @if($l3['balance']>=0)
+                                                                {{ number_format($l3['balance'],2) }}
+                                                            @else
+                                                            ({{ number_format(abs($l3['balance']),2) }})
+                                                            @endif
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -121,10 +165,54 @@
 
                                                         </td>
                                                         <td class="border-0 px-2 py-1">
-                                                            @if($l4['balance']>=0)
-                                                                {{ number_format($l4['balance'],2) }}
+
+
+                                                            @if($type == 'Assets')
+                                                                @cannot('2.hide-assets')
+                                                                    @if($l4['balance']>=0)
+                                                                        {{ number_format($l4['balance'],2) }}
+                                                                    @else
+                                                                    ({{ number_format(abs($l4['balance']),2) }})
+                                                                    @endif
+                                                                @endcannot
+                                                            @elseif($type == 'Liabilities')
+                                                                @cannot('2.hide-liabilities')
+                                                                    @if($l4['balance']>=0)
+                                                                        {{ number_format($l4['balance'],2) }}
+                                                                    @else
+                                                                    ({{ number_format(abs($l4['balance']),2) }})
+                                                                    @endif
+                                                                @endcannot
+                                                            @elseif($type == 'Equity')
+                                                                @cannot('2.hide-equity')
+                                                                    @if($l4['balance']>=0)
+                                                                        {{ number_format($l4['balance'],2) }}
+                                                                    @else
+                                                                    ({{ number_format(abs($l4['balance']),2) }})
+                                                                    @endif
+                                                                @endcannot
+                                                            @elseif($type == 'Income')
+                                                                @cannot('2.hide-income')
+                                                                    @if($l4['balance']>=0)
+                                                                        {{ number_format($l4['balance'],2) }}
+                                                                    @else
+                                                                    ({{ number_format(abs($l4['balance']),2) }})
+                                                                    @endif
+                                                                @endcannot
+                                                            @elseif($type == 'Expenses')
+                                                                @cannot('2.hide-expenses')
+                                                                    @if($l4['balance']>=0)
+                                                                        {{ number_format($l4['balance'],2) }}
+                                                                    @else
+                                                                    ({{ number_format(abs($l4['balance']),2) }})
+                                                                    @endif
+                                                                @endcannot
                                                             @else
-                                                            ({{ number_format(abs($l4['balance']),2) }})
+                                                                @if($l4['balance']>=0)
+                                                                    {{ number_format($l4['balance'],2) }}
+                                                                @else
+                                                                ({{ number_format(abs($l4['balance']),2) }})
+                                                                @endif
                                                             @endif
                                                         </td>
                                                     </tr>
@@ -144,10 +232,55 @@
 
 
 
-                                                                        @if($l5['balance']>=0)
-                                                                            {{ number_format($l5['balance'],2) }}
+
+
+
+                                                                        @if($type == 'Assets')
+                                                                            @cannot('2.hide-assets')
+                                                                                @if($l5['balance']>=0)
+                                                                                    {{ number_format($l5['balance'],2) }}
+                                                                                @else
+                                                                                ({{ number_format(abs($l5['balance']),2) }})
+                                                                                @endif
+                                                                            @endcannot
+                                                                        @elseif($type == 'Liabilities')
+                                                                            @cannot('2.hide-liabilities')
+                                                                                @if($l5['balance']>=0)
+                                                                                    {{ number_format($l5['balance'],2) }}
+                                                                                @else
+                                                                                ({{ number_format(abs($l5['balance']),2) }})
+                                                                                @endif
+                                                                            @endcannot
+                                                                        @elseif($type == 'Equity')
+                                                                            @cannot('2.hide-equity')
+                                                                                @if($l5['balance']>=0)
+                                                                                    {{ number_format($l5['balance'],2) }}
+                                                                                @else
+                                                                                ({{ number_format(abs($l5['balance']),2) }})
+                                                                                @endif
+                                                                            @endcannot
+                                                                        @elseif($type == 'Income')
+                                                                            @cannot('2.hide-income')
+                                                                                @if($l5['balance']>=0)
+                                                                                    {{ number_format($l5['balance'],2) }}
+                                                                                @else
+                                                                                ({{ number_format(abs($l5['balance']),2) }})
+                                                                                @endif
+                                                                            @endcannot
+                                                                        @elseif($type == 'Expenses')
+                                                                            @cannot('2.hide-expenses')
+                                                                                @if($l5['balance']>=0)
+                                                                                    {{ number_format($l5['balance'],2) }}
+                                                                                @else
+                                                                                ({{ number_format(abs($l5['balance']),2) }})
+                                                                                @endif
+                                                                            @endcannot
                                                                         @else
-                                                                        ({{ number_format(abs($l5['balance']),2) }})
+                                                                            @if($l5['balance']>=0)
+                                                                                {{ number_format($l5['balance'],2) }}
+                                                                            @else
+                                                                            ({{ number_format(abs($l5['balance']),2) }})
+                                                                            @endif
                                                                         @endif
                                                                         @if($l5['type'] != 'Equity')
                                                                     </a>
@@ -160,6 +293,67 @@
                                                     @endforeach
                                                 @endforeach
                                             @endforeach
+                                            <tr class="   bg-white">
+                                                <th colspan="2" class=" text-left px-2 py-1 bg-white">
+                                                    Total {{ $type }}
+                                                </th>
+
+                                                <th class=" text-left px-2 py-1 bg-white">
+                                                    @php
+                                                        $total = collect($level3)->where('type',$type)->sum('balance');
+                                                    @endphp
+
+                                                    @if($type == 'Assets')
+                                                        @cannot('2.hide-assets')
+                                                            @if($total>=0)
+                                                                {{ number_format($total,2) }}
+                                                            @else
+                                                            ({{ number_format(abs($total),2) }})
+                                                            @endif
+                                                        @endcannot
+                                                    @elseif($type == 'Liabilities')
+                                                        @cannot('2.hide-liabilities')
+                                                            @if($total>=0)
+                                                                {{ number_format($total,2) }}
+                                                            @else
+                                                            ({{ number_format(abs($total),2) }})
+                                                            @endif
+                                                        @endcannot
+                                                    @elseif($type == 'Equity')
+                                                        @cannot('2.hide-equity')
+                                                            @if($total>=0)
+                                                                {{ number_format($total,2) }}
+                                                            @else
+                                                            ({{ number_format(abs($total),2) }})
+                                                            @endif
+                                                        @endcannot
+                                                    @elseif($type == 'Income')
+                                                        @cannot('2.hide-income')
+                                                            @if($total>=0)
+                                                                {{ number_format($total,2) }}
+                                                            @else
+                                                            ({{ number_format(abs($total),2) }})
+                                                            @endif
+                                                        @endcannot
+                                                    @elseif($type == 'Expenses')
+                                                        @cannot('2.hide-expenses')
+                                                            @if($total>=0)
+                                                                {{ number_format($total,2) }}
+                                                            @else
+                                                            ({{ number_format(abs($total),2) }})
+                                                            @endif
+                                                        @endcannot
+                                                    @else
+                                                        @if($total>=0)
+                                                            {{ number_format($total,2) }}
+                                                        @else
+                                                        ({{ number_format(abs($total),2) }})
+                                                        @endif
+                                                    @endif
+
+
+                                                </th>
+                                            </tr>
                                         @endforeach
 
                                         <tr class="">
@@ -173,11 +367,15 @@
                                                     $equity = collect($level3)->where('type','Equity')->sum('balance');
                                                     $total = $liabilities + $equity;
                                                 @endphp
-                                                @if($total>=0)
-                                                    {{ number_format($total,2) }}
-                                                @else
-                                                ({{ number_format(abs($total),2) }})
-                                                @endif
+                                                @cannot('2.hide-liabilities')
+                                                    @cannot('2.hide-equity')
+                                                        @if($total>=0)
+                                                            {{ number_format($total,2) }}
+                                                        @else
+                                                        ({{ number_format(abs($total),2) }})
+                                                        @endif
+                                                    @endcannot
+                                                @endcannot
                                             </th>
                                         </tr>
                                         </tbody>
@@ -329,11 +527,54 @@
 
                             </td>
                             <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-900 font-medium">
-                                @if($l3['balance']>=0)
-                                    {{ number_format($l3['balance'],2) }}
+                                @if($type == 'Assets')
+                                    @cannot('2.hide-assets')
+                                        @if($l3['balance']>=0)
+                                            {{ number_format($l3['balance'],2) }}
+                                        @else
+                                        ({{ number_format(abs($l3['balance']),2) }})
+                                        @endif
+                                    @endcannot
+                                @elseif($type == 'Liabilities')
+                                    @cannot('2.hide-liabilities')
+                                        @if($l3['balance']>=0)
+                                            {{ number_format($l3['balance'],2) }}
+                                        @else
+                                        ({{ number_format(abs($l3['balance']),2) }})
+                                        @endif
+                                    @endcannot
+                                @elseif($type == 'Equity')
+                                    @cannot('2.hide-equity')
+                                        @if($l3['balance']>=0)
+                                            {{ number_format($l3['balance'],2) }}
+                                        @else
+                                        ({{ number_format(abs($l3['balance']),2) }})
+                                        @endif
+                                    @endcannot
+                                @elseif($type == 'Income')
+                                    @cannot('2.hide-income')
+                                        @if($l3['balance']>=0)
+                                            {{ number_format($l3['balance'],2) }}
+                                        @else
+                                        ({{ number_format(abs($l3['balance']),2) }})
+                                        @endif
+                                    @endcannot
+                                @elseif($type == 'Expenses')
+                                    @cannot('2.hide-expenses')
+                                        @if($l3['balance']>=0)
+                                            {{ number_format($l3['balance'],2) }}
+                                        @else
+                                        ({{ number_format(abs($l3['balance']),2) }})
+                                        @endif
+                                    @endcannot
                                 @else
-                                ({{ number_format(abs($l3['balance']),2) }})
+                                    @if($l3['balance']>=0)
+                                        {{ number_format($l3['balance'],2) }}
+                                    @else
+                                    ({{ number_format(abs($l3['balance']),2) }})
+                                    @endif
                                 @endif
+
                             </td>
                         </tr>
                         @foreach(collect($level4)->where('sub_account',$l3['id']) as $l4)
@@ -370,10 +611,52 @@
 
                                 </td>
                                 <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-900 font-medium ">
-                                    @if($l4['balance']>=0)
-                                        {{ number_format($l4['balance'],2) }}
+                                    @if($type == 'Assets')
+                                        @cannot('2.hide-assets')
+                                            @if($l4['balance']>=0)
+                                                {{ number_format($l4['balance'],2) }}
+                                            @else
+                                            ({{ number_format(abs($l4['balance']),2) }})
+                                            @endif
+                                        @endcannot
+                                    @elseif($type == 'Liabilities')
+                                        @cannot('2.hide-liabilities')
+                                            @if($l4['balance']>=0)
+                                                {{ number_format($l4['balance'],2) }}
+                                            @else
+                                            ({{ number_format(abs($l4['balance']),2) }})
+                                            @endif
+                                        @endcannot
+                                    @elseif($type == 'Equity')
+                                        @cannot('2.hide-equity')
+                                            @if($l4['balance']>=0)
+                                                {{ number_format($l4['balance'],2) }}
+                                            @else
+                                            ({{ number_format(abs($l4['balance']),2) }})
+                                            @endif
+                                        @endcannot
+                                    @elseif($type == 'Income')
+                                        @cannot('2.hide-income')
+                                            @if($l4['balance']>=0)
+                                                {{ number_format($l4['balance'],2) }}
+                                            @else
+                                            ({{ number_format(abs($l4['balance']),2) }})
+                                            @endif
+                                        @endcannot
+                                    @elseif($type == 'Expenses')
+                                        @cannot('2.hide-expenses')
+                                            @if($l4['balance']>=0)
+                                                {{ number_format($l4['balance'],2) }}
+                                            @else
+                                            ({{ number_format(abs($l4['balance']),2) }})
+                                            @endif
+                                        @endcannot
                                     @else
-                                    ({{ number_format(abs($l4['balance']),2) }})
+                                        @if($l4['balance']>=0)
+                                            {{ number_format($l4['balance'],2) }}
+                                        @else
+                                        ({{ number_format(abs($l4['balance']),2) }})
+                                        @endif
                                     @endif
                                 </td>
                             </tr>
@@ -392,11 +675,56 @@
 
 
 
-                                                @if($l5['balance']>=0)
-                                                    {{ number_format($l5['balance'],2) }}
+
+
+                                                @if($type == 'Assets')
+                                                    @cannot('2.hide-assets')
+                                                        @if($l5['balance']>=0)
+                                                            {{ number_format($l5['balance'],2) }}
+                                                        @else
+                                                        ({{ number_format(abs($l5['balance']),2) }})
+                                                        @endif
+                                                    @endcannot
+                                                @elseif($type == 'Liabilities')
+                                                    @cannot('2.hide-liabilities')
+                                                        @if($l5['balance']>=0)
+                                                            {{ number_format($l5['balance'],2) }}
+                                                        @else
+                                                        ({{ number_format(abs($l5['balance']),2) }})
+                                                        @endif
+                                                    @endcannot
+                                                @elseif($type == 'Equity')
+                                                    @cannot('2.hide-equity')
+                                                        @if($l5['balance']>=0)
+                                                            {{ number_format($l5['balance'],2) }}
+                                                        @else
+                                                        ({{ number_format(abs($l5['balance']),2) }})
+                                                        @endif
+                                                    @endcannot
+                                                @elseif($type == 'Income')
+                                                    @cannot('2.hide-income')
+                                                        @if($l5['balance']>=0)
+                                                            {{ number_format($l5['balance'],2) }}
+                                                        @else
+                                                        ({{ number_format(abs($l5['balance']),2) }})
+                                                        @endif
+                                                    @endcannot
+                                                @elseif($type == 'Expenses')
+                                                    @cannot('2.hide-expenses')
+                                                        @if($l5['balance']>=0)
+                                                            {{ number_format($l5['balance'],2) }}
+                                                        @else
+                                                        ({{ number_format(abs($l5['balance']),2) }})
+                                                        @endif
+                                                    @endcannot
                                                 @else
-                                                ({{ number_format(abs($l5['balance']),2) }})
+                                                    @if($l5['balance']>=0)
+                                                        {{ number_format($l5['balance'],2) }}
+                                                    @else
+                                                    ({{ number_format(abs($l5['balance']),2) }})
+                                                    @endif
                                                 @endif
+
                                                 @if($l5['type'] != 'Equity')
                                             </a>
                                         @endif
@@ -417,11 +745,56 @@
                             @php
                                 $total = collect($level3)->where('type',$type)->sum('balance');
                             @endphp
-                            @if($total>=0)
-                                {{ number_format($total,2) }}
+
+                            @if($type == 'Assets')
+                                @cannot('2.hide-assets')
+                                    @if($total>=0)
+                                        {{ number_format($total,2) }}
+                                    @else
+                                    ({{ number_format(abs($total),2) }})
+                                    @endif
+                                @endcannot
+                            @elseif($type == 'Liabilities')
+                                @cannot('2.hide-liabilities')
+                                    @if($total>=0)
+                                        {{ number_format($total,2) }}
+                                    @else
+                                    ({{ number_format(abs($total),2) }})
+                                    @endif
+                                @endcannot
+                            @elseif($type == 'Equity')
+                                @cannot('2.hide-equity')
+                                    @if($total>=0)
+                                        {{ number_format($total,2) }}
+                                    @else
+                                    ({{ number_format(abs($total),2) }})
+                                    @endif
+                                @endcannot
+                            @elseif($type == 'Income')
+                                @cannot('2.hide-income')
+                                    @if($total>=0)
+                                        {{ number_format($total,2) }}
+                                    @else
+                                    ({{ number_format(abs($total),2) }})
+                                    @endif
+                                @endcannot
+                            @elseif($type == 'Expenses')
+                                @cannot('2.hide-expenses')
+                                    @if($total>=0)
+                                        {{ number_format($total,2) }}
+                                    @else
+                                    ({{ number_format(abs($total),2) }})
+                                    @endif
+                                @endcannot
                             @else
-                            ({{ number_format(abs($total),2) }})
+                                @if($total>=0)
+                                    {{ number_format($total,2) }}
+                                @else
+                                ({{ number_format(abs($total),2) }})
+                                @endif
                             @endif
+
+
                         </th>
                     </tr>
                 @endforeach
@@ -438,11 +811,16 @@
                             $equity = collect($level3)->where('type','Equity')->sum('balance');
                             $total = $liabilities + $equity;
                         @endphp
-                        @if($total>=0)
-                            {{ number_format($total,2) }}
-                        @else
-                        ({{ number_format(abs($total),2) }})
-                        @endif
+                        @cannot('2.hide-liabilities')
+                            @cannot('2.hide-equity')
+                                @if($total>=0)
+                                    {{ number_format($total,2) }}
+                                @else
+                                ({{ number_format(abs($total),2) }})
+                                @endif
+                            @endcannot
+                        @endcannot
+
                     </th>
                 </tr>
                 </tbody>

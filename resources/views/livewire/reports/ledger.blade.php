@@ -391,6 +391,10 @@
                         @endphp
                         <tr class="{{ $loop->odd ? 'bg-gray-50' :'' }}">
                             <td class="px-2   py-2   border-r text-sm   text-gray-500">
+{{--                                @if(\Devzone\Ams\Models\ChartOfAccount::where('id', $en['account_id'])->first()->type == 'Assets')--}}
+{{--                                    --}}
+{{--                                @endif--}}
+
                                 <a class="font-medium text-indigo-600 hover:text-indigo-500" href="javascript:void(0);"
                                    onclick="window.open('{{ url('accounts/journal/voucher/print').'/'.$en['voucher_no'] }}','voucher-print-{{$en['voucher_no']}}','height=500,width=800');">{{ $en['voucher_no'] }}</a>
                             </td>
