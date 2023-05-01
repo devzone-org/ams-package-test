@@ -72,11 +72,18 @@
                                         </div>
                                     </div>
                                 </div>
+                                @if(!empty($error))
+                                    <div class="alert alert-danger">
+                                        {{ $error }}
+                                    </div>
+                                @endif
                             </div>
                             <div class="card-body p-0 m-0">
                                 <table class="table table-bordered border-0">
                                     <thead class="">
-                                    <th class="add-services-table col-1 text-muted" style="padding-left: 10px !important;">V. #</th>
+                                    <th class="add-services-table col-1 text-muted"
+                                        style="padding-left: 10px !important;">V. #
+                                    </th>
                                     <th class="add-services-table col-2 text-muted"> Date</th>
                                     <th class="add-services-table col-6 text-muted">Description</th>
                                     <th class="add-services-table text-right col-1 text-muted">Dr</th>
@@ -147,46 +154,47 @@
                                                     $att = \Devzone\Ams\Models\LedgerAttachment::where('voucher_no',$en['voucher_no'])->where('type','1')->get();
                                                 @endphp
 
-{{--                                                @if($att->isNotEmpty())--}}
-{{--                                                    <div class="relative inline-block text-left" x-data="{open:false}">--}}
-{{--                                                        <div class="pt-1 pl-0">--}}
-{{--                                                            <svg @click="open=true;" class="w-4 h-4 cursor-pointer"--}}
-{{--                                                                 fill="currentColor"--}}
-{{--                                                                 viewBox="0 0 20 20"--}}
-{{--                                                                 xmlns="http://www.w3.org/2000/svg">--}}
-{{--                                                                <path fill-rule="evenodd"--}}
-{{--                                                                      d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"--}}
-{{--                                                                      clip-rule="evenodd"></path>--}}
-{{--                                                            </svg>--}}
-{{--                                                        </div>--}}
+                                                {{--                                                @if($att->isNotEmpty())--}}
+                                                {{--                                                    <div class="relative inline-block text-left" x-data="{open:false}">--}}
+                                                {{--                                                        <div class="pt-1 pl-0">--}}
+                                                {{--                                                            <svg @click="open=true;" class="w-4 h-4 cursor-pointer"--}}
+                                                {{--                                                                 fill="currentColor"--}}
+                                                {{--                                                                 viewBox="0 0 20 20"--}}
+                                                {{--                                                                 xmlns="http://www.w3.org/2000/svg">--}}
+                                                {{--                                                                <path fill-rule="evenodd"--}}
+                                                {{--                                                                      d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"--}}
+                                                {{--                                                                      clip-rule="evenodd"></path>--}}
+                                                {{--                                                            </svg>--}}
+                                                {{--                                                        </div>--}}
 
-{{--                                                        <div @click.away="open=false;" x-show="open"--}}
-{{--                                                             class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10 focus:outline-none"--}}
-{{--                                                             role="menu" aria-orientation="vertical"--}}
-{{--                                                             aria-labelledby="menu-button"--}}
-{{--                                                             tabindex="-1">--}}
-{{--                                                            <div class="" role="none">--}}
-{{--                                                                @foreach($att as $a)--}}
-{{--                                                                    @if(empty($a->account_id) || $en['account_id'] == $a->account_id)--}}
-{{--                                                                        <a @click="open = false;"--}}
-{{--                                                                           href="{{ env('AWS_URL').$a->attachment }}"--}}
-{{--                                                                           target="_blank"--}}
-{{--                                                                           class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"--}}
-{{--                                                                           role="menuitem" tabindex="-1"--}}
-{{--                                                                           id="menu-item-0">{{ $loop->iteration }}--}}
-{{--                                                                            Attachment </a>--}}
-{{--                                                                    @endif--}}
-{{--                                                                @endforeach--}}
+                                                {{--                                                        <div @click.away="open=false;" x-show="open"--}}
+                                                {{--                                                             class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10 focus:outline-none"--}}
+                                                {{--                                                             role="menu" aria-orientation="vertical"--}}
+                                                {{--                                                             aria-labelledby="menu-button"--}}
+                                                {{--                                                             tabindex="-1">--}}
+                                                {{--                                                            <div class="" role="none">--}}
+                                                {{--                                                                @foreach($att as $a)--}}
+                                                {{--                                                                    @if(empty($a->account_id) || $en['account_id'] == $a->account_id)--}}
+                                                {{--                                                                        <a @click="open = false;"--}}
+                                                {{--                                                                           href="{{ env('AWS_URL').$a->attachment }}"--}}
+                                                {{--                                                                           target="_blank"--}}
+                                                {{--                                                                           class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"--}}
+                                                {{--                                                                           role="menuitem" tabindex="-1"--}}
+                                                {{--                                                                           id="menu-item-0">{{ $loop->iteration }}--}}
+                                                {{--                                                                            Attachment </a>--}}
+                                                {{--                                                                    @endif--}}
+                                                {{--                                                                @endforeach--}}
 
-{{--                                                            </div>--}}
-{{--                                                        </div>--}}
-{{--                                                    </div>--}}
-{{--                                                @endif--}}
+                                                {{--                                                            </div>--}}
+                                                {{--                                                        </div>--}}
+                                                {{--                                                    </div>--}}
+                                                {{--                                                @endif--}}
                                             </td>
                                         </tr>
                                     @endforeach
                                     <tr>
-                                        <th colspan="3" class="px-2 py-2 text-right bg-white border-right-0 border-left-0">
+                                        <th colspan="3"
+                                            class="px-2 py-2 text-right bg-white border-right-0 border-left-0">
                                             Closing Balance
                                         </th>
                                         <th class="bg-white border-right-0 border-left-0"></th>
@@ -195,7 +203,8 @@
                                         <th class="px-2 py-2 bg-white border-left-0"></th>
                                     </tr>
                                     <tr>
-                                        <th colspan="3" class="px-2 py-2 text-right bg-white border-right-0 border-left-0">
+                                        <th colspan="3"
+                                            class="px-2 py-2 text-right bg-white border-right-0 border-left-0">
                                             Total Debit & Credit
                                         </th>
                                         <th class="px-2 py-2 text-right bg-white border-right-0 border-left-0">{{ number_format(collect($ledger)->sum('debit'),2) }}</th>
@@ -322,6 +331,27 @@
 
 
                 </div>
+                @if(!empty($error))
+                    <div class="rounded-md bg-red-50 p-4 mb-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <!-- Heroicon name: x-circle -->
+                                <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd"
+                                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                          clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-red-800">
+                                    {{ $error }}
+                                </h3>
+
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
             <div>
 
@@ -391,9 +421,9 @@
                         @endphp
                         <tr class="{{ $loop->odd ? 'bg-gray-50' :'' }}">
                             <td class="px-2   py-2   border-r text-sm   text-gray-500">
-{{--                                @if(\Devzone\Ams\Models\ChartOfAccount::where('id', $en['account_id'])->first()->type == 'Assets')--}}
-{{--                                    --}}
-{{--                                @endif--}}
+                                {{--                                @if(\Devzone\Ams\Models\ChartOfAccount::where('id', $en['account_id'])->first()->type == 'Assets')--}}
+                                {{--                                    --}}
+                                {{--                                @endif--}}
 
                                 <a class="font-medium text-indigo-600 hover:text-indigo-500" href="javascript:void(0);"
                                    onclick="window.open('{{ url('accounts/journal/voucher/print').'/'.$en['voucher_no'] }}','voucher-print-{{$en['voucher_no']}}','height=500,width=800');">{{ $en['voucher_no'] }}</a>
@@ -510,39 +540,39 @@
     {{--        });--}}
 
 
-    @section('script')
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-        <script>
-            let from_date = new Pikaday({
-                field: document.getElementById('from_date'),
-                format: "DD MMM YYYY"
+@section('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+    <script>
+        let from_date = new Pikaday({
+            field: document.getElementById('from_date'),
+            format: "DD MMM YYYY"
+        });
+
+        let to_date = new Pikaday({
+            field: document.getElementById('to_date'),
+            format: "DD MMM YYYY"
+        });
+
+        from_date.setDate(new Date('{{ $from_date }}'));
+        to_date.setDate(new Date('{{ $to_date }}'));
+
+        document.addEventListener('livewire:load', () => {
+            Livewire.on('focusInput', postId => {
+                setTimeout(() => {
+                    document.getElementById('searchable_query').focus();
+                }, 300);
             });
 
-            let to_date = new Pikaday({
-                field: document.getElementById('to_date'),
-                format: "DD MMM YYYY"
-            });
 
-            from_date.setDate(new Date('{{ $from_date }}'));
-            to_date.setDate(new Date('{{ $to_date }}'));
+        });
 
-            document.addEventListener('livewire:load', () => {
-                Livewire.on('focusInput', postId => {
-                    setTimeout(() => {
-                        document.getElementById('searchable_query').focus();
-                    }, 300);
-                });
+        window.addEventListener('title', event => {
+            document.title = "GL: " + event.detail.name;
+        })
 
-
-            });
-
-            window.addEventListener('title', event => {
-                document.title = "GL: " + event.detail.name;
-            })
-
-        </script>
-    @endsection
+    </script>
+@endsection
 
 @endif
  
