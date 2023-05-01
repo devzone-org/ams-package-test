@@ -74,7 +74,8 @@ class Ledger extends Component
         $this->from_d = $this->from_date;
         $this->to_d = $this->to_date;
 
-        $this->error = '';
+
+        $this->reset(['ledger','error']);
         if (auth()->user()->can('2.hide-data-beyond-3-months')) {
             $date = Carbon::parse($this->formatDate($this->from_date));
             $now = Carbon::now();
