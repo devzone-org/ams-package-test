@@ -1,123 +1,130 @@
 @if(env('AMS_BOOTSTRAP') == 'true')
     <div class="content-wrapper">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <h1>Add Petty Expense</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="content">
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col">
-                            <div class="card card-primary card-outline">
-                                <div class="card-header">
-                                    <h3 class="card-title"><b>Add Petty Expenses</b></h3>
-                                </div>
-                                <div class="card-body">
-                                    <form wire:submit.prevent="save">
-                                        <div class="row">
-                                            <div class="col-xs-6 col-sm-4">
-                                                <div class="form-group">
-                                                    <label class="font-weight-normal">Invoice Date<span
-                                                                class="text-danger">*</span> </label>
-                                                    <input type="date" wire:model.lazy="petty_expenses.invoice_date"
-                                                           autocomplete="off"
-                                                           class="form-control @error('petty_expenses.invoice_date')  is-invalid @enderror">
-                                                </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><b>Add Petty Expenses</b></h3>
+                            </div>
+                            <div class="card-body">
+                                <form wire:submit.prevent="save">
+                                    <div class="row">
+                                        <div class="col-xs-6 col-sm-4">
+                                            <div class="form-group">
+                                                <label class="font-weight-normal">Invoice Date<span
+                                                            class="text-danger">*</span> </label>
+                                                <input type="date" wire:model.lazy="petty_expenses.invoice_date"
+                                                       autocomplete="off"
+                                                       class="form-control @error('petty_expenses.invoice_date')  is-invalid @enderror">
                                             </div>
-
-                                            <div class="col-xs-6 col-sm-4">
-                                                <div class="form-group">
-                                                    <label class="font-weight-normal">Expense Date <span
-                                                                class="text-danger">*</span></label>
-                                                    <input type="date" wire:model.lazy="petty_expenses.expense_date"
-                                                           autocomplete="off"
-                                                           class="form-control @error('petty_expenses.expense_date')  is-invalid @enderror">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-xs-6 col-sm-4">
-                                                <div class="form-group">
-                                                    <label class="font-weight-normal">Vendor Name <span
-                                                                class="text-danger">*</span></label>
-                                                    <input type="text" wire:model.lazy="petty_expenses.vendor_name"
-                                                           autocomplete="off"
-                                                           class="form-control @error('petty_expenses.vendor_name')  is-invalid @enderror">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-xs-6 col-sm-4">
-                                                <div class="form-group">
-                                                    <label class="font-weight-normal">Vendor Contact # <span
-                                                                class="text-danger">*</span></label>
-                                                    <input type="text" id="contact_no"
-                                                           wire:model.lazy="petty_expenses.vendor_contact_no"
-                                                           autocomplete="off"
-                                                           class="form-control @error('petty_expenses.vendor_contact_no')  is-invalid @enderror">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-xs-6 col-sm-4">
-                                                <div class="form-group">
-                                                    <label class="font-weight-normal">Attachment </label>
-                                                    <input type="file" wire:model.lazy="attachment" autocomplete="off"
-                                                           class="form-control p-0 m-0 pt-1 px-1">
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-6 col-sm-4">
-                                                <div class="form-group">
-                                                    <label class="font-weight-normal">Account Head <span
-                                                                class="text-danger">*</span></label>
-                                                    <select wire:model.defer="petty_expenses.account_head_id"
-                                                            class="form-control @error('petty_expenses.account_head_id')  is-invalid @enderror">
-                                                        <option value=""></option>
-                                                        @foreach($fetch_account_heads as $a)
-                                                            <option value="{{ $a['id'] }}">{{ $a['name'] }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-xs-6 col-sm-4">
-                                                <div class="form-group">
-                                                    <label class="font-weight-normal">Amount <span
-                                                                class="text-danger">*</span></label>
-                                                    <input type="number" step="0.1"
-                                                           wire:model.lazy="petty_expenses.amount" autocomplete="off"
-                                                           class="form-control @error('petty_expenses.amount')  is-invalid @enderror">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-12 pt-3">
-
-                                                <div class="form-group">
-                                                    <label class="font-weight-normal">Description <span
-                                                                class="text-danger">*</span></label>
-                                                    <textarea wire:model.lazy="petty_expenses.description"
-                                                              autocomplete="off" rows="5"
-                                                              class="form-control @error('petty_expenses.description')  is-invalid @enderror"></textarea>
-                                                </div>
-                                            </div>
-
-
-                                            <div class="col-12 pt-3">
-                                                <div class="form-group d-flex justify-content-end">
-                                                    <button type="submit" wire:loading.attr="disabled"
-                                                            class="btn btn-success mx-1">
-                                                        {{$is_edit?'Update':'Save'}}
-                                                    </button>
-
-                                                    <button type="button" wire:click="clear"
-                                                            wire:loading.attr="disabled"
-                                                            class="btn btn-danger mx-1">
-                                                        Reset
-                                                    </button>
-                                                    <a href="{{url('/accounts/petty-expenses-list/unclaimed')}}"
-                                                       class="btn btn-secondary mx-1">
-                                                        Go Back
-                                                    </a>
-                                                </div>
-                                            </div>
-
                                         </div>
-                                    </form>
-                                </div>
+
+                                        <div class="col-xs-6 col-sm-4">
+                                            <div class="form-group">
+                                                <label class="font-weight-normal">Expense Date <span
+                                                            class="text-danger">*</span></label>
+                                                <input type="date" wire:model.lazy="petty_expenses.expense_date"
+                                                       autocomplete="off"
+                                                       class="form-control @error('petty_expenses.expense_date')  is-invalid @enderror">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-6 col-sm-4">
+                                            <div class="form-group">
+                                                <label class="font-weight-normal">Vendor Name <span
+                                                            class="text-danger">*</span></label>
+                                                <input type="text" wire:model.lazy="petty_expenses.vendor_name"
+                                                       autocomplete="off"
+                                                       class="form-control @error('petty_expenses.vendor_name')  is-invalid @enderror">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-6 col-sm-4">
+                                            <div class="form-group">
+                                                <label class="font-weight-normal">Vendor Contact # <span
+                                                            class="text-danger">*</span></label>
+                                                <input type="text" id="contact_no"
+                                                       wire:model.lazy="petty_expenses.vendor_contact_no"
+                                                       autocomplete="off"
+                                                       class="form-control @error('petty_expenses.vendor_contact_no')  is-invalid @enderror">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-6 col-sm-4">
+                                            <div class="form-group">
+                                                <label class="font-weight-normal">Attachment </label>
+                                                <input type="file" wire:model.lazy="attachment" autocomplete="off"
+                                                       class="form-control p-0 m-0 pt-1 px-1">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 col-sm-4">
+                                            <div class="form-group">
+                                                <label class="font-weight-normal">Account Head <span
+                                                            class="text-danger">*</span></label>
+                                                <select wire:model.defer="petty_expenses.account_head_id"
+                                                        class="form-control @error('petty_expenses.account_head_id')  is-invalid @enderror">
+                                                    <option value=""></option>
+                                                    @foreach($fetch_account_heads as $a)
+                                                        <option value="{{ $a['id'] }}">{{ $a['name'] }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-6 col-sm-4">
+                                            <div class="form-group">
+                                                <label class="font-weight-normal">Amount <span
+                                                            class="text-danger">*</span></label>
+                                                <input type="number" step="0.1"
+                                                       wire:model.lazy="petty_expenses.amount" autocomplete="off"
+                                                       class="form-control @error('petty_expenses.amount')  is-invalid @enderror">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 pt-3">
+
+                                            <div class="form-group">
+                                                <label class="font-weight-normal">Description <span
+                                                            class="text-danger">*</span></label>
+                                                <textarea wire:model.lazy="petty_expenses.description"
+                                                          autocomplete="off" rows="5"
+                                                          class="form-control @error('petty_expenses.description')  is-invalid @enderror"></textarea>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-12 pt-3">
+                                            <div class="form-group d-flex justify-content-end">
+                                                <button type="submit" wire:loading.attr="disabled"
+                                                        class="btn btn-success mx-1">
+                                                    {{$is_edit?'Update':'Save'}}
+                                                </button>
+
+                                                <button type="button" wire:click="clear"
+                                                        wire:loading.attr="disabled"
+                                                        class="btn btn-danger mx-1">
+                                                    Reset
+                                                </button>
+                                                <a href="{{url('/accounts/petty-expenses-list/unclaimed')}}"
+                                                   class="btn btn-secondary mx-1">
+                                                    Go Back
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>

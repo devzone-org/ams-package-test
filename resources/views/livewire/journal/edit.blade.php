@@ -3,6 +3,11 @@
     <div class="content-wrapper">
         <div class="content-header">
             <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <h1>General Journal</h1>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="content">

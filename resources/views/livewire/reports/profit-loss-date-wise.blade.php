@@ -5,7 +5,25 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col">
+                            <h1>Profit and Loss (P&L) Date
+                                Wise</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col">
                             <div class="card card-primary card-outline">
+                                <div class="card-header">
+                                    <h4 class="card-title"><b>Search</b></h4>
+                                    <div class="card-tools">
+                                        {{--                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">--}}
+                                        {{--                                        <i class="fas fa-minus"></i>--}}
+                                        {{--                                    </button>--}}
+                                    </div>
+                                </div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-xs-6 col-sm-4">
@@ -116,25 +134,25 @@
                                                             <td class=" px-2 py-1">
                                                                 @cannot('2.hide-income')
 
-                                                                @if(!empty($first))
-                                                                    <a target="_blank" class="text-muted"
-                                                                       href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($first['date']))}}&to={{date('d M Y',strtotime($first['date']))}}">
-                                                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
-                                                                    </a>
-                                                                @else
-                                                                    -
-                                                                @endif
-                                                                    @endcannot
+                                                                    @if(!empty($first))
+                                                                        <a target="_blank" class="text-muted"
+                                                                           href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($first['date']))}}&to={{date('d M Y',strtotime($first['date']))}}">
+                                                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
+                                                                        </a>
+                                                                    @else
+                                                                        -
+                                                                    @endif
+                                                                @endcannot
                                                             </td>
                                                         @endforeach
                                                         <td class="px-2 py-1">
                                                             @cannot('2.hide-income')
 
-                                                            <a target="_blank" class="text-muted"
-                                                               href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
-                                                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
-                                                            </a>
-                                                                @endcannot
+                                                                <a target="_blank" class="text-muted"
+                                                                   href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
+                                                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
+                                                                </a>
+                                                            @endcannot
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -150,7 +168,7 @@
                                                             class="bg-white px-2 py-1">
                                                             @cannot('2.hide-income')
 
-                                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance'),2) }}
+                                                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance'),2) }}
                                                             @endcannot
                                                         </th>
 
@@ -160,7 +178,7 @@
                                                         class="bg-white px-2 py-1">
                                                         @cannot('2.hide-income')
 
-                                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance'),2) }}
+                                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance'),2) }}
                                                         @endcannot
                                                     </th>
 
@@ -197,24 +215,24 @@
                                                             <td class="px-2 py-1">
                                                                 @cannot('2.hide-expenses')
 
-                                                                @if(!empty($first))
-                                                                    <a target="_blank" class="text-muted"
-                                                                       href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($first['date']))}}&to={{date('d M Y',strtotime($first['date']))}}">
-                                                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
-                                                                    </a>
-                                                                @else
-                                                                    -
-                                                                @endif
+                                                                    @if(!empty($first))
+                                                                        <a target="_blank" class="text-muted"
+                                                                           href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($first['date']))}}&to={{date('d M Y',strtotime($first['date']))}}">
+                                                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
+                                                                        </a>
+                                                                    @else
+                                                                        -
+                                                                    @endif
                                                                 @endcannot
                                                             </td>
                                                         @endforeach
                                                         <td class="px-2 py-1">
                                                             @cannot('2.hide-expenses')
 
-                                                            <a target="_blank" class="text-muted"
-                                                               href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
-                                                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
-                                                            </a>
+                                                                <a target="_blank" class="text-muted"
+                                                                   href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
+                                                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
+                                                                </a>
                                                             @endcannot
                                                         </td>
                                                     </tr>
@@ -230,7 +248,7 @@
                                                             class="bg-white px-2 py-1">
                                                             @cannot('2.hide-expenses')
 
-                                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('p_ref','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
+                                                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('p_ref','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
                                                             @endcannot
                                                         </th>
 
@@ -240,7 +258,7 @@
                                                         class="bg-white px-2 py-1">
                                                         @cannot('2.hide-expenses')
 
-                                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('p_ref','cost-of-sales-4')->sum('balance'),2) }}
+                                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('p_ref','cost-of-sales-4')->sum('balance'),2) }}
                                                         @endcannot
                                                     </th>
 
@@ -265,7 +283,7 @@
                                                             class="bg-white px-2 py-1">
                                                             @cannot('2.hide-income')
 
-                                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance') - collect($report)->where('p_ref','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
+                                                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance') - collect($report)->where('p_ref','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
                                                             @endcannot
                                                         </th>
 
@@ -275,7 +293,7 @@
                                                         class="bg-white px-2 py-1">
                                                         @cannot('2.hide-income')
 
-                                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance') - collect($report)->where('p_ref','cost-of-sales-4')->sum('balance'),2) }}
+                                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance') - collect($report)->where('p_ref','cost-of-sales-4')->sum('balance'),2) }}
                                                         @endcannot
                                                     </th>
 
@@ -313,24 +331,24 @@
                                                             <td class="px-2 py-1">
                                                                 @cannot('2.hide-expenses')
 
-                                                                @if(!empty($first))
-                                                                    <a target="_blank" class="text-muted"
-                                                                       href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($first['date']))}}&to={{date('d M Y',strtotime($first['date']))}}">
-                                                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
-                                                                    </a>
-                                                                @else
-                                                                    -
-                                                                @endif
+                                                                    @if(!empty($first))
+                                                                        <a target="_blank" class="text-muted"
+                                                                           href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($first['date']))}}&to={{date('d M Y',strtotime($first['date']))}}">
+                                                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
+                                                                        </a>
+                                                                    @else
+                                                                        -
+                                                                    @endif
                                                                 @endcannot
                                                             </td>
                                                         @endforeach
                                                         <td class="px-2 py-1">
                                                             @cannot('2.hide-expenses')
 
-                                                            <a target="_blank" class="text-muted"
-                                                               href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
-                                                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
-                                                            </a>
+                                                                <a target="_blank" class="text-muted"
+                                                                   href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
+                                                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
+                                                                </a>
                                                             @endcannot
                                                         </td>
                                                     </tr>
@@ -347,7 +365,7 @@
                                                             class="bg-white px-2 py-1">
                                                             @cannot('2.hide-expenses')
 
-                                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
+                                                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
                                                             @endcannot
                                                         </th>
 
@@ -357,7 +375,7 @@
                                                         class="bg-white px-2 py-1">
                                                         @cannot('2.hide-expenses')
 
-                                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->sum('balance'),2) }}
+                                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->sum('balance'),2) }}
                                                         @endcannot
                                                     </th>
                                                 </tr>
@@ -379,7 +397,7 @@
                                                             class="bg-white px-2 py-1">
                                                             @cannot('2.hide-income')
 
-                                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance') - collect($report)->where('type','Expenses')->where('month',$h)->sum('balance'),2) }}
+                                                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance') - collect($report)->where('type','Expenses')->where('month',$h)->sum('balance'),2) }}
                                                             @endcannot
                                                         </th>
 
@@ -389,7 +407,7 @@
                                                         class="bg-white px-2 py-1">
                                                         @cannot('2.hide-income')
 
-                                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance') - collect($report)->where('type','Expenses')->sum('balance'),2) }}
+                                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance') - collect($report)->where('type','Expenses')->sum('balance'),2) }}
                                                         @endcannot
                                                     </th>
 
@@ -580,10 +598,10 @@
                                 <td class="px-2   py-2   text-center border-r text-sm text-gray-500">
                                     @cannot('2.hide-income')
 
-                                    <a target="_blank" class="hover:text-gray-900"
-                                       href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
-                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
-                                    </a>
+                                        <a target="_blank" class="hover:text-gray-900"
+                                           href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
+                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
+                                        </a>
                                     @endcannot
                                 </td>
                             </tr>
@@ -599,8 +617,8 @@
                                     class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
                                     @cannot('2.hide-income')
 
-                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance'),2) }}
-                                        @endcannot
+                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance'),2) }}
+                                    @endcannot
                                 </th>
 
                             @endforeach
@@ -609,7 +627,7 @@
                                 class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
                                 @cannot('2.hide-income')
 
-                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance'),2) }}
+                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance'),2) }}
                                 @endcannot
                             </th>
 
@@ -644,23 +662,23 @@
                                     <td class="px-2   py-2   text-center border-r text-sm text-gray-500">
                                         @cannot('2.hide-expenses')
 
-                                        @if(!empty($first))
-                                            <a target="_blank" class="hover:text-gray-900"
-                                               href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($first['date']))}}&to={{date('d M Y',strtotime($first['date']))}}">
-                                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
-                                            </a>
-                                        @else
-                                            -
-                                        @endif
+                                            @if(!empty($first))
+                                                <a target="_blank" class="hover:text-gray-900"
+                                                   href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($first['date']))}}&to={{date('d M Y',strtotime($first['date']))}}">
+                                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
+                                                </a>
+                                            @else
+                                                -
+                                            @endif
                                         @endcannot
                                     </td>
                                 @endforeach
                                 <td class="px-2   py-2   text-center border-r text-sm text-gray-500">
                                     @cannot('2.hide-expenses')
-                                    <a target="_blank" class="hover:text-gray-900"
-                                       href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
-                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
-                                    </a>
+                                        <a target="_blank" class="hover:text-gray-900"
+                                           href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
+                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
+                                        </a>
                                     @endcannot
                                 </td>
                             </tr>
@@ -675,7 +693,7 @@
                                 <th scope="col"
                                     class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
                                     @cannot('2.hide-expenses')
-                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('p_ref','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
+                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('p_ref','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
                                     @endcannot
                                 </th>
 
@@ -684,8 +702,8 @@
                             <th scope="col"
                                 class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
                                 @cannot('2.hide-expenses')
-                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('p_ref','cost-of-sales-4')->sum('balance'),2) }}
-                                    @endcannot
+                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('p_ref','cost-of-sales-4')->sum('balance'),2) }}
+                                @endcannot
                             </th>
 
                         </tr>
@@ -707,7 +725,7 @@
                                 <th scope="col"
                                     class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
                                     @cannot('2.hide-income')
-                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance') - collect($report)->where('p_ref','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
+                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance') - collect($report)->where('p_ref','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
                                     @endcannot
                                 </th>
 
@@ -717,7 +735,7 @@
                                 class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
                                 @cannot('2.hide-income')
 
-                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance') - collect($report)->where('p_ref','cost-of-sales-4')->sum('balance'),2) }}
+                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance') - collect($report)->where('p_ref','cost-of-sales-4')->sum('balance'),2) }}
                                 @endcannot
                             </th>
 
@@ -754,24 +772,24 @@
                                     <td class="px-2   py-2   text-center border-r text-sm text-gray-500">
                                         @cannot('2.hide-expenses')
 
-                                        @if(!empty($first))
-                                            <a target="_blank" class="hover:text-gray-900"
-                                               href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($first['date']))}}&to={{date('d M Y',strtotime($first['date']))}}">
-                                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
-                                            </a>
-                                        @else
-                                            -
-                                        @endif
+                                            @if(!empty($first))
+                                                <a target="_blank" class="hover:text-gray-900"
+                                                   href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($first['date']))}}&to={{date('d M Y',strtotime($first['date']))}}">
+                                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
+                                                </a>
+                                            @else
+                                                -
+                                            @endif
                                         @endcannot
                                     </td>
                                 @endforeach
                                 <td class="px-2   py-2   text-center border-r text-sm text-gray-500">
                                     @cannot('2.hide-expenses')
 
-                                    <a target="_blank" class="hover:text-gray-900"
-                                       href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
-                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
-                                    </a>
+                                        <a target="_blank" class="hover:text-gray-900"
+                                           href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
+                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
+                                        </a>
                                     @endcannot
                                 </td>
                             </tr>
@@ -787,7 +805,7 @@
                                     class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
                                     @cannot('2.hide-expenses')
 
-                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
+                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
                                     @endcannot
                                 </th>
 
@@ -797,8 +815,8 @@
                                 class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
                                 @cannot('2.hide-expenses')
 
-                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->sum('balance'),2) }}
-                                    @endcannot
+                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->sum('balance'),2) }}
+                                @endcannot
                             </th>
 
                         </tr>
@@ -819,8 +837,8 @@
                                     class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
                                     @cannot('2.hide-income')
 
-                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance') - collect($report)->where('type','Expenses')->where('month',$h)->sum('balance'),2) }}
-                                        @endcannot
+                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance') - collect($report)->where('type','Expenses')->where('month',$h)->sum('balance'),2) }}
+                                    @endcannot
                                 </th>
 
                             @endforeach
@@ -829,7 +847,7 @@
                                 class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
                                 @cannot('2.hide-income')
 
-                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance') - collect($report)->where('type','Expenses')->sum('balance'),2) }}
+                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance') - collect($report)->where('type','Expenses')->sum('balance'),2) }}
                                 @endcannot
                             </th>
 

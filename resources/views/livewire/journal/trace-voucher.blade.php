@@ -1,20 +1,27 @@
 @if(env('AMS_BOOTSTRAP') == 'true')
     <div class="content-wrapper">
         <div class="content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <h1>Trace Voucher</h1>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col">
                         <div class="card card-primary card-outline">
-                            {{--                            <div class="card-header">--}}
-                            {{--                                <h5 class="card-title">Add Journal Entry</h5>--}}
-                            {{--                                <div class="card-tools">--}}
-                            {{--                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">--}}
-                            {{--                                        <i class="fas fa-minus"></i>--}}
-                            {{--                                    </button>--}}
-                            {{--                                </div>--}}
-                            {{--                            </div>--}}
+                            <div class="card-header">
+                                <h5 class="card-title"><b>Search</b></h5>
+{{--                                <div class="card-tools">--}}
+{{--                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">--}}
+{{--                                        <i class="fas fa-minus"></i>--}}
+{{--                                    </button>--}}
+{{--                                </div>--}}
+                            </div>
                             <div class="card-body">
                                 <form wire:submit.prevent="search">
                                     <div class="row">
@@ -151,13 +158,19 @@
                                         <div class="card-body">
                                             <table class="table table-bordered border-0">
                                                 <thead class="text-nowrap">
-                                                <th class="text-center add-services-table col-1 text-muted" style="width: 25px;">#</th>
-                                                <th class="add-services-table text-center col-1 text-muted">Voucher #</th>
-                                                <th class="add-services-table text-center col-1 text-muted">Account Name</th>
+                                                <th class="text-center add-services-table col-1 text-muted"
+                                                    style="width: 25px;">#
+                                                </th>
+                                                <th class="add-services-table text-center col-1 text-muted">Voucher #
+                                                </th>
+                                                <th class="add-services-table text-center col-1 text-muted">Account
+                                                    Name
+                                                </th>
                                                 <th class="add-services-table text-center text-muted">Description</th>
                                                 <th class="add-services-table text-center col-1 text-muted">Debit</th>
                                                 <th class="add-services-table text-center col-1 text-muted">Credit</th>
-                                                <th class="text-center add-services-table  text-muted" style="width: 25px"></th>
+                                                <th class="text-center add-services-table  text-muted"
+                                                    style="width: 25px"></th>
                                                 </thead>
                                                 <tbody class="">
                                                 @foreach($tl->where('debit','>',0) as $t)

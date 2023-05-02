@@ -5,6 +5,15 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col">
+                            <h1>Add Chart Of Account</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col">
                             <div class="card card-primary card-outline">
                                 <div class="card-header">
                                     <h4 class="card-title"><b>Add New Account</b></h4>
@@ -36,7 +45,8 @@
 
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
-                                                <label for="account_type" class="font-weight-normal">Account Type</label>
+                                                <label for="account_type" class="font-weight-normal">Account
+                                                    Type</label>
                                                 <select id="account_type" wire:model="account_type"
                                                         class="form-control @error('account_type')  is-invalid @enderror">
                                                     <option value=""></option>
@@ -64,7 +74,8 @@
                                         </div>
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
-                                                <label for="account_name" class="font-weight-normal">Account Name</label>
+                                                <label for="account_name" class="font-weight-normal">Account
+                                                    Name</label>
                                                 <input type="text" wire:model="account_name" id="account_name"
                                                        autocomplete="off"
                                                        class="form-control @error('account_name')  is-invalid @enderror">
@@ -88,25 +99,29 @@
                                             <div class="form-group">
                                                 <label for="date" class="font-weight-normal">Date</label>
                                                 <input type="text" wire:model.lazy="date" id="date"
-                                                       class="form-control @error('date')  is-invalid @enderror" autocomplete="off">
+                                                       class="form-control @error('date')  is-invalid @enderror"
+                                                       autocomplete="off">
                                             </div>
                                         </div>
 
                                         <div class="col-12 pt-3">
-                                                <div class="h-5 flex items-center">
-                                                    <input wire:model="is_contra" id="is_contra" name="is_contra" type="checkbox"
-                                                           class="">
-                                                    <label for="is_contra" class="px-2 py-0 font-weight-normal">Is Contra?</label>
+                                            <div class="h-5 flex items-center">
+                                                <input wire:model="is_contra" id="is_contra" name="is_contra"
+                                                       type="checkbox"
+                                                       class="">
+                                                <label for="is_contra" class="px-2 py-0 font-weight-normal">Is
+                                                    Contra?</label>
 
-                                                </div>
-                                                <div class="ml-3 text-sm">
-                                                    <p class="text-muted">The behaviour of account will be treated as inverse.</p>
+                                            </div>
+                                            <div class="ml-3 text-sm">
+                                                <p class="text-muted">The behaviour of account will be treated as
+                                                    inverse.</p>
                                             </div>
                                         </div>
 
                                         <div class="col-12 pt-3 d-flex justify-content-end">
                                             <div class="form-group">
-                                                <button type="submit" class="btn btn-primary" >
+                                                <button type="submit" class="btn btn-primary">
                                                     Create
                                                 </button>
                                             </div>
