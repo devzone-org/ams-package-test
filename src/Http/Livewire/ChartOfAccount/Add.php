@@ -59,6 +59,7 @@ class Add extends Component
     public function create()
     {
         $this->validate();
+
         try {
             DB::beginTransaction();
             $code = null;
