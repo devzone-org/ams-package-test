@@ -24,13 +24,26 @@
                                             <div class="col-12">
                                                 <div class="alert alert-success alert-dismissible" style="">
                                                     <button type="button" class="close" data-dismiss="alert"
-                                                            aria-hidden="true">
+                                                            aria-hidden="true" wire:click.prevent="dismissErrorMsg">
                                                         ×
                                                     </button>
                                                     {{ $success }}
                                                 </div>
                                             </div>
                                         @endif
+{{--                                            @if(!empty($errors))--}}
+{{--                                                <div class="col-12">--}}
+{{--                                                    <div class="alert alert-danger alert-dismissible" style="">--}}
+{{--                                                        <button type="button" class="close" data-dismiss="alert"--}}
+{{--                                                                aria-hidden="true" >--}}
+{{--                                                            ×--}}
+{{--                                                        </button>--}}
+{{--                                                        @foreach ($errors->all() as $error)--}}
+{{--                                                            <li>{{ $error }}</li>--}}
+{{--                                                        @endforeach--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            @endif--}}
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
                                                 <label for="at_level" class="font-weight-normal">Choose Level</label>

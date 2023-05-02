@@ -28,6 +28,10 @@ class Add extends Component
     {
         $this->date = date('d M Y');
     }
+    public function dismissErrorMsg()
+    {
+        $this->success = '';
+    }
 
     public function updated($name, $value)
     {
