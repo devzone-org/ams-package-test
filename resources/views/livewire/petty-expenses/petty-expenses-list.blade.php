@@ -6,9 +6,9 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header">
                             <div class="d-flex justify-content-between">
-                                <p class="card-title pt-1"><b>Search Filters</b></p>
+                                <p class="card-title"><b>Search Filters</b></p>
                                 <a href="{{  url('/accounts/petty-expenses') }}"
-                                   class="btn btn-primary">
+                                   class="btn btn-primary btn-sm">
                                     Add Petty Expenses
                                 </a>
                             </div>
@@ -100,7 +100,8 @@
                         <form wire:submit.prevent="claim">
 
                             <div class="card-header">
-                                Unclaimed Petty Expenses
+
+                                <p class="card-title"><b>Unclaimed Petty Expenses</b></p>
                             </div>
                             <div class="card-body">
                                 <table class="table table-bordered border-0">

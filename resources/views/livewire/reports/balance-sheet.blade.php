@@ -5,7 +5,24 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col">
+                            <h1>Balance Sheet</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col">
                             <div class="card card-primary card-outline">
+                                <div class="card-header">
+                                    <h4 class="card-title"><b>Search</b></h4>
+                                    <div class="card-tools">
+                                        {{--                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">--}}
+                                        {{--                                        <i class="fas fa-minus"></i>--}}
+                                        {{--                                    </button>--}}
+                                    </div>
+                                </div>
                                 <div class="card-body p-0 px-4 pt-3">
                                     <div class="row">
                                         <div class="col-xs-6 col-sm-4">

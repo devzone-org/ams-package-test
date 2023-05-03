@@ -5,9 +5,18 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col">
+                            <h1>Trail Balance</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col">
                             <div class="card card-primary card-outline">
                                 <div class="card-header">
-                                    <h4 class="card-title"><b>Trial Balance</b></h4>
+                                    <h4 class="card-title"><b>Search</b></h4>
                                 </div>
                                 <div class="card-body m-0 p-0 p-2 px-3">
                                     <div class="row">

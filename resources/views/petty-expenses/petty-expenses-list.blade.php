@@ -13,7 +13,7 @@
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col">
-                                    <h4 class="card-title"><b>Petty Expenses</b></h4>
+                                    <h1>Petty Expense</h1>
                                 </div>
                             </div>
                         </div>

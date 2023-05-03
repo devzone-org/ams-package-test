@@ -2,7 +2,11 @@
     <div class="content-wrapper">
         <div class="content-header">
             <div class="container-fluid">
-
+                <div class="row">
+                    <div class="col">
+                        <h1>Payments & Receiving</h1>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="content">
@@ -10,6 +14,14 @@
                 <div class="row">
                     <div class="col">
                         <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h4 class="card-title"><b>Search</b></h4>
+                                <div class="card-tools">
+                                    {{--                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">--}}
+                                    {{--                                        <i class="fas fa-minus"></i>--}}
+                                    {{--                                    </button>--}}
+                                </div>
+                            </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-xs-6 col-sm-4">
@@ -82,7 +94,7 @@
                                 <div class="d-flex justify-content-between">
                                     <p class="card-title pt-1"><b>Payments & Receiving</b></p>
                                     <a href="{{  url('accounts/accountant/payments/add') }}"
-                                       class="btn btn-primary">
+                                       class="btn btn-primary btn-sm">
                                         Create
                                     </a>
                                 </div>

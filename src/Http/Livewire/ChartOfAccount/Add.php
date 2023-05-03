@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Devzone\Ams\Helper\GeneralJournal;
 use Devzone\Ams\Helper\Voucher;
 use Devzone\Ams\Models\ChartOfAccount;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -27,6 +28,10 @@ class Add extends Component
     public function mount()
     {
         $this->date = date('d M Y');
+    }
+    public function dismissErrorMsg()
+    {
+        $this->success = '';
     }
 
     public function updated($name, $value)
@@ -55,7 +60,10 @@ class Add extends Component
     public function create()
     {
         $this->validate();
+        $lock = Cache::lock('addService.' . \auth()->user()->id , 60);
+
         try {
+            if ($lock->get()) {
             DB::beginTransaction();
             $code = null;
             if(
@@ -106,7 +114,11 @@ class Add extends Component
             $this->success ='Account has been created.';
             $this->reset(['account_name','date','account_type','parent_account','at_level','is_contra','opening_balance','show_opening_balance','sub_accounts']);
             $this->date = date('d M Y');
+                optional($lock)->release();
+
+            }
         } catch (\Exception $e) {
+            optional($lock)->release();
             DB::rollBack();
             $this->addError('account_name', $e->getMessage());
         }

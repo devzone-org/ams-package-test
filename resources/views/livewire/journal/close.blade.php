@@ -2,62 +2,67 @@
     <div class="content-wrapper">
         <div class="content-header">
             <div class="container-fluid">
-
+                <div class="row">
+                    <div class="col">
+                        <h1>Day Closing</h1>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col">
-                    <div class="card card-primary card-outline">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class=""><b>Day Closing</b></h5>
-                                </div>
-                            </div>
-                            <div class="row px-2">
-                                <div class="col-xs-6 col-sm-4">
-                                    <div class="form-group">
-                                        <label for="user_account" class="font-weight-normal">ID to be
-                                            closed</label>
-                                        <select id="user_account" wire:model="user_account_id"
-                                                class="form-control">
-                                            <option value=""></option>
-                                            @foreach($users as $u)
-                                                <option value="{{ $u['account_id'] }}">{{ $u['account_name'] }}</option>
-                                            @endforeach
-                                        </select>
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <div class="card card-primary card-outline">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class=""><b>Day Closing</b></h5>
                                     </div>
                                 </div>
-                                <div class="col-xs-6 col-sm-4">
-                                    <div class="form-group">
+                                <div class="row px-2">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <div class="form-group">
+                                            <label for="user_account" class="font-weight-normal">ID to be
+                                                closed</label>
+                                            <select id="user_account" wire:model="user_account_id"
+                                                    class="form-control">
+                                                <option value=""></option>
+                                                @foreach($users as $u)
+                                                    <option value="{{ $u['account_id'] }}">{{ $u['account_name'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <div class="form-group">
 
-                                        <label for="date" class="font-weight-normal">Date</label>
-                                        <input type="text" value="{{ date('d M, Y') }}" readonly
-                                               class="form-control">
+                                            <label for="date" class="font-weight-normal">Date</label>
+                                            <input type="text" value="{{ date('d M, Y') }}" readonly
+                                                   class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-6 col-sm-4">
+                                        <div class="form-group">
+
+                                            <label for="date" class="font-weight-normal">Time</label>
+                                            <input wire:poll.60000ms type="text" value="{{ date('h:i A') }}" readonly
+                                                   class="form-control">
+                                        </div>
                                     </div>
                                 </div>
-
-                                <div class="col-xs-6 col-sm-4">
-                                    <div class="form-group">
-
-                                        <label for="date" class="font-weight-normal">Time</label>
-                                        <input wire:poll.60000ms type="text" value="{{ date('h:i A') }}" readonly
-                                               class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="">
-                                @if(!empty($current_user))
-                                    <div class="d-flex justify-content-between mx-3">
-                                        <div class="row ">
-                                            <div class="col">
-                                                @if(!empty($current_user['attachment']))
-                                                    <img class="img-circle" width="80px" height="80px"
-                                                         src="{{ env('AWS_URL').$current_user['attachment'] }}"
-                                                         alt="">
-                                                @else
-                                                    <span class="justify-center rounded-full">
+                                <div class="">
+                                    @if(!empty($current_user))
+                                        <div class="d-flex justify-content-between mx-3">
+                                            <div class="row ">
+                                                <div class="col">
+                                                    @if(!empty($current_user['attachment']))
+                                                        <img class="img-circle" width="80px" height="80px"
+                                                             src="{{ env('AWS_URL').$current_user['attachment'] }}"
+                                                             alt="">
+                                                    @else
+                                                        <span class="justify-center rounded-full">
                                                         <span class="">
                                                             @php
                                                                 $words = explode(" ", $current_user['name']);
@@ -69,23 +74,23 @@
                                                             {{  $acronym }}
                                                         </span>
                                                     </span>
-                                                @endif
+                                                    @endif
+                                                </div>
+                                                <div class="col text-nowrap">
+                                                    <p class="m-0 p-0">Teller: ID to be closed</p>
+                                                    <p class="m-0 p-0"><b>{{ $current_user['name'] }} </b></p>
+                                                    <p class="">{{ $current_user['email'] }}</p>
+                                                </div>
                                             </div>
-                                            <div class="col text-nowrap">
-                                                <p class="m-0 p-0">Teller: ID to be closed</p>
-                                                <p class="m-0 p-0"><b>{{ $current_user['name'] }} </b></p>
-                                                <p class="">{{ $current_user['email'] }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                @if(!empty(Auth::user()->attachment))
-                                                    <img class="img-circle" width="80px" height="80px"
-                                                         src="{{ env('AWS_URL').Auth::user()->attachment }}"
-                                                         alt="">
-                                                @else
-                                                    <span
-                                                            class="items-center d-flex justify-content-center h-20 w-20 rounded-full">
+                                            <div class="row">
+                                                <div class="col">
+                                                    @if(!empty(Auth::user()->attachment))
+                                                        <img class="img-circle" width="80px" height="80px"
+                                                             src="{{ env('AWS_URL').Auth::user()->attachment }}"
+                                                             alt="">
+                                                    @else
+                                                        <span
+                                                                class="items-center d-flex justify-content-center h-20 w-20 rounded-full">
                                                                 <span class="">
                                                                 @php
                                                                     $words = explode(" ", Auth::user()->name);
@@ -100,299 +105,300 @@
                                                                     {{  $acronym }}
                                                                 </span>
                                                             </span>
-                                                @endif
+                                                    @endif
+                                                </div>
+                                                <div class="col text-nowrap">
+                                                    <p class="m-0 p-0">Closing By</p>
+                                                    <p class="m-0 p-0"><b>{{ Auth::user()->name }}</b></p>
+                                                    <p class="">{{ Auth::user()->email }}</p>
+                                                </div>
                                             </div>
-                                            <div class="col text-nowrap">
-                                                <p class="m-0 p-0">Closing By</p>
-                                                <p class="m-0 p-0"><b>{{ Auth::user()->name }}</b></p>
-                                                <p class="">{{ Auth::user()->email }}</p>
-                                            </div>
+
+
                                         </div>
 
-
-                                    </div>
-
-                                @endif
-                            </div>
-                            <div class="row">
-                                @if(!empty($current_user))
-                                    <table class="table table-bordered border-0 mx-3">
-                                        <thead class="">
-                                        <tr >
-                                            <th scope="col"
-                                                class="text-center text-muted border-right-0">
-                                                Opening Balance
-                                            </th>
-                                            @foreach($closing_balance_heads as $h)
-                                                @if(empty($h))
-                                                    <th scope="col"
-                                                        class="text-center text-muted border-left-0 border-right-0">
-                                                        Other
-                                                    </th>
-                                                @else
-                                                    <th scope="col"
-                                                        class="text-center text-muted border-left-0 border-right-0">
-                                                        {{ ucwords(str_replace('-',' ',$h)) }}
-                                                    </th>
-                                                @endif
-
-                                            @endforeach
-
-                                            <th scope="col"
-                                                class="text-center text-muted border-left-0">
-                                                Closing Balance (CB)
-                                            </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td class="px-6 py-4 text-center border-right-0 text-muted" >
-                                                @if(!empty($opening_balance))
-                                                    <div class="">
-                                                        PKR {{ number_format($opening_balance) }}
-                                                    </div>
-                                                    <div class="">
-                                                        as at {{ date('d M, Y',strtotime($opening_balance_date)) }}
-                                                    </div>
-                                                @else
-                                                    -
-                                                @endif
-                                            </td>
-                                            @foreach($closing_balance_heads as $h)
-                                                <td class="px-6 py-4 text-center border-left-0 border-right-0 text-muted">
-                                                    @if(collect($closing_balance)->where('reference',$h)->first()['balance']>0)
-                                                        {{ number_format(collect($closing_balance)->where('reference',$h)->first()['balance']) }}
-                                                    @else
-                                                    ({{ number_format(abs(collect($closing_balance)->where('reference',$h)->first()['balance'])) }})
-                                                    @endif
-                                                </td>
-                                            @endforeach
-                                            <td class="px-6 py-4 text-center border-left-0 text-muted">
-                                                <div class="">
-                                                    PKR {{number_format(collect($closing_balance)->sum('balance') + $opening_balance)}}
-                                                </div>
-                                                <div class="">
-                                                    as at {{ date('d M, Y') }}
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                            </div>
-
-                            <div class="py-6 px-4">
-                                <h5 class="">
-                                    <b>Denomination Counting (DC)</b>
-                                </h5>
-                            </div>
-
-
-                            <div class="d-flex justify-content-between">
-                                <div class="w-50 px-2">
-                                    <table class="table table-bordered border-0">
-                                        <thead class="">
-                                        <tr>
-                                            <th scope="col"
-                                                class="px-6 py-3 text-left text-muted border-right-0">
-                                                Currency
-                                            </th>
-                                            <th scope="col"
-                                                class="px-6 py-3 text-left text-muted border-right-0 border-left-0">
-                                                Count
-                                            </th>
-                                            <th scope="col"
-                                                class="px-6 py-3 text-left text-muted border-left-0">
-                                                Total
-                                            </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody class="">
-                                        @foreach($denomination_counting as $key => $dc)
-                                            <tr>
-                                                <td class="px-6 py-2 align-middle border-right-0">
-                                                    {{  number_format($dc['currency']) }}
-                                                </td>
-                                                <td class="px-6 py-2 border-right-0 border-left-0">
-                                                    <input type="number"
-                                                           wire:model.lazy="denomination_counting.{{$key}}.count"
-                                                           class="form-control">
-                                                </td>
-                                                <td class="px-6 py-2 align-middle border-left-0">
-                                                    {{  number_format($dc['total']) }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-
-                                        <tr>
-                                            <th colspan="2"
-                                                class="px-6 text-left border-right-0 align-middle">Total
-                                            </th>
-                                            <th class="px-6 text-left border-left-0 align-middle">
-                                                {{ number_format(collect($denomination_counting)->sum('total')) }}
-                                            </th>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                    @endif
                                 </div>
-                                <div class="w-50 px-2">
-                                    <table class="table table-bordered border-0">
-                                        <tbody class="">
-
-                                        <tr class="">
-                                            <th class="px-6 py-2 border-right-0 bg-white">
-                                                CB System Cash
-                                            </th>
-                                            <th class="px-6 py-2 border-left-0 bg-white">
-                                                PKR {{number_format(collect($closing_balance)->sum('balance') + $opening_balance,2)}}
-                                            </th>
-                                        </tr>
-
-                                        <tr class="">
-                                            <th class="px-6 py-2 border-right-0 bg-white">
-                                                DC Physical Cash
-                                            </th>
-                                            <th class="px-6 py-2 border-left-0 bg-white">
-                                                PKR {{number_format(collect($denomination_counting)->sum('total'),2)}}
-                                            </th>
-                                        </tr>
-                                        @if(!empty($difference))
-                                            <tr class="">
-                                                <th class="px-6 py-2 border-right-0 bg-white">
-                                                    Difference
-                                                    @if($difference > 0)
-                                                        <span class="text-danger">(Surplus) </span>
+                                <div class="row">
+                                    @if(!empty($current_user))
+                                        <table class="table table-bordered border-0 mx-3">
+                                            <thead class="">
+                                            <tr>
+                                                <th scope="col"
+                                                    class="text-center text-muted border-right-0">
+                                                    Opening Balance
+                                                </th>
+                                                @foreach($closing_balance_heads as $h)
+                                                    @if(empty($h))
+                                                        <th scope="col"
+                                                            class="text-center text-muted border-left-0 border-right-0">
+                                                            Other
+                                                        </th>
                                                     @else
-                                                        <span class="text-danger">(Shortage)</span>
+                                                        <th scope="col"
+                                                            class="text-center text-muted border-left-0 border-right-0">
+                                                            {{ ucwords(str_replace('-',' ',$h)) }}
+                                                        </th>
                                                     @endif
-                                                </th>
-                                                <th class="px-6 py-2 border-left-0 bg-white">
-                                                    PKR {{number_format(abs(collect($closing_balance)->sum('balance') + $opening_balance - collect($denomination_counting)->sum('total')),2)}}
+
+                                                @endforeach
+
+                                                <th scope="col"
+                                                    class="text-center text-muted border-left-0">
+                                                    Closing Balance (CB)
                                                 </th>
                                             </tr>
-
-
-                                            <tr class="">
-                                                <th class="px-6 py-2 border-right-0 bg-white">
-                                                    Adjustment
-                                                </th>
-                                                <th class="px-6 py-2 border-left-0 bg-white">
-                                                    PKR
-                                                    @if($difference > 0)
-                                                        {{ number_format($difference,2) }}
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td class="px-6 py-4 text-center border-right-0 text-muted">
+                                                    @if(!empty($opening_balance))
+                                                        <div class="">
+                                                            PKR {{ number_format($opening_balance) }}
+                                                        </div>
+                                                        <div class="">
+                                                            as at {{ date('d M, Y',strtotime($opening_balance_date)) }}
+                                                        </div>
                                                     @else
-                                                        ({{ number_format(abs($difference),2) }})
+                                                        -
                                                     @endif
-                                                </th>
-                                            </tr>
-                                        @else
-                                            <tr class="">
-                                                <th class="text-success px-6 py-2 border-right-0 bg-white">
-                                                    Difference
-
-                                                </th>
-                                                <th class=" text-success px-6 py-2 border-left-0 bg-white">
-                                                    0
-                                                </th>
-                                            </tr>
-                                        @endif
-                                        <tr>
-                                            <td colspan="2">&nbsp;</td>
-                                        </tr>
-                                        <tr class="">
-                                            <td class="px-6 py-2 border-right-0">
-                                                Cash Retained
-                                            </td>
-                                            <td class="px-6 py-2 border-left-0">
-                                                <input type="number" wire:model.lazy="retained_cash"
-                                                       class="form-control w-75">
-                                            </td>
-                                        </tr>
-
-                                        <tr class="">
-                                            <td class="px-6 py-2 border-right-0">
-                                                Transfer Amount
-                                            </td>
-                                            <td class="px-6 py-2 border-left-0">
-                                                {{ number_format(collect($denomination_counting)->sum('total') - $retained_cash ,2) }}
-                                            </td>
-                                        </tr>
-
-
-                                        <tr class="">
-                                            <td class="px-6 py-2 border-right-0">
-                                                Transfer To
-                                            </td>
-                                            <td class="  px-6 py-2 border-left-0">
-                                                <select wire:model="transfer_id" id="transfer_to"
-                                                        class="form-control w-75">
-                                                    <option></option>
-                                                    @foreach($transfers as $t)
-                                                        @if($t['id']==$user_account_id)
-                                                            @continue
+                                                </td>
+                                                @foreach($closing_balance_heads as $h)
+                                                    <td class="px-6 py-4 text-center border-left-0 border-right-0 text-muted">
+                                                        @if(collect($closing_balance)->where('reference',$h)->first()['balance']>0)
+                                                            {{ number_format(collect($closing_balance)->where('reference',$h)->first()['balance']) }}
+                                                        @else
+                                                        ({{ number_format(abs(collect($closing_balance)->where('reference',$h)->first()['balance'])) }})
                                                         @endif
-                                                        <option value="{{ $t['id'] }}">{{ $t['name'] }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                        </tr>
+                                                    </td>
+                                                @endforeach
+                                                <td class="px-6 py-4 text-center border-left-0 text-muted">
+                                                    <div class="">
+                                                        PKR {{number_format(collect($closing_balance)->sum('balance') + $opening_balance)}}
+                                                    </div>
+                                                    <div class="">
+                                                        as at {{ date('d M, Y') }}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                </div>
 
-                                        <tr class="">
-                                            <td class="px-6 py-2 border-right-0">
-                                                Attachment
-                                            </td>
-                                            <td class="px-6 py-2 border-left-0">
-                                                <input type="file" wire:model.lazy="attachment"
-                                                       class="form-control w-75 p-0 m-0 pt-1 px-1">
-                                            </td>
-                                        </tr>
-                                        <tr class="">
-                                            <td class="px-6 py-2 border-right-0">
-                                                Description
-                                            </td>
-                                            <td class="px-6 py-2 border-left-0">
+                                <div class="py-6 px-4">
+                                    <h5 class="">
+                                        <b>Denomination Counting (DC)</b>
+                                    </h5>
+                                </div>
+
+
+                                <div class="d-flex justify-content-between">
+                                    <div class="w-50 px-2">
+                                        <table class="table table-bordered border-0">
+                                            <thead class="">
+                                            <tr>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-left text-muted border-right-0">
+                                                    Currency
+                                                </th>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-left text-muted border-right-0 border-left-0">
+                                                    Count
+                                                </th>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-left text-muted border-left-0">
+                                                    Total
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="">
+                                            @foreach($denomination_counting as $key => $dc)
+                                                <tr>
+                                                    <td class="px-6 py-2 align-middle border-right-0">
+                                                        {{  number_format($dc['currency']) }}
+                                                    </td>
+                                                    <td class="px-6 py-2 border-right-0 border-left-0">
+                                                        <input type="number"
+                                                               wire:model.lazy="denomination_counting.{{$key}}.count"
+                                                               class="form-control">
+                                                    </td>
+                                                    <td class="px-6 py-2 align-middle border-left-0">
+                                                        {{  number_format($dc['total']) }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+
+                                            <tr>
+                                                <th colspan="2"
+                                                    class="px-6 text-left border-right-0 align-middle">Total
+                                                </th>
+                                                <th class="px-6 text-left border-left-0 align-middle">
+                                                    {{ number_format(collect($denomination_counting)->sum('total')) }}
+                                                </th>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="w-50 px-2">
+                                        <table class="table table-bordered border-0">
+                                            <tbody class="">
+
+                                            <tr class="">
+                                                <th class="px-6 py-2 border-right-0 bg-white">
+                                                    CB System Cash
+                                                </th>
+                                                <th class="px-6 py-2 border-left-0 bg-white">
+                                                    PKR {{number_format(collect($closing_balance)->sum('balance') + $opening_balance,2)}}
+                                                </th>
+                                            </tr>
+
+                                            <tr class="">
+                                                <th class="px-6 py-2 border-right-0 bg-white">
+                                                    DC Physical Cash
+                                                </th>
+                                                <th class="px-6 py-2 border-left-0 bg-white">
+                                                    PKR {{number_format(collect($denomination_counting)->sum('total'),2)}}
+                                                </th>
+                                            </tr>
+                                            @if(!empty($difference))
+                                                <tr class="">
+                                                    <th class="px-6 py-2 border-right-0 bg-white">
+                                                        Difference
+                                                        @if($difference > 0)
+                                                            <span class="text-danger">(Surplus) </span>
+                                                        @else
+                                                            <span class="text-danger">(Shortage)</span>
+                                                        @endif
+                                                    </th>
+                                                    <th class="px-6 py-2 border-left-0 bg-white">
+                                                        PKR {{number_format(abs(collect($closing_balance)->sum('balance') + $opening_balance - collect($denomination_counting)->sum('total')),2)}}
+                                                    </th>
+                                                </tr>
+
+
+                                                <tr class="">
+                                                    <th class="px-6 py-2 border-right-0 bg-white">
+                                                        Adjustment
+                                                    </th>
+                                                    <th class="px-6 py-2 border-left-0 bg-white">
+                                                        PKR
+                                                        @if($difference > 0)
+                                                            {{ number_format($difference,2) }}
+                                                        @else
+                                                            ({{ number_format(abs($difference),2) }})
+                                                        @endif
+                                                    </th>
+                                                </tr>
+                                            @else
+                                                <tr class="">
+                                                    <th class="text-success px-6 py-2 border-right-0 bg-white">
+                                                        Difference
+
+                                                    </th>
+                                                    <th class=" text-success px-6 py-2 border-left-0 bg-white">
+                                                        0
+                                                    </th>
+                                                </tr>
+                                            @endif
+                                            <tr>
+                                                <td colspan="2">&nbsp;</td>
+                                            </tr>
+                                            <tr class="">
+                                                <td class="px-6 py-2 border-right-0">
+                                                    Cash Retained
+                                                </td>
+                                                <td class="px-6 py-2 border-left-0">
+                                                    <input type="number" wire:model.lazy="retained_cash"
+                                                           class="form-control w-75">
+                                                </td>
+                                            </tr>
+
+                                            <tr class="">
+                                                <td class="px-6 py-2 border-right-0">
+                                                    Transfer Amount
+                                                </td>
+                                                <td class="px-6 py-2 border-left-0">
+                                                    {{ number_format(collect($denomination_counting)->sum('total') - $retained_cash ,2) }}
+                                                </td>
+                                            </tr>
+
+
+                                            <tr class="">
+                                                <td class="px-6 py-2 border-right-0">
+                                                    Transfer To
+                                                </td>
+                                                <td class="  px-6 py-2 border-left-0">
+                                                    <select wire:model="transfer_id" id="transfer_to"
+                                                            class="form-control w-75">
+                                                        <option></option>
+                                                        @foreach($transfers as $t)
+                                                            @if($t['id']==$user_account_id)
+                                                                @continue
+                                                            @endif
+                                                            <option value="{{ $t['id'] }}">{{ $t['name'] }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                            </tr>
+
+                                            <tr class="">
+                                                <td class="px-6 py-2 border-right-0">
+                                                    Attachment
+                                                </td>
+                                                <td class="px-6 py-2 border-left-0">
+                                                    <input type="file" wire:model.lazy="attachment"
+                                                           class="form-control w-75 p-0 m-0 pt-1 px-1">
+                                                </td>
+                                            </tr>
+                                            <tr class="">
+                                                <td class="px-6 py-2 border-right-0">
+                                                    Description
+                                                </td>
+                                                <td class="px-6 py-2 border-left-0">
                                     <textarea wire:model.lazy="description"
                                               rows="7"
                                               class="form-control w-75"></textarea>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                            </tr>
 
-                                        <tr class="">
-                                            <td colspan="2" class="px-6 py-2 text-center">
-                                                Transfer to
-                                                "{{ collect($transfers)->firstWhere('id',$transfer_id)['name'] ?? '' }}
-                                                "
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    @if(!empty($transfer_id))
-                                        <button type="button" id="proceedingBtn"
-                                                wire:click="$set('confirm_popup','true')"
-                                                wire:loading.attr="disabled"
-                                                class="form-control btn btn-primary">
-                                            Proceed Closing
-                                        </button>
-                                    @endif
+                                            <tr class="">
+                                                <td colspan="2" class="px-6 py-2 text-center">
+                                                    Transfer to
+                                                    "{{ collect($transfers)->firstWhere('id',$transfer_id)['name'] ?? '' }}
+                                                    "
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        @if(!empty($transfer_id))
+                                            <button type="button" id="proceedingBtn"
+                                                    wire:click="$set('confirm_popup','true')"
+                                                    wire:loading.attr="disabled"
+                                                    class="form-control btn btn-primary">
+                                                Proceed Closing
+                                            </button>
+                                        @endif
 
 
-                                    @if ($errors->any())
-                                        <div class="col-12">
-                                            @foreach ($errors->all() as $error)
+                                        @if ($errors->any())
+                                            <div class="col-12">
+                                                @foreach ($errors->all() as $error)
 
-                                                <div class="alert alert-danger alert-dismissible">
-                                                    <button type="button" class="close" data-dismiss="alert"
-                                                            aria-hidden="true">
-                                                        ×
-                                                    </button>
-                                                    <li>{{ $error }}</li>
-                                                </div>
-                                            @endforeach
-                                        </div>
+                                                    <div class="alert alert-danger alert-dismissible">
+                                                        <button type="button" class="close" data-dismiss="alert"
+                                                                aria-hidden="true">
+                                                            ×
+                                                        </button>
+                                                        <li>{{ $error }}</li>
+                                                    </div>
+                                                @endforeach
+                                            </div>
 
-                                    @endif
+                                        @endif
+                                    </div>
                                 </div>
+                                @endif
                             </div>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -450,7 +456,7 @@
                                         let confirmationModal = document.querySelector('#confirmationModal');
                                         confirmationModal.style.display = 'block';
                                         let closeButton = document.querySelector('#closeButton');
-                                        closeButton.addEventListener('click', function(){
+                                        closeButton.addEventListener('click', function () {
                                             let confirmationModal = document.querySelector('#confirmationModal');
                                             confirmationModal.style.display = 'none';
                                         })

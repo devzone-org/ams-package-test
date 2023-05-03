@@ -1,153 +1,171 @@
 @if(env('AMS_BOOTSTRAP') == 'true')
     <div class="content-wrapper">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <h1>Day Closing</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="content">
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col">
-                            <div class="card card-primary card-outline">
-                                <div class="card-body py-0 pt-2">
-                                    <div class="row">
-                                        <div class="col-xs-6 col-sm-4">
-                                            <div class="form-group">
-                                                <label for="users" class="font-weight-normal">User</label>
-                                                <select wire:model.defer="user_account_id"
-                                                        class="form-control">
-                                                    <option value=""></option>
-                                                    @foreach($users as $u)
-                                                        <option value="{{ $u['account_id'] }}">{{ $u['account_name'] }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h4 class="card-title"><b>Search</b></h4>
+                                <div class="card-tools">
+                                    {{--                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">--}}
+                                    {{--                                        <i class="fas fa-minus"></i>--}}
+                                    {{--                                    </button>--}}
+                                </div>
+                            </div>
+                            <div class="card-body py-0 pt-2">
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-4">
+                                        <div class="form-group">
+                                            <label for="users" class="font-weight-normal">User</label>
+                                            <select wire:model.defer="user_account_id"
+                                                    class="form-control">
+                                                <option value=""></option>
+                                                @foreach($users as $u)
+                                                    <option value="{{ $u['account_id'] }}">{{ $u['account_name'] }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
+                                    </div>
 
-                                        <div class="col-xs-6 col-sm-4">
-                                            <div class="form-group">
-                                                <label for="from_date" class="font-weight-normal">From Date</label>
-                                                <input type="text" wire:model.lazy="from_date" id="from_date" autocomplete="off"
-                                                       class="form-control">
-                                            </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <div class="form-group">
+                                            <label for="from_date" class="font-weight-normal">From Date</label>
+                                            <input type="text" wire:model.lazy="from_date" id="from_date"
+                                                   autocomplete="off"
+                                                   class="form-control">
                                         </div>
-                                        <div class="col-xs-6 col-sm-4">
-                                            <div class="form-group">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-4">
+                                        <div class="form-group">
 
-                                                <label for="to_date" class="font-weight-normal">To Date</label>
-                                                <input type="text" wire:model.lazy="to_date" id="to_date" autocomplete="off"
-                                                       class="form-control">
-                                            </div>
+                                            <label for="to_date" class="font-weight-normal">To Date</label>
+                                            <input type="text" wire:model.lazy="to_date" id="to_date"
+                                                   autocomplete="off"
+                                                   class="form-control">
                                         </div>
-                                        <div class="col-12 pt-3">
-                                            <div class="form-group">
-                                                <button type="button" wire:click="search" wire:loading.attr="disabled"
-                                                        class="btn btn-primary">
-                                                    <span wire:loading wire:target="search">Searching ...</span>
-                                                    <span wire:loading.remove wire:target="search">Search</span>
-                                                </button>
-                                                <button type="button" wire:click="resetSearch" wire:loading.attr="disabled"
-                                                        class="btn btn-danger">
-                                                    Reset
-                                                </button>
-                                                @if(!empty($report))
-                                                    <a href="{{'day-closing/export'}}?id={{$user_account_id}}&from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}"
-                                                       target="_blank"
-                                                       class="btn btn-success">
-                                                        Export.csv
-                                                    </a>
-                                                @endif
-                                            </div>
+                                    </div>
+                                    <div class="col-12 pt-3">
+                                        <div class="form-group">
+                                            <button type="button" wire:click="search" wire:loading.attr="disabled"
+                                                    class="btn btn-primary">
+                                                <span wire:loading wire:target="search">Searching ...</span>
+                                                <span wire:loading.remove wire:target="search">Search</span>
+                                            </button>
+                                            <button type="button" wire:click="resetSearch"
+                                                    wire:loading.attr="disabled"
+                                                    class="btn btn-danger">
+                                                Reset
+                                            </button>
+                                            @if(!empty($report))
+                                                <a href="{{'day-closing/export'}}?id={{$user_account_id}}&from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}"
+                                                   target="_blank"
+                                                   class="btn btn-success">
+                                                    Export.csv
+                                                </a>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-header pt-0 m-0">
-                                    <h5 class="d-flex justify-content-center p-0 m-0"><b>Day Closing Report</b></h5>
-                                    <p class="text-center p-0 m-0 text-muted">{{ env('APP_NAME') }}</p>
-                                    <p class="text-center text-muted">Statement
-                                        Period {{ date('d M, Y',strtotime($from_date)) }}
-                                        to {{ date('d M, Y',strtotime($to_date)) }} </p>
-                                </div>
+                            </div>
+                            <div class="card-header pt-0 m-0">
+                                <h5 class="d-flex justify-content-center p-0 m-0"><b>Day Closing Report</b></h5>
+                                <p class="text-center p-0 m-0 text-muted">{{ env('APP_NAME') }}</p>
+                                <p class="text-center text-muted">Statement
+                                    Period {{ date('d M, Y',strtotime($from_date)) }}
+                                    to {{ date('d M, Y',strtotime($to_date)) }} </p>
+                            </div>
 
-                                <div class="card-body overflow-auto p-0 m-0">
-                                    <table class="table table-bordered border-0">
-                                        <thead class="text-nowrap">
+                            <div class="card-body overflow-auto p-0 m-0">
+                                <table class="table table-bordered border-0">
+                                    <thead class="text-nowrap">
+                                    <tr>
+                                        <th class="text-muted px-2 py-1">Closing Date</th>
+                                        <th class="text-muted px-2 py-1">Voucher</th>
+                                        <th class="text-muted px-2 py-1">User ID</th>
+                                        <th class="text-muted px-2 py-1">Closed By</th>
+                                        <th class="text-muted px-2 py-1">Close At</th>
+                                        <th class="text-muted px-2 py-1">System Cash</th>
+                                        <th class="text-muted px-2 py-1">Physical Cash</th>
+                                        <th class="text-muted px-2 py-1">Amount Retained</th>
+                                        <th class="text-muted px-2 py-1">Adjustment</th>
+                                        <th class="text-muted px-2 py-1">Amount Transferred</th>
+                                        <th class="text-muted px-2 py-1">Transfer To</th>
+                                        <th class="text-muted px-2 py-1">Attachment</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="text-nowrap">
+                                    @forelse($report as $r)
                                         <tr>
-                                            <th class="text-muted px-2 py-1">Closing Date</th>
-                                            <th class="text-muted px-2 py-1">Voucher</th>
-                                            <th class="text-muted px-2 py-1">User ID</th>
-                                            <th class="text-muted px-2 py-1">Closed By</th>
-                                            <th class="text-muted px-2 py-1">Close At</th>
-                                            <th class="text-muted px-2 py-1">System Cash</th>
-                                            <th class="text-muted px-2 py-1">Physical Cash</th>
-                                            <th class="text-muted px-2 py-1">Amount Retained</th>
-                                            <th class="text-muted px-2 py-1">Adjustment</th>
-                                            <th class="text-muted px-2 py-1">Amount Transferred</th>
-                                            <th class="text-muted px-2 py-1">Transfer To</th>
-                                            <th class="text-muted px-2 py-1">Attachment</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody class="text-nowrap">
-                                        @forelse($report as $r)
-                                            <tr>
-                                                <td class="text-center px-2 py-1">{{ date('d M Y',strtotime($r['created_at'])) }}</td>
-                                                <td class="text-center px-2 py-1">
-                                                    <a class="text-dark" href="javascript:void(0);"
-                                                       onclick="window.open('{{ url('accounts/journal/voucher/print').'/'.$r['voucher_no'] }}','voucher-print-{{$r['voucher_no']}}','height=500,width=800');">{{ $r['voucher_no'] }}</a>
-                                                </td>
-                                                <td class="text-center px-2 py-1">
-                                                    {{ $r['user_id'] }}
-                                                </td>
-                                                <td class="text-center px-2 py-1">
-                                                    {{ $r['close_by'] }}
-                                                </td>
-                                                <td class="text-center px-2 py-1">
-                                                    {{ date('h:i A',strtotime($r['created_at'])) }}
-                                                </td>
-
-                                                <td class="text-center px-2 py-1">
-                                                    {{ number_format($r['closing_balance'],2) }}
-                                                </td>
-
-                                                <td class="text-center px-2 py-1">
-                                                    {{ number_format($r['physical_cash']) }}
-                                                </td>
-                                                <td class="text-center px-2 py-1">
-                                                    {{ number_format($r['cash_retained']) }}
-                                                </td>
-
-                                                <td class="text-center px-2 py-1">
-                                                    @if($r['closing_balance'] - $r['physical_cash']<=0)
-                                                        {{ number_format(abs($r['closing_balance'] - $r['physical_cash']),2) }}
-                                                    @else
-                                                    ({{number_format(abs($r['closing_balance'] - $r['physical_cash']),2) }})
-                                                    @endif
-                                                </td>
-
-                                                <td class="text-center px-2 py-1">
-                                                    {{ number_format($r['physical_cash'] - $r['cash_retained']) }}
-                                                </td>
-
-                                                <td class="text-center px-2 py-1">
-                                                    {{ $r['transfer_name'] }}
-                                                </td>
-                                                <td class="text-center px-2 py-1">
-                                                    @if(!empty($r['attachment']))
-                                                        <a href="{{ env('AWS_URL').$r['attachment'] }}"
-                                                           class="text-danger" target="_blank">
-                                                            View Attachment
-                                                        </a>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            @empty
-                                            <td colspan="12" class="text-danger rounded-md overflow-hidden px-2 py-1">
-                                                <div class="alert alert-danger mb-0">
-                                                    No Records Found.
-                                                </div>
-
+                                            <td class="text-center px-2 py-1">{{ date('d M Y',strtotime($r['created_at'])) }}</td>
+                                            <td class="text-center px-2 py-1">
+                                                <a class="text-dark" href="javascript:void(0);"
+                                                   onclick="window.open('{{ url('accounts/journal/voucher/print').'/'.$r['voucher_no'] }}','voucher-print-{{$r['voucher_no']}}','height=500,width=800');">{{ $r['voucher_no'] }}</a>
                                             </td>
-                                        @endforelse
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            <td class="text-center px-2 py-1">
+                                                {{ $r['user_id'] }}
+                                            </td>
+                                            <td class="text-center px-2 py-1">
+                                                {{ $r['close_by'] }}
+                                            </td>
+                                            <td class="text-center px-2 py-1">
+                                                {{ date('h:i A',strtotime($r['created_at'])) }}
+                                            </td>
+
+                                            <td class="text-center px-2 py-1">
+                                                {{ number_format($r['closing_balance'],2) }}
+                                            </td>
+
+                                            <td class="text-center px-2 py-1">
+                                                {{ number_format($r['physical_cash']) }}
+                                            </td>
+                                            <td class="text-center px-2 py-1">
+                                                {{ number_format($r['cash_retained']) }}
+                                            </td>
+
+                                            <td class="text-center px-2 py-1">
+                                                @if($r['closing_balance'] - $r['physical_cash']<=0)
+                                                    {{ number_format(abs($r['closing_balance'] - $r['physical_cash']),2) }}
+                                                @else
+                                                ({{number_format(abs($r['closing_balance'] - $r['physical_cash']),2) }})
+                                                @endif
+                                            </td>
+
+                                            <td class="text-center px-2 py-1">
+                                                {{ number_format($r['physical_cash'] - $r['cash_retained']) }}
+                                            </td>
+
+                                            <td class="text-center px-2 py-1">
+                                                {{ $r['transfer_name'] }}
+                                            </td>
+                                            <td class="text-center px-2 py-1">
+                                                @if(!empty($r['attachment']))
+                                                    <a href="{{ env('AWS_URL').$r['attachment'] }}"
+                                                       class="text-danger" target="_blank">
+                                                        View Attachment
+                                                    </a>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <td colspan="12" class="text-danger rounded-md overflow-hidden px-2 py-1">
+                                            <div class="alert alert-danger mb-0">
+                                                No Records Found.
+                                            </div>
+
+                                        </td>
+                                    @endforelse
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

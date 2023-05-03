@@ -4,6 +4,15 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col">
+                        <h1>Chart Of Accounts</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
                                 <div class="d-flex justify-content-between mx-2">
@@ -22,14 +31,14 @@
                                         </div>
                                     </div>
                                     <div>
-                                    <a href="{{'chart-of-accounts/add'}}?type={{$type}}" target="_blank"
-                                       class="btn btn-primary " style="height: 40px">
-                                        Add
-                                    </a>
-                                    <a href="{{'chart-of-accounts/export'}}?type={{$type}}" target="_blank"
-                                       class="btn btn-primary " style="height: 40px">
-                                        Export.csv
-                                    </a>
+                                        <a href="{{'chart-of-accounts/add'}}?type={{$type}}" target="_blank"
+                                           class="btn btn-primary " style="height: 40px">
+                                            Add
+                                        </a>
+                                        <a href="{{'chart-of-accounts/export'}}?type={{$type}}" target="_blank"
+                                           class="btn btn-primary " style="height: 40px">
+                                            Export.csv
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -79,7 +88,7 @@
                                                                 class="add-services-table align-middle"
                                                                 style="border-right: none">
                                                                 <div class=" items-center">
-                                                                    <span >{!! str_repeat('&nbsp;', 90) !!}</span>
+                                                                    <span>{!! str_repeat('&nbsp;', 90) !!}</span>
                                                                     @if($five->is_contra == 't')
                                                                         <svg
                                                                                 class="{{ $five->status == 'f' ? 'text-danger' : 'text-success' }}"
@@ -90,7 +99,7 @@
                                                                                   clip-rule="evenodd"></path>
                                                                         </svg>
                                                                     @endif
-                                                                    <span > &nbsp;<b>{{ $five->name }}</b></span>
+                                                                    <span> &nbsp;<b>{{ $five->name }}</b></span>
 
                                                                 </div>
                                                             </td>
