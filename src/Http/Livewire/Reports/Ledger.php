@@ -62,7 +62,6 @@ class Ledger extends Component
 
     private function formatDate($date)
     {
-
         return Carbon::createFromFormat('d M Y', $date)
             ->format('Y-m-d');
 

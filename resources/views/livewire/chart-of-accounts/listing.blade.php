@@ -202,23 +202,20 @@
                                                                            class="dropdown-item" target="_blank">
                                                                             View Ledger
                                                                         </a>
-                                                                        <a type="button"
-                                                                           wire:click="changeStatus('{{ $five->id }}')"
-                                                                           class="text-danger mx-3"> Mark Inactive </a>
+                                                                        @if($five->status=='f')
+                                                                            <a type="button"
+                                                                               wire:click.prevent="changeStatus('{{ $five->id }}')"
+                                                                               class="text-success mx-3"> Mark
+                                                                                Active </a>
+                                                                        @else
+                                                                            <a type="button"
+                                                                               wire:click.prevent="changeStatus('{{ $five->id }}')"
+                                                                               class="text-danger mx-3"> Mark
+                                                                                Inactive </a>
+                                                                        @endif
+
                                                                     </div>
                                                                 </div>
-
-
-                                                                {{--                                                                <a--}}
-                                                                {{--                                                                        href="{{ url('accounts/accountant/ledger') }}?account_id={{$five->id}}"--}}
-                                                                {{--                                                                        target="_blank"--}}
-                                                                {{--                                                                        class="btn btn-success btn-sm"> View Ledger </a>--}}
-                                                                {{--                                                                <button type="button"--}}
-                                                                {{--                                                                        wire:click="changeStatus('{{ $five->id }}')"--}}
-                                                                {{--                                                                        class="btn btn-primary btn-sm"--}}
-                                                                {{--                                                                >--}}
-                                                                {{--                                                                    Mark Inactive--}}
-                                                                {{--                                                                </button>--}}
                                                             </td>
                                                         </tr>
                                                     @endforeach
@@ -236,7 +233,40 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="confirmationModal" wire:ignore.self tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content advance-modal-width">
+                    <div class="card-header">
+                        <h4 class="modal-title" id="exampleModalLabel">Attention!!</h4>
+                    </div>
+                    <form wire:click.prevent="changeStatusConfirm">
+                        <div class="modal-body p-0">
+
+                            <div class="px-2 pt-2 pl-3">
+                                Are you sure you want to perform this action?
+                            </div>
+                            <div class="px-2 pt-2 pl-3 pb-4">
+                                <button class="btn btn-primary">Proceed</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
     </div>
+    @push('js')
+        <script>
+            document.addEventListener('open-confirmation-modal', function () {
+                $('#confirmationModal').modal('show');
+            })
+            document.addEventListener('close-confirmation-modal', function () {
+                $('#confirmationModal').modal('hide');
+            })
+        </script>
+    @endpush
 @else
     <div class="shadow sm:rounded-md">
         <div class="bg-white rounded-md">

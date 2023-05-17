@@ -29,7 +29,8 @@ class Listing extends Component
         return view('ams::livewire.chart-of-accounts.listing', compact('coa'));
     }
 
-    public function changeStatusConfirm(){
+    public function changeStatusConfirm()
+    {
         if (auth()->user()->can('2.edit.coa.status')) {
             $account = ChartOfAccount::find($this->primary_id);
             if ($account->status == 't') {
@@ -43,11 +44,19 @@ class Listing extends Component
             }
         }
         $this->confirm = false;
+        if (env('AMS_BOOTSTRAP') == 'true') {
+            $this->dispatchBrowserEvent('close-confirmation-modal');
+        }
+
     }
+
     public function changeStatus($id)
     {
-        $this->primary_id  = $id;
+        $this->primary_id = $id;
         $this->confirm = true;
+        if (env('AMS_BOOTSTRAP') == 'true') {
+            $this->dispatchBrowserEvent('open-confirmation-modal');
+        }
 
 
     }
