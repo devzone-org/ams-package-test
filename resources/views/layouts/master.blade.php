@@ -5,5 +5,4 @@
 @elseif(env('ACCOUNTS_LAYOUT') == 'sidebar')
     @include('ams::include.layouts.sidebar')
     @include('ams::include.layouts.popup')
-
 @endif

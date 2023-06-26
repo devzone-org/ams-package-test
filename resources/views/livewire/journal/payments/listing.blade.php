@@ -28,20 +28,20 @@
                                         <div class="form-group">
 
                                             <label for="nature" class="font-weight-normal">Nature</label>
-                                            <select wire:model.defer="nature"
+                                            <select wire:model="nature"
                                                     class="form-control">
                                                 <option value="">All</option>
                                                 <option value="pay">Paid</option>
                                                 <option value="receive">Received</option>
+                                                <option value="transfer_entry">Transfer Entry</option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="col-xs-6 col-sm-4">
                                         <div class="form-group">
-
                                             <label for="status" class="font-weight-normal">Status</label>
-                                            <select wire:model.defer="status"
+                                            <select wire:model="status"
                                                     class="form-control">
                                                 <option value="">All</option>
                                                 <option value="t">Approve</option>
@@ -68,14 +68,14 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-xs-6 col-sm-4 pt-4 mt-2">
+                                    <div class="col-xs-6 col-sm-4 pt-4">
                                         <div class="form-group">
-                                            <button type="button" class="btn btn-primary"
+{{--                                            <button type="button" class="btn btn-primary"--}}
 {{--                                                    wire:click="search"--}}
-                                                    wire:loading.attr="disabled">
-                                                <span wire:loading wire:target="search">Searching ...</span>
-                                                <span wire:loading.remove wire:target="search">Search</span>
-                                            </button>
+{{--                                                    wire:loading.attr="disabled">--}}
+{{--                                                <span wire:loading wire:target="search">Searching ...</span>--}}
+{{--                                                <span wire:loading.remove wire:target="search">Search</span>--}}
+{{--                                            </button>--}}
                                             <button class="btn btn-danger" type="button" wire:click="resetSearch"
                                                     wire:loading.attr="disabled">Reset
                                             </button>
@@ -126,37 +126,39 @@
                                         </div>
                                     </div>
                                 @endif
-                                <table class="table table-bordered border-0">
+                                <table class="table table-bordered table-responsive border-0">
                                     <thead class="">
-                                    <th class="add-services-table text-center text-muted border-right-0">#</th>
-                                    <th class="add-services-table  text-muted border-left-0 border-right-0">NATURE</th>
-                                    <th class="add-services-table  text-muted border-left-0 border-right-0">DATE</th>
-                                    <th class="add-services-table  text-muted border-left-0 border-right-0">ACCOUNTS</th>
-                                    <th class="add-services-table  text-muted border-left-0 border-right-0">DESCRIPTION</th>
-                                    <th class="add-services-table  text-muted border-left-0 border-right-0">AMOUNT</th>
-                                    <th class="add-services-table  text-muted border-left-0 border-right-0">CREATED BY</th>
-                                    <th class="add-services-table  text-muted border-left-0 border-right-0">APPROVED BY</th>
+                                    <th class="add-services-table text-center pl-3 text-muted border-right-0">#</th>
+                                    <th class="add-services-table text-center text-muted border-left-0 border-right-0">NATURE</th>
+                                    <th class="add-services-table text-nowrap text-center text-muted border-left-0 border-right-0">TRANSACTION DATE</th>
+                                    <th class="add-services-table text-center text-muted border-left-0 border-right-0">ACCOUNTS</th>
+                                    <th class="add-services-table text-center text-muted border-left-0 border-right-0">DESCRIPTION</th>
+                                    <th class="add-services-table text-center text-muted border-left-0 border-right-0">AMOUNT</th>
+                                    <th class="add-services-table text-center text-nowrap text-muted border-left-0 border-right-0">CREATED BY</th>
+                                    <th class="add-services-table text-center text-nowrap text-muted border-left-0 border-right-0">APPROVED BY</th>
                                     <th class="text-center add-services-table text-muted border-left-0" style="width: 20px;"></th>
                                     </thead>
                                     <tbody>
                                     @foreach($entries as $e)
                                         <tr>
-                                            <td class="align-middle border-right-0">{{ $loop -> iteration }}</td>
+                                            <td class="align-middle text-center pl-3 border-right-0">{{ $loop -> iteration }}</td>
                                             <td class="align-middle border-right-0 border-left-0">
                                                 @if($e->nature=='pay')
                                                     <span class="badge badge-pill badge-success">Payment</span>
-                                                @else
+                                                @elseif($e->nature=='receive')
                                                     <span class="badge badge-pill badge-primary">Received</span>
+                                                @else
+                                                    <span class="badge badge-pill badge-warning">Transfer Entry</span>
                                                 @endif
                                                 @if($e->reversal == 't')
                                                     <br>
                                                     <span class="badge badge-pill badge-danger">Reversed</span>
                                                 @endif
                                             </td>
-                                            <td class="align-middle border-right-0 border-left-0">
+                                            <td class="align-middle text-center border-right-0 border-left-0">
                                                 {{ date('d M, Y',strtotime($e->posting_date)) }}
                                             </td>
-                                            <td class="align-middle border-right-0 border-left-0">
+                                            <td class="align-middle text-nowrap border-right-0 border-left-0">
                                                 <a class=""
                                                    href="{{ url('accounts/accountant/ledger') }}?account_id={{$e -> first_account_id}}&date={{$e->posting_date}}"
                                                    target="_blank">{{ $e->nature=='pay' ? 'Dr':'Cr' }}
@@ -167,20 +169,20 @@
                                                    target="_blank">{{ $e->nature!='pay' ? 'Dr':'Cr' }}
                                                     - {{ $e -> second_account_name }}</a>
                                             </td>
-                                            <td class="align-middle border-right-0 border-left-0">
-                                                {{ $e -> description }}
+                                            <td class="align-middle text-center border-right-0 border-left-0">
+                                                {{ $e->description }}
                                             </td>
-                                            <td class="align-middle border-right-0 border-left-0">
+                                            <td class="align-middle text-center border-right-0 border-left-0">
                                                 {{ number_format($e->amount,2)  }}
                                             </td>
-                                            <td class="align-middle border-right-0 border-left-0">
+                                            <td class="align-middle text-center text-nowrap border-right-0 border-left-0">
                                                 {{ $e->added_by }} <br>
                                                 {{ date('d M, Y h:i A',strtotime($e->created_at)) }}
                                             </td>
-                                            <td class="align-middle border-right-0 border-left-0">
+                                            <td class="align-middle text-center text-nowrap border-right-0 border-left-0">
                                                 @if(!empty($e->approved_at))
                                                     {{ $e->approved_by_name }} <br>
-                                                    {{ date('d M, Y h:i: A',strtotime($e->approved_at)) }}
+                                                    {{ date('d M, Y h:i A',strtotime($e->approved_at)) }}
                                                 @endif
                                             </td>
                                             <td class="align-middle border-left-0" style="width: 50px;">

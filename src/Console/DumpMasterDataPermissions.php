@@ -56,6 +56,8 @@ class DumpMasterDataPermissions extends Command
         Permission::updateOrCreate(['name' => '2.hide-expenses'], ['guard_name' => 'web', 'description' => 'Hide Expenses', 'portal' => 'accounts', 'section' => 'accounts']);
         Permission::updateOrCreate(['name' => '2.hide-data-beyond-3-months'], ['guard_name' => 'web', 'description' => 'Restrict To Last 3 Months', 'portal' => 'accounts', 'section' => 'accounts']);
 
+        Permission::updateOrCreate(['name' => '2.transfer-entry'], ['guard_name' => 'web', 'description' => 'payment and receiving transaction - transfer entry ', 'portal' => 'accounts', 'section' => 'accounts']);
+
 
         $this->info('Dumping Permissions Finished...');
     }
