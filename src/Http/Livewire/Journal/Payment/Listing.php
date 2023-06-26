@@ -208,11 +208,11 @@ class Listing extends Component
             }
 
             if ($payment['nature'] == 'transfer_entry') {
-                GeneralJournal::instance()->account($payment['first_account_id'])
+                GeneralJournal::instance()->account($payment['second_account_id'])
                     ->credit($payment['amount'])->voucherNo($vno)->reference('Transfer Entry')
                     ->date($payment['posting_date'])->approve()->description($description)->execute();
 
-                GeneralJournal::instance()->account($payment['second_account_id'])
+                GeneralJournal::instance()->account($payment['first_account_id'])
                     ->debit($payment['amount'])->voucherNo($vno)->reference('Transfer Entry')
                     ->date($payment['posting_date'])->approve()->description($description)->execute();
             }
