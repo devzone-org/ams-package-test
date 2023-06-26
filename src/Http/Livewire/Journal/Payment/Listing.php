@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Devzone\Ams\Helper\GeneralJournal;
 use Devzone\Ams\Helper\Voucher;
+use Devzone\Ams\Models\ChartOfAccount;
 use Devzone\Ams\Models\Ledger;
 use Devzone\Ams\Models\LedgerAttachment;
 use Devzone\Ams\Models\PaymentReceiving;
@@ -158,6 +159,14 @@ class Listing extends Component
 
             $description = $payment->description;
             $created = User::find($payment['added_by']);
+
+            if ($payment['nature'] == 'transfer_entry') {
+                $description = ' Amount "PKR ' . $payment['amount'] . '" transferred from "'
+                    . ChartOfAccount::find($payment['second_account_id'])->name . '" to "'
+                    . ChartOfAccount::find($payment['first_account_id'])->name . '" with description "'
+                    . $payment->description . '".';
+            }
+
             $description .= " Created by " . $created->name . " @ " . date('d M, Y h:i A', strtotime($payment['created_at']));
             $description .= ". Approved by " . Auth::user()->name . " @ " . date('d M, Y h:i A');
 
@@ -198,6 +207,16 @@ class Listing extends Component
                     ->date($payment['posting_date'])->approve()->description($description)->execute();
             }
 
+            if ($payment['nature'] == 'transfer_entry') {
+                GeneralJournal::instance()->account($payment['second_account_id'])
+                    ->credit($payment['amount'])->voucherNo($vno)->reference('Transfer Entry')
+                    ->date($payment['posting_date'])->approve()->description($description)->execute();
+
+                GeneralJournal::instance()->account($payment['first_account_id'])
+                    ->debit($payment['amount'])->voucherNo($vno)->reference('Transfer Entry')
+                    ->date($payment['posting_date'])->approve()->description($description)->execute();
+            }
+
             $payment->update([
                 'approved_by' => Auth::user()->id,
                 'approved_at' => date('Y-m-d H:i:s'),
@@ -212,7 +231,7 @@ class Listing extends Component
                 ]);
             }
 
-
+            $this->success = 'Entry has been approved.';
             DB::commit();
         } catch
         (\Exception $e) {

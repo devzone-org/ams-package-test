@@ -7,12 +7,12 @@
                         <div class="">
                             <a href="{{ url('accounts/accountant/payments') }}"
                                class="">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-dark"
-                                         style="height: 40px; width: 40px">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                              d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75"/>
-                                    </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-dark"
+                                     style="height: 40px; width: 40px">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75"/>
+                                </svg>
 
                             </a>
                             <span class="ml-2"><b>Go Back</b></span>
@@ -35,7 +35,6 @@
                                 @if ($errors->any())
                                     <div class="col-12">
                                         @foreach ($errors->all() as $error)
-
                                             <div class="alert alert-danger alert-dismissible">
                                                 <button type="button" class="close" data-dismiss="alert"
                                                         aria-hidden="true">
@@ -60,13 +59,15 @@
                                 <div class="row">
                                     <div class="col-xs-6 col-sm-4">
                                         <div class="form-group">
-
                                             <label for="nature" class="font-weight-normal">Nature</label>
                                             <select id="nature" wire:model="nature"
                                                     class="form-control @error('nature')  is-invalid @enderror">
                                                 <option value=""></option>
                                                 <option value="pay">Amount Pay to Anyone</option>
                                                 <option value="receive">Receive Amount from Anyone</option>
+                                                @can('2.transfer-entry')
+                                                    <option value="transfer_entry">Transfer Entry</option>
+                                                @endcan
                                             </select>
                                         </div>
                                     </div>
@@ -80,111 +81,201 @@
                                         </div>
                                     </div>
                                     @if(!empty($nature))
+                                        @if($nature == 'transfer_entry')
 
-                                        <div class="col-xs-6 col-sm-4">
-                                            <div class="form-group">
-                                                <label for="first_account" class="font-weight-normal">
-                                                    @if($nature=='pay')
-                                                        Payment on account of
-                                                    @elseif($nature=='receive')
-                                                        Received on account of
-                                                    @endif
-                                                </label>
+                                            @if(auth()->user()->can('2.transfer-entry'))
+                                                <div class="col-xs-6 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label for="transfer_from" class="font-weight-normal">Transfer
+                                                            From</label>
+                                                        <select id="transfer_from" wire:model="from_account_id"
+                                                                class="form-control @error('from_account_id')  is-invalid @enderror">
+                                                            <option value=""></option>
+                                                            @foreach($payment_accounts as $key => $account)
+                                                                <optgroup
+                                                                        label="{{\App\Models\ChartOfAccount::find($key)->name}}">
+                                                                    @foreach($account as $acc)
+                                                                        @if(!empty($to_account_id) && $to_account_id == $acc['id'])
+                                                                            @php
+                                                                                continue;
+                                                                            @endphp
+                                                                        @else
+                                                                            <option value="{{$acc['id']}}">{{$acc['name']}}</option>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </optgroup>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
 
-                                                <input type="text"
-                                                       wire:click="searchableOpenModal('first_account_id','first_account_name','accounts')"
-                                                       wire:model="first_account_name"
-                                                       class="form-control @error('first_account_name')  is-invalid @enderror">
-                                            </div>
-                                        </div>
+                                                <div class="col-xs-6 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label for="transfer_to" class="font-weight-normal">Transfer
+                                                            To</label>
+                                                        <select id="transfer_to" wire:model="to_account_id"
+                                                                class="form-control @error('to_account_id')  is-invalid @enderror">
+                                                            <option value=""></option>
+                                                            @foreach($payment_accounts as $key => $account)
+                                                                <optgroup
+                                                                        label="{{\App\Models\ChartOfAccount::find($key)->name}}">
+                                                                    @foreach($account as $acc)
+                                                                        @if(!empty($from_account_id) && $from_account_id == $acc['id'])
+                                                                            @php
+                                                                                continue;
+                                                                            @endphp
+                                                                        @else
+                                                                            <option value="{{$acc['id']}}">{{$acc['name']}}</option>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </optgroup>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
 
-                                        <div class="col-xs-6 col-sm-4">
-                                            <div class="form-group">
-                                                <label for="amount" class="font-weight-normal">
-                                                    @if($nature=='pay')
-                                                        Amount Paid
-                                                    @elseif($nature=='receive')
-                                                        Amount Received
-                                                    @endif
-                                                </label>
-                                                <input type="number" wire:model.defer="amount"
-                                                       class="form-control @error('amount')  is-invalid @enderror">
-                                            </div>
-                                        </div>
+                                                <div class="col-xs-6 col-sm-4">
+                                                    <div class="form-group">
+                                                        <label for="amount" class="font-weight-normal">
+                                                            Transfer Amount
+                                                        </label>
+                                                        <input type="number" wire:model="amount"
+                                                               class="form-control @error('amount')  is-invalid @enderror">
+                                                    </div>
+                                                </div>
 
-                                        <div class="col-12 pt-3">
-                                            <div class="form-group">
-                                                <label class="font-weight-normal">
-                                                    Description
-                                                </label>
-                                                <textarea wire:model.defer="description" cols="30" rows="5"
-                                                          class="form-control @error('description')  is-invalid @enderror"></textarea>
-                                            </div>
-                                        </div>
+                                                <div class="col-12 pt-3">
+                                                    <div class="form-group">
+                                                        <label class="font-weight-normal">
+                                                            Description
+                                                        </label>
+                                                        <textarea wire:model="description" cols="30" rows="5"
+                                                                  class="form-control @error('description')  is-invalid @enderror"></textarea>
+                                                    </div>
+                                                </div>
 
-                                        <div class="col-xs-6 col-sm-4">
-                                            <div class="form-group">
-                                                <label for="first_account" class="font-weight-normal">
-                                                    @if($nature=='pay')
-                                                        Paid From
-                                                    @elseif($nature=='receive')
-                                                        Received In
-                                                    @endif
-                                                </label>
-                                                @if(auth()->user()->can('2.payments.any'))
-                                                    <input type="text"
-                                                           wire:click="searchableOpenModal('second_account_id','second_account_name','accounts')"
-                                                           wire:model="second_account_name"
-                                                           class="form-control @error('second_account_name')  is-invalid @enderror">
-                                                @else
-                                                    <input type="text"
-                                                           wire:model="second_account_name"
-                                                           class="form-control @error('second_account_name')  is-invalid @enderror">
-                                                @endif
-                                            </div>
-                                        </div>
+                                                <div class="col-12 pt-3 d-flex justify-content-end">
+                                                    <div class="form-group">
+                                                        <button type="button" class="btn btn-primary"
+                                                                data-toggle="modal"
+                                                                data-target="#saveConfirm"
+                                                                data-style="expand-right"
+                                                                @if(empty($amount) || empty($from_account_id) || empty($to_account_id) || empty($description)) disabled @endif>
+                                                            Save
+                                                        </button>
+                                                    </div>
+                                                </div>
 
-                                        <div class="col-xs-6 col-sm-4">
-                                            <div class="form-group">
-                                                <label for="mode" class="font-weight-normal">Mode of Payment</label>
-                                                <select id="mode" wire:model="mode"
-                                                        class="form-control @error('mode')  is-invalid @enderror">
-                                                    <option value=""></option>
-                                                    <option value="cash">Cash</option>
-                                                    <option value="cheque">Cheque</option>
-                                                </select>
-                                            </div>
-                                        </div>
+                                            @endif
 
-                                        <div class="col-xs-6 col-sm-4">
-                                            <div class="form-group">
-                                                @if($mode=='cheque')
+                                        @else
+
+                                            <div class="col-xs-6 col-sm-4">
+                                                <div class="form-group">
                                                     <label for="first_account" class="font-weight-normal">
-                                                        Instrument #
+                                                        @if($nature=='pay')
+                                                            Payment on account of
+                                                        @elseif($nature=='receive')
+                                                            Received on account of
+                                                        @endif
                                                     </label>
-                                                    <input type="text" wire:model.defer="instrument_no"
-                                                           class="form-control @error('instrument_no')  is-invalid @enderror">
-                                                @endif
-                                            </div>
-                                        </div>
 
-                                        <div class="col-12">
-                                            <div class="form-group">
-                                                <label for="attachment" class="font-weight-normal">Attachment</label>
-                                                <input
-                                                        class="form-control p-0 py-1 px-1 attachment"
-                                                        type="file" wire:model="attachment">
+                                                    <input type="text"
+                                                           wire:click="searchableOpenModal('first_account_id','first_account_name','accounts')"
+                                                           wire:model="first_account_name"
+                                                           class="form-control @error('first_account_name')  is-invalid @enderror">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-12 pt-3 d-flex justify-content-end">
-                                            <div class="form-group">
-                                                <button type="button" class="btn btn-primary" wire:click="save"
-                                                        wire:loading.attr="disabled">
-                                                    <span wire:loading wire:target="save">Saving ...</span>
-                                                    <span wire:loading.remove wire:target="save">Save</span>
-                                                </button>
+
+                                            <div class="col-xs-6 col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="amount" class="font-weight-normal">
+                                                        @if($nature=='pay')
+                                                            Amount Paid
+                                                        @elseif($nature=='receive')
+                                                            Amount Received
+                                                        @endif
+                                                    </label>
+                                                    <input type="number" wire:model.defer="amount"
+                                                           class="form-control @error('amount')  is-invalid @enderror">
+                                                </div>
                                             </div>
-                                        </div>
+
+                                            <div class="col-12 pt-3">
+                                                <div class="form-group">
+                                                    <label class="font-weight-normal">
+                                                        Description
+                                                    </label>
+                                                    <textarea wire:model.defer="description" cols="30" rows="5"
+                                                              class="form-control @error('description')  is-invalid @enderror"></textarea>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-6 col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="first_account" class="font-weight-normal">
+                                                        @if($nature=='pay')
+                                                            Paid From
+                                                        @elseif($nature=='receive')
+                                                            Received In
+                                                        @endif
+                                                    </label>
+                                                    @if(auth()->user()->can('2.payments.any'))
+                                                        <input type="text"
+                                                               wire:click="searchableOpenModal('second_account_id','second_account_name','accounts')"
+                                                               wire:model="second_account_name"
+                                                               class="form-control @error('second_account_name')  is-invalid @enderror">
+                                                    @else
+                                                        <input type="text"
+                                                               wire:model="second_account_name"
+                                                               class="form-control @error('second_account_name')  is-invalid @enderror">
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-6 col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="mode" class="font-weight-normal">Mode of Payment</label>
+                                                    <select id="mode" wire:model="mode"
+                                                            class="form-control @error('mode')  is-invalid @enderror">
+                                                        <option value=""></option>
+                                                        <option value="cash">Cash</option>
+                                                        <option value="cheque">Cheque</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-6 col-sm-4">
+                                                <div class="form-group">
+                                                    @if($mode=='cheque')
+                                                        <label for="first_account" class="font-weight-normal">
+                                                            Instrument #
+                                                        </label>
+                                                        <input type="text" wire:model.defer="instrument_no"
+                                                               class="form-control @error('instrument_no')  is-invalid @enderror">
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label for="attachment"
+                                                           class="font-weight-normal">Attachment</label>
+                                                    <input
+                                                            class="form-control p-0 py-1 px-1 attachment"
+                                                            type="file" wire:model="attachment">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 pt-3 d-flex justify-content-end">
+                                                <div class="form-group">
+                                                    <button type="button" class="btn btn-primary" wire:click="save"
+                                                            wire:loading.attr="disabled">
+                                                        <span wire:loading wire:target="save">Saving ...</span>
+                                                        <span wire:loading.remove wire:target="save">Save</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        @endif
                                     @endif
 
                                 </div>
@@ -195,6 +286,42 @@
             </div>
             @include("ams::include.searchable")
         </div>
+
+        <div class="modal fade" id="saveConfirm" tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <form wire:submit.prevent="transferEntry">
+                    <div class="modal-content">
+                        <div class="card-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="exampleModalLabel">Attention!!!</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                Are you sure you want to transfer <strong>PKR {{$amount}}</strong> from
+                                <strong>{{!empty($from_account_id) ? \Devzone\Ams\Models\ChartOfAccount::find($from_account_id)->name : ''}}</strong>
+                                to
+                                <strong>{{!empty($to_account_id) ? \Devzone\Ams\Models\ChartOfAccount::find($to_account_id)->name : ''}}</strong>
+                                ?
+                            </p>
+                        </div>
+                        <div class="modal-footer text-right">
+                            <button type="submit" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#saveConfirm">
+                                Yes
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                No
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
     @push('js')
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
