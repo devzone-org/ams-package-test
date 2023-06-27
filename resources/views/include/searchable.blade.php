@@ -4,70 +4,72 @@
              aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                        <div class="modal-body p-0" id="std_form">
+                    <div class="modal-body p-0" id="std_form">
+                        <div>
+                            <div class="form-group px-2 mb-1">
+                                <label for="status"
+                                       class="">Search {{ ucwords(str_replace('_', ' ', $searchable_type))  }}</label>
+                                <input type="text"
+                                       wire:model.debounce.500ms="searchable_query"
+                                       wire:keydown.arrow-up="decrementHighlight"
+                                       wire:keydown.arrow-down="incrementHighlight"
+                                       wire:keydown.enter="searchableSelection"
+                                       wire:keydown.escape="searchableReset"
+                                       wire:keydown.tab="searchableReset"
+                                       id="searchable_query"
+                                       class="rounded searchable_query" style="width: 480px"
+                                       autocomplete="off">
+                            </div>
                             <div>
-                                    <div class="form-group px-2 mb-1">
-                                        <label for="status"
-                                               class="">Search {{ ucwords(str_replace('_', ' ', $searchable_type))  }}</label>
-                                        <input type="text"
-                                               wire:model.debounce.500ms="searchable_query"
-                                               wire:keydown.arrow-up="decrementHighlight"
-                                               wire:keydown.arrow-down="incrementHighlight"
-                                               wire:keydown.enter="searchableSelection"
-                                               wire:keydown.escape="searchableReset"
-                                               wire:keydown.tab="searchableReset"
-                                               id="searchable_query"
-                                               class="rounded searchable_query" style="width: 480px"
-                                               autocomplete="off">
-                                </div>
-                                <div>
-                                    @if(!empty($searchable_data))
-                                        <table class="table border-0 table-hover">
-                                            <thead class="">
-                                            <tr>
-                                                @foreach($searchable_column[$searchable_type] as $c)
-                                                    @if($c == 'name')
-                                                        <th scope="col"
-                                                            class="px-2 py-2 text-left">
-                                                            {{ ucwords($c) }}
-                                                        </th>
-                                                    @else
-                                                        <th scope="col"
-                                                            class=" col-1 px-2 py-2 text-left">
-                                                            {{ ucwords($c) }}
-                                                        </th>
-                                                    @endif
+                                @if(!empty($searchable_data))
+                                    <table class="table border-0 table-hover">
+                                        <thead class="">
+                                        <tr>
+                                            @foreach($searchable_column[$searchable_type] as $c)
+                                                @if($c == 'name')
+                                                    <th scope="col"
+                                                        class="px-2 py-2 text-left">
+                                                        {{ ucwords($c) }}
+                                                    </th>
+                                                @else
+                                                    <th scope="col"
+                                                        class=" col-1 px-2 py-2 text-left">
+                                                        {{ ucwords($c) }}
+                                                    </th>
+                                                @endif
 
+                                            @endforeach
+                                        </tr>
+                                        </thead>
+                                        <tbody class="bg-white">
+                                        @foreach($searchable_data as $key=> $a)
+                                            <tr class=""
+                                                style="cursor: pointer; {{$highlight_index === $key ? 'background-color: #3d40e0; color: white;' : '' }}"
+                                                onmouseover="this.style.backgroundColor='#3d40e0';this.style.color='#ffffff';"
+                                                onmouseout="this.style.backgroundColor='#ffffff'; this.style.color='#000000';"
+                                                wire:click="searchableSelection('{{ $key }}')">
+                                                @foreach($searchable_column[$searchable_type] as $c)
+                                                    <td style="padding: 7px;border-top: none;">
+                                                        {{ $a[$c] }}
+                                                    </td>
                                                 @endforeach
                                             </tr>
-                                            </thead>
-                                            <tbody class="bg-white">
-                                            @foreach($searchable_data as $key=> $a)
-                                                <tr class="" style="cursor: pointer;"
-                                                    onmouseover="this.style.backgroundColor='#3d40e0';this.style.color='#ffffff';"
-                                                    onmouseout="this.style.backgroundColor='#ffffff'; this.style.color='#000000';"
-                                                    wire:click="searchableSelection('{{ $key }}')">
-                                                    @foreach($searchable_column[$searchable_type] as $c)
-                                                        <td style="padding: 7px;border-top: none;">
-                                                            {{ $a[$c] }}
-                                                        </td>
-                                                    @endforeach
-                                                </tr>
-                                            @endforeach
-                                            </tbody>
-                                        </table>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                @else
+                                    @if(strlen($searchable_query) < 2)
+                                        <p class=" pt-0  px-2 text-muted">Please
+                                            enter {{ 2 - strlen($searchable_query) }}
+                                            or more
+                                            {{ (2 - strlen($searchable_query)) > 1 ? 'characters' : 'character' }}</p>
                                     @else
-                                        @if(strlen($searchable_query) < 2)
-                                            <p class=" pt-0  px-2 text-muted">Please enter {{ 2 - strlen($searchable_query) }}
-                                                or more
-                                                {{ (2 - strlen($searchable_query)) > 1 ? 'characters' : 'character' }}</p>
-                                        @else
-                                            <p class="pt-0 px-2 text-muted">{{ empty($searchable_data) ? 'No Record Found': '' }}</p>
-                                        @endif
+                                        <p class="pt-0 px-2 text-muted">{{ empty($searchable_data) ? 'No Record Found': '' }}</p>
                                     @endif
-                                </div>
+                                @endif
                             </div>
                         </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -79,7 +81,7 @@
             document.addEventListener('open-modal', function () {
                 $("#searchable_query").blur();
                 $('#SelectAccount').modal('show');
-                setTimeout(function() {
+                setTimeout(function () {
                     $("#searchable_query").focus();
                 }, 500);
             })
