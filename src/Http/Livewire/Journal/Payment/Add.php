@@ -103,7 +103,7 @@ class Add extends Component
     public function save()
     {
         $this->success = null;
-        $lock = Cache::lock('transferPayment.' . $this->first_account_id . $this->second_account_id, 60);
+        $lock = Cache::lock('savePayment.' . $this->first_account_id . $this->second_account_id, 60);
         $this->validate();
 
         try {

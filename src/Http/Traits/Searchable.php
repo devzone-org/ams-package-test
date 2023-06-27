@@ -25,8 +25,7 @@ trait Searchable
 
     public function searchableOpenModal($id, $name, $type)
     {
-        if(env('AMS_BOOTSTRAP') == 'true')
-        {
+        if (env('AMS_BOOTSTRAP') == 'true') {
             $this->dispatchBrowserEvent('open-modal');
         }
         $this->searchable_modal = true;
@@ -64,8 +63,7 @@ trait Searchable
         $this->{$this->searchable_id} = $data['id']; //$this->searchable_id = account_id
         $this->{$this->searchable_name} = $data['name'];
         $this->emitSelf(Str::camel('emit_' . $this->searchable_id));
-        if(env('AMS_BOOTSTRAP') == 'true')
-        {
+        if (env('AMS_BOOTSTRAP') == 'true') {
             $this->dispatchBrowserEvent('close-modal');
         }
         $this->searchableReset();
