@@ -95,7 +95,7 @@
                                                     Revenue
                                                 </th>
                                             </tr>
-                                            @foreach(collect($report)->where('type','Income')->groupBy('account_id') as $key => $en)
+                                            @foreach(collect($report)->where('type','Income')->sortByDesc('same_account_total_balance')->groupBy('account_id') as $key => $en)
                                                 <tr>
                                                     <td class="px-2 py-1 text-muted">
                                                         {{ $en->first()['name'] }}
@@ -120,7 +120,6 @@
                                                     @endforeach
                                                     <td class="text-center px-2 py-1">
                                                         @cannot('2.hide-income')
-
                                                             <a target="_blank" class="text-muted"
                                                                href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
                                                                 {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
@@ -170,7 +169,7 @@
                                                 </th>
                                             </tr>
 
-                                            @foreach(collect($report)->where('p_ref','cost-of-sales-4')->groupBy('account_id') as $key => $en)
+                                            @foreach(collect($report)->where('p_ref','cost-of-sales-4')->sortByDesc('same_account_total_balance')->groupBy('account_id') as $key => $en)
                                                 <tr class="">
                                                     <td class="px-2 py-1 text-muted">
                                                         {{ $en->first()['name'] }}
@@ -275,7 +274,7 @@
                                                 </th>
                                             </tr>
 
-                                            @foreach(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->groupBy('account_id') as $key => $en)
+                                            @foreach(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->sortByDesc('same_account_total_balance')->groupBy('account_id') as $key => $en)
                                                 <tr class="">
                                                     <td class="px-2 py-1  text-muted">
                                                         {{ $en->first()['name'] }}
