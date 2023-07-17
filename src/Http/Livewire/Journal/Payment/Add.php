@@ -54,7 +54,7 @@ class Add extends Component
             $this->second_account_name = Auth::user()->account_name;
         }
 
-        $this->payment_accounts = \App\Models\ChartOfAccount::whereIn('sub_account', function ($q) {
+        $this->payment_accounts = ChartOfAccount::whereIn('sub_account', function ($q) {
             $q->select('id')->from('chart_of_accounts')->where('sub_account', function ($p) {
                 $p->select('id')->from('chart_of_accounts')->where('level', 3)->where('name', 'Cash and Cash Equivalents');
             });
