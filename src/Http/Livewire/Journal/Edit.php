@@ -268,7 +268,7 @@ class Edit extends Component
                 LedgerAttachment::where('type', '0')->whereIn('id', $this->deleted_attachment)->delete();
             }
             foreach ($this->attachment_entries as $ae) {
-                if (isset($ae['file'])) {
+                if (!empty($ae['file'])) {
                     $path = $ae['file']->storePublicly(env('AWS_FOLDER') . 'accounts', 's3');
                     LedgerAttachment::create([
                         'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
@@ -276,7 +276,7 @@ class Edit extends Component
                         'attachment' => $path
                     ]);
                 } else {
-                    if (isset($ae['id'])) {
+                    if (!empty($ae['id'])) {
                         LedgerAttachment::find($ae['id'])->update([
                             'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
                         ]);

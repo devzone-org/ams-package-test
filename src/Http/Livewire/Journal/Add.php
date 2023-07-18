@@ -265,8 +265,8 @@ class Add extends Component
                         'attachment' => $path
                     ]);
                 } else {
-                    if (!empty($ae['account_id'])) {
-                        LedgerAttachment::find($ae['account_id'])->update([
+                    if (!empty($ae['id'])) {
+                        LedgerAttachment::find($ae['id'])->update([
                             'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
                         ]);
                     }
@@ -309,7 +309,6 @@ class Add extends Component
 
     public function posted()
     {
-
         $this->validate();
         try {
             DB::beginTransaction();
@@ -375,7 +374,7 @@ class Add extends Component
             }
 
             foreach ($this->attachment_entries as $ae) {
-                if (isset($ae['file'])) {
+                if (!empty($ae['file'])) {
                     $path = $ae['file']->storePublicly(env('AWS_FOLDER') . 'accounts', 's3');
                     LedgerAttachment::create([
                         'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
@@ -383,7 +382,7 @@ class Add extends Component
                         'attachment' => $path
                     ]);
                 } else {
-                    if (isset($ae['id'])) {
+                    if (!empty($ae['id'])) {
                         LedgerAttachment::find($ae['id'])->update([
                             'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
                         ]);
