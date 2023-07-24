@@ -283,7 +283,7 @@
                         </svg>
                         <div class="ml-4">
                             <p class="text-base font-medium text-gray-900">
-                                Profit and Loss
+                                Profit and Loss - Periodic
                             </p>
                             <p class="mt-1 text-sm text-gray-500">
                                 Financial statement that summarizes the revenues, costs, and expenses incurred during a
@@ -301,7 +301,7 @@
                         </svg>
                         <div class="ml-4">
                             <p class="text-base font-medium text-gray-900">
-                                Profit and Loss Date Wise
+                                Profit and Loss - Date Wise
                             </p>
                             <p class="mt-1 text-sm text-gray-500">
                                 Financial statement that summarizes the revenues, costs, and expenses incurred during a
