@@ -83,7 +83,7 @@ class Add extends Component
     public function create()
     {
         $this->validate();
-        $lock = Cache::lock('addService.' . \auth()->user()->id, 1);
+        $lock = Cache::lock('addService.' . \auth()->user()->id, 60);
 
         try {
             if ($lock->get()) {
