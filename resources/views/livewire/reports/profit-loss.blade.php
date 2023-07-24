@@ -5,7 +5,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col">
-                            <h1>Profit and Loss</h1>
+                            <h1>Profit and Loss - Periodic</h1>
                         </div>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
                                     </div>
                                 </div>
                                 <div class="card-header pt-0">
-                                    <h5 class="d-flex justify-content-center p-0 m-0"><b>Profit and Loss (P&L)</b></h5>
+                                    <h5 class="d-flex justify-content-center p-0 m-0"><b>Profit and Loss (P&L) - Periodic</b></h5>
                                     <p class="text-center p-0 m-0 text-muted">{{ env('APP_NAME') }}</p>
                                     <p class="text-center p-0 m-0 text-muted">Statement
                                         Period {{ date('d M, Y',strtotime($from_date)) }}
@@ -442,7 +442,7 @@
                 </div>
 
                 <div>
-                    <h3 class="text-lg leading-6 text-center font-medium text-gray-900">Profit and Loss (P&L)</h3>
+                    <h3 class="text-lg leading-6 text-center font-medium text-gray-900">Profit and Loss (P&L) - Periodic</h3>
                     <p class="text-md  font-sm text-gray-500 text-center">{{ env('APP_NAME') }}</p>
                     <p class="text-md  font-sm text-gray-500 text-center">Statement
                         Period {{ date('d M, Y',strtotime($from_date)) }}
