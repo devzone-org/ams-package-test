@@ -56,7 +56,7 @@
 
                                             <div class="col-xs-12 col-sm-6">
                                                 <div class="form-group">
-                                                    <label class="font-weight-normal" >Posting Date</label>
+                                                    <label class="font-weight-normal">Posting Date</label>
                                                     <input type="text" wire:model.lazy="posting_date"
                                                            id="posting_date" autocomplete="off"
                                                            class="form-control  @error('posting_date')  is-invalid @enderror">
@@ -77,7 +77,8 @@
                                 <div class="card-body table-responsive p-0">
                                     <table class="table table-bordered border-0">
                                         <thead class="text-nowrap">
-                                        <th class="text-center add-services-table text-muted" style="width: 35px;">#</th>
+                                        <th class="text-center add-services-table text-muted" style="width: 35px;">#
+                                        </th>
                                         <th class="add-services-table text-center col-3 text-muted">Accounts</th>
                                         <th class="add-services-table text-center col-6 text-muted">Description</th>
                                         <th class="add-services-table text-center text-muted">Debit</th>
@@ -130,7 +131,8 @@
                                                            autocomplete="off" style="outline: none; width: 25px">
                                                 </td>
                                                 <td class="text-center add-services-table ">
-                                                    <button class="outline-none border-0 p-0 mt-2 bg-white" type="button"
+                                                    <button class="outline-none border-0 p-0 mt-2 bg-white"
+                                                            type="button"
                                                             wire:click="removeEntry('{{ $key }}')">
                                                         <svg xmlns="http://www.w3.org/2000/svg"
                                                              viewBox="0 0 24 24" fill="currentColor"
@@ -210,7 +212,8 @@
                                             <td class="add-services-table col-8">
                                                 @if(!isset($en['id']))
                                                     <input id="{{$key}}-file" type="file"
-                                                           wire:model="attachment_entries.{{$key}}.file" class="mt-2 mb-2 mx-2">
+                                                           wire:model="attachment_entries.{{$key}}.file"
+                                                           class="mt-2 mb-2 mx-2">
                                                 @else
                                                     <a class="font-medium text-indigo-600 hover:text-indigo-500 pt-2"
                                                        href="{{ env('AWS_URL').$en['attachment'] }}" target="_blank">View
@@ -246,22 +249,24 @@
                     Delete All
                 </button>
             </div>
-            <div>
-                @if((!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
-                    <button type="button" wire:click="draft" wire:loading.attr="disabled"
-                            class="btn btn-secondary">
-                        <span wire:loading.remove wire:target="draft">Save as Draft</span>
-                        <span wire:loading wire:target="draft">Saving...</span>
-                    </button>
-                @endif
-                @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
-                    <button type="button" wire:click="posted" wire:loading.attr="disabled"
-                            class="btn btn-success">
-                        <span wire:loading.remove wire:target="posted">Post for Approval</span>
-                        <span wire:loading wire:target="posted">Posting...</span>
-                    </button>
-                @endif
-            </div>
+            @if(!$file_upload)
+                <div>
+                    @if((!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
+                        <button type="button" wire:click="draft" wire:loading.attr="disabled"
+                                class="btn btn-secondary">
+                            <span wire:loading.remove wire:target="draft">Save as Draft</span>
+                            <span wire:loading wire:target="draft">Saving...</span>
+                        </button>
+                    @endif
+                    @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
+                        <button type="button" wire:click="posted" wire:loading.attr="disabled"
+                                class="btn btn-success">
+                            <span wire:loading.remove wire:target="posted">Post for Approval</span>
+                            <span wire:loading wire:target="posted">Posting...</span>
+                        </button>
+                    @endif
+                </div>
+            @endif
         </div>
 
         <div class="modal fade" id="searchmodal" wire:ignore.self tabindex="-1" role="dialog"
@@ -617,7 +622,13 @@
                         </td>
                         <td class="px-2      border-r  text-sm text-gray-500">
                             @if(!isset($en['id']))
-                                <input id="{{$key}}-file" type="file" wire:model="attachment_entries.{{$key}}.file">
+                                <input id="{{$key}}-file" type="file" wire:model="attachment_entries.{{$key}}.file"
+                                       onchange="progress()" onload="load()"
+                                       wire:loading.remove>
+                                <span class="col-sm-6 text-danger" wire:loading
+                                      wire:target="attachment_entries.{{$key}}.file">
+                                Uploading...
+                            </span>
                             @else
                                 <a class="font-medium text-indigo-600 hover:text-indigo-500"
                                    href="{{ env('AWS_URL').$en['attachment'] }}" target="_blank">View Attachment</a>
@@ -649,24 +660,26 @@
                     Delete All
                 </button>
             </p>
-            <div class="mt-3 flex sm:mt-0 sm:ml-4">
+            @if(!$file_upload)
+                <div class="mt-3 flex sm:mt-0 sm:ml-4" id="hide">
 
-                @if((!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
-                    <button type="button" wire:click="draft" wire:loading.attr="disabled"
-                            class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <span wire:loading.remove wire:target="draft">Save as Draft</span>
-                        <span wire:loading wire:target="draft">Saving...</span>
-                    </button>
-                @endif
-                @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
-                    <button type="button" wire:click="posted" wire:loading.attr="disabled"
-                            class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <span wire:loading.remove wire:target="posted">Post for Approval</span>
-                        <span wire:loading wire:target="posted">Posting...</span>
-                    </button>
-                @endif
+                    @if((!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
+                        <button type="button" wire:click="draft" wire:loading.attr="disabled"
+                                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <span wire:loading.remove wire:target="draft">Save as Draft</span>
+                            <span wire:loading wire:target="draft">Saving...</span>
+                        </button>
+                    @endif
+                    @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
+                        <button type="button" wire:click="posted" wire:loading.attr="disabled"
+                                class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <span wire:loading.remove wire:target="posted">Post for Approval</span>
+                            <span wire:loading wire:target="posted">Posting...</span>
+                        </button>
+                    @endif
 
-            </div>
+                </div>
+            @endif
         </div>
 
 
@@ -764,27 +777,33 @@
         </div>
     </div>
 
-    @section('script')
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-        <script>
-            document.addEventListener('livewire:load', () => {
-                Livewire.on('focusInput', postId => {
-                    console.log('asd');
-                    setTimeout(() => {
-                        document.getElementById('search').focus();
-                    }, 300);
-                })
-            });
-            let from_date = new Pikaday({
-                field: document.getElementById('posting_date'),
-                format: "DD MMM YYYY"
-            });
+@section('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+    <script>
+        document.addEventListener('livewire:load', () => {
+            Livewire.on('focusInput', postId => {
+                console.log('asd');
+                setTimeout(() => {
+                    document.getElementById('search').focus();
+                }, 300);
+            })
+        });
+        let from_date = new Pikaday({
+            field: document.getElementById('posting_date'),
+            format: "DD MMM YYYY"
+        });
 
 
-            from_date.setDate(new Date('{{ $posting_date }}'));
+        from_date.setDate(new Date('{{ $posting_date }}'));
 
-
-        </script>
-    @endsection
+        function progress() {
+            if (event.target.files[0]) {
+                document.querySelector("#hide").style.display = 'none';
+                @this.
+                set('file_upload', true)
+            }
+        }
+    </script>
+@endsection
 @endif

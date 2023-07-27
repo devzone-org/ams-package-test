@@ -73,7 +73,8 @@
                                 <div class="card-body table-responsive p-0">
                                     <table class="table table-bordered border-0">
                                         <thead class="text-nowrap">
-                                        <th class="text-center add-services-table text-muted" style="width: 35px;">#</th>
+                                        <th class="text-center add-services-table text-muted" style="width: 35px;">#
+                                        </th>
                                         <th class="add-services-table text-center text-muted">Accounts</th>
                                         <th class="add-services-table text-center text-muted">Description</th>
                                         <th class="add-services-table text-center text-muted">Debit</th>
@@ -126,7 +127,8 @@
                                                            autocomplete="off" style="outline: none; width: 25px">
                                                 </td>
                                                 <td class="text-center add-services-table ">
-                                                    <button class="outline-none border-0 p-0 mt-2 bg-white" type="button"
+                                                    <button class="outline-none border-0 p-0 mt-2 bg-white"
+                                                            type="button"
                                                             wire:click="removeEntry('{{ $key }}')">
                                                         <svg xmlns="http://www.w3.org/2000/svg"
                                                              viewBox="0 0 24 24" fill="currentColor"
@@ -207,7 +209,8 @@
                                             <td class="add-services-table col-8">
                                                 @if(!isset($en['id']))
                                                     <input id="{{$key}}-file" type="file"
-                                                           wire:model="attachment_entries.{{$key}}.file" class="mt-2 mb-2 mx-2">
+                                                           wire:model="attachment_entries.{{$key}}.file"
+                                                           class="mt-2 mb-2 mx-2">
                                                 @else
                                                     <a class="mt-2"
                                                        href="{{ env('AWS_URL').$en['attachment'] }}" target="_blank">View
@@ -243,20 +246,22 @@
                 {{--                    Delete All--}}
                 {{--                </button>--}}
             </div>
-            <div>
+            @if(!$file_upload)
+                <div id="hide">
 
-                <a href="{{url('/accounts/accountant/journal')}}"
-                   class="btn btn-secondary">
-                    Go Back
-                </a>
-                @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
-                    <button type="button" wire:click="draft" wire:loading.attr="disabled"
-                            class="btn btn-primary">
-                        <span wire:loading.remove wire:target="draft">Update</span>
-                        <span wire:loading wire:target="draft">Updating...</span>
-                    </button>
-                @endif
-            </div>
+                    <a href="{{url('/accounts/accountant/journal')}}"
+                       class="btn btn-secondary">
+                        Go Back
+                    </a>
+                    @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
+                        <button type="button" wire:click="draft" wire:loading.attr="disabled"
+                                class="btn btn-primary">
+                            <span wire:loading.remove wire:target="draft">Update</span>
+                            <span wire:loading wire:target="draft">Updating...</span>
+                        </button>
+                    @endif
+                </div>
+            @endif
         </div>
 
         <div class="modal fade" id="searchmodal" wire:ignore.self tabindex="-1" role="dialog"
@@ -295,9 +300,13 @@
                                 </thead>
                                 <tbody class="text-nowrap">
                                 @foreach($accounts as $key=> $a)
-                                    <tr style="cursor: pointer;"  wire:click="chooseAccount('{{ $a['id'] }}','{{$a['name'] }}')" onmouseover="this.style.backgroundColor='#3d40e0';this.style.color='#ffffff';" onmouseout="this.style.backgroundColor='#ffffff'; this.style.color='#000000';">
-                                            <td style="padding: 7px;border-top: none;">{{ $a['code'] }} - {{ $a['name'] }}</td>
-                                            <td class="col-1" style="padding: 7px;border-top: none;">{{ $a['type'] }}</td>
+                                    <tr style="cursor: pointer;"
+                                        wire:click="chooseAccount('{{ $a['id'] }}','{{$a['name'] }}')"
+                                        onmouseover="this.style.backgroundColor='#3d40e0';this.style.color='#ffffff';"
+                                        onmouseout="this.style.backgroundColor='#ffffff'; this.style.color='#000000';">
+                                        <td style="padding: 7px;border-top: none;">{{ $a['code'] }}
+                                            - {{ $a['name'] }}</td>
+                                        <td class="col-1" style="padding: 7px;border-top: none;">{{ $a['type'] }}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -338,6 +347,14 @@
 
 
             from_date.setDate(new Date('{{ $posting_date }}'));
+
+            function progress() {
+                if (event.target.files[0]) {
+                    document.querySelector("#hide").style.display = 'none';
+                    @this.
+                    set('file_upload', true)
+                }
+            }
         </script>
     @endpush
 
@@ -606,7 +623,13 @@
                         </td>
                         <td class="px-2      border-r  text-sm text-gray-500">
                             @if(!isset($en['id']))
-                                <input id="{{$key}}-file" type="file" wire:model="attachment_entries.{{$key}}.file">
+                                <input id="{{$key}}-file" type="file" wire:model="attachment_entries.{{$key}}.file"
+                                       onchange="progress()" onload="load()"
+                                       wire:loading.remove>
+                                <span class="col-sm-6 text-danger" wire:loading
+                                      wire:target="attachment_entries.{{$key}}.file">
+                                Uploading...
+                            </span>
                             @else
                                 <a class="font-medium text-indigo-600 hover:text-indigo-500"
                                    href="{{ env('AWS_URL').$en['attachment'] }}" target="_blank">View Attachment</a>
@@ -638,20 +661,23 @@
                 {{--                Delete All--}}
                 {{--            </button>--}}
             </p>
-            <div class="mt-3 flex sm:mt-0 sm:ml-4">
+            @if(!$file_upload)
 
-                <a href="{{url('/accounts/accountant/journal')}}"
-                   class="ml-1 inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md shadow-sm disabled:opacity-25 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Go Back
-                </a>
-                @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
-                    <button type="button" wire:click="draft" wire:loading.attr="disabled"
-                            class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <span wire:loading.remove wire:target="draft">Update</span>
-                        <span wire:loading wire:target="draft">Updating...</span>
-                    </button>
-                @endif
-            </div>
+                <div class="mt-3 flex sm:mt-0 sm:ml-4" id="hide">
+
+                    <a href="{{url('/accounts/accountant/journal')}}"
+                       class="ml-1 inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md shadow-sm disabled:opacity-25 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Go Back
+                    </a>
+                    @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
+                        <button type="button" wire:click="draft" wire:loading.attr="disabled"
+                                class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <span wire:loading.remove wire:target="draft">Update</span>
+                            <span wire:loading wire:target="draft">Updating...</span>
+                        </button>
+                    @endif
+                </div>
+            @endif
         </div>
 
 
@@ -763,21 +789,28 @@
 
 
 
-    @section('script')
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-        <script>
-            let from_date = new Pikaday({
-                field: document.getElementById('posting_date'),
-                format: "DD MMM YYYY"
-            });
+@section('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+    <script>
+        let from_date = new Pikaday({
+            field: document.getElementById('posting_date'),
+            format: "DD MMM YYYY"
+        });
 
 
-            from_date.setDate(new Date('{{ $posting_date }}'));
+        from_date.setDate(new Date('{{ $posting_date }}'));
 
+        function progress() {
+            if (event.target.files[0]) {
+                document.querySelector("#hide").style.display = 'none';
+                @this.
+                set('file_upload', true)
+            }
+        }
 
-        </script>
-    @endsection
+    </script>
+@endsection
 @endif
 
 
