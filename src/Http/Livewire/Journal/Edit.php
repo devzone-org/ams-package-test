@@ -28,6 +28,7 @@ class Edit extends Component
     public $deleted = [];
     public $deleted_attachment = [];
     public $success;
+    public $file_upload = false;
     public $account_list = [];
     public $highlightIndex = 0;
 
@@ -191,6 +192,10 @@ class Edit extends Component
                     $this->entries[$array[1]]['credit'] = 0;
                 }
             }
+
+            if ($array[0] == 'attachment_entries') {
+                $this->file_upload = false;
+            }
         }
     }
 
@@ -245,7 +250,7 @@ class Edit extends Component
                     ]);
                 } else {
                     //created
-                    Ledger::create([ 
+                    Ledger::create([
                         'account_id' => !empty($entry['account_id']) ? $entry['account_id'] : null,
                         'voucher_no' => $this->voucher_no,
                         'debit' => $entry['debit'],
@@ -261,12 +266,14 @@ class Edit extends Component
             }
             foreach ($this->attachment_entries as $ae) {
                 if (isset($ae['file'])) {
-                    $path = $ae['file']->storePublicly(env('AWS_FOLDER') . 'accounts', 's3');
-                    LedgerAttachment::create([
-                        'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
-                        'voucher_no' => $this->voucher_no,
-                        'attachment' => $path
-                    ]);
+                    if (is_object($ae['file'])) {
+                        $path = $ae['file']->storePublicly(env('AWS_FOLDER') . 'accounts', 's3');
+                        LedgerAttachment::create([
+                            'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
+                            'voucher_no' => $this->voucher_no,
+                            'attachment' => $path
+                        ]);
+                    }
                 } else {
                     if (isset($ae['id'])) {
                         LedgerAttachment::find($ae['id'])->update([

@@ -165,6 +165,9 @@ class DumpMasterData extends Command
             ChartOfAccount::updateOrCreate(['reference' => 'income-commission-5'], ['name' => 'Income Commission', 'type' => 'Income', 'sub_account' => '36', 'level' => '5', 'nature' => 'c']);
             ChartOfAccount::updateOrCreate(['reference' => 'sale-tax-received-on-sale-5'], ['name' => 'Sales Tax Received On Sale', 'type' => 'Liabilities', 'sub_account' => '25', 'level' => '5', 'nature' => 'c']);
         }
+
+
+
         $this->info('Dumping Chart of Accounts Finished...');
 
  

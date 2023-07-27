@@ -117,7 +117,8 @@
                     </th>
                     <th scope="col" wire:click="addEntry()"
                         class="w-10 cursor-pointer px-2 py-2   border-r text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        <svg class="w-6 h-6  " fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <svg class="w-6 h-6  " fill="currentColor" viewBox="0 0 20 20"
+                             xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
                                   d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                                   clip-rule="evenodd"></path>
@@ -134,7 +135,8 @@
                         <td class="px-2  text-left   border-r text-sm text-gray-500">
                             <input wire:click="searchAccounts('{{ $key }}')" type="text" readonly
                                    wire:model.lazy="entries.{{$key}}.account_name"
-                                   class="p-0 focus:ring-0 block w-full  text-sm border-0 text-left " autocomplete="off">
+                                   class="p-0 focus:ring-0 block w-full  text-sm border-0 text-left "
+                                   autocomplete="off">
                         </td>
                         <td class="px-2   text-left   border-r  text-sm text-gray-500">
                     <textarea wire:ignore.self cols="30" rows="1" wire:model.lazy="entries.{{$key}}.description"
@@ -142,11 +144,13 @@
                         </td>
                         <td class="px-2  text-center  border-r text-sm text-gray-500">
                             <input type="number" step="0.01" wire:model.lazy="entries.{{$key}}.debit"
-                                   class="text-center p-0 focus:ring-0 block w-full   text-sm border-0  "  onclick="this.select()"
+                                   class="text-center p-0 focus:ring-0 block w-full   text-sm border-0  "
+                                   onclick="this.select()"
                                    autocomplete="off">
                         </td>
                         <td class="px-2  text-center border-r text-sm text-gray-500">
-                            <input type="number" step="0.01" wire:model.lazy="entries.{{$key}}.credit" onclick="this.select()"
+                            <input type="number" step="0.01" wire:model.lazy="entries.{{$key}}.credit"
+                                   onclick="this.select()"
                                    class="p-0 text-center focus:ring-0 block w-full  text-sm border-0  "
                                    autocomplete="off">
                         </td>
@@ -204,10 +208,6 @@
             </table>
 
 
-
-
-
-
         </div>
     </div>
 
@@ -253,7 +253,8 @@
                         {{ $loop->iteration }}
                     </td>
                     <td class="px-2     border-r text-sm text-gray-500">
-                        <select id="{{$key}}-account_id" name="" wire:model="attachment_entries.{{$key}}.account_id" id="ref_account" class="p-0 focus:ring-0 block w-full  text-sm border-0  ">
+                        <select id="{{$key}}-account_id" name="" wire:model="attachment_entries.{{$key}}.account_id"
+                                id="ref_account" class="p-0 focus:ring-0 block w-full  text-sm border-0  ">
                             <option value=""></option>
                             @foreach($entries as $e)
                                 <option value="{{ $e['account_id'] }}">{{ $e['account_name'] }}</option>
@@ -262,13 +263,21 @@
                     </td>
                     <td class="px-2      border-r  text-sm text-gray-500">
                         @if(!isset($en['id']))
-                        <input id="{{$key}}-file"  type="file" wire:model="attachment_entries.{{$key}}.file" >
-                            @else
-                            <a class="font-medium text-indigo-600 hover:text-indigo-500" href="{{ env('AWS_URL').$en['attachment'] }}" target="_blank">View Attachment</a>
+                            <input id="{{$key}}-file" type="file" wire:model="attachment_entries.{{$key}}.file"
+                                   onchange="progress()" onload="load()"
+                                   wire:loading.remove>
+                            <span class="col-sm-6 text-danger" wire:loading
+                                  wire:target="attachment_entries.{{$key}}.file">
+                                Uploading...
+                            </span>
+
+                        @else
+                            <a class="font-medium text-indigo-600 hover:text-indigo-500"
+                               href="{{ env('AWS_URL').$en['attachment'] }}" target="_blank">View Attachment</a>
                         @endif
                     </td>
 
-                    <td  wire:click="removeAttachmentEntry('{{ $key }}')"
+                    <td wire:click="removeAttachmentEntry('{{ $key }}')"
                         class="  w-10 cursor-pointer px-2 py-3   border-r text-right text-xs font-medium text-red-700  tracking-wider  ">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                              xmlns="http://www.w3.org/2000/svg">
@@ -293,26 +302,26 @@
                 Delete All
             </button>
         </p>
-        <div class="mt-3 flex sm:mt-0 sm:ml-4">
+        @if(!$file_upload)
+            <div class="mt-3 flex sm:mt-0 sm:ml-4" id="hide">
 
-            @if((!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
-                <button type="button" wire:click="draft" wire:loading.attr="disabled"
-                        class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <span wire:loading.remove wire:target="draft">Save as Draft</span>
-                    <span wire:loading wire:target="draft">Saving...</span>
-                </button>
-            @endif
-            @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
-                <button type="button" wire:click="posted" wire:loading.attr="disabled"
-                        class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <span wire:loading.remove wire:target="posted">Post for Approval</span>
-                    <span wire:loading wire:target="posted">Posting...</span>
-                </button>
-            @endif
-
-        </div>
+                @if((!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
+                    <button type="button" wire:click.prevent="draft" wire:loading.attr="disabled"
+                            class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <span wire:loading.remove wire:target="draft">Save as Draft</span>
+                        <span wire:loading wire:target="draft">Saving...</span>
+                    </button>
+                @endif
+                @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
+                    <button type="button" wire:click.prevent="posted" wire:loading.attr="disabled"
+                            class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <span wire:loading.remove wire:target="posted">Post for Approval</span>
+                        <span wire:loading wire:target="posted">Posting...</span>
+                    </button>
+                @endif
+            </div>
+        @endif
     </div>
-
 
 
     <div x-data="{ open: @entangle('search_accounts_modal') }" x-cloak x-show="open"
@@ -341,15 +350,18 @@
                 <div class="  px-2 pt-2 pb-2">
 
 
-                        <div class="">
-                            <input type="text"
-                                   wire:model.debounce.500ms="search_accounts"
-                                   wire:keydown.arrow-up="decrementHighlight"
-                                   wire:keydown.arrow-down="incrementHighlight"
-                                   wire:keydown.enter="selectionAccount"
-                                   id="search" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"   autocomplete="off">
-                        </div>
-                        <p class="mt-2 text-sm text-gray-400" id="search-description">You can search accounts by Name, Code and Type.</p>
+                    <div class="">
+                        <input type="text"
+                               wire:model.debounce.500ms="search_accounts"
+                               wire:keydown.arrow-up="decrementHighlight"
+                               wire:keydown.arrow-down="incrementHighlight"
+                               wire:keydown.enter="selectionAccount"
+                               id="search"
+                               class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                               autocomplete="off">
+                    </div>
+                    <p class="mt-2 text-sm text-gray-400" id="search-description">You can search accounts by Name, Code
+                        and Type.</p>
 
 
                 </div>
@@ -426,10 +438,18 @@
             format: "DD MMM YYYY"
         });
 
-
-
         from_date.setDate(new Date('{{ $posting_date }}'));
 
+
+        function progress() {
+
+            if (event.target.files[0]) {
+                document.querySelector("#hide").style.display = 'none';
+                @this.
+                set('file_upload', true)
+
+            }
+        }
 
     </script>
 @endsection

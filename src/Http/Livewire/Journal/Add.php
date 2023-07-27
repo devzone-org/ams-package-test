@@ -12,6 +12,7 @@ use Devzone\Ams\Models\LedgerAttachment;
 use Devzone\Ams\Models\TempLedger;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use League\Csv\Exception;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use function Couchbase\defaultDecoder;
@@ -33,6 +34,8 @@ class Add extends Component
     public $success;
     public $account_list = [];
     public $highlightIndex = 0;
+
+    public $file_upload = false;
 
     protected $rules = [
         'entries.*.account_id' => 'required|integer',
@@ -195,6 +198,10 @@ class Add extends Component
                     $this->entries[$array[1]]['credit'] = 0;
                 }
             }
+            if ($array[0] == 'attachment_entries') {
+                $this->file_upload = false;
+            }
+
         }
     }
 
@@ -249,13 +256,15 @@ class Add extends Component
                 LedgerAttachment::where('type', '0')->whereIn('id', $this->deleted_attachment)->delete();
             }
             foreach ($this->attachment_entries as $ae) {
-                if (!empty($ae['file'])) {
-                    $path = $ae['file']->storePublicly(env('AWS_FOLDER') . 'accounts', 's3');
-                    LedgerAttachment::create([
-                        'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
-                        'voucher_no' => $this->voucher_no,
-                        'attachment' => $path
-                    ]);
+                if (isset($ae['file'])) {
+                    if (is_object($ae['file'])) {
+                        $path = $ae['file']->storePublicly(env('AWS_FOLDER') . 'accounts', 's3');
+                        LedgerAttachment::create([
+                            'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
+                            'voucher_no' => $this->voucher_no,
+                            'attachment' => $path
+                        ]);
+                    }
                 } else {
                     if (!empty($ae['account_id'])) {
                         LedgerAttachment::find($ae['account_id'])->update([
@@ -368,12 +377,14 @@ class Add extends Component
 
             foreach ($this->attachment_entries as $ae) {
                 if (isset($ae['file'])) {
-                    $path = $ae['file']->storePublicly(env('AWS_FOLDER') . 'accounts', 's3');
-                    LedgerAttachment::create([
-                        'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
-                        'voucher_no' => $this->voucher_no,
-                        'attachment' => $path
-                    ]);
+                    if (is_object($ae['file'])) {
+                        $path = $ae['file']->storePublicly(env('AWS_FOLDER') . 'accounts', 's3');
+                        LedgerAttachment::create([
+                            'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
+                            'voucher_no' => $this->voucher_no,
+                            'attachment' => $path
+                        ]);
+                    }
                 } else {
                     if (isset($ae['id'])) {
                         LedgerAttachment::find($ae['id'])->update([

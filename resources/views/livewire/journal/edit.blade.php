@@ -261,7 +261,13 @@
                     </td>
                     <td class="px-2      border-r  text-sm text-gray-500">
                         @if(!isset($en['id']))
-                            <input id="{{$key}}-file" type="file" wire:model="attachment_entries.{{$key}}.file">
+                            <input id="{{$key}}-file" type="file" wire:model="attachment_entries.{{$key}}.file"
+                                   onchange="progress()" onload="load()"
+                                   wire:loading.remove>
+                            <span class="col-sm-6 text-danger" wire:loading
+                                  wire:target="attachment_entries.{{$key}}.file">
+                                Uploading...
+                            </span>
                         @else
                             <a class="font-medium text-indigo-600 hover:text-indigo-500"
                                href="{{ env('AWS_URL').$en['attachment'] }}" target="_blank">View Attachment</a>
@@ -293,20 +299,22 @@
             {{--                Delete All--}}
             {{--            </button>--}}
         </p>
-        <div class="mt-3 flex sm:mt-0 sm:ml-4">
+        @if(!$file_upload)
+            <div class="mt-3 flex sm:mt-0 sm:ml-4" id="hide">
 
-            <a href="{{url('/accounts/accountant/journal')}}"
-               class="ml-1 inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md shadow-sm disabled:opacity-25 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Go Back
-            </a>
-            @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
-                <button type="button" wire:click="draft" wire:loading.attr="disabled"
-                        class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <span wire:loading.remove wire:target="draft">Update</span>
-                    <span wire:loading wire:target="draft">Updating...</span>
-                </button>
-            @endif
-        </div>
+                <a href="{{url('/accounts/accountant/journal')}}"
+                   class="ml-1 inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md shadow-sm disabled:opacity-25 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Go Back
+                </a>
+                @if(collect($entries)->sum('debit') == collect($entries)->sum('credit') && (!empty(collect($entries)->sum('debit')) || !empty(collect($entries)->sum('credit'))  ) )
+                    <button type="button" wire:click="draft" wire:loading.attr="disabled"
+                            class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <span wire:loading.remove wire:target="draft">Update</span>
+                        <span wire:loading wire:target="draft">Updating...</span>
+                    </button>
+                @endif
+            </div>
+        @endif
     </div>
 
 
@@ -429,6 +437,16 @@
 
         from_date.setDate(new Date('{{ $posting_date }}'));
 
+
+        function progress() {
+
+            if (event.target.files[0]) {
+                document.querySelector("#hide").style.display = 'none';
+                @this.
+                set('file_upload', true)
+
+            }
+        }
 
     </script>
 @endsection
