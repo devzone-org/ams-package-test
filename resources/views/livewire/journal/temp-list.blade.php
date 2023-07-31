@@ -57,19 +57,24 @@
                                             <div class="card-header">
                                                 <h4 class="card-title"><b>Temporary Journal Entries</b></h4>
                                                 <div class="card-tools">
-{{--                                                    <button type="button" class="btn btn-tool"--}}
-{{--                                                            data-card-widget="collapse">--}}
-{{--                                                        <i class="fas fa-minus"></i>--}}
-{{--                                                    </button>--}}
+                                                    {{--                                                    <button type="button" class="btn btn-tool"--}}
+                                                    {{--                                                            data-card-widget="collapse">--}}
+                                                    {{--                                                        <i class="fas fa-minus"></i>--}}
+                                                    {{--                                                    </button>--}}
                                                 </div>
                                             </div>
                                         @endif
                                         <div class="card-body table-responsive p-0">
                                             <table class="table table-bordered border-0">
                                                 <thead class="text-nowrap">
-                                                <th class="text-center add-services-table col-1 text-muted" style="width: 25px;">#</th>
-                                                <th class="add-services-table text-center col-1 text-muted">Voucher #</th>
-                                                <th class="add-services-table text-center col-1 text-muted">Account Name</th>
+                                                <th class="text-center add-services-table col-1 text-muted"
+                                                    style="width: 25px;">#
+                                                </th>
+                                                <th class="add-services-table text-center col-1 text-muted">Voucher #
+                                                </th>
+                                                <th class="add-services-table text-center col-1 text-muted">Account
+                                                    Name
+                                                </th>
                                                 <th class="add-services-table text-center text-muted">Description</th>
                                                 <th class="add-services-table text-center col-1 text-muted">Debit</th>
                                                 <th class="add-services-table text-center col-1 text-muted">Credit</th>
@@ -157,13 +162,14 @@
                                                                     Edit
                                                                 </a>
 
-                                                                <a href="#"
-                                                                   wire:click="deleteTempEntry('{{ $tl->first()->voucher_no }}')"
-                                                                   class="text-danger">
-                                                                    Delete
-                                                                </a>
+                                                                <button wire:click="deleteTempEntry('{{ $tl->first()->voucher_no }}')"
+                                                                        class="text-danger" style="cursor: pointer">
+                                                                    <span wire:loading.remove
+                                                                          wire:target="deleteTempEntry('{{ $tl->first()->voucher_no }}')">Delete</span>
+                                                                    <span wire:loading
+                                                                          wire:target="deleteTempEntry('{{ $tl->first()->voucher_no }}')">Deleting...</span>
 
-
+                                                                </button>
                                                             </div>
                                                         </div>
                                                     </th>
@@ -373,10 +379,10 @@
                                     </td>
                                     <td class="px-2 text-right py-2  text-sm text-gray-500">
 
-                                        @php
-                                            $att = $t->attachments->where('type','0');
-                                        @endphp
-                                                <!-- This example requires Tailwind CSS v2.0+ -->
+                                    @php
+                                        $att = $t->attachments->where('type','0');
+                                    @endphp
+                                    <!-- This example requires Tailwind CSS v2.0+ -->
                                         @if($att->isNotEmpty())
                                             <div class="relative inline-block text-left" x-data="{open:false}">
                                                 <div>
@@ -443,10 +449,10 @@
                                     </td>
                                     <td class="px-2 text-right py-2  text-sm text-gray-500">
 
-                                        @php
-                                            $att = $t->attachments->where('type','0');
-                                        @endphp
-                                                <!-- This example requires Tailwind CSS v2.0+ -->
+                                    @php
+                                        $att = $t->attachments->where('type','0');
+                                    @endphp
+                                    <!-- This example requires Tailwind CSS v2.0+ -->
                                         @if($att->isNotEmpty())
                                             <div class="relative inline-block text-left" x-data="{open:false}">
                                                 <div>
@@ -507,9 +513,12 @@
                                                 Edit
                                             </a>
 
-                                            <a href="#" wire:click="deleteTempEntry('{{ $tl->first()->voucher_no }}')"
-                                               class="font-medium  py-1 px-2 rounded-md text-red-600 hover:text-red-800 hover:bg-red-100">
-                                                Delete
+                                            <a wire:click="deleteTempEntry('{{ $tl->first()->voucher_no }}')"
+                                                    class="font-medium  py-1 px-2 rounded-md text-red-600 hover:text-red-800 hover:bg-red-100 cursor-pointer">
+                                                <span wire:loading.remove
+                                                      wire:target="deleteTempEntry('{{ $tl->first()->voucher_no }}')">Delete</span>
+                                                <span wire:loading
+                                                      wire:target="deleteTempEntry('{{ $tl->first()->voucher_no }}')">Deleting...</span>
                                             </a>
 
 
