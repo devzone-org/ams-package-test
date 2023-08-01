@@ -33,20 +33,20 @@
                             </div>
                             <div class="card-body">
                                 @if ($errors->any())
-                                    <div class="col-12">
-                                        @foreach ($errors->all() as $error)
-                                            <div class="alert alert-danger alert-dismissible">
-                                                <button type="button" class="close" data-dismiss="alert"
-                                                        aria-hidden="true">
-                                                    ×
-                                                </button>
+                                    <div class="col-12 px-0">
+                                        <div class="alert alert-danger alert-dismissible">
+                                            <button type="button" class="close" data-dismiss="alert"
+                                                    aria-hidden="true">
+                                                ×
+                                            </button>
+                                            @foreach ($errors->all() as $error)
                                                 <li>{{ $error }}</li>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        </div>
                                     </div>
                                 @endif
                                 @if(!empty($success))
-                                    <div class="col-12">
+                                    <div class="col-12 px-0">
                                         <div class="alert alert-success alert-dismissible">
                                             <button type="button" class="close" data-dismiss="alert"
                                                     aria-hidden="true">
@@ -65,9 +65,9 @@
                                                 <option value=""></option>
                                                 <option value="pay">Amount Pay to Anyone</option>
                                                 <option value="receive">Receive Amount from Anyone</option>
-                                                @can('2.transfer-entry')
-                                                    <option value="transfer_entry">Transfer Entry</option>
-                                                @endcan
+                                                {{--                                                @can('2.transfer-entry')--}}
+                                                {{--                                                    <option value="transfer_entry">Transfer Entry</option>--}}
+                                                {{--                                                @endcan--}}
                                             </select>
                                         </div>
                                     </div>
@@ -81,201 +81,205 @@
                                         </div>
                                     </div>
                                     @if(!empty($nature))
-                                        @if($nature == 'transfer_entry')
 
-                                            @if(auth()->user()->can('2.transfer-entry'))
-                                                <div class="col-xs-6 col-sm-4">
-                                                    <div class="form-group">
-                                                        <label for="transfer_from" class="font-weight-normal">Transfer
-                                                            From</label>
-                                                        <select id="transfer_from" wire:model="from_account_id"
-                                                                class="form-control @error('from_account_id')  is-invalid @enderror">
-                                                            <option value=""></option>
-                                                            @foreach($payment_accounts as $key => $account)
-                                                                <optgroup
-                                                                        label="{{\App\Models\ChartOfAccount::find($key)->name}}">
-                                                                    @foreach($account as $acc)
-                                                                        @if(!empty($to_account_id) && $to_account_id == $acc['id'])
-                                                                            @php
-                                                                                continue;
-                                                                            @endphp
-                                                                        @else
-                                                                            <option value="{{$acc['id']}}">{{$acc['name']}}</option>
-                                                                        @endif
-                                                                    @endforeach
-                                                                </optgroup>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
+                                        <div class="col-xs-6 col-sm-4">
+                                            <div class="form-group">
+                                                <label for="first_account" class="font-weight-normal">
+                                                    @if($nature=='pay')
+                                                        Payment on account of
+                                                    @elseif($nature=='receive')
+                                                        Received on account of
+                                                    @endif
+                                                </label>
 
-                                                <div class="col-xs-6 col-sm-4">
-                                                    <div class="form-group">
-                                                        <label for="transfer_to" class="font-weight-normal">Transfer
-                                                            To</label>
-                                                        <select id="transfer_to" wire:model="to_account_id"
-                                                                class="form-control @error('to_account_id')  is-invalid @enderror">
-                                                            <option value=""></option>
-                                                            @foreach($payment_accounts as $key => $account)
-                                                                <optgroup
-                                                                        label="{{\App\Models\ChartOfAccount::find($key)->name}}">
-                                                                    @foreach($account as $acc)
-                                                                        @if(!empty($from_account_id) && $from_account_id == $acc['id'])
-                                                                            @php
-                                                                                continue;
-                                                                            @endphp
-                                                                        @else
-                                                                            <option value="{{$acc['id']}}">{{$acc['name']}}</option>
-                                                                        @endif
-                                                                    @endforeach
-                                                                </optgroup>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
+                                                <input type="text"
+                                                       wire:click="searchableOpenModal('first_account_id','first_account_name','accounts')"
+                                                       wire:model="first_account_name"
+                                                       class="form-control @error('first_account_name')  is-invalid @enderror">
+                                            </div>
+                                        </div>
 
-                                                <div class="col-xs-6 col-sm-4">
-                                                    <div class="form-group">
-                                                        <label for="amount" class="font-weight-normal">
-                                                            Transfer Amount
-                                                        </label>
-                                                        <input type="number" wire:model="amount"
-                                                               class="form-control @error('amount')  is-invalid @enderror">
-                                                    </div>
-                                                </div>
+                                        <div class="col-xs-6 col-sm-4">
+                                            <div class="form-group">
+                                                <label for="amount" class="font-weight-normal">
+                                                    @if($nature=='pay')
+                                                        Amount Paid
+                                                    @elseif($nature=='receive')
+                                                        Amount Received
+                                                    @endif
+                                                </label>
+                                                <input type="number" wire:model.defer="amount"
+                                                       class="form-control @error('amount')  is-invalid @enderror">
+                                            </div>
+                                        </div>
 
-                                                <div class="col-12 pt-3">
-                                                    <div class="form-group">
-                                                        <label class="font-weight-normal">
-                                                            Description
-                                                        </label>
-                                                        <textarea wire:model="description" cols="30" rows="5"
-                                                                  class="form-control @error('description')  is-invalid @enderror"></textarea>
-                                                    </div>
-                                                </div>
+                                        <div class="col-12 pt-3">
+                                            <div class="form-group">
+                                                <label class="font-weight-normal">
+                                                    Description
+                                                </label>
+                                                <textarea wire:model.defer="description" cols="30" rows="5"
+                                                          class="form-control @error('description')  is-invalid @enderror"></textarea>
+                                            </div>
+                                        </div>
 
-                                                <div class="col-12 pt-3 d-flex justify-content-end">
-                                                    <div class="form-group">
-                                                        <button type="button" class="btn btn-primary"
-                                                                data-toggle="modal"
-                                                                data-target="#saveConfirm"
-                                                                data-style="expand-right"
-                                                                @if(empty($amount) || empty($from_account_id) || empty($to_account_id) || empty($description)) disabled @endif>
-                                                            Save
-                                                        </button>
-                                                    </div>
-                                                </div>
-
-                                            @endif
-
-                                        @else
-
-                                            <div class="col-xs-6 col-sm-4">
-                                                <div class="form-group">
-                                                    <label for="first_account" class="font-weight-normal">
-                                                        @if($nature=='pay')
-                                                            Payment on account of
-                                                        @elseif($nature=='receive')
-                                                            Received on account of
-                                                        @endif
-                                                    </label>
-
+                                        <div class="col-xs-6 col-sm-4">
+                                            <div class="form-group">
+                                                <label for="first_account" class="font-weight-normal">
+                                                    @if($nature=='pay')
+                                                        Paid From
+                                                    @elseif($nature=='receive')
+                                                        Received In
+                                                    @endif
+                                                </label>
+                                                @if(auth()->user()->can('2.payments.any'))
                                                     <input type="text"
-                                                           wire:click="searchableOpenModal('first_account_id','first_account_name','accounts')"
-                                                           wire:model="first_account_name"
-                                                           class="form-control @error('first_account_name')  is-invalid @enderror">
-                                                </div>
+                                                           wire:click="searchableOpenModal('second_account_id','second_account_name','accounts')"
+                                                           wire:model="second_account_name"
+                                                           class="form-control @error('second_account_name')  is-invalid @enderror">
+                                                @else
+                                                    <input type="text"
+                                                           wire:model="second_account_name"
+                                                           class="form-control @error('second_account_name')  is-invalid @enderror">
+                                                @endif
                                             </div>
+                                        </div>
 
-                                            <div class="col-xs-6 col-sm-4">
-                                                <div class="form-group">
-                                                    <label for="amount" class="font-weight-normal">
-                                                        @if($nature=='pay')
-                                                            Amount Paid
-                                                        @elseif($nature=='receive')
-                                                            Amount Received
-                                                        @endif
-                                                    </label>
-                                                    <input type="number" wire:model.defer="amount"
-                                                           class="form-control @error('amount')  is-invalid @enderror">
-                                                </div>
+                                        <div class="col-xs-6 col-sm-4">
+                                            <div class="form-group">
+                                                <label for="mode" class="font-weight-normal">Mode of Payment</label>
+                                                <select id="mode" wire:model="mode"
+                                                        class="form-control @error('mode')  is-invalid @enderror">
+                                                    <option value=""></option>
+                                                    <option value="cash">Cash</option>
+                                                    <option value="cheque">Cheque</option>
+                                                </select>
                                             </div>
+                                        </div>
 
-                                            <div class="col-12 pt-3">
-                                                <div class="form-group">
-                                                    <label class="font-weight-normal">
-                                                        Description
-                                                    </label>
-                                                    <textarea wire:model.defer="description" cols="30" rows="5"
-                                                              class="form-control @error('description')  is-invalid @enderror"></textarea>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-xs-6 col-sm-4">
-                                                <div class="form-group">
+                                        <div class="col-xs-6 col-sm-4">
+                                            <div class="form-group">
+                                                @if($mode=='cheque')
                                                     <label for="first_account" class="font-weight-normal">
-                                                        @if($nature=='pay')
-                                                            Paid From
-                                                        @elseif($nature=='receive')
-                                                            Received In
-                                                        @endif
+                                                        Instrument #
                                                     </label>
-                                                    @if(auth()->user()->can('2.payments.any'))
-                                                        <input type="text"
-                                                               wire:click="searchableOpenModal('second_account_id','second_account_name','accounts')"
-                                                               wire:model="second_account_name"
-                                                               class="form-control @error('second_account_name')  is-invalid @enderror">
-                                                    @else
-                                                        <input type="text"
-                                                               wire:model="second_account_name"
-                                                               class="form-control @error('second_account_name')  is-invalid @enderror">
-                                                    @endif
-                                                </div>
+                                                    <input type="text" wire:model.defer="instrument_no"
+                                                           class="form-control @error('instrument_no')  is-invalid @enderror">
+                                                @endif
                                             </div>
+                                        </div>
 
-                                            <div class="col-xs-6 col-sm-4">
-                                                <div class="form-group">
-                                                    <label for="mode" class="font-weight-normal">Mode of Payment</label>
-                                                    <select id="mode" wire:model="mode"
-                                                            class="form-control @error('mode')  is-invalid @enderror">
-                                                        <option value=""></option>
-                                                        <option value="cash">Cash</option>
-                                                        <option value="cheque">Cheque</option>
-                                                    </select>
-                                                </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="attachment"
+                                                       class="font-weight-normal">Attachment</label>
+                                                <input
+                                                        class="form-control p-0 py-1 px-1 attachment"
+                                                        type="file" wire:model="attachment">
                                             </div>
+                                        </div>
+                                        <div class="col-12 pt-3 d-flex justify-content-end">
+                                            <div class="form-group">
+                                                <button type="button" class="btn btn-primary" wire:click="save"
+                                                        wire:loading.attr="disabled">
+                                                    <span wire:loading wire:target="save">Saving ...</span>
+                                                    <span wire:loading.remove wire:target="save">Save</span>
+                                                </button>
+                                            </div>
+                                        </div>
 
-                                            <div class="col-xs-6 col-sm-4">
-                                                <div class="form-group">
-                                                    @if($mode=='cheque')
-                                                        <label for="first_account" class="font-weight-normal">
-                                                            Instrument #
-                                                        </label>
-                                                        <input type="text" wire:model.defer="instrument_no"
-                                                               class="form-control @error('instrument_no')  is-invalid @enderror">
-                                                    @endif
-                                                </div>
-                                            </div>
 
-                                            <div class="col-12">
-                                                <div class="form-group">
-                                                    <label for="attachment"
-                                                           class="font-weight-normal">Attachment</label>
-                                                    <input
-                                                            class="form-control p-0 py-1 px-1 attachment"
-                                                            type="file" wire:model="attachment">
-                                                </div>
-                                            </div>
-                                            <div class="col-12 pt-3 d-flex justify-content-end">
-                                                <div class="form-group">
-                                                    <button type="button" class="btn btn-primary" wire:click="save"
-                                                            wire:loading.attr="disabled">
-                                                        <span wire:loading wire:target="save">Saving ...</span>
-                                                        <span wire:loading.remove wire:target="save">Save</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        @endif
+                                        {{--                                        @if($nature == 'transfer_entry')--}}
+
+                                        {{--                                            @if(auth()->user()->can('2.transfer-entry'))--}}
+                                        {{--                                                <div class="col-xs-6 col-sm-4">--}}
+                                        {{--                                                    <div class="form-group">--}}
+                                        {{--                                                        <label for="transfer_from" class="font-weight-normal">Transfer--}}
+                                        {{--                                                            From</label>--}}
+                                        {{--                                                        <select id="transfer_from" wire:model="from_account_id"--}}
+                                        {{--                                                                class="form-control @error('from_account_id')  is-invalid @enderror">--}}
+                                        {{--                                                            <option value=""></option>--}}
+                                        {{--                                                            @foreach($payment_accounts as $key => $account)--}}
+                                        {{--                                                                <optgroup--}}
+                                        {{--                                                                        label="{{\App\Models\ChartOfAccount::find($key)->name}}">--}}
+                                        {{--                                                                    @foreach($account as $acc)--}}
+                                        {{--                                                                        @if(!empty($to_account_id) && $to_account_id == $acc['id'])--}}
+                                        {{--                                                                            @php--}}
+                                        {{--                                                                                continue;--}}
+                                        {{--                                                                            @endphp--}}
+                                        {{--                                                                        @else--}}
+                                        {{--                                                                            <option value="{{$acc['id']}}">{{$acc['name']}}</option>--}}
+                                        {{--                                                                        @endif--}}
+                                        {{--                                                                    @endforeach--}}
+                                        {{--                                                                </optgroup>--}}
+                                        {{--                                                            @endforeach--}}
+                                        {{--                                                        </select>--}}
+                                        {{--                                                    </div>--}}
+                                        {{--                                                </div>--}}
+
+                                        {{--                                                <div class="col-xs-6 col-sm-4">--}}
+                                        {{--                                                    <div class="form-group">--}}
+                                        {{--                                                        <label for="transfer_to" class="font-weight-normal">Transfer--}}
+                                        {{--                                                            To</label>--}}
+                                        {{--                                                        <select id="transfer_to" wire:model="to_account_id"--}}
+                                        {{--                                                                class="form-control @error('to_account_id')  is-invalid @enderror">--}}
+                                        {{--                                                            <option value=""></option>--}}
+                                        {{--                                                            @foreach($payment_accounts as $key => $account)--}}
+                                        {{--                                                                <optgroup--}}
+                                        {{--                                                                        label="{{\App\Models\ChartOfAccount::find($key)->name}}">--}}
+                                        {{--                                                                    @foreach($account as $acc)--}}
+                                        {{--                                                                        @if(!empty($from_account_id) && $from_account_id == $acc['id'])--}}
+                                        {{--                                                                            @php--}}
+                                        {{--                                                                                continue;--}}
+                                        {{--                                                                            @endphp--}}
+                                        {{--                                                                        @else--}}
+                                        {{--                                                                            <option value="{{$acc['id']}}">{{$acc['name']}}</option>--}}
+                                        {{--                                                                        @endif--}}
+                                        {{--                                                                    @endforeach--}}
+                                        {{--                                                                </optgroup>--}}
+                                        {{--                                                            @endforeach--}}
+                                        {{--                                                        </select>--}}
+                                        {{--                                                    </div>--}}
+                                        {{--                                                </div>--}}
+
+                                        {{--                                                <div class="col-xs-6 col-sm-4">--}}
+                                        {{--                                                    <div class="form-group">--}}
+                                        {{--                                                        <label for="amount" class="font-weight-normal">--}}
+                                        {{--                                                            Transfer Amount--}}
+                                        {{--                                                        </label>--}}
+                                        {{--                                                        <input type="number" wire:model="amount"--}}
+                                        {{--                                                               class="form-control @error('amount')  is-invalid @enderror">--}}
+                                        {{--                                                    </div>--}}
+                                        {{--                                                </div>--}}
+
+                                        {{--                                                <div class="col-12 pt-3">--}}
+                                        {{--                                                    <div class="form-group">--}}
+                                        {{--                                                        <label class="font-weight-normal">--}}
+                                        {{--                                                            Description--}}
+                                        {{--                                                        </label>--}}
+                                        {{--                                                        <textarea wire:model="description" cols="30" rows="5"--}}
+                                        {{--                                                                  class="form-control @error('description')  is-invalid @enderror"></textarea>--}}
+                                        {{--                                                    </div>--}}
+                                        {{--                                                </div>--}}
+
+                                        {{--                                                <div class="col-12 pt-3 d-flex justify-content-end">--}}
+                                        {{--                                                    <div class="form-group">--}}
+                                        {{--                                                        <button type="button" class="btn btn-primary"--}}
+                                        {{--                                                                data-toggle="modal"--}}
+                                        {{--                                                                data-target="#saveConfirm"--}}
+                                        {{--                                                                data-style="expand-right"--}}
+                                        {{--                                                                @if(empty($amount) || empty($from_account_id) || empty($to_account_id) || empty($description)) disabled @endif>--}}
+                                        {{--                                                            Save--}}
+                                        {{--                                                        </button>--}}
+                                        {{--                                                    </div>--}}
+                                        {{--                                                </div>--}}
+
+                                        {{--                                            @endif--}}
+
+                                        {{--                                        @else--}}
+
+                                        {{--                                            --}}
+                                        {{--                                        @endif--}}
                                     @endif
 
                                 </div>
