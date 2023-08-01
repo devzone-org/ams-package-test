@@ -126,10 +126,10 @@
                                         </div>
                                     </div>
                                 @endif
-                                <div class="table-responsive">
-                                    <table class="table table-bordered border-0">
+                                <div class="table table bordered table-responsive">
+                                    <table class="table border-0">
                                         <thead class="">
-                                        <th class="add-services-table text-center pl-3 text-muted border-right-0">#</th>
+                                        <th class="add-services-table text-center pl-3 pr-1 text-muted border-right-0">#</th>
                                         <th class="add-services-table text-center text-muted border-left-0 border-right-0">
                                             NATURE
                                         </th>
@@ -157,8 +157,8 @@
                                         <tbody>
                                         @foreach($entries as $key => $e)
                                             <tr>
-                                                <td class="align-middle text-center pl-3 border-right-0">{{$entries->firstItem() + $key}}</td>
-                                                <td class="align-middle border-right-0 border-left-0">
+                                                <td class="align-middle pl-3 pr-1 border-right-0">{{$entries->firstItem() + $key}}</td>
+                                                <td class="align-middle text-center border-right-0 border-left-0">
                                                     @if($e->nature=='pay')
                                                         <span class="badge badge-pill badge-success">Payment</span>
                                                     @elseif($e->nature=='receive')
