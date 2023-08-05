@@ -121,7 +121,7 @@
                                 </div>
                                 <div class="row">
                                     @if(!empty($current_user))
-                                        <table class="table table-bordered border-0 mx-3">
+                                        <table class="table table-bordered table-responsive border-0 mx-3">
                                             <thead class="">
                                             <tr>
                                                 <th scope="col"

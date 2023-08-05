@@ -6,7 +6,7 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header">
                             <div class="d-flex justify-content-between">
-                                <p class="card-title"><b>Search Filters</b></p>
+                                <p class="card-title pt-1"><b>Search Filters</b></p>
                                 <a href="{{  url('/accounts/petty-expenses') }}"
                                    class="btn btn-primary btn-sm">
                                     Add Petty Expenses
@@ -78,7 +78,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-xs-6 col-sm-4 pt-4 mt-2">
+                                    <div class="col-xs-6 col-sm-4 pt-4">
                                         <div class="form-group">
                                             <button type="submit" wire:loading.attr="disabled" class="btn btn-primary">
                                                 Search

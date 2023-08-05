@@ -37,7 +37,7 @@
                                                        class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-xs-6 col-sm-4 mt-4" style="padding-top: 8px">
+                                        <div class="col-xs-6 col-sm-4 pt-4">
                                             <div class="form-group">
                                                 @if(!empty($ledger))
                                                     <a href="{{'trial-balance/export'}}?from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}"

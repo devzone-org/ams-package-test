@@ -14,10 +14,10 @@
                 <div class="row">
                     <div class="col">
                         <div class="card card-primary card-outline">
-                            <div class="card-header">
+                            <div class="card-header pb-1">
                                 <div class="d-flex justify-content-between mx-2">
-                                    <h4 class="card-title pt-2  mt-1"><b>Chart of Accounts</b></h4>
-                                    <div class="col-xs-6 col-sm-3 mt-1">
+                                    <h4 class="card-title pt-3"><b>Chart of Accounts</b></h4>
+                                    <div class="col-xs-6 col-sm-3 pt-2">
                                         <div class="form-group">
                                             <select name="first_name" wire:model="type" id="first_name"
                                                     class="form-control">
@@ -30,7 +30,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div>
+                                    <div class="pt-2">
                                         <a href="{{'chart-of-accounts/add'}}?type={{$type}}" target="_blank"
                                            class="btn btn-primary " style="height: 40px">
                                             Add

@@ -85,8 +85,7 @@
                                         <th class="add-services-table text-center text-muted">Credit</th>
                                         <th class="text-center add-services-table text-muted">
                                             <button class="outline-none border-0 p-0"
-                                                    wire:click="addEntry()"
-                                            >
+                                                    wire:click="addEntry()">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                      viewBox="0 0 24 24"
                                                      stroke-width="1.5" stroke="currentColor" class=""
@@ -107,8 +106,7 @@
                                                            wire:model.lazy="entries.{{$key}}.account_name"
                                                            class="border-0 w-100 pt-2" id="searchbox"
                                                            autocomplete="off" style="outline: none;"
-                                                           wire:key="'searchbox-' . {{$key}}"
-                                                    >
+                                                           wire:key="'searchbox-' . {{$key}}">
                                                 </td>
                                                 <td class="add-services-table col-6">
                                                  <textarea wire:ignore.self
@@ -148,13 +146,13 @@
                                         @endforeach
                                         <tr>
                                             <th colspan="3" class="text-right align-middle col-9 bg-white">Total</th>
-                                            <td>{{ number_format(collect($entries)->sum('debit'),2) }}</td>
-                                            <td>{{ number_format(collect($entries)->sum('credit'),2) }}</td>
+                                            <td class="text-center pl-3">{{ number_format(collect($entries)->sum('debit'),2) }}</td>
+                                            <td class="text-center">{{ number_format(collect($entries)->sum('credit'),2) }}</td>
                                             <td style="width: 35px"></td>
                                         </tr>
                                         <tr class="">
                                             <th colspan="3" class="text-right align-middle bg-white">Difference</th>
-                                            <td colspan="2"> {{ number_format(abs(collect($entries)->sum('debit') - collect($entries)->sum('credit')),2) }}</td>
+                                            <td colspan="2" class="text-center"> {{ number_format(abs(collect($entries)->sum('debit') - collect($entries)->sum('credit')),2) }}</td>
                                             <td></td>
                                         </tr>
                                         </tbody>
@@ -201,7 +199,7 @@
                                             <td class="add-services-table col-3">
                                                 <select id="{{$key}}-account_id" name=""
                                                         wire:model="attachment_entries.{{$key}}.account_id"
-                                                        id="ref_account" class="p-0 border-0 w-100 mt-2 pt-2"
+                                                        id="ref_account" class="border-0 w-100 pt-3"
                                                         style="outline: none">
                                                     <option value=""></option>
                                                     @foreach($entries as $e)
@@ -242,7 +240,7 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex  justify-content-between px-4">
+        <div class="d-flex  justify-content-between px-3">
             <div>
                 <button type="button" wire:click="deleteAll" wire:loading.attr="disabled"
                         class="btn btn-danger">
@@ -777,33 +775,33 @@
         </div>
     </div>
 
-@section('script')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-    <script>
-        document.addEventListener('livewire:load', () => {
-            Livewire.on('focusInput', postId => {
-                console.log('asd');
-                setTimeout(() => {
-                    document.getElementById('search').focus();
-                }, 300);
-            })
-        });
-        let from_date = new Pikaday({
-            field: document.getElementById('posting_date'),
-            format: "DD MMM YYYY"
-        });
+    @section('script')
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+        <script>
+            document.addEventListener('livewire:load', () => {
+                Livewire.on('focusInput', postId => {
+                    console.log('asd');
+                    setTimeout(() => {
+                        document.getElementById('search').focus();
+                    }, 300);
+                })
+            });
+            let from_date = new Pikaday({
+                field: document.getElementById('posting_date'),
+                format: "DD MMM YYYY"
+            });
 
 
-        from_date.setDate(new Date('{{ $posting_date }}'));
+            from_date.setDate(new Date('{{ $posting_date }}'));
 
-        function progress() {
-            if (event.target.files[0]) {
-                document.querySelector("#hide").style.display = 'none';
-                @this.
-                set('file_upload', true)
+            function progress() {
+                if (event.target.files[0]) {
+                    document.querySelector("#hide").style.display = 'none';
+                    @this.
+                    set('file_upload', true)
+                }
             }
-        }
-    </script>
-@endsection
+        </script>
+    @endsection
 @endif
