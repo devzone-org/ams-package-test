@@ -5,8 +5,9 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col">
-                            <h1>Profit and Loss (P&L) - Date
-                                Wise</h1>
+                            <h1>
+                                Profit and Loss (P&L) - Date Wise
+                            </h1>
                         </div>
                     </div>
                 </div>
@@ -43,7 +44,7 @@
                                                        class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-xs-6 col-sm-4" style="margin-top: 32px">
+                                        <div class="col-xs-6 col-sm-4 pt-4">
                                             <div class="form-group">
                                                 <button type="button" wire:click="search" wire:loading.attr="disabled"
                                                         class="btn btn-primary">

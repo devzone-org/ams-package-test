@@ -113,7 +113,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 pt-3">
+                                        <div class="col-12">
                                             <div class="form-group">
                                                 <button type="submit" class="btn btn-primary">
                                                     <div wire:loading wire:target="search">

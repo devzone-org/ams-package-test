@@ -81,12 +81,18 @@
                                                 <th class="text-center add-services-table"></th>
                                                 </thead>
                                                 <tbody class="">
+                                                @php
+                                                    $counter = 0;
+                                                @endphp
                                                 @foreach($tl->where('debit','>',0) as $t)
+                                                    @php
+                                                        $counter++;
+                                                    @endphp
                                                     <tr>
-                                                        <td class="align-middle">
-                                                            {{$loop->iteration}}
+                                                        <td class="align-middle px-3">
+                                                            {{$counter}}
                                                         </td>
-                                                        <td class="align-middle">
+                                                        <td class="align-middle text-center">
                                                             @if($loop->first)
                                                                 {{ $t->voucher_no }}
                                                             @endif
@@ -97,12 +103,12 @@
                                                         <td>
                                                             {{ $t->description }}
                                                         </td>
-                                                        <td class="align-middle">
+                                                        <td class="align-middle text-center">
                                                             @if($t->debit>0)
                                                                 {{ number_format($t->debit,2) }}
                                                             @endif
                                                         </td>
-                                                        <td class="align-middle">
+                                                        <td class="align-middle text-center">
                                                             @if($t->credit>0)
                                                                 {{ number_format($t->credit,2) }}
                                                             @endif
@@ -115,9 +121,12 @@
                                                     </tr>
                                                 @endforeach
                                                 @foreach($tl->where('credit','>',0) as $t)
+                                                    @php
+                                                        $counter++;
+                                                    @endphp
                                                     <tr>
-                                                        <td class="align-middle">
-                                                            {{$loop->iteration}}
+                                                        <td class="align-middle px-3">
+                                                            {{$counter}}
                                                         </td>
                                                         <td class="align-middle">
                                                         </td>
@@ -127,12 +136,12 @@
                                                         <td>
                                                             {{ $t->description }}
                                                         </td>
-                                                        <td class="align-middle">
+                                                        <td class="align-middle text-center">
                                                             @if($t->debit>0)
                                                                 {{ number_format($t->debit,2) }}
                                                             @endif
                                                         </td>
-                                                        <td class="align-middle">
+                                                        <td class="align-middle text-center">
                                                             @if($t->credit>0)
                                                                 {{ number_format($t->credit,2) }}
                                                             @endif
@@ -158,25 +167,30 @@
 
                                                             <div>
                                                                 <a href="{{ url('accounts/accountant/journal/edit').'/'.$tl->first()->voucher_no }}"
-                                                                   class="text-primary px-2">
+                                                                   class="text-primary px-0">
                                                                     Edit
                                                                 </a>
-
+                                                                <span class="text-secondary px-2">&nbsp;</span>
                                                                 <button wire:click="deleteTempEntry('{{ $tl->first()->voucher_no }}')"
-                                                                        class="text-danger" style="cursor: pointer">
-                                                                    <span wire:loading.remove
-                                                                          wire:target="deleteTempEntry('{{ $tl->first()->voucher_no }}')">Delete</span>
-                                                                    <span wire:loading
-                                                                          wire:target="deleteTempEntry('{{ $tl->first()->voucher_no }}')">Deleting...</span>
-
+                                                                        class="text-danger btn pt-0 px-0" style="cursor: pointer">
+                                                                    <b>
+                                                                        <span wire:loading.remove
+                                                                          wire:target="deleteTempEntry('{{ $tl->first()->voucher_no }}')">
+                                                                            Delete
+                                                                        </span>
+                                                                        <span wire:loading
+                                                                              wire:target="deleteTempEntry('{{ $tl->first()->voucher_no }}')">
+                                                                            Deleting...
+                                                                        </span>
+                                                                    </b>
                                                                 </button>
                                                             </div>
                                                         </div>
                                                     </th>
-                                                    <th class="">
+                                                    <th class="text-center">
                                                         {{ number_format($tl->sum('debit'),2) }}
                                                     </th>
-                                                    <th class="">
+                                                    <th class="text-center">
                                                         {{ number_format($tl->sum('credit'),2) }}
                                                     </th>
                                                     <th class="bg-white"></th>
@@ -379,10 +393,10 @@
                                     </td>
                                     <td class="px-2 text-right py-2  text-sm text-gray-500">
 
-                                    @php
-                                        $att = $t->attachments->where('type','0');
-                                    @endphp
-                                    <!-- This example requires Tailwind CSS v2.0+ -->
+                                        @php
+                                            $att = $t->attachments->where('type','0');
+                                        @endphp
+                                                <!-- This example requires Tailwind CSS v2.0+ -->
                                         @if($att->isNotEmpty())
                                             <div class="relative inline-block text-left" x-data="{open:false}">
                                                 <div>
@@ -449,10 +463,10 @@
                                     </td>
                                     <td class="px-2 text-right py-2  text-sm text-gray-500">
 
-                                    @php
-                                        $att = $t->attachments->where('type','0');
-                                    @endphp
-                                    <!-- This example requires Tailwind CSS v2.0+ -->
+                                        @php
+                                            $att = $t->attachments->where('type','0');
+                                        @endphp
+                                                <!-- This example requires Tailwind CSS v2.0+ -->
                                         @if($att->isNotEmpty())
                                             <div class="relative inline-block text-left" x-data="{open:false}">
                                                 <div>
@@ -514,7 +528,7 @@
                                             </a>
 
                                             <a wire:click="deleteTempEntry('{{ $tl->first()->voucher_no }}')"
-                                                    class="font-medium  py-1 px-2 rounded-md text-red-600 hover:text-red-800 hover:bg-red-100 cursor-pointer">
+                                               class="font-medium  py-1 px-2 rounded-md text-red-600 hover:text-red-800 hover:bg-red-100 cursor-pointer">
                                                 <span wire:loading.remove
                                                       wire:target="deleteTempEntry('{{ $tl->first()->voucher_no }}')">Delete</span>
                                                 <span wire:loading

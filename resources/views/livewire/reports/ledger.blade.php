@@ -85,14 +85,14 @@
                             <div class="card-body p-0 m-0">
                                 <table class="table table-bordered border-0">
                                     <thead class="">
-                                    <th class="add-services-table col-1 text-muted"
+                                    <th class="add-services-table col-1 text-muted text-center"
                                         style="padding-left: 10px !important;">V. #
                                     </th>
-                                    <th class="add-services-table col-2 text-muted"> Date</th>
+                                    <th class="add-services-table col-2 text-muted text-center"> Date</th>
                                     <th class="add-services-table col-6 text-muted">Description</th>
-                                    <th class="add-services-table text-right col-1 text-muted">Dr</th>
-                                    <th class="add-services-table text-right col-1 text-muted">Cr</th>
-                                    <th class="add-services-table text-right col-1 text-muted">Balance</th>
+                                    <th class="add-services-table text-center col-1 text-muted">Dr</th>
+                                    <th class="add-services-table text-center col-1 text-muted">Cr</th>
+                                    <th class="add-services-table text-center col-1 text-muted">Balance</th>
                                     <th class="text-center add-services-table text-muted" style="width: 20px;"></th>
                                     </thead>
                                     <tbody class="">
@@ -126,11 +126,11 @@
                                             }
                                         @endphp
                                         <tr class="">
-                                            <td class="align-middle px-3 py-2">
+                                            <td class="align-middle text-center px-3 py-2">
                                                 <a class="" href="javascript:void(0);"
                                                    onclick="window.open('{{ url('accounts/journal/voucher/print').'/'.$en['voucher_no'] }}','voucher-print-{{$en['voucher_no']}}','height=500,width=800');">{{ $en['voucher_no'] }}</a>
                                             </td>
-                                            <td class="align-middle px-2 py-2">
+                                            <td class="align-middle text-center px-2 py-2">
                                                 {{ date('d M, Y',strtotime($en['posting_date'])) }}
                                             </td>
                                             <td class="px-2 py-2">
@@ -221,7 +221,7 @@
                                         <th colspan="3" class="px-2 py-2 text-right bg-white border-right-0">
                                             Total Number of Transactions
                                         </th>
-                                        <th class="px-2 py-2 text-right bg-white border-left-0">{{ number_format(collect($ledger)->count(),2) }}</th>
+                                        <th class="px-2 py-2 text-right bg-white border-left-0">{{ number_format(collect($ledger)->count()) }}</th>
                                         <th class="px-2 py-2 text-right bg-white"></th>
                                         <th class="px-2 py-2 text-right bg-white border-right-0"></th>
                                         <th class="px-2 py-2 bg-white border-left-0"></th>

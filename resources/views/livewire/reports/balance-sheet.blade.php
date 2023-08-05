@@ -34,7 +34,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-xs-6 col-sm-4 mt-4" style="padding-top: 8px">
+                                        <div class="col-xs-6 col-sm-4 pt-4">
 
                                             <div class="form-group">
                                                 <button type="button" wire:click="search" wire:loading.attr="disabled"
