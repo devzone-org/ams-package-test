@@ -8,6 +8,8 @@ use Carbon\Carbon;
 use Devzone\Ams\Helper\GeneralJournal;
 use Devzone\Ams\Helper\Voucher;
 use Devzone\Ams\Models\ChartOfAccount;
+use http\Env;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -23,16 +25,41 @@ class Add extends Component
     public $sub_accounts = [];
     public $show_opening_balance = false;
     public $success;
+    public $restriction_accounts;
 
     public function mount()
     {
         $this->date = date('d M Y');
+
+        if (env('RESTRICT_CERTAIN_ACCOUNTS')) {
+            $account_references = [
+                'cash-in-hand-driver-4',
+                'vendor-payable-4',
+                'customer-receivable-4'
+            ];
+
+            $this->restriction_accounts = ChartOfAccount::where('level', 4)->whereIn('reference', $account_references)
+                ->select('id')
+                ->pluck('id')
+                ->toArray();
+        }
+
+    }
+
+    public function dismissErrorMsg()
+    {
+        $this->success = '';
     }
 
     public function updated($name, $value)
     {
         if (!empty($this->at_level) && !empty($this->account_type)) {
-            $this->sub_accounts = ChartOfAccount::where('level', $this->at_level)->where('type', $this->account_type)->get()->toArray();
+            $this->sub_accounts = ChartOfAccount::where('level', $this->at_level)
+                ->where('type', $this->account_type)
+                ->when(!empty($this->restriction_accounts) && env('RESTRICT_CERTAIN_ACCOUNTS'), function ($q) {
+                    return $q->whereNotIn('id', $this->restriction_accounts);
+                })
+                ->get()->toArray();
         }
         if ($this->at_level == '4') {
             $this->show_opening_balance = true;
@@ -47,65 +74,81 @@ class Add extends Component
     }
 
 
-    private function formatDate($date){
-        return Carbon::createFromFormat('d M Y',$date)
+    private function formatDate($date)
+    {
+        return Carbon::createFromFormat('d M Y', $date)
             ->format('Y-m-d');
     }
 
     public function create()
     {
         $this->validate();
-        try {
-            DB::beginTransaction();
-            $code = null;
-            if(
-                ChartOfAccount::where('name',$this->account_name)
-                    ->where('level',$this->at_level + 1)->exists()
-            ){
-                throw new \Exception('This account name already in use.');
-            }
-            if($this->at_level==3 && !auth()->user()->can('2.create.coa.all')){
-                throw new \Exception(env('PERMISSION_ERROR'));
-            }
-            if($this->at_level==4){
-                $code = Voucher::instance()->coa()->get();
-                $code = str_pad($code,7,"0",STR_PAD_LEFT);
-            }
-            $account_id = ChartOfAccount::create([
-                'name' => $this->account_name,
-                'type' => $this->account_type,
-                'sub_account' => $this->parent_account,
-                'level' => $this->at_level + 1,
-                'code' => $code,
-                'nature' => $this->determineNature(),
-                'is_contra' => !empty($this->is_contra)?'t':'f',
-                'status' => 't'
-            ])->id;
+        $lock = Cache::lock('addService.' . \auth()->user()->id, 60);
 
-            if($this->at_level == 4 && $this->opening_balance > 0){
-                $voucher_no = Voucher::instance()->voucher()->get();
-                $entry = GeneralJournal::instance()->account($account_id);
-                if($this->determineNature()=='d'){
-                    if(empty($this->is_contra)){
-                        $entry = $entry->debit($this->opening_balance);
-                    } else {
-                        $entry = $entry->credit($this->opening_balance);
-                    }
-                } else {
-                    if(empty($this->is_contra)){
-                        $entry = $entry->credit($this->opening_balance);
-                    } else {
-                        $entry = $entry->debit($this->opening_balance);
+        try {
+            if ($lock->get()) {
+                DB::beginTransaction();
+                $code = null;
+
+                if (env('RESTRICT_CERTAIN_ACCOUNTS')) {
+                    if (in_array($this->parent_account, $this->restriction_accounts)) {
+                        throw new \Exception('You cannot create this account here.');
                     }
                 }
 
-                $entry->description('Opening balance')->voucherNo($voucher_no)
-                    ->date($this->formatDate($this->date))->approve()->execute();
+                if (
+                    ChartOfAccount::where('name', $this->account_name)
+                        ->where('level', $this->at_level + 1)->exists()
+                ) {
+                    throw new \Exception('This account name already in use.');
+                }
+                if ($this->at_level == 3 && !auth()->user()->can('2.create.coa.all')) {
+                    throw new \Exception(env('PERMISSION_ERROR'));
+                }
+                if ($this->at_level == 4) {
+                    $code = Voucher::instance()->coa()->get();
+                    $code = str_pad($code, 7, "0", STR_PAD_LEFT);
+                }
+                $account_id = ChartOfAccount::create([
+                    'name' => $this->account_name,
+                    'type' => $this->account_type,
+                    'sub_account' => $this->parent_account,
+                    'level' => $this->at_level + 1,
+                    'code' => $code,
+                    'nature' => $this->determineNature(),
+                    'is_contra' => !empty($this->is_contra) ? 't' : 'f',
+                    'status' => 't'
+                ])->id;
+
+                if ($this->at_level == 4 && $this->opening_balance > 0) {
+                    $voucher_no = Voucher::instance()->voucher()->get();
+                    $entry = GeneralJournal::instance()->account($account_id);
+                    if ($this->determineNature() == 'd') {
+                        if (empty($this->is_contra)) {
+                            $entry = $entry->debit($this->opening_balance);
+                        } else {
+                            $entry = $entry->credit($this->opening_balance);
+                        }
+                    } else {
+                        if (empty($this->is_contra)) {
+                            $entry = $entry->credit($this->opening_balance);
+                        } else {
+                            $entry = $entry->debit($this->opening_balance);
+                        }
+                    }
+
+                    $entry->description('Opening balance')->voucherNo($voucher_no)
+                        ->date($this->formatDate($this->date))->approve()->execute();
+                }
+                DB::commit();
+                $this->success = 'Account has been created.';
+                $this->reset(['account_name', 'date', 'account_type', 'parent_account', 'at_level', 'is_contra', 'opening_balance', 'show_opening_balance', 'sub_accounts']);
+                $this->date = date('d M Y');
+                optional($lock)->release();
+
             }
-            DB::commit();
-            $this->success ='Account has been created.';
-            $this->reset(['account_name','date','account_type','parent_account','at_level','is_contra','opening_balance','show_opening_balance','sub_accounts']);
         } catch (\Exception $e) {
+            optional($lock)->release();
             DB::rollBack();
             $this->addError('account_name', $e->getMessage());
         }

@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Devzone\Ams\Models\ChartOfAccount;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use mysql_xdevapi\Collection;
 
 class ProfitLoss extends Component
 {
@@ -29,9 +30,10 @@ class ProfitLoss extends Component
         return view('ams::livewire.reports.profit-loss');
     }
 
-    private function formatDate($date){
-        return Carbon::createFromFormat('d M Y',$date)
-                                ->format('Y-m-d');
+    private function formatDate($date)
+    {
+        return Carbon::createFromFormat('d M Y', $date)
+            ->format('Y-m-d');
     }
 
     public function search()
@@ -56,11 +58,11 @@ class ProfitLoss extends Component
             ->whereIn('coa.type', ['Income', 'Expenses'])
             ->groupBy(DB::raw("DATE_FORMAT(l.posting_date,'%Y-%m')"))
             ->groupBy('l.account_id')
-            ->orderBy('coa.name','asc')
+//            ->orderBy('coa.name', 'asc')
             ->get();
 
         $account_ids = array_unique($report->pluck('sub_account')->toArray());
-        $accounts = ChartOfAccount::whereIn('id',$account_ids)->get();
+        $accounts = ChartOfAccount::whereIn('id', $account_ids)->get();
         $this->heading = $report->groupBy('month')->sortKeys()->keys()->toArray();
 
         $pnl = [];
@@ -70,17 +72,17 @@ class ProfitLoss extends Component
                 if ($r->is_contra == 'f') {
                     $balance = $r->debit - $r->credit;
                 } else {
-                    $balance = - ($r->credit - $r->debit);
+                    $balance = -($r->credit - $r->debit);
                 }
             } else {
                 if ($r->is_contra == 'f') {
                     $balance = $r->credit - $r->debit;
                 } else {
-                    $balance = - ($r->debit - $r->credit);
+                    $balance = -($r->debit - $r->credit);
                 }
             }
-            $p_ref = $accounts->firstWhere('id',$r->sub_account);
-            if(!empty($p_ref)){
+            $p_ref = $accounts->firstWhere('id', $r->sub_account);
+            if (!empty($p_ref)) {
                 $p_ref = $p_ref->reference;
             } else {
                 $p_ref = null;
@@ -98,8 +100,12 @@ class ProfitLoss extends Component
             ];
         }
 
-        $this->report = $pnl;
+        foreach ($pnl as $key => $d) {
+            $same_account_total_balance = collect($pnl)->where('account_id', $d['account_id'])->sum('balance');
+            $pnl[$key]['same_account_total_balance'] = $same_account_total_balance;
+        }
 
+        $this->report = $pnl;
 
     }
 }

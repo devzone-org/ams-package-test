@@ -72,7 +72,7 @@ class Close extends Component
 
     public function updatedUserAccountId($value)
     {
-        $this->reset(['current_user', 'opening_balance', 'closing_balance']);
+        $this->reset(['current_user', 'opening_balance', 'closing_balance','difference']);
 
         $user = collect($this->users)->firstWhere('account_id', $value);
         if (!empty($user)) {

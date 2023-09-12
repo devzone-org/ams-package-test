@@ -28,6 +28,7 @@ class Edit extends Component
     public $deleted = [];
     public $deleted_attachment = [];
     public $success;
+    public $file_upload = false;
     public $account_list = [];
     public $highlightIndex = 0;
 
@@ -130,7 +131,11 @@ class Edit extends Component
 
     public function searchAccounts($key)
     {
-        $this->accounts = $this->account_list;
+        if (env('AMS_BOOTSTRAP') == 'true') {
+            $this->success = '';
+            $this->dispatchBrowserEvent('open-modal');
+        }
+        $this->accounts = [];
         $this->search_accounts_modal = true;
         $this->key_id = $key;
         $this->emit('focusInput');
@@ -150,9 +155,12 @@ class Edit extends Component
         $this->entries[$this->key_id]['account_id'] = $id;
         $this->entries[$this->key_id]['account_name'] = $name;
         $this->search_accounts_modal = false;
-        $this->accounts = $this->account_list;
+        $this->accounts = [];
         $this->search_accounts = '';
         $this->entries[$this->key_id]['description'] = $this->entries[0]['description'];
+        if (env('AMS_BOOTSTRAP') == 'true') {
+            $this->dispatchBrowserEvent('close-modal');
+        }
     }
 
     public function updatedSearchAccounts($value)
@@ -170,7 +178,7 @@ class Edit extends Component
                 $this->accounts = $this->account_list;
             }
         } else {
-            $this->accounts = $this->account_list;
+            $this->accounts = [];
         }
     }
 
@@ -190,6 +198,10 @@ class Edit extends Component
                 if (!is_numeric($value)) {
                     $this->entries[$array[1]]['credit'] = 0;
                 }
+            }
+
+            if ($array[0] == 'attachment_entries') {
+                $this->file_upload = false;
             }
         }
     }
@@ -245,7 +257,7 @@ class Edit extends Component
                     ]);
                 } else {
                     //created
-                    Ledger::create([ 
+                    Ledger::create([
                         'account_id' => !empty($entry['account_id']) ? $entry['account_id'] : null,
                         'voucher_no' => $this->voucher_no,
                         'debit' => $entry['debit'],
@@ -260,15 +272,17 @@ class Edit extends Component
                 LedgerAttachment::where('type', '0')->whereIn('id', $this->deleted_attachment)->delete();
             }
             foreach ($this->attachment_entries as $ae) {
-                if (isset($ae['file'])) {
-                    $path = $ae['file']->storePublicly(env('AWS_FOLDER') . 'accounts', 's3');
-                    LedgerAttachment::create([
-                        'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
-                        'voucher_no' => $this->voucher_no,
-                        'attachment' => $path
-                    ]);
+                if (!empty($ae['file'])) {
+                    if (is_object($ae['file'])) {
+                        $path = $ae['file']->storePublicly(env('AWS_FOLDER') . 'accounts', 's3');
+                        LedgerAttachment::create([
+                            'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
+                            'voucher_no' => $this->voucher_no,
+                            'attachment' => $path
+                        ]);
+                    }
                 } else {
-                    if (isset($ae['id'])) {
+                    if (!empty($ae['id'])) {
                         LedgerAttachment::find($ae['id'])->update([
                             'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
                         ]);

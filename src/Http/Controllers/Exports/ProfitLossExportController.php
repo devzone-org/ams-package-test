@@ -112,10 +112,12 @@ class ProfitLossExportController
             $bal = [];
             foreach ($heading as $h) {
                 $first = collect($report)->where('account_id', $key)->where('month', $h)->first();
-                if (!empty($first)) {
-                    $bal[] = $first['balance'];
-                } else {
-                    $bal[] = '-';
+                if (auth()->user()->cannot('2.hide-income')) {
+                    if (!empty($first)) {
+                        $bal[] = $first['balance'];
+                    } else {
+                        $bal[] = '-';
+                    }
                 }
 
 
@@ -123,19 +125,23 @@ class ProfitLossExportController
             $data[] = [
                 'name' => $en->first()['name'],
                 'balance' => $bal,
-                'total' => number_format(collect($report)->where('account_id', $key)->sum('balance'),2)
+                'total' => (auth()->user()->cannot('2.hide-income')) ? number_format(collect($report)->where('account_id', $key)->sum('balance'), 2) : '',
             ];
 
         }
 
         $bal = [];
         foreach ($heading as $h) {
-            $bal[] = collect($report)->where('type', 'Income')->where('month', $h)->sum('balance');
+            if (auth()->user()->cannot('2.hide-income')) {
+
+                $bal[] = collect($report)->where('type', 'Income')->where('month', $h)->sum('balance');
+            }
         }
+
         $data [] = [
             'name' => 'Total Revenue',
             'balance' => $bal,
-            'total' => number_format(collect($report)->where('type', 'Income')->sum('balance'),2)
+            'total' => (auth()->user()->cannot('2.hide-income')) ? number_format(collect($report)->where('type', 'Income')->sum('balance'), 2) : '',
         ];
 
         $data[] = [
@@ -154,28 +160,32 @@ class ProfitLossExportController
             $bal = [];
             foreach ($heading as $h) {
                 $first = collect($report)->where('account_id', $key)->where('month', $h)->first();
-                if (!empty($first)) {
-                    $bal[] = $first['balance'];
-                } else {
-                    $bal[] = '-';
+                if (auth()->user()->cannot('2.hide-expenses')) {
+                    if (!empty($first)) {
+                        $bal[] = $first['balance'];
+                    } else {
+                        $bal[] = '-';
+                    }
                 }
             }
 
             $data[] = [
                 'name' => $en->first()['name'],
                 'balance' => $bal,
-                'total' => number_format(collect($report)->where('account_id', $key)->sum('balance'),2)
+                'total' => (auth()->user()->cannot('2.hide-expenses')) ? number_format(collect($report)->where('account_id', $key)->sum('balance'), 2) : '',
             ];
         }
 
         $bal = [];
         foreach ($heading as $h) {
-            $bal[] = collect($report)->where('p_ref', 'cost-of-sales-4')->where('month', $h)->sum('balance');
+            if(auth()->user()->cannot('2.hide-expenses')) {
+                $bal[] = collect($report)->where('p_ref', 'cost-of-sales-4')->where('month', $h)->sum('balance');
+            }
         }
         $data [] = [
             'name' => 'Total Expenses',
             'balance' => $bal,
-            'total' => number_format(collect($report)->where('p_ref', 'cost-of-sales-4')->sum('balance'),2)
+            'total' => (auth()->user()->cannot('2.hide-expenses')) ? number_format(collect($report)->where('p_ref', 'cost-of-sales-4')->sum('balance'), 2): '',
         ];
 
         $data[] = [
@@ -186,12 +196,14 @@ class ProfitLossExportController
 
         $bal = [];
         foreach ($heading as $h) {
-            $bal[] = collect($report)->where('type', 'Income')->where('month', $h)->sum('balance') - collect($report)->where('p_ref', 'cost-of-sales-4')->where('month', $h)->sum('balance');
+            if (auth()->user()->cannot('2.hide-income')) {
+                $bal[] = collect($report)->where('type', 'Income')->where('month', $h)->sum('balance') - collect($report)->where('p_ref', 'cost-of-sales-4')->where('month', $h)->sum('balance');
+            }
         }
         $data [] = [
             'name' => 'Gross Profit',
             'balance' => $bal,
-            'total' => number_format(collect($report)->where('type', 'Income')->sum('balance') - collect($report)->where('p_ref', 'cost-of-sales-4')->sum('balance'),2)
+            'total' => (auth()->user()->cannot('2.hide-income')) ? number_format(collect($report)->where('type', 'Income')->sum('balance') - collect($report)->where('p_ref', 'cost-of-sales-4')->sum('balance'), 2) : '',
         ];
 
         $data[] = [
@@ -209,30 +221,33 @@ class ProfitLossExportController
             $bal = [];
             foreach ($heading as $h) {
                 $first = collect($report)->where('account_id', $key)->where('month', $h)->first();
-                if (!empty($first)) {
-                    $bal[] = $first['balance'];
-                } else {
-                    $bal[] = '-';
+                if (auth()->user()->cannot('2.hide-expenses')) {
+                    if (!empty($first)) {
+                        $bal[] = $first['balance'];
+                    } else {
+                        $bal[] = '-';
+                    }
                 }
             }
 
             $data[] = [
                 'name' => $en->first()['name'],
                 'balance' => $bal,
-                'total' => number_format(collect($report)->where('account_id', $key)->sum('balance'),2)
+                'total' => (auth()->user()->cannot('2.hide-expenses')) ? number_format(collect($report)->where('account_id', $key)->sum('balance'), 2) : '',
             ];
 
         }
 
         $bal = [];
         foreach ($heading as $h) {
-
-            $bal[] = collect($report)->where('type', 'Expenses')->where('p_ref', '!=', 'cost-of-sales-4')->where('month', $h)->sum('balance');
+            if (auth()->user()->cannot('2.hide-expenses')) {
+                $bal[] = collect($report)->where('type', 'Expenses')->where('p_ref', '!=', 'cost-of-sales-4')->where('month', $h)->sum('balance');
+            }
         }
         $data [] = [
             'name' => 'Total Other Expenses',
             'balance' => $bal,
-            'total' => number_format(collect($report)->where('type', 'Expenses')->where('p_ref', '!=', 'cost-of-sales-4')->sum('balance'),2)
+            'total' => (auth()->user()->cannot('2.hide-expenses')) ? number_format(collect($report)->where('type', 'Expenses')->where('p_ref', '!=', 'cost-of-sales-4')->sum('balance'), 2) : '',
         ];
 
         $data[] = [
@@ -242,13 +257,14 @@ class ProfitLossExportController
         ];
         $bal = [];
         foreach ($heading as $h) {
-
-            $bal[] = collect($report)->where('type', 'Income')->where('month', $h)->sum('balance') - collect($report)->where('type', 'Expenses')->where('month', $h)->sum('balance');
+            if(auth()->user()->cannot('2.hide-expenses')) {
+                $bal[] = collect($report)->where('type', 'Income')->where('month', $h)->sum('balance') - collect($report)->where('type', 'Expenses')->where('month', $h)->sum('balance');
+            }
         }
         $data [] = [
             'name' => 'Net Profit/(Loss)',
             'balance' => $bal,
-            'total' => number_format(collect($report)->where('type', 'Income')->sum('balance') - collect($report)->where('type', 'Expenses')->sum('balance'),2)
+            'total' => (auth()->user()->cannot('2.hide-expenses')) ? number_format(collect($report)->where('type', 'Income')->sum('balance') - collect($report)->where('type', 'Expenses')->sum('balance'), 2) : '',
         ];
 
 
@@ -276,7 +292,7 @@ class ProfitLossExportController
             }
         }
 
-        $csv->output('P&L '. date('d M Y h:i A') . '.csv');
+        $csv->output('P&L ' . date('d M Y h:i A') . '.csv');
 
 
 //        $request = request();

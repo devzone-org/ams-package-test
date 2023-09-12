@@ -49,7 +49,18 @@ class DumpMasterDataPermissions extends Command
 
         Permission::updateOrCreate(['name' => '2.coa.equity-ratio'], ['guard_name' => 'web', 'description' => 'Equity Ratio ', 'portal' => 'accounts', 'section' => 'accounts']);
 
+ 
         Permission::updateOrCreate(['name' => '2.closing-fiscal-year'], ['guard_name' => 'web', 'description' => 'Closing Fiscal Year ', 'portal' => 'accounts', 'section' => 'accounts']);
+ 
+        Permission::updateOrCreate(['name' => '2.hide-assets'], ['guard_name' => 'web', 'description' => 'Hide Assets', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.hide-liabilities'], ['guard_name' => 'web', 'description' => 'Hide Liabilities', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.hide-equity'], ['guard_name' => 'web', 'description' => 'Hide Equity', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.hide-income'], ['guard_name' => 'web', 'description' => 'Hide Income', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.hide-expenses'], ['guard_name' => 'web', 'description' => 'Hide Expenses', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '2.hide-data-beyond-3-months'], ['guard_name' => 'web', 'description' => 'Restrict To Last 3 Months', 'portal' => 'accounts', 'section' => 'accounts']);
+
+        Permission::updateOrCreate(['name' => '2.transfer-entry'], ['guard_name' => 'web', 'description' => 'payment and receiving transaction - transfer entry ', 'portal' => 'accounts', 'section' => 'accounts']);
+
 
 
         $this->info('Dumping Permissions Finished...');

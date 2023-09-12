@@ -146,6 +146,3 @@ Route::group(['middleware' => ['permission:3.view.petty-expenses']], function ()
         return view('ams::petty-expenses.approved-petty-expenses-list');
     });
 });
-
-
-
