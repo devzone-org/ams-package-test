@@ -30,8 +30,11 @@ Route::group(['middleware' => ['permission:2.coa.equity-ratio']], function () {
     });
 });
 
-
-
+Route::group(['middleware' => ['permission:2.closing-fiscal-year']], function () {
+    Route::get('reports/closing-fiscal-year', function () {
+        return view('ams::closing.closing-fiscal-year');
+    });
+});
 
 
 
