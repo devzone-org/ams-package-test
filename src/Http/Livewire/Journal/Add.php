@@ -160,7 +160,7 @@ class Add extends Component
         $this->search_accounts_modal = false;
 
         $this->search_accounts = '';
-        $this->entries[$this->key_id]['description'] = $this->entries[0]['description'];
+//        $this->entries[$this->key_id]['description'] = $this->entries[0]['description'];
         if(env('AMS_BOOTSTRAP') == 'true'){
             $this->dispatchBrowserEvent('close-modal');
         }

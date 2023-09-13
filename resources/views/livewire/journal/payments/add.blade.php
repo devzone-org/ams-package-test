@@ -305,7 +305,7 @@
                         </div>
                         <div class="modal-body">
                             <p>
-                                Are you sure you want to transfer <strong>PKR {{$amount}}</strong> from
+                                Are you sure you want to transfer <strong>{{ env('CURRENCY','PKR') }} {{$amount}}</strong> from
                                 <strong>{{!empty($from_account_id) ? \Devzone\Ams\Models\ChartOfAccount::find($from_account_id)->name : ''}}</strong>
                                 to
                                 <strong>{{!empty($to_account_id) ? \Devzone\Ams\Models\ChartOfAccount::find($to_account_id)->name : ''}}</strong>

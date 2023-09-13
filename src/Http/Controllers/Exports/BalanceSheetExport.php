@@ -328,7 +328,7 @@ class BalanceSheetExport
 
         $csv = Writer::createFromFileObject(new SplTempFileObject());
 
-        $csv->insertOne(['Name', '', '', '', '', 'PKR', 'PKR']);
+        $csv->insertOne(['Name', '', '', '', '', env('CURRENCY','PKR'), env('CURRENCY','PKR')]);
 
         $csv->insertAll($data);
 

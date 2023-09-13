@@ -163,7 +163,7 @@ class Listing extends Component
             $created = User::find($payment['added_by']);
 
 //            if ($payment['nature'] == 'transfer_entry') {
-//                $description = ' Amount "PKR ' . $payment['amount'] . '" transferred from "'
+//                $description = ' Amount " ' . env('CURRENCY','PKR') . ' ' . $payment['amount'] . '" transferred from "'
 //                    . ChartOfAccount::find($payment['second_account_id'])->name . '" to "'
 //                    . ChartOfAccount::find($payment['first_account_id'])->name . '" with description "'
 //                    . $payment->description . '".';
