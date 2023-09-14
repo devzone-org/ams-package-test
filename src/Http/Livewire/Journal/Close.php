@@ -147,7 +147,7 @@ class Close extends Component
                 $total_denomination = collect($this->denomination_counting)->sum('total');
                 $transfer_amount = $total_denomination - $this->retained_cash;
                 $description = "[TILL CLOSING: " . date('d M Y h:i A') . "]; [Teller: " . $this->current_user['name'] .
-                    " Till closed by: " . Auth::user()->name . "][Transferring PKR " . number_format($transfer_amount, 2) . " to " . collect($this->transfers)->firstWhere('id', $this->transfer_id)['name'] . " from till of Teller '" . $this->current_user['name'] . "'. Cash Retained PKR " .
+                    " Till closed by: " . Auth::user()->name . "][Transferring " . env('CURRENCY','PKR') . " " . number_format($transfer_amount, 2) . " to " . collect($this->transfers)->firstWhere('id', $this->transfer_id)['name'] . " from till of Teller '" . $this->current_user['name'] . "'. Cash Retained PKR " .
                     number_format($this->retained_cash, 2) . " in till of " . $this->current_user['name'] . "]";
 
                 if (!empty($this->description)) {
@@ -169,7 +169,7 @@ class Close extends Component
                         }
                     } else if ($this->difference > 0) {
 
-                        $description .= " Surplus PKR " . number_format($this->difference, 2) . "/-";
+                        $description .= " Surplus " . env('CURRENCY','PKR') . " " . number_format($this->difference, 2) . "/-";
                         GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
                             ->date(date('Y-m-d'))->approve()->description($description)->execute();
                         GeneralJournal::instance()->account(67)->credit($this->difference)->voucherNo($vno)
@@ -186,7 +186,7 @@ class Close extends Component
 
 
                     } else if ($this->difference < 0) {
-                        $description .= " Shortage PKR " . number_format(abs($this->difference), 2) . "/-";
+                        $description .= " Shortage " . env('CURRENCY','PKR') . " " . number_format(abs($this->difference), 2) . "/-";
                         GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
                             ->date(date('Y-m-d'))->approve()->description($description)->execute();
 

@@ -88,7 +88,7 @@
                                                     @php
                                                         $debit = ($d->debit - $d->credit);
                                                         $total_debit = $total_debit + $debit;
-                                                        $record = $d->name.' - PKR '.number_format($debit,2);
+                                                        $record = $d->name.' - ' . env('CURRENCY','PKR') . ' ' . number_format($debit,2);
                                                     @endphp
                                                     {{$record}}
                                                     <br>
@@ -99,7 +99,7 @@
                                                     @php
                                                         $credit = ($c->credit - $c->debit);
                                                         $total_credit = $total_credit + $credit;
-                                                        $record = $c->name.' - PKR '.number_format($credit,2);
+                                                        $record = $c->name.' - ' . env('CURRENCY','PKR') . ' ' . number_format($credit,2);
                                                     @endphp
                                                     {{$record}}
                                                     <br>
@@ -111,12 +111,14 @@
                                         <tr>
                                             <td class="bold px-6 py-4 text-center text-sm font-medium text-gray-900 border-r border-gray-200">
                                                 <strong>
-                                                    {{'PKR ' . number_format($total_debit,2)}}
+                                                    {{ env('CURRENCY','PKR') }}
+                                                    {{number_format($total_debit,2)}}
                                                 </strong>
                                             </td>
                                             <td class="bold px-6 py-4 text-center text-sm font-medium text-gray-900">
                                                 <strong>
-                                                    {{'PKR ' . number_format($total_credit,2)}}
+                                                    {{ env('CURRENCY','PKR') }}
+                                                    {{number_format($total_credit,2)}}
                                                 </strong>
                                             </td>
                                         </tr>
@@ -125,7 +127,7 @@
                                             @if($total_debit > $total_credit)
                                                 <td class="bg-red-50 bold px-6 py-4 text-center text-sm font-medium text-red-900">
                                                     <strong>
-                                                        Loss: {{'PKR ' . number_format(($total_debit - $total_credit),2)}}
+                                                        Loss: {{ env('CURRENCY','PKR') }} {{number_format(($total_debit - $total_credit),2)}}
                                                     </strong>
                                                 </td>
                                                 <td class="bg-white bold px-6 py-4 text-center text-sm font-medium text-gray-900">
@@ -137,7 +139,7 @@
                                                 </td>
                                                 <td class="bg-green-50 bold px-6 py-4 text-center text-sm font-medium text-green-900">
                                                     <strong>
-                                                        Profit: {{'PKR ' . number_format(($total_credit - $total_debit),2)}}
+                                                        Profit: {{ env('CURRENCY','PKR') }} {{number_format(($total_credit - $total_debit),2)}}
                                                     </strong>
                                                 </td>
                                             @endif
