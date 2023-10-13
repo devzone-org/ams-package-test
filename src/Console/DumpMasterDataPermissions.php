@@ -61,6 +61,8 @@ class DumpMasterDataPermissions extends Command
 
         Permission::updateOrCreate(['name' => '2.transfer-entry'], ['guard_name' => 'web', 'description' => 'payment and receiving transaction - transfer entry ', 'portal' => 'accounts', 'section' => 'accounts']);
 
+        Permission::updateOrCreate(['name' => '2.transactions-manual-allocation'], ['guard_name' => 'web', 'description' => 'transactions manual allocation ', 'portal' => 'accounts', 'section' => 'accounts']);
+
 
 
         $this->info('Dumping Permissions Finished...');

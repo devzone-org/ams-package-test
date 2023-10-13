@@ -147,6 +147,9 @@ Route::group(['middleware' => ['permission:3.view.petty-expenses']], function ()
     });
 });
 
-Route::get('transactions-allocation', function () {
-    return view('ams::allocation.transactions-allocation');
+Route::group(['middleware' => ['permission:2.transactions-manual-allocation']], function () {
+    Route::get('transactions-allocation', function () {
+        return view('ams::allocation.transactions-allocation');
+    });
 });
+

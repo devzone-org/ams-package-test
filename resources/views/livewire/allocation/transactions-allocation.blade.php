@@ -136,7 +136,8 @@
                                                     <th scope="col"
                                                         class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
 
-                                                        <input type="checkbox" wire:model="select_all_credit" @if (empty($select_all_credit)) disabled @endif
+                                                        <input type="checkbox" wire:model="unselect_all_credit"
+                                                            @if (empty($unselect_all_credit)) disabled @endif
                                                             class="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 
                                                     </th>
@@ -157,11 +158,11 @@
                                                         Reference
                                                     </th>
                                                     <th scope="col"
-                                                        class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
+                                                        class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-right text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
                                                         Amount
                                                     </th>
                                                     <th scope="col"
-                                                        class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
+                                                        class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-right text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
                                                         Unallocated
                                                     </th>
                                                 </tr>
@@ -173,7 +174,9 @@
                                                             <td
                                                                 class="whitespace-nowrap py-2 pl-3 pr-3 text-sm text-gray-500 text-center">
 
-                                                                <input type="checkbox" wire:model="credit_checkbox.{{ $uc['voucher_no'] }}" @if ($first_check == 'credit' && $first_voucher != $uce['voucher_no']) disabled @endif
+                                                                <input type="checkbox"
+                                                                    wire:model="credit_checkbox.{{ $uc['voucher_no'] }}"
+                                                                    @if ($first_check == 'credit' && $first_voucher != $uc['voucher_no']) disabled @endif
                                                                     class="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 
                                                             </td>
@@ -194,26 +197,26 @@
                                                                 {{ $uc['reference'] }}
                                                             </td>
                                                             <td
-                                                                class="whitespace-nowrap py-2 pl-3 pr-3 text-sm text-gray-500 text-center">
+                                                                class="whitespace-nowrap py-2 pl-3 pr-3 text-sm text-gray-500 text-right">
                                                                 {{ number_format($uc['credit'], 2) }}
                                                             </td>
                                                             <td
-                                                                class="whitespace-nowrap py-2 pl-3 pr-3 text-sm text-gray-500 text-center">
+                                                                class="whitespace-nowrap py-2 pl-3 pr-3 text-sm text-gray-500 text-right">
                                                                 {{ number_format($uc['unallocated'], 2) }}
                                                             </td>
                                                         </tr>
                                                     @endforeach
                                                     <tr>
                                                         <th colspan="5"
-                                                            class="whitespace-nowrap bg-gray-50 py-2 pl-3 pr-3 text-sm text-gray-500 text-center">
+                                                            class="whitespace-nowrap border-r bg-gray-50 py-2 pl-3 pr-3 text-sm text-gray-500 text-center">
                                                             Total
                                                         </th>
                                                         <th
-                                                            class="whitespace-nowrap bg-gray-50 py-2 pl-3 pr-3 text-sm text-gray-500 text-center">
+                                                            class="whitespace-nowrap border-r bg-gray-50 py-2 pl-3 pr-3 text-sm text-gray-500 text-right">
                                                             {{ number_format(collect($unsettled_credit)->sum('credit'), 2) }}
                                                         </th>
                                                         <th
-                                                            class="whitespace-nowrap bg-gray-50 py-2 pl-3 pr-3 text-sm text-gray-500 text-center">
+                                                            class="whitespace-nowrap bg-gray-50 py-2 pl-3 pr-3 text-sm text-gray-500 text-right">
                                                             {{ number_format(collect($unsettled_credit)->sum('unallocated'), 2) }}
                                                         </th>
                                                     </tr>
@@ -242,7 +245,8 @@
                                                     <th scope="col"
                                                         class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
 
-                                                        <input type="checkbox" wire:model="select_all_debit" @if (empty($select_all_debit)) disabled @endif
+                                                        <input type="checkbox" wire:model="unselect_all_debit"
+                                                            @if (empty($unselect_all_debit)) disabled @endif
                                                             class="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 
                                                     </th>
@@ -263,11 +267,11 @@
                                                         Reference
                                                     </th>
                                                     <th scope="col"
-                                                        class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
+                                                        class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-right text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
                                                         Amount
                                                     </th>
                                                     <th scope="col"
-                                                        class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
+                                                        class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-right text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
                                                         Unallocated
                                                     </th>
                                                 </tr>
@@ -279,7 +283,9 @@
                                                             <td
                                                                 class="whitespace-nowrap py-2 pl-3 pr-3 text-sm text-gray-500 text-center">
 
-                                                                <input type="checkbox" wire:model="debit_checkbox.{{ $ud['voucher_no'] }}"  @if ($first_check == 'debit' && $first_voucher != $ude['voucher_no']) disabled @endif
+                                                                <input type="checkbox"
+                                                                    wire:model="debit_checkbox.{{ $ud['voucher_no'] }}"
+                                                                    @if ($first_check == 'debit' && $first_voucher != $ud['voucher_no']) disabled @endif
                                                                     class="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 
                                                             </td>
@@ -300,26 +306,26 @@
                                                                 {{ $ud['reference'] }}
                                                             </td>
                                                             <td
-                                                                class="whitespace-nowrap py-2 pl-3 pr-3 text-sm text-gray-500 text-center">
+                                                                class="whitespace-nowrap py-2 pl-3 pr-3 text-sm text-gray-500 text-right">
                                                                 {{ number_format($ud['debit'], 2) }}
                                                             </td>
                                                             <td
-                                                                class="whitespace-nowrap py-2 pl-3 pr-3 text-sm text-gray-500 text-center">
+                                                                class="whitespace-nowrap py-2 pl-3 pr-3 text-sm text-gray-500 text-right">
                                                                 {{ number_format($ud['unallocated'], 2) }}
                                                             </td>
                                                         </tr>
                                                     @endforeach
                                                     <tr>
                                                         <th colspan="5"
-                                                            class="whitespace-nowrap bg-gray-50 py-2 pl-3 pr-3 text-sm text-gray-500 text-center">
+                                                            class="whitespace-nowrap border-r bg-gray-50 py-2 pl-3 pr-3 text-sm text-gray-500 text-center">
                                                             Total
                                                         </th>
                                                         <th
-                                                            class="whitespace-nowrap bg-gray-50 py-2 pl-3 pr-3 text-sm text-gray-500 text-center">
+                                                            class="whitespace-nowrap border-r bg-gray-50 py-2 pl-3 pr-3 text-sm text-gray-500 text-right">
                                                             {{ number_format(collect($unsettled_debit)->sum('debit'), 2) }}
                                                         </th>
                                                         <th
-                                                            class="whitespace-nowrap bg-gray-50 py-2 pl-3 pr-3 text-sm text-gray-500 text-center">
+                                                            class="whitespace-nowrap bg-gray-50 py-2 pl-3 pr-3 text-sm text-gray-500 text-right">
                                                             {{ number_format(collect($unsettled_debit)->sum('unallocated'), 2) }}
                                                         </th>
                                                     </tr>
@@ -343,22 +349,28 @@
 
                 <div class="bg-white px-3 pb-4 text-right sm:px-6">
 
-                    <div class="space-x-2 justify-end align-middle">
+                    <div class="space-x-2 justify-end">
                         <span class="align-middle pt-1 pr-4 text-gray-500 font-medium">Selected Credit</span>
-                        <input type="text" class="w-12 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm value" disabled>
-                        <input type="text" class="w-48 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="" readonly>
+                        <input type="text" value="{{ !empty($credit_checkbox) ? count($credit_checkbox) : 0 }}"
+                            disabled
+                            class="w-12 text-center text-gray-500 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <input type="text" value="{{ number_format($selected_credit_amount, 2) }}" readonly
+                            class="w-48 text-right text-gray-500 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
 
                     <div class="space-x-2 justify-end align-middle pt-2 pb-4">
                         <span class="align-middle pt-1 pr-4 text-gray-500 font-medium">Selected Debit</span>
-                        <input type="text" class="w-12 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm value" disabled>
-                        <input type="text" class="w-48 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="" readonly>
+                        <input type="text" value="{{ !empty($debit_checkbox) ? count($debit_checkbox) : 0 }}"
+                            disabled
+                            class="w-12 text-center text-gray-500 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <input type="text" value="{{ number_format($selected_debit_amount, 2) }}" readonly
+                            class="w-48 text-right text-gray-500 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
 
                 </div>
 
                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                    <button type="submit"
+                    <button type="submit" wire:click.prevent="allocate"
                         class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600">
                         Allocate
                     </button>
