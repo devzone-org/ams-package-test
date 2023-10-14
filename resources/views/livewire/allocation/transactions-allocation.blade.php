@@ -99,6 +99,16 @@
                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
+                        <div class="col-span-6 sm:col-span-2">
+                            <label for="type" class="block text-sm font-medium text-gray-700">Transaction
+                                Type</label>
+                            <select wire:model.defer="type"
+                                class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="unallocated">Unallocated</option>
+                                <option value="allocated">Allocated</option>
+                            </select>
+                        </div>
+
                     </div>
 
                 </div>
@@ -112,15 +122,17 @@
         </div>
 
         <div class="shadow sm:rounded-md sm:overflow-hidden mt-5">
-            <form wire:submit.prevent="fetch">
-                <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-                    <div>
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">Unallocated Transactions</h3>
-                    </div>
+            <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+                <div>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        {{ $type == 'unallocated' ? 'Unallocated' : 'Allocated' }} Transactions
+                    </h3>
+                </div>
 
-                    <div class="flex flex-col">
-                        <div class="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
-                            <div class="inline-block min-w-full py-2 align-middle">
+                <div class="flex flex-col">
+                    <div class="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+                        <div class="inline-block min-w-full py-2 align-middle">
+                            @if (empty($settled_data))
                                 <div class="flex gap-4 px-6">
 
                                     <div class="flex-1">
@@ -129,7 +141,7 @@
                                                 <tr>
                                                     <th colspan="7" scope="col"
                                                         class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
-                                                        Unallocated Credit
+                                                        Credit Transactions - Unallocated Deposits
                                                     </th>
                                                 </tr>
                                                 <tr>
@@ -224,7 +236,7 @@
                                                     <tr>
                                                         <td colspan="7"
                                                             class="whitespace-nowrap py-2 pl-3 pr-3 text-sm text-red-500 text-center">
-                                                            No Record found!
+                                                            No Entries found!
                                                         </td>
                                                     </tr>
                                                 @endif
@@ -238,7 +250,7 @@
                                                 <tr>
                                                     <th colspan="7" scope="col"
                                                         class="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-center text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter">
-                                                        Unallocated Debit
+                                                        Unpaid - Sales Invoices
                                                     </th>
                                                 </tr>
                                                 <tr>
@@ -333,7 +345,7 @@
                                                     <tr>
                                                         <td colspan="7"
                                                             class="whitespace-nowrap py-2 pl-3 pr-3 text-sm text-red-500 text-center">
-                                                            No Record found!
+                                                            No Entries found!
                                                         </td>
                                                     </tr>
                                                 @endif
@@ -341,12 +353,21 @@
                                         </table>
                                     </div>
                                 </div>
-                            </div>
+                            @else
+
+
+
+
+                            
+                            @endif
+
                         </div>
                     </div>
-
                 </div>
 
+            </div>
+
+            @if (empty($settled_data))
                 <div class="bg-white px-3 pb-4 text-right sm:px-6">
 
                     <div class="space-x-2 justify-end">
@@ -370,12 +391,41 @@
                 </div>
 
                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                    <button type="submit" wire:click.prevent="allocate"
+                    <button type="button" wire:click.prevent="allocate"
                         class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600">
                         Allocate
                     </button>
                 </div>
-            </form>
+            @else
+                {{-- <div class="bg-white px-3 pb-4 text-right sm:px-6">
+
+                        <div class="space-x-2 justify-end">
+                            <span class="align-middle pt-1 pr-4 text-gray-500 font-medium">Selected Credit</span>
+                            <input type="text" value="{{ !empty($credit_checkbox) ? count($credit_checkbox) : 0 }}"
+                                disabled
+                                class="w-12 text-center text-gray-500 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <input type="text" value="{{ number_format($selected_credit_amount, 2) }}" readonly
+                                class="w-48 text-right text-gray-500 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+    
+                        <div class="space-x-2 justify-end align-middle pt-2 pb-4">
+                            <span class="align-middle pt-1 pr-4 text-gray-500 font-medium">Selected Debit</span>
+                            <input type="text" value="{{ !empty($debit_checkbox) ? count($debit_checkbox) : 0 }}"
+                                disabled
+                                class="w-12 text-center text-gray-500 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <input type="text" value="{{ number_format($selected_debit_amount, 2) }}" readonly
+                                class="w-48 text-right text-gray-500 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+
+                    </div> --}}
+
+                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                    <button type="button" wire:click.prevent="deallocate"
+                        class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600">
+                        Deallocate
+                    </button>
+                </div>
+            @endif
         </div>
 
         @include('ams::include.searchable')

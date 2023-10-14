@@ -21,11 +21,14 @@ class TransactionsAllocation extends Component
     public $first_check, $first_voucher, $unselect_all_debit, $unselect_all_credit;
     public $debit_checkbox = [], $credit_checkbox = [], $selected_debit_amount = 0, $selected_credit_amount = 0;
     public $success;
+    public $type;
+    public $settled_credit, $settled_debit, $settled_data;
 
     protected $rules = [
         'account_name' => 'required',
         'from_date' => 'nullable|date',
-        'to_date' => 'nullable|date'
+        'to_date' => 'nullable|date',
+        'type' => 'required|string',
     ];
     protected $validationAttributes = [
         'account_name' => 'Account Name',
@@ -33,12 +36,14 @@ class TransactionsAllocation extends Component
         'to_date' => 'To Date',
         'debit_checkbox' => 'Debit Amount',
         'credit_checkbox' => 'Credit Amount',
+        'type' => 'Transaction Type',
     ];
 
     public function mount()
     {
         $this->from_date = date('d M Y', strtotime('-1 month'));
         $this->to_date = date('d M Y');
+        $this->type = 'unallocated';
     }
 
     public function updated($key, $val)
@@ -132,6 +137,9 @@ class TransactionsAllocation extends Component
         );
         $this->unsettled_credit = [];
         $this->unsettled_debit = [];
+        $this->settled_credit = [];
+        $this->settled_debit = [];
+        $this->settled_data = [];
 
         try {
             if (auth()->user()->cannot('2.transactions-manual-allocation')) {
@@ -167,10 +175,18 @@ class TransactionsAllocation extends Component
                 }
             }
 
-            $unsettled_credit = Ledger::from('ledgers as l')
+            $status = $this->type == 'unallocated' ? 'f' : 't';
+
+            $credit = Ledger::from('ledgers as l')
                 ->leftjoin('ledger_settlements as ls', 'ls.voucher_no', 'l.voucher_no')
                 ->where('l.account_id', $account_id)
                 ->where('credit', '!=', '0.00')
+                ->when(!empty($this->from_date), function ($q) {
+                    return $q->whereDate('l.posting_date', '>=', date('Y-m-d', strtotime($this->from_date)));
+                })
+                ->when(!empty($this->to_date), function ($q) {
+                    return $q->whereDate('l.posting_date', '<=', date('Y-m-d', strtotime($this->to_date)));
+                })
                 ->select(
                     'l.id',
                     'l.posting_date',
@@ -188,11 +204,17 @@ class TransactionsAllocation extends Component
                 ->groupBy('voucher_no')
                 ->toArray();
 
-            $unsettled_debit = Ledger::from('ledgers as l')
+            $debit = Ledger::from('ledgers as l')
                 ->leftjoin('ledger_settlements as ls', 'ls.ledger_id', 'l.id')
                 ->where('l.account_id', $account_id)
-                ->where('ls.status', 'f')
+                ->where('ls.status', $status)
                 ->where('debit', '!=', '0.00')
+                ->when(!empty($this->from_date), function ($q) {
+                    return $q->whereDate('l.posting_date', '>=', date('Y-m-d', strtotime($this->from_date)));
+                })
+                ->when(!empty($this->to_date), function ($q) {
+                    return $q->whereDate('l.posting_date', '<=', date('Y-m-d', strtotime($this->to_date)));
+                })
                 ->select(
                     'l.id',
                     'l.posting_date',
@@ -210,42 +232,92 @@ class TransactionsAllocation extends Component
                 ->groupBy('ledger_id')
                 ->toArray();
 
-            foreach ($unsettled_credit as $uc) {
-                $total =  $uc[0]['credit'];
-                $paid = collect($uc)->sum('amount');
-                $remaining = $total - $paid;
-                if ($remaining > 0) {
-                    $this->unsettled_credit[] = [
-                        'ledger_settlement_id' => $uc[0]['ledger_settlement_id'],
-                        'ledger_id' => $uc[0]['ledger_id'],
-                        'status' => $uc[0]['status'],
-                        'posting_date' => $uc[0]['posting_date'],
-                        'voucher_no' => $uc[0]['voucher_no'],
-                        'reference' => $uc[0]['reference'],
-                        'credit' => $uc[0]['credit'],
-                        'unallocated' => $remaining,
-                    ];
-                }
+            if ($this->type == 'unallocated') {
+                $this->fetchUnallocated($credit, $debit);
+            } elseif ($this->type == 'allocated') {
+                $this->fetchAllocated($credit, $debit);
             }
-
-            foreach ($unsettled_debit as $ud) {
-                $this->unsettled_debit[] = [
-                    'ledger_settlement_id' => $ud[0]['ledger_settlement_id'],
-                    'ledger_id' => $ud[0]['ledger_id'],
-                    'status' => $ud[0]['status'],
-                    'posting_date' => $ud[0]['posting_date'],
-                    'voucher_no' => $ud[0]['voucher_no'],
-                    'reference' => $ud[0]['reference'],
-                    'debit' => $ud[0]['debit'],
-                    'settled_amount' => collect($ud)->sum('amount'),
-                    'unallocated' => $ud[0]['debit'] - collect($ud)->sum('amount'),
-                ];
-            }
-
-            // dd($this->unsettled_credit, $this->unsettled_debit);
         } catch (\Exception $e) {
             $this->addError('error', $e->getMessage());
         }
+    }
+
+    public function fetchUnallocated($credit, $debit)
+    {
+
+        foreach ($credit as $uc) {
+            $total =  $uc[0]['credit'];
+            $paid = collect($uc)->sum('amount');
+            $remaining = $total - $paid;
+            if ($remaining > 0) {
+                $this->unsettled_credit[] = [
+                    'ledger_settlement_id' => $uc[0]['ledger_settlement_id'],
+                    'ledger_id' => $uc[0]['ledger_id'],
+                    'status' => $uc[0]['status'],
+                    'posting_date' => $uc[0]['posting_date'],
+                    'voucher_no' => $uc[0]['voucher_no'],
+                    'reference' => $uc[0]['reference'],
+                    'credit' => $uc[0]['credit'],
+                    'unallocated' => $remaining,
+                ];
+            }
+        }
+
+        foreach ($debit as $ud) {
+            $this->unsettled_debit[] = [
+                'ledger_settlement_id' => $ud[0]['ledger_settlement_id'],
+                'ledger_id' => $ud[0]['ledger_id'],
+                'status' => $ud[0]['status'],
+                'posting_date' => $ud[0]['posting_date'],
+                'voucher_no' => $ud[0]['voucher_no'],
+                'reference' => $ud[0]['reference'],
+                'debit' => $ud[0]['debit'],
+                'settled_amount' => collect($ud)->sum('amount'),
+                'unallocated' => $ud[0]['debit'] - collect($ud)->sum('amount'),
+            ];
+        }
+    }
+
+    public function fetchAllocated($credit, $debit)
+    {
+        foreach ($credit as $c_key => $uc) {
+            if (!empty($uc[0]['amount'])) {
+                $this->settled_credit[] = [
+                    'ledger_settlement_id' => $uc[0]['ledger_settlement_id'],
+                    'ledger_id' => $uc[0]['ledger_id'],
+                    'status' => $uc[0]['status'],
+                    'posting_date' => $uc[0]['posting_date'],
+                    'voucher_no' => $uc[0]['voucher_no'],
+                    'reference' => $uc[0]['reference'],
+                    'credit' => $uc[0]['credit'],
+                    'allocated' => $uc[0]['amount'],
+                ];
+            }
+        }
+
+        foreach ($debit as $d_key => $ud) {
+            $this->settled_debit[] = [
+                'ledger_settlement_id' => $ud[0]['ledger_settlement_id'],
+                'ledger_id' => $ud[0]['ledger_id'],
+                'status' => $ud[0]['status'],
+                'posting_date' => $ud[0]['posting_date'],
+                'voucher_no' => $ud[0]['voucher_no'],
+                'reference' => $ud[0]['reference'],
+                'debit' => $ud[0]['debit'],
+                'settled_amount' => collect($ud)->sum('amount'),
+                'allocated' => $ud[0]['debit'] - collect($ud)->sum('amount'),
+            ];
+        }
+
+        if (!empty($this->settled_credit) && !empty($this->settled_debit)) {
+            foreach ($this->settled_debit as $data) {
+                $c = $this->settled_credit;
+                $this->settled_data[$data['ledger_id']]['credit'] = $c;
+                $this->settled_data[$data['ledger_id']]['debit'] = $this->settled_debit;
+            }
+        }
+
+        // dd($this->settled_credit, $this->settled_debit, $this->settled_data);
     }
 
     public function allocate()
