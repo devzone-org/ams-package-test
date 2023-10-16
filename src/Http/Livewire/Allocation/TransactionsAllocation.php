@@ -23,6 +23,7 @@ class TransactionsAllocation extends Component
     public $success;
     public $type;
     public $settled_credit, $settled_debit, $settled_data;
+    public $deallocate_checkbox, $unselect_all_deallocate;
 
     protected $rules = [
         'account_name' => 'required',
@@ -37,6 +38,7 @@ class TransactionsAllocation extends Component
         'debit_checkbox' => 'Debit Amount',
         'credit_checkbox' => 'Credit Amount',
         'type' => 'Transaction Type',
+        'unselect_all_deallocate' => 'Allocated Check',
     ];
 
     public function mount()
@@ -114,6 +116,24 @@ class TransactionsAllocation extends Component
                 $this->debit_checkbox = [];
                 $this->selected_debit_amount = 0;
             }
+
+            if ($value['0'] == 'deallocate_checkbox') {
+                if ($val == false) {
+                    unset($this->deallocate_checkbox[$value[1]]);
+                } else {
+                    $this->unselect_all_deallocate = true;
+                }
+
+                if (count($this->deallocate_checkbox) == 0) {
+                    $this->unselect_all_deallocate = false;
+                }
+            }
+
+            if ($key == 'unselect_all_deallocate') {
+                if ($val == false) {
+                    $this->deallocate_checkbox = [];
+                }
+            }
         } catch (\Exception $e) {
             $this->addError('error', $e->getMessage());
         }
@@ -123,7 +143,7 @@ class TransactionsAllocation extends Component
     {
 
         $this->resetErrorBag();
-        $this->success = empty($this->debit_checkbox) ? '' : $this->success;
+        $this->success = empty($this->debit_checkbox) && empty($this->unselect_all_deallocate) ? '' : $this->success;
         $this->validate();
         $this->reset(
             'selected_credit_amount',
@@ -133,7 +153,9 @@ class TransactionsAllocation extends Component
             'unselect_all_credit',
             'unselect_all_debit',
             'first_voucher',
-            'first_check'
+            'first_check',
+            'deallocate_checkbox',
+            'unselect_all_deallocate',
         );
         $this->unsettled_credit = [];
         $this->unsettled_debit = [];
@@ -176,6 +198,7 @@ class TransactionsAllocation extends Component
             }
 
             $status = $this->type == 'unallocated' ? 'f' : 't';
+            $group_by = $this->type == 'unallocated' ? 'voucher_no' : 'ledger_id';
 
             $credit = Ledger::from('ledgers as l')
                 ->leftjoin('ledger_settlements as ls', 'ls.voucher_no', 'l.voucher_no')
@@ -201,7 +224,7 @@ class TransactionsAllocation extends Component
                 )
                 ->orderBy('posting_date', 'asc')
                 ->get()
-                ->groupBy('voucher_no')
+                ->groupBy($group_by)
                 ->toArray();
 
             $debit = Ledger::from('ledgers as l')
@@ -229,7 +252,7 @@ class TransactionsAllocation extends Component
                 )
                 ->orderBy('posting_date', 'asc')
                 ->get()
-                ->groupBy('ledger_id')
+                ->groupBy('id')
                 ->toArray();
 
             if ($this->type == 'unallocated') {
@@ -280,44 +303,46 @@ class TransactionsAllocation extends Component
 
     public function fetchAllocated($credit, $debit)
     {
-        foreach ($credit as $c_key => $uc) {
-            if (!empty($uc[0]['amount'])) {
-                $this->settled_credit[] = [
-                    'ledger_settlement_id' => $uc[0]['ledger_settlement_id'],
-                    'ledger_id' => $uc[0]['ledger_id'],
-                    'status' => $uc[0]['status'],
-                    'posting_date' => $uc[0]['posting_date'],
-                    'voucher_no' => $uc[0]['voucher_no'],
-                    'reference' => $uc[0]['reference'],
-                    'credit' => $uc[0]['credit'],
-                    'allocated' => $uc[0]['amount'],
+        foreach ($credit as $c_key => $data) {
+            foreach ($data as $c_k => $uc) {
+            if (!empty($uc['amount'])) {
+                $this->settled_credit[$c_key][] = [
+                    'ledger_settlement_id' => $uc['ledger_settlement_id'],
+                    'ledger_id' => $uc['ledger_id'],
+                    'status' => $uc['status'],
+                    'credit_posting_date' => $uc['posting_date'],
+                    'voucher_no' => $uc['voucher_no'],
+                    'reference' => $uc['reference'],
+                    'credit_amount' => $uc['credit'],
+                    'allocated' => $uc['amount'],
                 ];
             }
         }
+    }
+
 
         foreach ($debit as $d_key => $ud) {
-            $this->settled_debit[] = [
+            $this->settled_debit[$d_key][] = [
                 'ledger_settlement_id' => $ud[0]['ledger_settlement_id'],
                 'ledger_id' => $ud[0]['ledger_id'],
                 'status' => $ud[0]['status'],
-                'posting_date' => $ud[0]['posting_date'],
+                'debit_posting_date' => $ud[0]['posting_date'],
                 'voucher_no' => $ud[0]['voucher_no'],
                 'reference' => $ud[0]['reference'],
-                'debit' => $ud[0]['debit'],
+                'debit_amount' => $ud[0]['debit'],
                 'settled_amount' => collect($ud)->sum('amount'),
-                'allocated' => $ud[0]['debit'] - collect($ud)->sum('amount'),
+                'unallocated' => $ud[0]['debit'] - collect($ud)->sum('amount'),
             ];
         }
 
         if (!empty($this->settled_credit) && !empty($this->settled_debit)) {
-            foreach ($this->settled_debit as $data) {
-                $c = $this->settled_credit;
-                $this->settled_data[$data['ledger_id']]['credit'] = $c;
-                $this->settled_data[$data['ledger_id']]['debit'] = $this->settled_debit;
+            foreach ($this->settled_debit as $ledger_id => $data) {
+                $c = $this->settled_credit[$ledger_id];
+                $this->settled_data[$ledger_id]['credit'] = $c;
+                $this->settled_data[$ledger_id]['debit'] = $this->settled_debit[$ledger_id];
             }
         }
-
-        // dd($this->settled_credit, $this->settled_debit, $this->settled_data);
+        
     }
 
     public function allocate()
@@ -427,6 +452,46 @@ class TransactionsAllocation extends Component
 
                 DB::commit();
                 $this->success = "Allocation Completed!!!";
+                $this->fetch();
+                optional($lock)->release();
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            optional($lock)->release();
+            $this->addError('error', $e->getMessage());
+        }
+    }
+
+    public function deallocate()
+    {
+        $this->resetErrorBag();
+        $this->success = '';
+        $this->validate(
+            [
+                'unselect_all_deallocate' => 'required',
+            ]
+        );
+
+        $lock = \Cache::lock('Customer' . $this->account_name, 60);
+        try {
+
+            if ($lock->get()) {
+                DB::beginTransaction();
+
+                if (auth()->user()->cannot('2.transactions-manual-allocation')) {
+                    throw new \Exception('You dont have the permission to do that!!!');
+                }
+
+                $deallocate_ledger_ids = array_keys($this->deallocate_checkbox);
+
+                if (empty($deallocate_ledger_ids)) {
+                    throw new \Exception('No transaction is selected to deallocate!!!');
+                }
+
+                LedgerSettlement::whereIn('ledger_id', $deallocate_ledger_ids)->where('status', 't')->delete();
+
+                DB::commit();
+                $this->success = "Deallocation Completed!!!";
                 $this->fetch();
                 optional($lock)->release();
             }
