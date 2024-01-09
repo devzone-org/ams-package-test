@@ -76,7 +76,7 @@
                                     </tr>
                                     </thead>
 
-                                    @if(collect($closing_data)->isNotEmpty())
+                                    @if(!empty($closing_data_array))
                                         <tbody class="bg-white divide-y divide-gray-200  rounded-md">
                                         <tr>
                                             @php
@@ -84,22 +84,22 @@
                                                 $total_debit = 0;
                                             @endphp
                                             <td class="px-6 py-4 text-center text-sm font-medium text-gray-500 border-r border-gray-200">
-                                                @foreach($closing_data->where('type', 'Expenses') as $d)
+                                                @foreach(collect($closing_data_array)->where('type', 'Expenses') as $d)
                                                     @php
-                                                        $debit = ($d->debit - $d->credit);
+                                                        $debit = ($d['debit'] - $d['credit']);
                                                         $total_debit = $total_debit + $debit;
-                                                        $record = $d->name.' - PKR '.number_format($debit,2);
+                                                        $record = $d['name'].' - PKR '.number_format($debit,2);
                                                     @endphp
                                                     {{$record}}
                                                     <br>
                                                 @endforeach
                                             </td>
                                             <td class="px-6 py-4 text-center text-sm font-medium text-gray-500">
-                                                @foreach($closing_data->where('type', 'Income') as $c)
+                                                @foreach(collect($closing_data_array)->where('type', 'Income') as $c)
                                                     @php
-                                                        $credit = ($c->credit - $c->debit);
+                                                        $credit = ($c['credit'] - $c['debit']);
                                                         $total_credit = $total_credit + $credit;
-                                                        $record = $c->name.' - PKR '.number_format($credit,2);
+                                                        $record = $d['name'].' - PKR '.number_format($credit,2);
                                                     @endphp
                                                     {{$record}}
                                                     <br>
