@@ -80,6 +80,7 @@ class ClosingFiscalYear extends Component
         $this->selected_year = collect($this->fiscal_years)->where('year', $this->closing_year)->first();
         $get_previous_year = collect($this->fiscal_years)->where('to', '<', $this->selected_year['to'])->first();
 
+
         if ($get_previous_year != null) {
 
             $exists = ClosingSummaryAccounts::where('fiscal_year', $get_previous_year['year'])->exists();
@@ -89,19 +90,20 @@ class ClosingFiscalYear extends Component
                 throw new \Exception('Fiscal year ' . $get_previous_year['year'] . ' not closed.');
 
             }
-        } else {
-
-            $this->closing_data = Ledger::from('ledgers as l')
-                ->where('l.is_approve', 't')
-                ->join('chart_of_accounts as coa', 'coa.id', 'l.account_id')
-                ->whereIn('coa.type', ['Income', 'Expenses'])
-                ->whereDate('l.posting_date', '>=', $this->selected_year['from'])
-                ->whereDate('l.posting_date', '<=', $this->selected_year['to'])
-                ->selectRaw('sum(l.debit) as debit, sum(l.credit) as credit, coa.name, coa.type , l.account_id')
-                ->orderBy('l.posting_date', 'asc')
-                ->groupBy('l.account_id')
-                ->get();
         }
+
+        $this->closing_data = Ledger::from('ledgers as l')
+            ->where('l.is_approve', 't')
+            ->join('chart_of_accounts as coa', 'coa.id', 'l.account_id')
+            ->whereIn('coa.type', ['Income', 'Expenses'])
+            ->whereDate('l.posting_date', '>=', $this->selected_year['from'])
+            ->whereDate('l.posting_date', '<=', $this->selected_year['to'])
+            ->selectRaw('sum(l.debit) as debit, sum(l.credit) as credit, coa.name, coa.type , l.account_id')
+            ->orderBy('l.posting_date', 'asc')
+            ->groupBy('l.account_id')
+            ->get();
+
+
     }
 
     public function getAndUpdateVoucher()
@@ -128,6 +130,7 @@ class ClosingFiscalYear extends Component
         try {
 
             $this->checkAndGetRecord();
+
             $this->success = 'Successfully loaded closing summary A/C.';
 
         } catch (\Exception $ex) {
@@ -145,73 +148,73 @@ class ClosingFiscalYear extends Component
 
             $this->checkAndGetRecord();
 
-                DB::beginTransaction();
+            DB::beginTransaction();
 
-                $debit_voucher_id = $this->getAndUpdateVoucher();
-                $credit_voucher_id = $this->getAndUpdateVoucher();
-                $equity_voucher_id = $this->getAndUpdateVoucher();
+            $debit_voucher_id = $this->getAndUpdateVoucher();
+            $credit_voucher_id = $this->getAndUpdateVoucher();
+            $equity_voucher_id = $this->getAndUpdateVoucher();
 
-                foreach ($this->closing_data as $data) {
+            foreach ($this->closing_data as $data) {
 
-                    $this->closingSummaryAccount($data, ['dvid' => $debit_voucher_id, 'cvid' => $credit_voucher_id], $this->selected_year);
+                $this->closingSummaryAccount($data, ['dvid' => $debit_voucher_id, 'cvid' => $credit_voucher_id], $this->selected_year);
 
-                    $debit = 0;
-                    $credit = 0;
+                $debit = 0;
+                $credit = 0;
 
-                    if ($data->type == 'Expenses') {
+                if ($data->type == 'Expenses') {
 
-                        $debit = $data->debit - $data->credit;
-                        $voucher_id = $debit_voucher_id;
+                    $debit = $data->debit - $data->credit;
+                    $voucher_id = $debit_voucher_id;
 
-                    } elseif ($data->type == 'Income') {
+                } elseif ($data->type == 'Income') {
 
-                        $credit = $data->credit - $data->debit;
-                        $voucher_id = $credit_voucher_id;
-
-                    }
-
-                    Ledger::create([
-                        'account_id' => $data->account_id,
-                        'voucher_no' => $voucher_id,
-                        'type' => $data->type,
-                        'debit' => $debit,
-                        'credit' => $credit,
-                        'description' => 'Fiscal Year  ' . $this->selected_year['year'] . ' Closed to Summary Account.',
-                        'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
-                        'posted_by' => \Auth::user()->id,
-                        'is_approve' => 't',
-                        'approved_at' => date('Y-m-d'),
-                        'approved_by' => \Auth::user()->id
-                    ]);
-                }
-
-                $details = $this->closingEquityEntries($this->closing_data);
-                $coa = ChartOfAccount::where('type', 'Equity')
-                    ->where('level', '5')
-                    ->where('is_contra', 'f')
-                    ->get();
-
-                $total_partner = $coa->count();
-
-                foreach ($coa as $data) {
-
-                    Ledger::create([
-                        'account_id' => $data->id,
-                        'voucher_no' => $equity_voucher_id,
-                        'type' => $data->type,
-                        'debit' => $details['debit'] > 0 ? ($details['debit'] / $total_partner) : 0,
-                        'credit' => $details['credit'] > 0 ? ($details['credit'] / $total_partner) : 0,
-                        'description' => 'Fiscal Year  ' . $this->selected_year['year'] . ' Closed to Summary Account.',
-                        'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
-                        'posted_by' => \Auth::user()->id,
-                        'is_approve' => 't',
-                        'approved_at' => date('Y-m-d'),
-                        'approved_by' => \Auth::user()->id
-                    ]);
+                    $credit = $data->credit - $data->debit;
+                    $voucher_id = $credit_voucher_id;
 
                 }
 
-                DB::commit();
+                Ledger::create([
+                    'account_id' => $data->account_id,
+                    'voucher_no' => $voucher_id,
+                    'type' => $data->type,
+                    'debit' => $debit,
+                    'credit' => $credit,
+                    'description' => 'Fiscal Year  ' . $this->selected_year['year'] . ' Closed to Summary Account.',
+                    'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
+                    'posted_by' => \Auth::user()->id,
+                    'is_approve' => 't',
+                    'approved_at' => date('Y-m-d'),
+                    'approved_by' => \Auth::user()->id
+                ]);
+            }
+
+            $details = $this->closingEquityEntries($this->closing_data);
+            $coa = ChartOfAccount::where('type', 'Equity')
+                ->where('level', '5')
+                ->where('is_contra', 'f')
+                ->get();
+
+            $total_partner = $coa->count();
+
+            foreach ($coa as $data) {
+
+                Ledger::create([
+                    'account_id' => $data->id,
+                    'voucher_no' => $equity_voucher_id,
+                    'type' => $data->type,
+                    'debit' => $details['debit'] > 0 ? ($details['debit'] / $total_partner) : 0,
+                    'credit' => $details['credit'] > 0 ? ($details['credit'] / $total_partner) : 0,
+                    'description' => 'Fiscal Year  ' . $this->selected_year['year'] . ' Closed to Summary Account.',
+                    'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
+                    'posted_by' => \Auth::user()->id,
+                    'is_approve' => 't',
+                    'approved_at' => date('Y-m-d'),
+                    'approved_by' => \Auth::user()->id
+                ]);
+
+            }
+
+            DB::commit();
 
             $this->success = 'Fiscal Year  ' . $this->selected_year['year'] . ' has been closed successfully.';
             $this->closing_data = null;

@@ -1,6 +1,6 @@
 @extends('ams::layouts.master')
 
-@section('title') Profit and Loss Report @endsection
+@section('title') Profit and Loss - Periodic Report @endsection
 
 @section('content')
 

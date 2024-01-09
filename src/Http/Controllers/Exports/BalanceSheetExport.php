@@ -137,6 +137,31 @@ class BalanceSheetExport
 
             ];
             foreach ($lvl3 as $l3) {
+                $l3_balance = '';
+
+                if ($type == 'Assets') {
+                    if (auth()->user()->cannot('2.hide-assets')) {
+                        $l3_balance = number_format($l3['balance'], 2);
+                    }
+                } elseif ($type == 'Liabilities') {
+                    if (auth()->user()->cannot('2.hide-liabilities')) {
+                        $l3_balance = number_format($l3['balance'], 2);
+                    }
+                } elseif ($type == 'Equity') {
+                    if (auth()->user()->cannot('2.hide-equity')) {
+                        $l3_balance = number_format($l3['balance'], 2);
+                    }
+                } elseif ($type == 'Income') {
+                    if (auth()->user()->cannot('2.hide-income')) {
+                        $l3_balance = number_format($l3['balance'], 2);
+                    }
+                } elseif ($type == 'Expenses') {
+                    if (auth()->user()->cannot('2.hide-expenses')) {
+                        $l3_balance = number_format($l3['balance'], 2);
+                    }
+                } else {
+                    $l3_balance = number_format($l3['balance'], 2);
+                }
 
                 $data[] = [
                     '1' => null,
@@ -145,13 +170,39 @@ class BalanceSheetExport
                     '4' => null,
                     '5' => null,
                     '6' => null,
-                    'balance' => number_format($l3['balance'], 2),
-
+                    'balance' => $l3_balance,
 
 
                 ];
 
+
                 foreach (collect($level4)->where('sub_account', $l3['id']) as $l4) {
+
+                    $l4_balance = '';
+
+                    if ($type == 'Assets') {
+                        if (auth()->user()->cannot('2.hide-assets')) {
+                            $l4_balance = number_format($l4['balance'], 2);
+                        }
+                    } elseif ($type == 'Liabilities') {
+                        if (auth()->user()->cannot('2.hide-liabilities')) {
+                            $l4_balance = number_format($l4['balance'], 2);
+                        }
+                    } elseif ($type == 'Equity') {
+                        if (auth()->user()->cannot('2.hide-equity')) {
+                            $l4_balance = number_format($l4['balance'], 2);
+                        }
+                    } elseif ($type == 'Income') {
+                        if (auth()->user()->cannot('2.hide-income')) {
+                            $l4_balance = number_format($l4['balance'], 2);
+                        }
+                    } elseif ($type == 'Expenses') {
+                        if (auth()->user()->cannot('2.hide-expenses')) {
+                            $l4_balance = number_format($l4['balance'], 2);
+                        }
+                    } else {
+                        $l4_balance = number_format($l4['balance'], 2);
+                    }
                     $data[] = [
                         '1' => null,
                         '2' => null,
@@ -159,22 +210,71 @@ class BalanceSheetExport
                         '4' => null,
                         '5' => null,
                         '6' => null,
-                        'balance' => number_format($l4['balance'], 2),
+                        'balance' => $l4_balance,
 
                     ];
-
                     foreach (collect($level5)->where('sub_account', $l4['id']) as $l5) {
+                        $l5_balance = '';
+
+                        if ($type == 'Assets') {
+                            if (auth()->user()->cannot('2.hide-assets')) {
+                                $l5_balance = number_format($l5['balance'], 2);
+                            }
+                        } elseif ($type == 'Liabilities') {
+                            if (auth()->user()->cannot('2.hide-liabilities')) {
+                                $l5_balance = number_format($l5['balance'], 2);
+                            }
+                        } elseif ($type == 'Equity') {
+                            if (auth()->user()->cannot('2.hide-equity')) {
+                                $l5_balance = number_format($l5['balance'], 2);
+                            }
+                        } elseif ($type == 'Income') {
+                            if (auth()->user()->cannot('2.hide-income')) {
+                                $l5_balance = number_format($l5['balance'], 2);
+                            }
+                        } elseif ($type == 'Expenses') {
+                            if (auth()->user()->cannot('2.hide-expenses')) {
+                                $l5_balance = number_format($l5['balance'], 2);
+                            }
+                        } else {
+                            $l5_balance = number_format($l5['balance'], 2);
+                        }
                         $data[] = [
                             '1' => null,
                             '2' => null,
                             '3' => null,
                             'name' => $l5['name'],
                             '5' => null,
-                            'balance' => number_format($l5['balance'], 2),
+                            'balance' => $l5_balance,
                             '7' => null,
                         ];
                     }
                 }
+            }
+            $type_total = '';
+
+            if ($type == 'Assets') {
+                if (auth()->user()->cannot('2.hide-assets')) {
+                    $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
+                }
+            } elseif ($type == 'Liabilities') {
+                if (auth()->user()->cannot('2.hide-liabilities')) {
+                    $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
+                }
+            } elseif ($type == 'Equity') {
+                if (auth()->user()->cannot('2.hide-equity')) {
+                    $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
+                }
+            } elseif ($type == 'Income') {
+                if (auth()->user()->cannot('2.hide-income')) {
+                    $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
+                }
+            } elseif ($type == 'Expenses') {
+                if (auth()->user()->cannot('2.hide-expenses')) {
+                    $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
+                }
+            } else {
+                $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
             }
 
             $data[] = [
@@ -184,7 +284,7 @@ class BalanceSheetExport
                 '4' => null,
                 '5' => null,
                 '6' => null,
-                'balance' => number_format(collect($level3)->where('type', $type)->sum('balance')),
+                'balance' => $type_total,
 
 
             ];
@@ -204,7 +304,14 @@ class BalanceSheetExport
         $liabilities = collect($level3)->where('type', 'Liabilities')->sum('balance');
         $equity = collect($level3)->where('type', 'Equity')->sum('balance');
         $total = $liabilities + $equity;
+        $equity_and_liabilities = '';
 
+        if(auth()->user()->cannot('2.hide-liabilities')){
+            if(auth()->user()->cannot('2.hide-equity'))
+            {
+                $equity_and_liabilities = number_format($total, 2);
+            }
+        }
         $data[] = [
             'name' => ' Total Liabilities & Equity ',
             '2' => null,
@@ -212,15 +319,16 @@ class BalanceSheetExport
             '4' => null,
             '5' => null,
             '6' => null,
-            'balance' => number_format($total, 2),
+            'balance' => $equity_and_liabilities,
 
 
         ];
 
 
+
         $csv = Writer::createFromFileObject(new SplTempFileObject());
 
-        $csv->insertOne(['Name','', '','','','PKR', 'PKR']);
+        $csv->insertOne(['Name', '', '', '', '', 'PKR', 'PKR']);
 
         $csv->insertAll($data);
 

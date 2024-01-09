@@ -58,23 +58,78 @@ class CoaExportController
         foreach ($sth->where('level', 1) as $one) {
 
 
-            foreach($sth->where('sub_account',$one->id) as $two){
-                foreach($sth->where('sub_account',$two->id) as $three){
-                    foreach($sth->where('sub_account',$three->id) as $four){
-                        foreach($sth->where('sub_account',$four->id) as $five){
+            foreach ($sth->where('sub_account', $one->id) as $two) {
+                foreach ($sth->where('sub_account', $two->id) as $three) {
+                    foreach ($sth->where('sub_account', $three->id) as $four) {
+                        foreach ($sth->where('sub_account', $four->id) as $five) {
+                            $bal = '';
+                            if ($one->name == 'Assets') {
+                                if (auth()->user()->cannot('2.hide-assets')) {
+                                    $clo = $this->closingBalance($five['nature'], $five['is_contra'], $five['debit'], $five['credit']);
+                                    if ($clo < 0) {
+                                        $bal = number_format($clo, 2);
+                                    } else {
+                                        $bal = number_format($clo, 2);
+                                    }
+                                }
+                            } elseif ($one->name == 'Liabilities') {
+                                if (auth()->user()->cannot('2.hide-liabilities')) {
 
-                            $clo =  $this->closingBalance($five['nature'], $five['is_contra'], $five['debit'], $five['credit']);
-                            if ($clo < 0) {
-                                $bal= number_format($clo, 2 );
+                                    $clo = $this->closingBalance($five['nature'], $five['is_contra'], $five['debit'], $five['credit']);
+                                    if ($clo < 0) {
+                                        $bal = number_format($clo, 2);
+                                    } else {
+                                        $bal = number_format($clo, 2);
+                                    }
+                                }
+                            } elseif ($one->name == 'Equity') {
+                                if (auth()->user()->cannot('2.hide-equity')) {
+                                    $clo = $this->closingBalance($five['nature'], $five['is_contra'], $five['debit'], $five['credit']);
+                                    if ($clo < 0) {
+                                        $bal = number_format($clo, 2);
+                                    } else {
+                                        $bal = number_format($clo, 2);
+                                    }
+                                }
+                            } elseif ($one->name == 'Income') {
+                                if (auth()->user()->cannot('2.hide-income')) {
+                                    $clo = $this->closingBalance($five['nature'], $five['is_contra'], $five['debit'], $five['credit']);
+                                    if ($clo < 0) {
+                                        $bal = number_format($clo, 2);
+                                    } else {
+                                        $bal = number_format($clo, 2);
+                                    }
+                                }
+                            } elseif ($one->name == 'Expenses') {
+                                if (auth()->user()->cannot('2.hide-expenses')) {
+                                    $clo = $this->closingBalance($five['nature'], $five['is_contra'], $five['debit'], $five['credit']);
+                                    if ($clo < 0) {
+                                        $bal = number_format($clo, 2);
+                                    } else {
+                                        $bal = number_format($clo, 2);
+                                    }
+                                }
                             } else {
-                                $bal = number_format($clo, 2);
+                                $clo = $this->closingBalance($five['nature'], $five['is_contra'], $five['debit'], $five['credit']);
+                                if ($clo < 0) {
+                                    $bal = number_format($clo, 2);
+                                } else {
+                                    $bal = number_format($clo, 2);
+                                }
                             }
+
+//                            $clo =  $this->closingBalance($five['nature'], $five['is_contra'], $five['debit'], $five['credit']);
+//                            if ($clo < 0) {
+//                                $bal= number_format($clo, 2 );
+//                            } else {
+//                                $bal = number_format($clo, 2);
+//                            }
 
                             $data [] = [
                                 'name' => $five['name'],
-                                'code' => str_pad($five['code'],7,"0",STR_PAD_LEFT),
+                                'code' => str_pad($five['code'], 7, "0", STR_PAD_LEFT),
                                 'balance' => $bal,
-                                'date' => !empty($five['posting_date']) ? date('d M, Y',strtotime($five['posting_date'])) : ''
+                                'date' => !empty($five['posting_date']) ? date('d M, Y', strtotime($five['posting_date'])) : ''
 
                             ];
 
