@@ -174,7 +174,7 @@ class ClosingFiscalYear extends Component
                     'type' => $data->type,
                     'debit' => $debit,
                     'credit' => $credit,
-                    'description' => 'Fiscal Year  ' . $this->selected_year['year'] . ' Closed to Summary Account.',
+                    'description' => 'Fiscal Year ' . $this->selected_year['year'] . ' Closed to Summary Account.',
                     'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
                     'posted_by' => \Auth::user()->id,
                     'is_approve' => 't',
@@ -199,7 +199,7 @@ class ClosingFiscalYear extends Component
                     'type' => $data->type,
                     'debit' => $details['debit'] > 0 ? ($details['debit'] / $total_partner) : 0,
                     'credit' => $details['credit'] > 0 ? ($details['credit'] / $total_partner) : 0,
-                    'description' => 'Fiscal Year  ' . $this->selected_year['year'] . ' Closed to Summary Account.',
+                    'description' => 'Fiscal Year ' . $this->selected_year['year'] . ' Closed to Summary Account.',
                     'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
                     'posted_by' => \Auth::user()->id,
                     'is_approve' => 't',
@@ -210,8 +210,9 @@ class ClosingFiscalYear extends Component
 
             DB::commit();
 
-            $this->success = 'Fiscal Year  ' . $this->selected_year['year'] . ' has been closed successfully.';
+            $this->success = 'Fiscal Year ' . $this->selected_year['year'] . ' has been closed successfully.';
             $this->closing_data = null;
+            $this->closing_data_array = null;
 
             unset($this->closing_year, $this->entries_confirm, $this->agree_confirm);
         } catch (\Exception $ex) {
@@ -244,7 +245,7 @@ class ClosingFiscalYear extends Component
             'debit' => $debit ?? 0,
             'credit' => $credit ?? 0,
             'posting_date' => date('Y-m-d', strtotime($year['to'])),
-            'description' => 'Fiscal Year  ' . $year['year'] . ' Closed to Summary Account.',
+            'description' => 'Fiscal Year ' . $year['year'] . ' Closed to Summary Account.',
             'posted_by' => \Auth::user()->id
         ]);
     }
