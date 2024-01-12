@@ -16,7 +16,7 @@ class ClosingFiscalYear extends Component
     public $selected_year;
     public $entries_confirm, $agree_confirm;
     public $success;
-    public $closing_data;
+    public $closing_data, $closing_data_array;
     public $fiscal_years = [];
     public $summary_account;
 
@@ -72,7 +72,6 @@ class ClosingFiscalYear extends Component
         } catch (\Exception $ex) {
             $this->addError('error', $ex->getMessage());
         }
-
     }
 
     public function checkAndGetRecord()
@@ -88,7 +87,6 @@ class ClosingFiscalYear extends Component
             if (!$exists) {
 
                 throw new \Exception('Fiscal year ' . $get_previous_year['year'] . ' not closed.');
-
             }
         }
 
@@ -103,7 +101,7 @@ class ClosingFiscalYear extends Component
             ->groupBy('l.account_id')
             ->get();
 
-
+        $this->closing_data_array = $this->closing_data->toArray();
     }
 
     public function getAndUpdateVoucher()
@@ -132,7 +130,6 @@ class ClosingFiscalYear extends Component
             $this->checkAndGetRecord();
 
             $this->success = 'Successfully loaded closing summary A/C.';
-
         } catch (\Exception $ex) {
             $this->addError('error', $ex->getMessage());
         }
@@ -170,7 +167,6 @@ class ClosingFiscalYear extends Component
                         $debit = $temp_1;
                     }
                     $voucher_id = $debit_voucher_id;
-
                 } elseif ($data->type == 'Income') {
 
                     $temp_2 = $data->credit - $data->debit;
@@ -181,7 +177,6 @@ class ClosingFiscalYear extends Component
                     }
 
                     $voucher_id = $credit_voucher_id;
-
                 }
 
                 Ledger::create([
@@ -190,7 +185,7 @@ class ClosingFiscalYear extends Component
                     'type' => $data->type,
                     'debit' => $debit,
                     'credit' => $credit,
-                    'description' => 'Fiscal Year  ' . $this->selected_year['year'] . ' Closed to Summary Account.',
+                    'description' => 'Fiscal Year ' . $this->selected_year['year'] . ' Closed to Summary Account.',
                     'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
                     'posted_by' => \Auth::user()->id,
                     'is_approve' => 't',
@@ -215,30 +210,27 @@ class ClosingFiscalYear extends Component
                     'type' => $data->type,
                     'debit' => $details['debit'] > 0 ? ($details['debit'] / $total_partner) : 0,
                     'credit' => $details['credit'] > 0 ? ($details['credit'] / $total_partner) : 0,
-                    'description' => 'Fiscal Year  ' . $this->selected_year['year'] . ' Closed to Summary Account.',
+                    'description' => 'Fiscal Year ' . $this->selected_year['year'] . ' Closed to Summary Account.',
                     'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
                     'posted_by' => \Auth::user()->id,
                     'is_approve' => 't',
                     'approved_at' => date('Y-m-d'),
                     'approved_by' => \Auth::user()->id
                 ]);
-
             }
 
             DB::commit();
 
-            $this->success = 'Fiscal Year  ' . $this->selected_year['year'] . ' has been closed successfully.';
+            $this->success = 'Fiscal Year ' . $this->selected_year['year'] . ' has been closed successfully.';
             $this->closing_data = null;
+            $this->closing_data_array = null;
 
             unset($this->closing_year, $this->entries_confirm, $this->agree_confirm);
-
-
         } catch (\Exception $ex) {
 
             DB::rollBack();
             $this->addError('error', $ex->getMessage() . 'Unable to close fiscal year.');
         }
-
     }
 
     public function closingSummaryAccount($data, $voucher_id, $year)
@@ -255,7 +247,6 @@ class ClosingFiscalYear extends Component
                 $debit = $temp_1;
             }
             $voucher_id = $voucher_id['dvid'];
-
         } elseif ($data->type == 'Income') {
 
             $temp_2 = $data->credit - $data->debit;
@@ -265,7 +256,6 @@ class ClosingFiscalYear extends Component
                 $credit = $temp_2;
             }
             $voucher_id = $voucher_id['cvid'];
-
         }
 
         ClosingSummaryAccounts::create([
@@ -276,7 +266,7 @@ class ClosingFiscalYear extends Component
             'debit' => $debit ?? 0,
             'credit' => $credit ?? 0,
             'posting_date' => date('Y-m-d', strtotime($year['to'])),
-            'description' => 'Fiscal Year  ' . $year['year'] . ' Closed to Summary Account.',
+            'description' => 'Fiscal Year ' . $year['year'] . ' Closed to Summary Account.',
             'posted_by' => \Auth::user()->id
         ]);
     }
