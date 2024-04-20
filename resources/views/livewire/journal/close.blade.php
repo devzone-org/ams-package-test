@@ -154,7 +154,7 @@
                                                 <td class="px-6 py-4 text-center border-right-0 text-muted">
                                                     @if(!empty($opening_balance))
                                                         <div class="">
-                                                            PKR {{ number_format($opening_balance) }}
+                                                            {{ env('CURRENCY','PKR') }} {{ number_format($opening_balance) }}
                                                         </div>
                                                         <div class="">
                                                             as at {{ date('d M, Y',strtotime($opening_balance_date)) }}
@@ -174,7 +174,7 @@
                                                 @endforeach
                                                 <td class="px-6 py-4 text-center border-left-0 text-muted">
                                                     <div class="">
-                                                        PKR {{number_format(collect($closing_balance)->sum('balance') + $opening_balance)}}
+                                                        {{ env('CURRENCY','PKR') }} {{number_format(collect($closing_balance)->sum('balance') + $opening_balance)}}
                                                     </div>
                                                     <div class="">
                                                         as at {{ date('d M, Y') }}
@@ -248,7 +248,7 @@
                                                     CB System Cash
                                                 </th>
                                                 <th class="px-6 py-2 border-left-0 bg-white">
-                                                    PKR {{number_format(collect($closing_balance)->sum('balance') + $opening_balance,2)}}
+                                                    {{ env('CURRENCY','PKR') }} {{number_format(collect($closing_balance)->sum('balance') + $opening_balance,2)}}
                                                 </th>
                                             </tr>
 
@@ -257,7 +257,7 @@
                                                     DC Physical Cash
                                                 </th>
                                                 <th class="px-6 py-2 border-left-0 bg-white">
-                                                    PKR {{number_format(collect($denomination_counting)->sum('total'),2)}}
+                                                    {{ env('CURRENCY','PKR') }} {{number_format(collect($denomination_counting)->sum('total'),2)}}
                                                 </th>
                                             </tr>
                                             @if(!empty($difference))
@@ -271,7 +271,7 @@
                                                         @endif
                                                     </th>
                                                     <th class="px-6 py-2 border-left-0 bg-white">
-                                                        PKR {{number_format(abs(collect($closing_balance)->sum('balance') + $opening_balance - collect($denomination_counting)->sum('total')),2)}}
+                                                        {{ env('CURRENCY','PKR') }} {{number_format(abs(collect($closing_balance)->sum('balance') + $opening_balance - collect($denomination_counting)->sum('total')),2)}}
                                                     </th>
                                                 </tr>
 
@@ -281,7 +281,7 @@
                                                         Adjustment
                                                     </th>
                                                     <th class="px-6 py-2 border-left-0 bg-white">
-                                                        PKR
+                                                        {{ env('CURRENCY','PKR') }}
                                                         @if($difference > 0)
                                                             {{ number_format($difference,2) }}
                                                         @else
@@ -411,7 +411,7 @@
                     <div class="modal-body" id="std_form">
                         <div class="p-4">
                             Are you sure you want to transfer
-                            PKR {{ number_format(collect($denomination_counting)->sum('total') - $retained_cash ,2) }}
+                            {{ env('CURRENCY','PKR') }} {{ number_format(collect($denomination_counting)->sum('total') - $retained_cash ,2) }}
                             to {{ collect($transfers)->firstWhere('id',$transfer_id)['name'] ?? '' }}
                             from {{ $current_user['name'] ?? '' }}
                             <br>
@@ -612,7 +612,7 @@
                         <td class="px-6 py-4 text-center text-sm  text-gray-500">
                             @if(!empty($opening_balance))
                                 <div class="text-sm">
-                                    PKR {{ number_format($opening_balance) }}
+                                    {{ env('CURRENCY','PKR') }} {{ number_format($opening_balance) }}
                                 </div>
                                 <div class="text-sm text-gray-500">
                                     as at {{ date('d M, Y',strtotime($opening_balance_date)) }}
@@ -632,7 +632,7 @@
                         @endforeach
                         <td class="px-6 py-4 text-center text-sm text-gray-500">
                             <div class="text-sm">
-                                PKR {{number_format(collect($closing_balance)->sum('balance') + $opening_balance)}}
+                                {{ env('CURRENCY','PKR') }} {{number_format(collect($closing_balance)->sum('balance') + $opening_balance)}}
                             </div>
                             <div class="text-sm text-gray-500">
                                 as at {{ date('d M, Y') }}
@@ -709,7 +709,7 @@
                                     CB System Cash
                                 </td>
                                 <td class="  px-6 py-2 font-medium   text-lg text-gray-900">
-                                    PKR {{number_format(collect($closing_balance)->sum('balance') + $opening_balance,2)}}
+                                    {{ env('CURRENCY','PKR') }} {{number_format(collect($closing_balance)->sum('balance') + $opening_balance,2)}}
                                 </td>
                             </tr>
 
@@ -718,7 +718,7 @@
                                     DC Physical Cash
                                 </td>
                                 <td class="  px-6 py-2 font-medium   text-lg text-gray-900">
-                                    PKR {{number_format(collect($denomination_counting)->sum('total'),2)}}
+                                    {{ env('CURRENCY','PKR') }} {{number_format(collect($denomination_counting)->sum('total'),2)}}
                                 </td>
                             </tr>
                             @if(!empty($difference))
@@ -732,7 +732,7 @@
                                         @endif
                                     </td>
                                     <td class="  px-6 py-2 font-medium    text-lg text-gray-900">
-                                        PKR {{number_format(abs(collect($closing_balance)->sum('balance') + $opening_balance - collect($denomination_counting)->sum('total')),2)}}
+                                        {{ env('CURRENCY','PKR') }} {{number_format(abs(collect($closing_balance)->sum('balance') + $opening_balance - collect($denomination_counting)->sum('total')),2)}}
                                     </td>
                                 </tr>
 
@@ -743,7 +743,7 @@
 
                                     </td>
                                     <td class="  px-6 py-2 font-medium    text-lg text-gray-900">
-                                        PKR
+                                        {{ env('CURRENCY','PKR') }}
                                         @if($difference > 0)
                                             {{ number_format($difference,2) }}
                                         @else
@@ -893,7 +893,7 @@
 
                     <div class="p-4">
                         Are you sure you want to transfer
-                        PKR {{ number_format(collect($denomination_counting)->sum('total') - $retained_cash ,2) }}
+                        {{ env('CURRENCY','PKR') }} {{ number_format(collect($denomination_counting)->sum('total') - $retained_cash ,2) }}
                         to {{ collect($transfers)->firstWhere('id',$transfer_id)['name'] ?? '' }}
                         from {{ $current_user['name'] ?? '' }}
                         <br>

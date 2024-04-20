@@ -160,11 +160,23 @@ class ClosingFiscalYear extends Component
 
                 if ($data->type == 'Expenses') {
 
-                    $debit = $data->debit - $data->credit;
+                    $temp_1 = $data->debit - $data->credit;
+                    if ($temp_1 > 0) {
+                        $credit = $temp_1;
+                    } else {
+                        $debit = $temp_1;
+                    }
                     $voucher_id = $debit_voucher_id;
                 } elseif ($data->type == 'Income') {
+ 
+                    $temp_2 = $data->credit - $data->debit;
+                    if ($temp_2 > 0) {
+                        $debit = $temp_2;
+                    } else {
+                        $credit = $temp_2;
+                    }
 
-                    $credit = $data->credit - $data->debit;
+ 
                     $voucher_id = $credit_voucher_id;
                 }
 
@@ -229,11 +241,21 @@ class ClosingFiscalYear extends Component
 
         if ($data->type == 'Expenses') {
 
-            $debit = $data->debit - $data->credit;
+            $temp_1 = $data->debit - $data->credit;
+            if ($temp_1 > 0) {
+                $credit = $temp_1;
+            } else {
+                $debit = $temp_1;
+            }
             $voucher_id = $voucher_id['dvid'];
         } elseif ($data->type == 'Income') {
 
-            $credit = $data->credit - $data->debit;
+            $temp_2 = $data->credit - $data->debit;
+            if ($temp_2 > 0) {
+                $debit = $temp_2;
+            } else {
+                $credit = $temp_2;
+            }
             $voucher_id = $voucher_id['cvid'];
         }
 

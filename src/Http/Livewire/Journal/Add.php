@@ -53,8 +53,8 @@ class Add extends Component
 
     public function mount()
     {
-        $this->account_list = ChartOfAccount::where('level', 5)->orderBy('type')->get()->toArray();
-        $this->accounts = $this->account_list;
+//        $this->account_list = ChartOfAccount::where('level', 5)->orderBy('type')->get()->toArray();
+//        $this->accounts = $this->account_list;
         $temp_entries = $this->getTempEntries();
 
 
@@ -160,7 +160,7 @@ class Add extends Component
         $this->search_accounts_modal = false;
 
         $this->search_accounts = '';
-        $this->entries[$this->key_id]['description'] = $this->entries[0]['description'];
+//        $this->entries[$this->key_id]['description'] = $this->entries[0]['description'];
         if(env('AMS_BOOTSTRAP') == 'true'){
             $this->dispatchBrowserEvent('close-modal');
         }
@@ -176,11 +176,12 @@ class Add extends Component
                     ->orWhere('code', 'LIKE', '%' . $value . '%')
                     ->orWhere('type', 'LIKE', '%' . $value . '%');
             })->where('level', '5')->where('status', 't')
+                ->limit(10)
                 ->get();
             if ($accounts->isNotEmpty()) {
                 $this->accounts = $accounts->toArray();
             } else {
-                $this->accounts = $this->account_list;
+                $this->accounts = [];
             }
         } else {
             $this->accounts = [];

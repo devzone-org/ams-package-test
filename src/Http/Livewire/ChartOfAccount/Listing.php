@@ -11,6 +11,7 @@ class Listing extends Component
     public $type;
     public $confirm;
     public $primary_id;
+    public $zero_balance_accounts = false;
 
     public function render()
     {
@@ -20,8 +21,13 @@ class Listing extends Component
             })
             ->when(!empty($this->type), function ($q) {
                 return $q->where('coa.type', $this->type);
-            })->select('coa.*', DB::raw('SUM(l.debit) as debit'), DB::raw('SUM(l.credit) as credit'),
-                DB::raw('max(l.posting_date) as posting_date'))
+            })
+            ->select(
+                'coa.*',
+                DB::raw('SUM(l.debit) as debit'),
+                DB::raw('SUM(l.credit) as credit'),
+                DB::raw('max(l.posting_date) as posting_date')
+            )
             ->groupBy('coa.id')
             ->orderByRaw('FIELD(coa.type,"Assets","Liabilities","Equity","Income","Expenses")')
             ->get();
@@ -47,7 +53,6 @@ class Listing extends Component
         if (env('AMS_BOOTSTRAP') == 'true') {
             $this->dispatchBrowserEvent('close-confirmation-modal');
         }
-
     }
 
     public function changeStatus($id)
@@ -57,7 +62,5 @@ class Listing extends Component
         if (env('AMS_BOOTSTRAP') == 'true') {
             $this->dispatchBrowserEvent('open-confirmation-modal');
         }
-
-
     }
 }

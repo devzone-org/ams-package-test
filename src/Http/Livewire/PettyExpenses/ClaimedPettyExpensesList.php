@@ -207,7 +207,7 @@ class ClaimedPettyExpensesList extends Component
                         throw new \Exception('Expense Head Account Not Found.');
                     }
 
-                    $desc = 'Petty Payment of Amount PKR ' . $amount . '/- approved by ' . auth()->user()->name . ' at ' . date('d M, Y h:ia', strtotime(Carbon::now()->toDateTimeString())) . '
+                    $desc = 'Petty Payment of Amount ' . env('CURRENCY','PKR') . ' ' . $amount . '/- approved by ' . auth()->user()->name . ' at ' . date('d M, Y h:ia', strtotime(Carbon::now()->toDateTimeString())) . '
                 against Voucher# ' . $vno . ' To ' . $expense_head['name'] . '.';
 
                     GeneralJournal::instance()->account($account_id)->credit($amount)->voucherNo($vno)
