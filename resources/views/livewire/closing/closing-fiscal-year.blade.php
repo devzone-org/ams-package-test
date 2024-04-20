@@ -78,53 +78,55 @@
                                             </th>
                                         </tr>
                                     </thead>
-
-                                    @if (!empty($closing_data_array))
+ 
+                                    @if(!empty($closing_data_array))
                                         <tbody class="bg-white divide-y divide-gray-200  rounded-md">
-                                            <tr>
-                                                @php
-                                                    $total_credit = 0;
-                                                    $total_debit = 0;
-                                                @endphp
-                                                <td
-                                                    class="px-6 py-4 text-center text-sm font-medium text-gray-500 border-r border-gray-200">
-                                                    @foreach (collect($closing_data_array)->where('type', 'Expenses')->toArray() as $d)
-                                                        @php
-                                                            $debit = $d['debit'] - $d['credit'];
-                                                            $total_debit = $total_debit + $debit;
-                                                            $record = $d['name'] . ' - ' . env('CURRENCY', 'PKR') . ' ' . number_format($debit, 2);
-                                                        @endphp
-                                                        {{ $record }}
-                                                        <br>
-                                                    @endforeach
-                                                </td>
-                                                <td class="px-6 py-4 text-center text-sm font-medium text-gray-500">
-                                                    @foreach (collect($closing_data_array)->where('type', 'Income')->toArray() as $c)
-                                                        @php
-                                                            $credit = $c['credit'] - $c['debit'];
-                                                            $total_credit = $total_credit + $credit;
-                                                            $record = $c['name'] . ' - ' . env('CURRENCY', 'PKR') . ' ' . number_format($credit, 2);
-                                                        @endphp
-                                                        {{ $record }}
-                                                        <br>
-                                                    @endforeach
-                                                </td>
-                                            </tr>
+                                        <tr>
+                                            @php
+                                                $total_credit = 0;
+                                                $total_debit = 0;
+                                            @endphp
+                                            <td class="px-6 py-4 text-center text-sm font-medium text-gray-500 border-r border-gray-200">
+                                                @foreach(collect($closing_data_array)->where('type', 'Expenses') as $d)
+                                                    @php
+                                                        $debit = ($d['debit'] - $d['credit']);
+                                                        $total_debit = $total_debit + $debit;
+                                                        $record = $d['name'].' - PKR '.number_format($debit,2);
+                                                    @endphp
+                                                    {{$record}}
+                                                    <br>
+                                                @endforeach
+                                            </td>
+                                            <td class="px-6 py-4 text-center text-sm font-medium text-gray-500">
+                                                @foreach(collect($closing_data_array)->where('type', 'Income') as $c)
+                                                    @php
+                                                        $credit = ($c['credit'] - $c['debit']);
+                                                        $total_credit = $total_credit + $credit;
+                                                        $record = $d['name'].' - PKR '.number_format($credit,2);
+                                                    @endphp
+                                                    {{$record}}
+                                                    <br>
+                                                @endforeach
+                                            </td>
+                                        </tr>
+ 
                                         </tbody>
                                         <tfoot class="bg-gray-50 divide-y divide-gray-200 rounded-md">
                                             <tr>
                                                 <td
                                                     class="bold px-6 py-4 text-center text-sm font-medium text-gray-900 border-r border-gray-200">
                                                     <strong>
-                                                        {{ env('CURRENCY', 'PKR') }}
-                                                        {{ number_format($total_debit, 2) }}
+ 
+                                                        Loss: {{ env('CURRENCY','PKR') }} {{number_format(($total_debit - $total_credit),2)}}
+ 
                                                     </strong>
                                                 </td>
                                                 <td
                                                     class="bold px-6 py-4 text-center text-sm font-medium text-gray-900">
                                                     <strong>
-                                                        {{ env('CURRENCY', 'PKR') }}
-                                                        {{ number_format($total_credit, 2) }}
+ 
+                                                        Profit: {{ env('CURRENCY','PKR') }} {{number_format(($total_credit - $total_debit),2)}}
+ 
                                                     </strong>
                                                 </td>
                                             </tr>

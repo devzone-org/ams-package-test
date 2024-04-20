@@ -168,7 +168,7 @@ class ClosingFiscalYear extends Component
                     }
                     $voucher_id = $debit_voucher_id;
                 } elseif ($data->type == 'Income') {
-
+ 
                     $temp_2 = $data->credit - $data->debit;
                     if ($temp_2 > 0) {
                         $debit = $temp_2;
@@ -176,6 +176,7 @@ class ClosingFiscalYear extends Component
                         $credit = $temp_2;
                     }
 
+ 
                     $voucher_id = $credit_voucher_id;
                 }
 
