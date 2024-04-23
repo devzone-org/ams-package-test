@@ -17,6 +17,7 @@ class TraceVoucher extends Component
     public $to;
     public $voucher_no;
     public $type;
+    public $last_voucher;
 
     public function mount()
     {
@@ -45,10 +46,10 @@ class TraceVoucher extends Component
             ->when(!empty($this->voucher_from), function ($q) {
                 return $q->where('l.voucher_no', '>=', $this->voucher_from);
             })
-            ->when(!empty($this->to), function ($q) {
+            ->when($this->type == 'date_range' && !empty($this->to), function ($q) {
                 return $q->whereDate('l.posting_date', '<=', $this->formatDate($this->to));
             })
-            ->when(!empty($this->from), function ($q) {
+            ->when($this->type == 'date_range' && !empty($this->from), function ($q) {
                 return $q->whereDate('l.posting_date', '>=', $this->formatDate($this->from));
             })
             ->when(!empty($this->voucher_no), function ($q) {
@@ -67,7 +68,6 @@ class TraceVoucher extends Component
 
     public function resetSearch()
     {
-
         $this->reset('voucher_no', 'type', 'voucher_from', 'voucher_to');
     }
 
@@ -75,27 +75,49 @@ class TraceVoucher extends Component
     {
         if ($val == 'custom_range') {
             $this->date_range = true;
-
         } elseif ($val == 'seven_days') {
             $this->date_range = false;
             $this->from = date('d M Y', strtotime('-7 days'));
             $this->to = date('d M Y');
+            $this->dispatchBrowserEvent('resetPikaday');
             $this->search();
         } elseif ($val == 'thirty_days') {
             $this->date_range = false;
             $this->from = date('d M Y', strtotime('-30 days'));
             $this->to = date('d M Y');
+            $this->dispatchBrowserEvent('resetPikaday');
             $this->search();
         } elseif ($val == 'yesterday') {
             $this->date_range = false;
             $this->from = date('d M Y', strtotime('-1 days'));
             $this->to = date('d M Y', strtotime('-1 days'));
+            $this->dispatchBrowserEvent('resetPikaday');
             $this->search();
         } elseif ($val == 'today') {
             $this->date_range = false;
             $this->from = date('d M Y');
             $this->to = date('d M Y');
+            $this->dispatchBrowserEvent('resetPikaday');
             $this->search();
+        }
+    }
+
+    public function updatedType($key)
+    {
+        if ($key != 'date_range') {
+            $this->range = 'seven_days';
+            $this->from = date('d M Y', strtotime('-7 days'));
+            $this->to = date('d M Y');
+            $this->dispatchBrowserEvent('resetPikaday');
+        }
+
+        if ($key != 'voucher_range') {
+            $this->voucher_from = null;
+            $this->voucher_to = null;
+        }
+
+        if ($key != 'voucher') {
+            $this->voucher_no = null;
         }
     }
 
@@ -103,5 +125,4 @@ class TraceVoucher extends Component
     {
         return view('ams::livewire.journal.trace-voucher');
     }
-
 }
