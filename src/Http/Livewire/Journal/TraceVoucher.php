@@ -17,7 +17,7 @@ class TraceVoucher extends Component
     public $to;
     public $voucher_no;
     public $type;
-    public $last_voucher;
+    // public $last_voucher;
 
     public function mount()
     {
@@ -46,17 +46,24 @@ class TraceVoucher extends Component
             ->when(!empty($this->voucher_from), function ($q) {
                 return $q->where('l.voucher_no', '>=', $this->voucher_from);
             })
-            ->when($this->type == 'date_range' && !empty($this->to), function ($q) {
+            ->when(empty($this->voucher_no) && empty($this->voucher_to) && empty($this->voucher_from) && !empty($this->to), function ($q) {
                 return $q->whereDate('l.posting_date', '<=', $this->formatDate($this->to));
             })
-            ->when($this->type == 'date_range' && !empty($this->from), function ($q) {
+            ->when(empty($this->voucher_no) && empty($this->voucher_to) && empty($this->voucher_from) && !empty($this->from), function ($q) {
                 return $q->whereDate('l.posting_date', '>=', $this->formatDate($this->from));
             })
             ->when(!empty($this->voucher_no), function ($q) {
                 return $q->where('l.voucher_no', $this->voucher_no);
             })
-            ->select('l.*', 'coa.name', 'coa.code', 'u.name as posting')
-            ->orderBy('l.voucher_no')->orderBy('l.posting_date')->get();
+            ->select(
+                'l.*',
+                'coa.name',
+                'coa.code',
+                'u.name as posting'
+            )
+            ->orderBy('l.voucher_no')
+            ->orderBy('l.posting_date')
+            ->get();
     }
 
     public function print($voucher_no, $print = null)
