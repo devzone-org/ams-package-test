@@ -53,8 +53,8 @@ class Add extends Component
 
     public function mount()
     {
-//        $this->account_list = ChartOfAccount::where('level', 5)->orderBy('type')->get()->toArray();
-//        $this->accounts = $this->account_list;
+        //        $this->account_list = ChartOfAccount::where('level', 5)->orderBy('type')->get()->toArray();
+        //        $this->accounts = $this->account_list;
         $temp_entries = $this->getTempEntries();
 
 
@@ -64,22 +64,18 @@ class Add extends Component
             $this->entries = $temp_entries->toArray();
             $attachments = LedgerAttachment::where('type', '0')->where('voucher_no', $this->voucher_no)->get();
 
-//            for($i=1; $i<= 4 - $temp_entries->count(); $i++){
-//                $this->entries[] = $this->defaultEntries();
-//            }
+            //            for($i=1; $i<= 4 - $temp_entries->count(); $i++){
+            //                $this->entries[] = $this->defaultEntries();
+            //            }
 
             if ($attachments->isNotEmpty()) {
                 $this->attachment_entries = $attachments->toArray();
-
             }
         } else {
             $this->posting_date = date('d M Y');
             $this->voucher_no = Voucher::instance()->tempVoucherOnly();
             $this->entries[] = $this->defaultEntries();
-
-
         }
-
     }
 
     private function getTempEntries()
@@ -134,15 +130,13 @@ class Add extends Component
 
     public function searchAccounts($key)
     {
-        if(env('AMS_BOOTSTRAP') == 'true')
-        {
+        if (env('AMS_BOOTSTRAP') == 'true') {
             $this->dispatchBrowserEvent('open-modal');
         }
         $this->accounts = [];
         $this->search_accounts_modal = true;
         $this->key_id = $key;
         $this->emit('focusInput');
-
     }
 
     public function selectionAccount()
@@ -150,7 +144,6 @@ class Add extends Component
         $contact = $this->accounts[$this->highlightIndex] ?? null;
         $this->chooseAccount($contact['id'], $contact['name']);
         $this->highlightIndex = 0;
-
     }
 
     public function chooseAccount($id, $name)
@@ -160,11 +153,10 @@ class Add extends Component
         $this->search_accounts_modal = false;
 
         $this->search_accounts = '';
-//        $this->entries[$this->key_id]['description'] = $this->entries[0]['description'];
-        if(env('AMS_BOOTSTRAP') == 'true'){
+        $this->entries[$this->key_id]['description'] = $this->entries[0]['description'];
+        if (env('AMS_BOOTSTRAP') == 'true') {
             $this->dispatchBrowserEvent('close-modal');
         }
-
     }
 
     public function updatedSearchAccounts($value)
@@ -219,7 +211,8 @@ class Add extends Component
             DB::beginTransaction();
             //$this->validate();
             if (TempLedger::where('voucher_no', $this->voucher_no)
-                ->where('posted_by', '!=', Auth::user()->id)->exists()) {
+                ->where('posted_by', '!=', Auth::user()->id)->exists()
+            ) {
                 $this->addError('voucher_no', 'Voucher # ' . $this->voucher_no . ' already in use. System have updated to new one kindly try again.');
                 $this->voucher_no = Voucher::instance()->tempVoucherOnly();
                 TempLedger::where('posted_by', Auth::user()->id)->update([
@@ -278,7 +271,6 @@ class Add extends Component
                             'account_id' => !empty($ae['account_id']) ? $ae['account_id'] : null,
                         ]);
                     }
-
                 }
             }
 
@@ -322,7 +314,8 @@ class Add extends Component
             DB::beginTransaction();
 
             if (Ledger::where('voucher_no', $this->voucher_no)
-                ->where('is_approve', 'f')->exists()) {
+                ->where('is_approve', 'f')->exists()
+            ) {
                 $this->addError('voucher_no', 'Voucher # ' . $this->voucher_no . ' already in use. System have updated to new one kindly try again.');
                 $this->voucher_no = Voucher::instance()->tempVoucherOnly();
                 return false;

@@ -37,10 +37,10 @@
                                             </div>
                                         @endif
 
-                                        <div class="col-xs-6 col-sm-4">
+                                        <div class="col-xs-6 col-sm-3">
                                             <div class="form-group">
 
-                                                <label class="font-weight-normal" for="salesman">Search Type</label>
+                                                <label class="font-weight-normal" for="">Search Type</label>
                                                 <select wire:model.lazy="type"
                                                     class="custom-select @error('type') is-invalid @enderror">
                                                     <option value=""></option>
@@ -52,41 +52,44 @@
                                         </div>
 
                                         @if ($type == 'voucher' || empty($type))
-                                            <div class="col-xs-6 col-sm-4">
+                                            <div class="col-xs-6 col-sm-3">
                                                 <div class="form-group">
-                                                    <label class="font-weight-normal" for="doctor">Voucher #</label>
+                                                    <label class="font-weight-normal" for="">Voucher #</label>
                                                     <input type="text" wire:model.lazy="voucher_no"
-                                                        class="form-control  @error('voucher_no')  is-invalid @enderror">
+                                                        class="form-control  @error('voucher_no') is-invalid @enderror">
                                                 </div>
                                             </div>
                                         @endif
 
                                         @if ($type == 'voucher_range')
-                                            <div class="col-xs-6 col-sm-4">
+                                            <div class="col-xs-6 col-sm-3">
                                                 <div class="form-group">
-                                                    <label class="font-weight-normal" for="doctor">Voucher
-                                                        from</label>
+                                                    <label class="font-weight-normal" for="">
+                                                        Voucher From
+                                                    </label>
                                                     <input type="text" wire:model.lazy="voucher_from"
-                                                        class="form-control  @error('voucher_from')  is-invalid @enderror">
+                                                        class="form-control  @error('voucher_from') is-invalid @enderror">
                                                 </div>
                                             </div>
 
-                                            <div class="col-xs-6 col-sm-4">
+                                            <div class="col-xs-6 col-sm-3">
                                                 <div class="form-group">
-                                                    <label class="font-weight-normal" for="doctor">Voucher
-                                                        to</label>
+                                                    <label class="font-weight-normal" for="">
+                                                        Voucher To
+                                                    </label>
                                                     <input type="text" wire:model.lazy="voucher_to"
                                                         class="form-control  @error('voucher_to')  is-invalid @enderror">
                                                 </div>
                                             </div>
                                         @endif
 
-                                        <div class="col-xs-6 col-sm-4 {{ $type != 'date_range' ? 'd-none' : '' }}">
+                                        <div class="col-xs-6 col-sm-3 {{ $type != 'date_range' ? 'd-none' : '' }}">
                                             <div class="form-group">
-                                                <label class="font-weight-normal" for="salesman">Date
-                                                    Range</label>
+                                                <label class="font-weight-normal" for="">
+                                                    Date Range
+                                                </label>
                                                 <select wire:model="range"
-                                                    class="form-control  @error('range')  is-invalid @enderror">
+                                                    class="form-control  @error('range') is-invalid @enderror">
                                                     <option value="today">Today</option>
                                                     <option value="yesterday">Yesterday</option>
                                                     <option value="seven_days">Last 7 Days</option>
@@ -97,29 +100,23 @@
                                         </div>
                                         {{--                                        @if ($date_range) --}}
                                         <div
-                                            class=" col-xs-6 col-sm-4 {{ $type == 'date_range' && $date_range ? '' : 'd-none' }}">
-                                            <label class="font-weight-normal" for="from">From</label>
+                                            class=" col-xs-6 col-sm-3 {{ $type == 'date_range' && $date_range ? '' : 'd-none' }}">
+                                            <label class="font-weight-normal" for="from">Date From</label>
                                             <input type="text" wire:model.lazy="from" autocomplete="off"
                                                 id="from"
                                                 class="form-control  @error('from')  is-invalid @enderror">
                                         </div>
 
                                         <div
-                                            class=" col-xs-6 col-sm-4 {{ $type == 'date_range' && $date_range ? '' : 'd-none' }}">
-                                            <label class="font-weight-normal" for="to">To</label>
+                                            class=" col-xs-6 col-sm-3 {{ $type == 'date_range' && $date_range ? '' : 'd-none' }}">
+                                            <label class="font-weight-normal" for="to">Date To</label>
                                             <input type="text" wire:model.lazy="to" autocomplete="off" id="to"
                                                 class="form-control  @error('to')  is-invalid @enderror">
                                         </div>
                                         {{--                                        @endif --}}
 
-                                        <div class=" col-xs-6 col-sm-4">
-                                            <div class="form-group">
-
-                                            </div>
-                                        </div>
-
                                         <div class="col-12">
-                                            <div class="form-group">
+                                            <div class="form-group mb-0">
                                                 <button type="submit" class="btn btn-primary">
                                                     <div wire:loading wire:target="search">
                                                         Searching ...
@@ -135,6 +132,11 @@
                                         </div>
                                     </div>
                                 </form>
+                                <div class="">
+                                    <span class="d-flex justify-content-end font-weight-normal">
+                                        Last Voucher # {{ $last_voucher }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -142,7 +144,7 @@
                 <div class="row">
                     <div class="col">
                         @if (empty($temp_list))
-                            <div class="p-2">
+                            <div class="py-2">
                                 <div class="alert alert-danger mb-0">
                                     Record Not Found.
                                 </div>
@@ -164,19 +166,23 @@
                                             <table class="table table-bordered border-0">
                                                 <thead class="text-nowrap">
                                                     <th class="text-center add-services-table col-1 text-muted"
-                                                        style="width: 25px;">#
-                                                    </th>
-                                                    <th class="add-services-table text-center col-1 text-muted">Voucher
+                                                        style="width: 25px;">
                                                         #
                                                     </th>
-                                                    <th class="add-services-table text-center col-1 text-muted">Account
-                                                        Name
+                                                    <th class="add-services-table text-center col-1 text-muted">
+                                                        Voucher #
                                                     </th>
-                                                    <th class="add-services-table text-center text-muted">Description
+                                                    <th class="add-services-table text-center col-1 text-muted">
+                                                        Account Name
                                                     </th>
-                                                    <th class="add-services-table text-center col-1 text-muted">Debit
+                                                    <th class="add-services-table text-center text-muted">
+                                                        Description
                                                     </th>
-                                                    <th class="add-services-table text-center col-1 text-muted">Credit
+                                                    <th class="add-services-table text-center col-1 text-muted">
+                                                        Debit
+                                                    </th>
+                                                    <th class="add-services-table text-center col-1 text-muted">
+                                                        Credit
                                                     </th>
                                                     <th class="text-center add-services-table  text-muted"
                                                         style="width: 25px"></th>
@@ -316,9 +322,9 @@
             to_date.setDate(new Date('{{ $to }}'));
 
             window.addEventListener('resetPikaday', event => {
-            from_date.setDate(new Date('{{ $from }}'));
-            to_date.setDate(new Date('{{ $to }}'));
-        });
+                from_date.setDate(new Date('{{ $from }}'));
+                to_date.setDate(new Date('{{ $to }}'));
+            });
         </script>
     @endpush
 @else
@@ -328,7 +334,9 @@
                 <div class="bg-white py-6 px-4 space-y-6 sm:p-6 ">
                     <div class="grid grid-cols-8 gap-6">
                         <div class="col-span-8 sm:col-span-2">
-                            <label for="salesman" class="block text-sm font-medium text-gray-700">Search Type</label>
+                            <label for="salesman" class="block text-sm font-medium text-gray-700">
+                                Search Type
+                            </label>
                             <select wire:model.lazy="type"
                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <option value=""></option>
@@ -340,8 +348,9 @@
 
                         @if ($type == 'voucher' || empty($type))
                             <div class=" col-span-8 sm:col-span-2">
-                                <label for="doctor" class="block text-sm font-medium text-gray-700">Voucher
-                                    #</label>
+                                <label for="doctor" class="block text-sm font-medium text-gray-700">
+                                    Voucher #
+                                </label>
                                 <input type="text" wire:model.lazy="voucher_no"
                                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             </div>
@@ -350,16 +359,18 @@
 
                         @if ($type == 'voucher_range')
                             <div class="col-span-8 sm:col-span-2">
-                                <label for="doctor" class="block text-sm font-medium text-gray-700">Voucher
-                                    from</label>
+                                <label for="doctor" class="block text-sm font-medium text-gray-700">
+                                    Voucher From
+                                </label>
                                 <input type="text" wire:model.lazy="voucher_from"
                                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             </div>
 
 
                             <div class="col-span-8 sm:col-span-2">
-                                <label for="doctor" class="block text-sm font-medium text-gray-700">Voucher
-                                    to</label>
+                                <label for="doctor" class="block text-sm font-medium text-gray-700">
+                                    Voucher To
+                                </label>
                                 <input type="text" wire:model.lazy="voucher_to"
                                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             </div>
@@ -379,18 +390,17 @@
 
                         <div
                             class="{{ $type == 'date_range' && $date_range ? 'block' : 'hidden' }} col-span-8 sm:col-span-2">
-                            <label for="from" class="block text-sm font-medium text-gray-700">From</label>
+                            <label for="from" class="block text-sm font-medium text-gray-700">Date From</label>
                             <input type="text" wire:model.lazy="from" autocomplete="off" id="from" readonly
                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
                         <div
                             class="{{ $type == 'date_range' && $date_range ? 'block' : 'hidden' }} col-span-8 sm:col-span-2">
-                            <label for="to" class="block text-sm font-medium text-gray-700">To</label>
+                            <label for="to" class="block text-sm font-medium text-gray-700">Date To</label>
                             <input type="text" wire:model.lazy="to" autocomplete="off" id="to" readonly
                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
-
 
                         <div class="col-span-8 sm:col-span-2">
                             <button type="submit"
@@ -408,6 +418,11 @@
                                 Reset
                             </button>
                         </div>
+                    </div>
+                    <div class="">
+                        <span class="flex justify-end text-gray-700 text-sm font-medium">
+                            Last Voucher # {{ $last_voucher }}
+                        </span>
                     </div>
                 </div>
             </div>

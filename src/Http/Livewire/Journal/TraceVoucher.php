@@ -17,7 +17,7 @@ class TraceVoucher extends Component
     public $to;
     public $voucher_no;
     public $type;
-    // public $last_voucher;
+    public $last_voucher;
 
     public function mount()
     {
@@ -25,7 +25,8 @@ class TraceVoucher extends Component
         $this->to = date('d M Y');
         $this->range = 'seven_days';
         $this->type = 'voucher';
-        $this->search();
+        $this->last_voucher = Ledger::max('voucher_no');
+        // $this->search();
     }
 
     private function formatDate($date)
@@ -75,7 +76,14 @@ class TraceVoucher extends Component
 
     public function resetSearch()
     {
-        $this->reset('voucher_no', 'type', 'voucher_from', 'voucher_to');
+        $this->reset('temp_list', 'voucher_no', 'type', 'voucher_from', 'voucher_to');
+
+        $this->type = 'voucher';
+        $this->range = 'seven_days';
+        $this->date_range = false;
+        $this->from = date('d M Y', strtotime('-7 days'));
+        $this->to = date('d M Y');
+        $this->dispatchBrowserEvent('resetPikaday');
     }
 
     public function updatedRange($val)
@@ -87,31 +95,32 @@ class TraceVoucher extends Component
             $this->from = date('d M Y', strtotime('-7 days'));
             $this->to = date('d M Y');
             $this->dispatchBrowserEvent('resetPikaday');
-            $this->search();
+            // $this->search();
         } elseif ($val == 'thirty_days') {
             $this->date_range = false;
             $this->from = date('d M Y', strtotime('-30 days'));
             $this->to = date('d M Y');
             $this->dispatchBrowserEvent('resetPikaday');
-            $this->search();
+            // $this->search();
         } elseif ($val == 'yesterday') {
             $this->date_range = false;
             $this->from = date('d M Y', strtotime('-1 days'));
             $this->to = date('d M Y', strtotime('-1 days'));
             $this->dispatchBrowserEvent('resetPikaday');
-            $this->search();
+            // $this->search();
         } elseif ($val == 'today') {
             $this->date_range = false;
             $this->from = date('d M Y');
             $this->to = date('d M Y');
             $this->dispatchBrowserEvent('resetPikaday');
-            $this->search();
+            // $this->search();
         }
     }
 
     public function updatedType($key)
     {
         if ($key != 'date_range') {
+            $this->date_range = false;
             $this->range = 'seven_days';
             $this->from = date('d M Y', strtotime('-7 days'));
             $this->to = date('d M Y');
