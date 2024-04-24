@@ -212,6 +212,7 @@ class ClosingFiscalYear extends Component
             }
 
             $details = $this->closingEquityEntries($this->closing_data);
+
             $coa = ChartOfAccount::where('type', 'Equity')
                 ->where('level', '5')
                 ->where('is_contra', 'f')
@@ -235,6 +236,8 @@ class ClosingFiscalYear extends Component
                     'approved_by' => \Auth::user()->id
                 ]);
             }
+
+            $this->incomeSummaryAccountEntries($this->closing_data, $debit_voucher_id, $credit_voucher_id);
 
             DB::commit();
 
@@ -305,6 +308,55 @@ class ClosingFiscalYear extends Component
         }
 
         return ['debit' => $loss, 'credit' => $profit];
+    }
+
+    public function incomeSummaryAccountEntries($closing, $debit_voucher_id, $credit_voucher_id)
+    {
+        $expense = $closing->where('type', 'Expenses');
+        $debit = $expense->sum('debit') - $expense->sum('credit');
+
+        $income = $closing->where('type', 'Income');
+        $credit = $income->sum('credit') - $income->sum('debit');
+
+        $income_sumamry_account_id = env('INCOME_SUMMARY_ACCOUNT_ID');
+
+        if(empty($income_sumamry_account_id)) {
+            throw new Exception('Income Summary Account is not defined. ');
+        }
+
+        $found = ChartOfAccount::find($income_sumamry_account_id);
+
+        if(!$found) {
+            throw new Exception('Income Summary Account not found. ');
+        }
+
+        //for debit entry
+        Ledger::create([
+            'account_id' => $income_sumamry_account_id,
+            'voucher_no' => $debit_voucher_id,
+            'debit' => $debit,
+            'credit' => 0,
+            'description' => 'Fiscal Year ' . $this->selected_year['year'] . ' Closed to Summary Account.',
+            'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
+            'posted_by' => \Auth::user()->id,
+            'is_approve' => 't',
+            'approved_at' => date('Y-m-d'),
+            'approved_by' => \Auth::user()->id
+        ]);
+
+        //for credit entry
+        Ledger::create([
+            'account_id' => $income_sumamry_account_id,
+            'voucher_no' => $credit_voucher_id,
+            'debit' => 0,
+            'credit' => $credit,
+            'description' => 'Fiscal Year ' . $this->selected_year['year'] . ' Closed to Summary Account.',
+            'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
+            'posted_by' => \Auth::user()->id,
+            'is_approve' => 't',
+            'approved_at' => date('Y-m-d'),
+            'approved_by' => \Auth::user()->id
+        ]);
     }
 
     public function render()
