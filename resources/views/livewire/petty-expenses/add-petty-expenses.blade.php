@@ -166,7 +166,7 @@
                                 <div class="mt-2 text-sm text-red-700">
                                     <ul class="pl-5 space-y-1 list-disc">
                                         @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
+                                            <li>{!! $error !!}</li>
                                         @endforeach
                                     </ul>
                                 </div>

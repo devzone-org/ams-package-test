@@ -1,13 +1,12 @@
 <?php
 
-
 namespace Devzone\Ams\Http\Livewire\Closing;
-
 
 use Devzone\Ams\Models\ChartOfAccount;
 use Devzone\Ams\Models\ClosingSummaryAccounts;
 use Devzone\Ams\Models\Ledger;
 use DB;
+use Exception;
 use Livewire\Component;
 
 class ClosingFiscalYear extends Component
@@ -19,6 +18,10 @@ class ClosingFiscalYear extends Component
     public $closing_data, $closing_data_array;
     public $fiscal_years = [];
     public $summary_account;
+    public $record_sum = [
+        'debit' => 0,
+        'credit' => 0,
+    ];
 
     protected $rules = [
         'closing_year' => 'required',
@@ -85,7 +88,6 @@ class ClosingFiscalYear extends Component
             $exists = ClosingSummaryAccounts::where('fiscal_year', $get_previous_year['year'])->exists();
 
             if (!$exists) {
-
                 throw new \Exception('Fiscal year ' . $get_previous_year['year'] . ' not closed.');
             }
         }
@@ -102,13 +104,20 @@ class ClosingFiscalYear extends Component
             ->get();
 
         $this->closing_data_array = $this->closing_data->toArray();
+
+        if (!empty($this->closing_data_array)) {
+            $this->record_sum['debit'] = array_sum(array_column($this->closing_data_array, 'debit'));
+            $this->record_sum['credit'] = array_sum(array_column($this->closing_data_array, 'credit'));
+        }
     }
 
     public function getAndUpdateVoucher()
     {
         $voucher = \Devzone\Ams\Models\Voucher::where('name', 'voucher')
+            ->lockForUpdate()
             ->select('value')
-            ->first()->value;
+            ->first()
+            ->value;
         $temp = \Devzone\Ams\Models\Voucher::where('name', 'voucher')
             ->update(['value' => $voucher + 1]);
 
@@ -143,7 +152,14 @@ class ClosingFiscalYear extends Component
 
         try {
 
+            $old_record_sum = $this->record_sum;
+
             $this->checkAndGetRecord();
+
+            if ($old_record_sum['debit'] != $this->record_sum['debit'] || $old_record_sum['credit'] != $this->record_sum['credit']) {
+                $this->agree_confirm = false;
+                throw new Exception('Ledger entries have changed. Please re-check the closing summary again. ');
+            }
 
             DB::beginTransaction();
 
@@ -166,9 +182,10 @@ class ClosingFiscalYear extends Component
                     } else {
                         $debit = $temp_1;
                     }
+
                     $voucher_id = $debit_voucher_id;
                 } elseif ($data->type == 'Income') {
- 
+
                     $temp_2 = $data->credit - $data->debit;
                     if ($temp_2 > 0) {
                         $debit = $temp_2;
@@ -176,7 +193,6 @@ class ClosingFiscalYear extends Component
                         $credit = $temp_2;
                     }
 
- 
                     $voucher_id = $credit_voucher_id;
                 }
 
@@ -247,6 +263,7 @@ class ClosingFiscalYear extends Component
             } else {
                 $debit = $temp_1;
             }
+
             $voucher_id = $voucher_id['dvid'];
         } elseif ($data->type == 'Income') {
 
@@ -256,6 +273,7 @@ class ClosingFiscalYear extends Component
             } else {
                 $credit = $temp_2;
             }
+
             $voucher_id = $voucher_id['cvid'];
         }
 
