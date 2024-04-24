@@ -19,7 +19,7 @@ class Ledger extends Model
     {
         parent::boot();
 
-        $posting_date = ClosingSummaryAccounts::orderBy('posting_date', 'asc')->select('posting_date')->first()->posting_date ?? null;
+        $posting_date = ClosingSummaryAccounts::max('posting_date') ?? null;
 
         if (!empty($posting_date))
         {
