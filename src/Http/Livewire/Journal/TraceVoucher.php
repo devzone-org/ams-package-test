@@ -17,6 +17,7 @@ class TraceVoucher extends Component
     public $to;
     public $voucher_no;
     public $type;
+    public $last_voucher;
 
     public function mount()
     {
@@ -24,7 +25,7 @@ class TraceVoucher extends Component
         $this->to = date('d M Y');
         $this->range = 'seven_days';
         $this->type = 'voucher';
-        $this->search();
+        // $this->search();
     }
 
     private function formatDate($date)
@@ -45,17 +46,24 @@ class TraceVoucher extends Component
             ->when(!empty($this->voucher_from), function ($q) {
                 return $q->where('l.voucher_no', '>=', $this->voucher_from);
             })
-            ->when(!empty($this->to), function ($q) {
+            ->when(empty($this->voucher_no) && empty($this->voucher_to) && empty($this->voucher_from) && !empty($this->to), function ($q) {
                 return $q->whereDate('l.posting_date', '<=', $this->formatDate($this->to));
             })
-            ->when(!empty($this->from), function ($q) {
+            ->when(empty($this->voucher_no) && empty($this->voucher_to) && empty($this->voucher_from) && !empty($this->from), function ($q) {
                 return $q->whereDate('l.posting_date', '>=', $this->formatDate($this->from));
             })
             ->when(!empty($this->voucher_no), function ($q) {
                 return $q->where('l.voucher_no', $this->voucher_no);
             })
-            ->select('l.*', 'coa.name', 'coa.code', 'u.name as posting')
-            ->orderBy('l.voucher_no')->orderBy('l.posting_date')->get();
+            ->select(
+                'l.*',
+                'coa.name',
+                'coa.code',
+                'u.name as posting'
+            )
+            ->orderBy('l.voucher_no')
+            ->orderBy('l.posting_date')
+            ->get();
     }
 
     public function print($voucher_no, $print = null)
@@ -67,41 +75,71 @@ class TraceVoucher extends Component
 
     public function resetSearch()
     {
+        $this->reset('temp_list', 'voucher_no', 'type', 'voucher_from', 'voucher_to');
 
-        $this->reset('voucher_no', 'type', 'voucher_from', 'voucher_to');
+        $this->type = 'voucher';
+        $this->range = 'seven_days';
+        $this->date_range = false;
+        $this->from = date('d M Y', strtotime('-7 days'));
+        $this->to = date('d M Y');
+        $this->dispatchBrowserEvent('resetPikaday');
     }
 
     public function updatedRange($val)
     {
         if ($val == 'custom_range') {
             $this->date_range = true;
-
         } elseif ($val == 'seven_days') {
             $this->date_range = false;
             $this->from = date('d M Y', strtotime('-7 days'));
             $this->to = date('d M Y');
-            $this->search();
+            $this->dispatchBrowserEvent('resetPikaday');
+            // $this->search();
         } elseif ($val == 'thirty_days') {
             $this->date_range = false;
             $this->from = date('d M Y', strtotime('-30 days'));
             $this->to = date('d M Y');
-            $this->search();
+            $this->dispatchBrowserEvent('resetPikaday');
+            // $this->search();
         } elseif ($val == 'yesterday') {
             $this->date_range = false;
             $this->from = date('d M Y', strtotime('-1 days'));
             $this->to = date('d M Y', strtotime('-1 days'));
-            $this->search();
+            $this->dispatchBrowserEvent('resetPikaday');
+            // $this->search();
         } elseif ($val == 'today') {
             $this->date_range = false;
             $this->from = date('d M Y');
             $this->to = date('d M Y');
-            $this->search();
+            $this->dispatchBrowserEvent('resetPikaday');
+            // $this->search();
+        }
+    }
+
+    public function updatedType($key)
+    {
+        if ($key != 'date_range') {
+            $this->date_range = false;
+            $this->range = 'seven_days';
+            $this->from = date('d M Y', strtotime('-7 days'));
+            $this->to = date('d M Y');
+            $this->dispatchBrowserEvent('resetPikaday');
+        }
+
+        if ($key != 'voucher_range') {
+            $this->voucher_from = null;
+            $this->voucher_to = null;
+        }
+
+        if ($key != 'voucher') {
+            $this->voucher_no = null;
         }
     }
 
     public function render()
     {
+        $this->last_voucher = Ledger::where('is_approve', 't')->max('voucher_no');
+        
         return view('ams::livewire.journal.trace-voucher');
     }
-
 }

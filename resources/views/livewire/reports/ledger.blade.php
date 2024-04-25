@@ -78,7 +78,7 @@
                                 </div>
                                 @if(!empty($error))
                                     <div class="alert alert-danger">
-                                        {{ $error }}
+                                        {!! $error !!}
                                     </div>
                                 @endif
                             </div>
@@ -349,7 +349,7 @@
                             </div>
                             <div class="ml-3">
                                 <h3 class="text-sm font-medium text-red-800">
-                                    {{ $error }}
+                                    {!! $error !!}
                                 </h3>
 
                             </div>

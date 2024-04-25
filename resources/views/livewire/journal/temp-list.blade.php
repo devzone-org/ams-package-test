@@ -22,7 +22,7 @@
                                                 aria-hidden="true">
                                             ×
                                         </button>
-                                        <li>{{ $error }}</li>
+                                        <li>{!! $error !!}</li>
                                     </div>
                                 @endforeach
                             </div>
@@ -274,7 +274,7 @@
                                 <ul class="list-disc pl-5 space-y-1">
 
                                     @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
+                                        <li>{!! $error !!}</li>
                                     @endforeach
 
                                 </ul>
