@@ -215,6 +215,7 @@ class ClosingFiscalYear extends Component
 
             $coa = ChartOfAccount::where('type', 'Equity')
                 ->where('level', '5')
+                ->where('id', '!=', env('INCOME_SUMMARY_ACCOUNT_ID'))
                 ->where('is_contra', 'f')
                 ->where('status', 't')
                 ->get();
