@@ -59,6 +59,9 @@ class Add extends Component
                 ->when(!empty($this->restriction_accounts) && env('RESTRICT_CERTAIN_ACCOUNTS'), function ($q) {
                     return $q->whereNotIn('id', $this->restriction_accounts);
                 })
+                ->when(!empty(env('INCOME_SUMMARY_ACCOUNT_ID')), function ($q) {
+                    return $q->where('id', '!=', env('INCOME_SUMMARY_ACCOUNT_ID'));
+                })
                 ->get()->toArray();
         }
         if ($this->at_level == '4') {

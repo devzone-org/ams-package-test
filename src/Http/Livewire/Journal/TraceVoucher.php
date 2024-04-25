@@ -25,7 +25,6 @@ class TraceVoucher extends Component
         $this->to = date('d M Y');
         $this->range = 'seven_days';
         $this->type = 'voucher';
-        $this->last_voucher = Ledger::max('voucher_no');
         // $this->search();
     }
 
@@ -139,6 +138,8 @@ class TraceVoucher extends Component
 
     public function render()
     {
+        $this->last_voucher = Ledger::where('is_approve', 't')->max('voucher_no');
+        
         return view('ams::livewire.journal.trace-voucher');
     }
 }

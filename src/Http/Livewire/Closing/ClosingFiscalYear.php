@@ -158,7 +158,7 @@ class ClosingFiscalYear extends Component
 
             if ($old_record_sum['debit'] != $this->record_sum['debit'] || $old_record_sum['credit'] != $this->record_sum['credit']) {
                 $this->agree_confirm = false;
-                throw new Exception('Ledger entries have changed. Please re-check the closing summary again. ');
+                throw new Exception('Ledger entries have changed. Please re-check the closing summary again.');
             }
 
             DB::beginTransaction();
@@ -216,9 +216,16 @@ class ClosingFiscalYear extends Component
             $coa = ChartOfAccount::where('type', 'Equity')
                 ->where('level', '5')
                 ->where('is_contra', 'f')
+                ->where('status', 't')
                 ->get();
 
             $total_partner = $coa->count();
+
+            if ($total_partner == 0) {
+                throw new Exception('No Equity account found. Please add at least 1 Equity account.');
+            }
+
+            $total_equity_amount = 0; //to remove 0.01 difference
 
             foreach ($coa as $data) {
 
@@ -226,8 +233,8 @@ class ClosingFiscalYear extends Component
                     'account_id' => $data->id,
                     'voucher_no' => $equity_voucher_id,
                     'type' => $data->type,
-                    'debit' => $details['debit'] > 0 ? ($details['debit'] / $total_partner) : 0,
-                    'credit' => $details['credit'] > 0 ? ($details['credit'] / $total_partner) : 0,
+                    'debit' => $details['debit'] > 0 ? round($details['debit'] / $total_partner, 2) : 0,
+                    'credit' => $details['credit'] > 0 ? round($details['credit'] / $total_partner, 2) : 0,
                     'description' => 'Fiscal Year ' . $this->selected_year['year'] . ' Closed to Summary Account.',
                     'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
                     'posted_by' => \Auth::user()->id,
@@ -235,9 +242,17 @@ class ClosingFiscalYear extends Component
                     'approved_at' => date('Y-m-d'),
                     'approved_by' => \Auth::user()->id
                 ]);
+
+                if ($details['debit'] > 0) {
+                    $total_equity_amount += round($details['debit'] / $total_partner, 2);
+                } elseif ($details['credit'] > 0) {
+                    $total_equity_amount += round($details['credit'] / $total_partner, 2);
+                }
             }
 
-            $this->incomeSummaryAccountEntries($this->closing_data, $debit_voucher_id, $credit_voucher_id);
+            $this->incomeSummaryAccountEntries($this->closing_data, $debit_voucher_id, $credit_voucher_id, $equity_voucher_id, $total_equity_amount);
+
+            $this->checkLedgerEntries($debit_voucher_id, $credit_voucher_id, $equity_voucher_id);
 
             DB::commit();
 
@@ -249,7 +264,7 @@ class ClosingFiscalYear extends Component
         } catch (\Exception $ex) {
 
             DB::rollBack();
-            $this->addError('error', $ex->getMessage() . 'Unable to close fiscal year.');
+            $this->addError('error', $ex->getMessage() . ' Unable to close fiscal year.');
         }
     }
 
@@ -310,7 +325,7 @@ class ClosingFiscalYear extends Component
         return ['debit' => $loss, 'credit' => $profit];
     }
 
-    public function incomeSummaryAccountEntries($closing, $debit_voucher_id, $credit_voucher_id)
+    public function incomeSummaryAccountEntries($closing, $debit_voucher_id, $credit_voucher_id, $equity_voucher_id, $total_equity_amount)
     {
         $expense = $closing->where('type', 'Expenses');
         $debit = $expense->sum('debit') - $expense->sum('credit');
@@ -320,14 +335,14 @@ class ClosingFiscalYear extends Component
 
         $income_sumamry_account_id = env('INCOME_SUMMARY_ACCOUNT_ID');
 
-        if(empty($income_sumamry_account_id)) {
-            throw new Exception('Income Summary Account is not defined. ');
+        if (empty($income_sumamry_account_id)) {
+            throw new Exception('Income Summary Account is not defined.');
         }
 
         $found = ChartOfAccount::find($income_sumamry_account_id);
 
-        if(!$found) {
-            throw new Exception('Income Summary Account not found. ');
+        if (!$found) {
+            throw new Exception('Income Summary Account not found.');
         }
 
         //for debit entry
@@ -357,6 +372,58 @@ class ClosingFiscalYear extends Component
             'approved_at' => date('Y-m-d'),
             'approved_by' => \Auth::user()->id
         ]);
+
+        $equity_debit = 0;
+        $equity_credit = 0;
+
+        if ($debit > $credit) {
+            // $equity_credit = $debit - $credit;
+            $equity_credit = $total_equity_amount;
+        } elseif ($debit < $credit) {
+            // $equity_debit = $credit - $debit;
+            $equity_debit = $total_equity_amount;
+        }
+
+        //for equity entry
+        Ledger::create([
+            'account_id' => $income_sumamry_account_id,
+            'voucher_no' => $equity_voucher_id,
+            'debit' => $equity_debit,
+            'credit' => $equity_credit,
+            'description' => 'Fiscal Year ' . $this->selected_year['year'] . ' Closed to Summary Account.',
+            'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
+            'posted_by' => \Auth::user()->id,
+            'is_approve' => 't',
+            'approved_at' => date('Y-m-d'),
+            'approved_by' => \Auth::user()->id
+        ]);
+    }
+
+    public function checkLedgerEntries($debit_voucher_id, $credit_voucher_id, $equity_voucher_id)
+    {
+        $check = true;
+        $ledger_entries = Ledger::whereIn('voucher_no', [$debit_voucher_id, $credit_voucher_id, $equity_voucher_id])
+        ->select(
+            'voucher_no',
+            DB::raw('SUM(debit) as debit'),
+            DB::raw('SUM(credit) as credit'),
+            DB::raw('(SUM(debit) - SUM(credit)) as difference'),
+        )
+        ->groupBy('voucher_no')
+        ->get()
+        ->keyBy('voucher_no')
+        ->toArray();
+
+        foreach($ledger_entries as $v_no => $data) {
+            if($ledger_entries[$v_no]['difference'] != 0) {
+                $check = false;
+            }
+        }
+
+        if(!$check) {
+            throw new Exception('Ledger entries are not balanced. Please re-check the entries.');
+        }
+
     }
 
     public function render()
