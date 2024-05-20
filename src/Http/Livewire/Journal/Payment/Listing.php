@@ -61,6 +61,11 @@ class Listing extends Component
         return view('ams::livewire.journal.payments.listing', compact('entries'));
     }
 
+    public function search()
+    {
+        //just empty function to send request to back end so that where defer used their values can come to backend
+    }
+
     private function formatDate($date)
     {
 
