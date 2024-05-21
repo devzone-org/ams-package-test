@@ -616,12 +616,14 @@
                                                     role="menuitem" tabindex="-1">Delete</a> --}}
 
                                                 <button type="button" wire:click="approve('{{ $e->id }}')"
-                                                    class="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"  role="menuitem">
+                                                    class="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                                                    role="menuitem">
                                                     Approve
                                                 </button>
 
                                                 <button type="button" wire:click="delete('{{ $e->id }}')"
-                                                    class="text-red-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"  role="menuitem">
+                                                    class="text-red-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                                                    role="menuitem">
                                                     Delete
                                                 </button>
                                             @else
@@ -651,12 +653,16 @@
 
                 </tbody>
             </table>
+        </div>
+
+        <div>
             @if ($entries->hasPages())
-                <div class="bg-white border-t px-3 py-2  rounded-md">
+                <div class="bg-white border-t px-3 py-2  rounded-md flex flex-row" style="display: flex; flex-direction: column;">
                     {{ $entries->links() }}
                 </div>
             @endif
         </div>
+        
         <div x-data="{ open: @entangle('reverse_modal') }" x-show="open" class="fixed z-10 inset-0 overflow-y-auto"
             aria-labelledby="modal-title" x-ref="dialog" aria-modal="true">
             <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
