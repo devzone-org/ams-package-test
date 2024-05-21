@@ -604,16 +604,26 @@
                                         <div class="py-1" role="none">
 
                                             @if (empty($e->approved_at))
-                                                <a href="javascript:void(0);"
+                                                {{-- <a href="javascript:void(0);"
                                                     wire:click="approve('{{ $e->id }}')"
                                                     class="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                                                    role="menuitem" tabindex="-1">Approve</a>
+                                                    role="menuitem" tabindex="-1">Approve</a> --}}
 
 
-                                                <a href="javascript:void(0);"
+                                                {{-- <a href="javascript:void(0);"
                                                     wire:click="delete('{{ $e->id }}')"
                                                     class="text-red-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                                                    role="menuitem" tabindex="-1">Delete</a>
+                                                    role="menuitem" tabindex="-1">Delete</a> --}}
+
+                                                <button type="button" wire:click="approve('{{ $e->id }}')"
+                                                    class="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"  role="menuitem">
+                                                    Approve
+                                                </button>
+
+                                                <button type="button" wire:click="delete('{{ $e->id }}')"
+                                                    class="text-red-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"  role="menuitem">
+                                                    Delete
+                                                </button>
                                             @else
                                                 <a href="javascript:void(0);"
                                                     onclick="window.open('{{ url('accounts/journal/voucher/print') . '/' . $e->voucher_no }}','voucher-print-{{ $e->voucher_no }}','height=500,width=800');"
@@ -736,7 +746,7 @@
 
 
 
-@section('script')    
+@section('script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
     <script>
