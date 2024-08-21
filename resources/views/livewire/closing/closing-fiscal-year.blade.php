@@ -104,8 +104,7 @@
                                                         @php
                                                             $credit = $c['credit'] - $c['debit'];
                                                             $total_credit = $total_credit + $credit;
-                                                            $record =
-                                                                $d['name'] . ' - PKR ' . number_format($credit, 2);
+                                                            $record = $c['name'] . ' - PKR ' . number_format($credit, 2);
                                                         @endphp
                                                         {{ $record }}
                                                         <br>
