@@ -4,6 +4,7 @@
 namespace Devzone\Ams\Http\Livewire\Journal;
 
 
+use App\Mail\ClosingSummaryMail;
 use App\Models\User;
 use Devzone\Ams\Helper\GeneralJournal;
 use Devzone\Ams\Helper\Voucher;
@@ -13,6 +14,7 @@ use Devzone\Ams\Models\Ledger;
 use Devzone\Ams\Models\LedgerAttachment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Illuminate\Support\Facades\Cache;
 use Livewire\WithFileUploads;
@@ -234,6 +236,13 @@ class Close extends Component
                     throw new \Exception('Denomination cash must be greater than 0.');
                 }
                 DB::commit();
+                if (env('CLIENT_CODE') == 'abh') {
+//                    $closed_by = Auth::user()->name;
+//                    $transfered_to = collect($this->transfers)->firstWhere('id', $this->transfer_id)['name'];
+//                    $teller = $this->current_user['name'];
+                    $mail = new ClosingSummaryMail($description);
+                    Mail::to(['ohaiderg@gmail.com', 'talha8018@gmail.com'])->send($mail);
+                }
             }
             $lock->release();
             $this->redirect('/accounts/accountant/day-close');
