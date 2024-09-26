@@ -236,13 +236,13 @@ class Close extends Component
                     throw new \Exception('Denomination cash must be greater than 0.');
                 }
                 DB::commit();
-                if (env('CLIENT_CODE') == 'abh') {
+//                if (env('CLIENT_CODE') == 'abh') {
 //                    $closed_by = Auth::user()->name;
 //                    $transfered_to = collect($this->transfers)->firstWhere('id', $this->transfer_id)['name'];
 //                    $teller = $this->current_user['name'];
-                    $mail = new ClosingSummaryMail($description);
-                    Mail::to(['ohaiderg@gmail.com', 'talha8018@gmail.com'])->send($mail);
-                }
+//                    $mail = new ClosingSummaryMail($description);
+//                    Mail::to(['ohaiderg@gmail.com', 'talha8018@gmail.com'])->send($mail);
+//                }
             }
             $lock->release();
             $this->redirect('/accounts/accountant/day-close');
