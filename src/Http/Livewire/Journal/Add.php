@@ -142,7 +142,9 @@ class Add extends Component
     public function selectionAccount()
     {
         $contact = $this->accounts[$this->highlightIndex] ?? null;
-        $this->chooseAccount($contact['id'], $contact['name']);
+        $contact_id = !empty($contact['id']) ? $contact['id'] : '';
+        $contact_name = !empty($contact['name']) ? $contact['name'] : '';
+        $this->chooseAccount($contact_id, $contact_name);
         $this->highlightIndex = 0;
     }
 
