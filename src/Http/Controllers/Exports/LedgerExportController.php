@@ -149,6 +149,8 @@ class LedgerExportController
 
         $csv = Writer::createFromFileObject(new SplTempFileObject());
 
+        $csv->insertOne([$account_name]);
+
         $csv->insertOne(['Voucher #', 'Date', 'Description', 'Dr', 'Cr', 'Balance']);
 
         $csv->insertAll($data);

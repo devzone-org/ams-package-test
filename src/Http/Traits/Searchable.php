@@ -60,8 +60,8 @@ trait Searchable
         }
         $data = $this->searchable_data[$this->highlight_index] ?? null;
 
-        $this->{$this->searchable_id} = $data['id']; //$this->searchable_id = account_id
-        $this->{$this->searchable_name} = $data['name'];
+        $this->{$this->searchable_id} = !empty($data['id']) ? $data['id'] : ''; //$this->searchable_id = account_id
+        $this->{$this->searchable_name} = !empty($data['name']) ? $data['name'] : '';
         $this->emitSelf(Str::camel('emit_' . $this->searchable_id));
         if (env('AMS_BOOTSTRAP') == 'true') {
             $this->dispatchBrowserEvent('close-modal');

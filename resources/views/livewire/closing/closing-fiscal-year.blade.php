@@ -83,10 +83,10 @@
                                     @if (!empty($closing_data_array))
                                         <tbody class="bg-white divide-y divide-gray-200  rounded-md">
                                             <tr>
-                                                @php
-                                                    $total_credit = 0;
-                                                    $total_debit = 0;
-                                                @endphp
+                                                    @php
+                                                        $total_credit = 0;
+                                                        $total_debit = 0;
+                                                    @endphp
                                                 <td
                                                     class="px-6 py-4 text-center text-sm font-medium text-gray-500 border-r border-gray-200">
                                                     @foreach (collect($closing_data_array)->where('type', 'Expenses') as $d)
