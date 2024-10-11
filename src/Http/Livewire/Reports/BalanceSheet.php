@@ -109,12 +109,14 @@ class BalanceSheet extends Component
                     if ($r->type == 'Equity') {
 
                         $acc = EquityRatio::where('account_id', $r->id)->first();
-                        $draw = $report->firstWhere('id', $acc->drawing_account_id);
-                        $drawings = 0;
-                        if (!empty($draw)) {
-                            $drawings = $draw['debit'] - $draw['credit'];
+                        if(!empty($acc)){
+                            $draw = $report->firstWhere('id', $acc->drawing_account_id);
+                            $drawings = 0;
+                            if (!empty($draw)) {
+                                $drawings = $draw['debit'] - $draw['credit'];
+                            }
+                            $balance = $balance + ($this->pnl * $acc->ratio) - $drawings;
                         }
-                        $balance = $balance + ($this->pnl * $acc->ratio) - $drawings;
 
                     }
                     $balance_v4 += $balance;
