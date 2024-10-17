@@ -117,7 +117,7 @@ class LedgerExportController
         if ($balance >= 0) {
            $closing = number_format($balance, 2);
         } else {
-            $closing = number_format(-$balance, 2);
+            $closing = number_format($balance, 2);
         }
 
         $data [] = [
