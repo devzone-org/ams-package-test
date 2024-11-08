@@ -120,6 +120,11 @@ class BalanceSheet extends Component
 
                     }
                     $balance_v4 += $balance;
+//                  Converting -0 to 0 if the amount is effectively zero
+                    if ($balance == 0) {
+                        $balance = 0;
+                    }
+
                     $this->level5[] = [
                         'name' => $r->name,
                         'type' => $r->type,
