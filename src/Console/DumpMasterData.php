@@ -8,6 +8,7 @@ use Devzone\Ams\Models\ChartOfAccount;
 use Devzone\Ams\Models\Voucher;
 use Illuminate\Console\Command;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\DB;
 
 class DumpMasterData extends Command
 {
@@ -115,6 +116,58 @@ class DumpMasterData extends Command
 
         ChartOfAccount::updateOrCreate(['id' => '79'], ['name' => 'Customers Receivable', 'type' => 'Assets', 'reference' => 'commission-receivable-4', 'sub_account' => '10', 'level' => '4', 'nature' => 'd']);
         ChartOfAccount::updateOrCreate(['reference' => 'customer-receivable-4'], ['name' => 'Customers Receivable', 'type' => 'Assets', 'sub_account' => '10', 'level' => '4', 'nature' => 'd']);
+
+        $cash_suplus = ChartOfAccount::where('reference', 'inc-cash-surplus')->exists();
+        if(!$cash_suplus){
+            $voucher = \Devzone\Ams\Models\Voucher::where('name', 'coa')->get();
+            $voucher = $voucher->first();
+            $count = $voucher->value;
+            $count = $count + 1;
+
+            DB::table('vouchers')
+                ->where('id', $voucher->id)
+                ->update([
+                    'value' => DB::raw('value + 1')
+                ]);
+            $code = $count;
+            $code = str_pad($code, 7, "0", STR_PAD_LEFT);
+            \Devzone\Ams\Models\ChartOfAccount::create([
+                'name' => 'Income - Till Cash Surplus',
+                'type' => 'Income',
+                'sub_account' => '66',
+                'level' => 5,
+                'code' => $code,
+                'nature' => 'c',
+                'status' => 't',
+                'reference' => 'inc-cash-surplus',
+            ]);
+        }
+
+        $cash_shortage = ChartOfAccount::where('reference', 'exp-cash-shortage')->exists();
+        if(!$cash_shortage){
+            $voucher = \Devzone\Ams\Models\Voucher::where('name', 'coa')->get();
+            $voucher = $voucher->first();
+            $count = $voucher->value;
+            $count = $count + 1;
+
+            DB::table('vouchers')
+                ->where('id', $voucher->id)
+                ->update([
+                    'value' => DB::raw('value + 1')
+                ]);
+            $code = $count;
+            $code = str_pad($code, 7, "0", STR_PAD_LEFT);
+            \Devzone\Ams\Models\ChartOfAccount::create([
+                'name' => 'Expense Till Cash Shortage',
+                'type' => 'Expenses',
+                'sub_account' => '56',
+                'level' => 5,
+                'code' => $code,
+                'nature' => 'd',
+                'status' => 't',
+                'reference' => 'exp-cash-shortage',
+            ]);
+        }
 
         if (env('IS_HOSPITAL', false)) {
 
