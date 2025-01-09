@@ -67,12 +67,12 @@ class Close extends Component
 
         $this->transfers = ChartOfAccount::whereIn('sub_account', ['11', '12'])->get()->toArray();
         $cash_surplus_account = ChartOfAccount::where('reference', 'inc-cash-surplus')->select('id')->first();
-        if(!empty($cash_surplus_account['account_id'])){
-            $this->cash_surplus_account_id = $cash_surplus_account['account_id'];
+        if(!empty($cash_surplus_account['id'])){
+            $this->cash_surplus_account_id = $cash_surplus_account['id'];
         }
         $cash_shortage_account = ChartOfAccount::where('reference', 'exp-cash-shortage')->select('id')->first();
-        if(!empty($cash_shortage_account['account_id'])){
-            $this->cash_shortage_account_id = $cash_surplus_account['account_id'];
+        if(!empty($cash_shortage_account['id'])){
+            $this->cash_shortage_account_id = $cash_shortage_account['id'];
         }
     }
 
