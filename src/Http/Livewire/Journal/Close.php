@@ -39,6 +39,8 @@ class Close extends Component
     public $transfer_id;
     public $attachment;
     public $description;
+    public $cash_surplus_account_id = '';
+    public $cash_shortage_account_id = '';
 
     protected $rules = [
         'transfer_id' => 'required|integer'
@@ -64,6 +66,14 @@ class Close extends Component
         ];
 
         $this->transfers = ChartOfAccount::whereIn('sub_account', ['11', '12'])->get()->toArray();
+        $cash_surplus_account = ChartOfAccount::where('reference', 'inc-cash-surplus')->select('id')->first();
+        if(!empty($cash_surplus_account['account_id'])){
+            $this->cash_surplus_account_id = $cash_surplus_account['account_id'];
+        }
+        $cash_shortage_account = ChartOfAccount::where('reference', 'exp-cash-shortage')->select('id')->first();
+        if(!empty($cash_shortage_account['account_id'])){
+            $this->cash_shortage_account_id = $cash_surplus_account['account_id'];
+        }
     }
 
 
@@ -170,11 +180,14 @@ class Close extends Component
                                 ->date(date('Y-m-d'))->approve()->description($description)->execute();
                         }
                     } else if ($this->difference > 0) {
+                        if(empty($this->cash_surplus_account_id)){
+                            throw new \Exception('Income - Till Cash Surplus account not found.');
+                        }
 
                         $description .= " Surplus " . env('CURRENCY','PKR') . " " . number_format($this->difference, 2) . "/-";
                         GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
                             ->date(date('Y-m-d'))->approve()->description($description)->execute();
-                        GeneralJournal::instance()->account(67)->credit($this->difference)->voucherNo($vno)
+                        GeneralJournal::instance()->account($this->cash_surplus_account_id)->credit($this->difference)->voucherNo($vno)
                             ->date(date('Y-m-d'))->approve()->description($description)->execute();
 
                         if ($this->retained_cash > 0) {
@@ -188,11 +201,16 @@ class Close extends Component
 
 
                     } else if ($this->difference < 0) {
+
+                        if(empty($this->cash_shortage_account_id)){
+                            throw new \Exception('Expense Till Cash Shortage account not found.');
+                        }
+
                         $description .= " Shortage " . env('CURRENCY','PKR') . " " . number_format(abs($this->difference), 2) . "/-";
                         GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
                             ->date(date('Y-m-d'))->approve()->description($description)->execute();
 
-                        GeneralJournal::instance()->account(82)->debit(abs($this->difference))->voucherNo($vno)
+                        GeneralJournal::instance()->account($this->cash_shortage_account_id)->debit(abs($this->difference))->voucherNo($vno)
                             ->date(date('Y-m-d'))->approve()->description($description)->execute();
                         if ($this->retained_cash > 0) {
                             GeneralJournal::instance()->account($this->user_account_id)->debit($this->retained_cash)->voucherNo($vno)
