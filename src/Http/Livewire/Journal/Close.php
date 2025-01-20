@@ -167,6 +167,41 @@ class Close extends Component
                 }
 
 
+                $user_account_exists = ChartOfAccount::where('id', $this->user_account_id)->exists();
+                if (!$user_account_exists) {
+                    throw new \Exception("Closing account not found!");
+                }
+
+                $transfer_account_exists = ChartOfAccount::where('id', $this->transfer_id)->exists();
+                if (!$transfer_account_exists) {
+                    throw new \Exception("Transfer account not found!");
+                }
+
+                if (!empty($this->cash_surplus_account_id)) {
+                    $cash_surplus_account_exists = ChartOfAccount::where('id', $this->cash_shortage_account_id)->exists();
+                    if (!$cash_surplus_account_exists) {
+                        throw new \Exception("Cash - Surplus account not found!");
+                    }
+                } else {
+                    $cash_surplus_account_exists = ChartOfAccount::where('id', 67)->exists();
+                    if (!$cash_surplus_account_exists) {
+                        throw new \Exception("Cash - Surplus account not found!");
+                    }
+                }
+
+                if (!empty($this->cash_shortage_account_id)) {
+                    $cash_shortage_account_exists = ChartOfAccount::where('id', $this->cash_shortage_account_id)->exists();
+                    if (!$cash_shortage_account_exists) {
+                        throw new \Exception("Cash - Shortage account not found!");
+                    }
+                } else {
+                    $cash_shortage_account_exists = ChartOfAccount::where('id', 82)->exists();
+                    if (!$cash_shortage_account_exists) {
+                        throw new \Exception("Cash - Shortage account not found!");
+                    }
+                }
+
+
                 if ($total_denomination > 0) {
                     $vno = Voucher::instance()->voucher()->get();
                     if (empty($this->difference)) {
