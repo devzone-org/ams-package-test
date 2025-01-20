@@ -67,11 +67,11 @@ class Close extends Component
 
         $this->transfers = ChartOfAccount::whereIn('sub_account', ['11', '12'])->get()->toArray();
         $cash_surplus_account = ChartOfAccount::where('reference', 'inc-cash-surplus')->select('id')->first();
-        if(!empty($cash_surplus_account['id'])){
+        if (!empty($cash_surplus_account['id'])) {
             $this->cash_surplus_account_id = $cash_surplus_account['id'];
         }
         $cash_shortage_account = ChartOfAccount::where('reference', 'exp-cash-shortage')->select('id')->first();
-        if(!empty($cash_shortage_account['id'])){
+        if (!empty($cash_shortage_account['id'])) {
             $this->cash_shortage_account_id = $cash_shortage_account['id'];
         }
     }
@@ -84,7 +84,7 @@ class Close extends Component
 
     public function updatedUserAccountId($value)
     {
-        $this->reset(['current_user', 'opening_balance', 'closing_balance','difference']);
+        $this->reset(['current_user', 'opening_balance', 'closing_balance', 'difference']);
 
         $user = collect($this->users)->firstWhere('account_id', $value);
         if (!empty($user)) {
@@ -105,7 +105,7 @@ class Close extends Component
                 ->when(!empty($closing), function ($q) use ($closing) {
                     return $q->where('voucher_no', '>', $closing['voucher_no']);
                 })->select(DB::raw('sum(debit-credit) as balance'), 'reference')
-                ->where('is_approve','t')
+                ->where('is_approve', 't')
                 ->groupBy('reference')->get();
             $this->closing_balance = $closing_balance->toArray();
 
@@ -145,7 +145,7 @@ class Close extends Component
                 }
 
                 $closing_balance = Ledger::where('account_id', $this->user_account_id)
-                    ->where('is_approve','t')
+                    ->where('is_approve', 't')
                     ->select(DB::raw('sum(debit-credit) as balance'))
                     ->first();
 
@@ -159,11 +159,45 @@ class Close extends Component
                 $total_denomination = collect($this->denomination_counting)->sum('total');
                 $transfer_amount = $total_denomination - $this->retained_cash;
                 $description = "[TILL CLOSING: " . date('d M Y h:i A') . "]; [Teller: " . $this->current_user['name'] .
-                    " Till closed by: " . Auth::user()->name . "][Transferring " . env('CURRENCY','PKR') . " " . number_format($transfer_amount, 2) . " to " . collect($this->transfers)->firstWhere('id', $this->transfer_id)['name'] . " from till of Teller '" . $this->current_user['name'] . "'. Cash Retained PKR " .
+                    " Till closed by: " . Auth::user()->name . "][Transferring " . env('CURRENCY', 'PKR') . " " . number_format($transfer_amount, 2) . " to " . collect($this->transfers)->firstWhere('id', $this->transfer_id)['name'] . " from till of Teller '" . $this->current_user['name'] . "'. Cash Retained PKR " .
                     number_format($this->retained_cash, 2) . " in till of " . $this->current_user['name'] . "]";
 
                 if (!empty($this->description)) {
                     $description .= ' Description: ' . $this->description;
+                }
+
+                $user_account_exists = ChartOfAccount::where('id', $this->user_account_id)->exists();
+                if (!$user_account_exists) {
+                    throw new \Exception("Closing account not found!");
+                }
+
+                $transfer_account_exists = ChartOfAccount::where('id', $this->transfer_id)->exists();
+                if (!$transfer_account_exists) {
+                    throw new \Exception("Transfer account not found!");
+                }
+
+                if (!empty($this->cash_surplus_account_id)) {
+                    $cash_surplus_account_exists = ChartOfAccount::where('id', $this->cash_shortage_account_id)->exists();
+                    if (!$cash_surplus_account_exists) {
+                        throw new \Exception("Cash - Surplus account not found!");
+                    }
+                } else {
+                    $cash_surplus_account_exists = ChartOfAccount::where('id', 67)->exists();
+                    if (!$cash_surplus_account_exists) {
+                        throw new \Exception("Cash - Surplus account not found!");
+                    }
+                }
+
+                if (!empty($this->cash_shortage_account_id)) {
+                    $cash_shortage_account_exists = ChartOfAccount::where('id', $this->cash_shortage_account_id)->exists();
+                    if (!$cash_shortage_account_exists) {
+                        throw new \Exception("Cash - Shortage account not found!");
+                    }
+                } else {
+                    $cash_shortage_account_exists = ChartOfAccount::where('id', 82)->exists();
+                    if (!$cash_shortage_account_exists) {
+                        throw new \Exception("Cash - Shortage account not found!");
+                    }
                 }
 
 
@@ -180,19 +214,19 @@ class Close extends Component
                                 ->date(date('Y-m-d'))->approve()->description($description)->execute();
                         }
                     } else if ($this->difference > 0) {
-                        
 
-                        $description .= " Surplus " . env('CURRENCY','PKR') . " " . number_format($this->difference, 2) . "/-";
+
+                        $description .= " Surplus " . env('CURRENCY', 'PKR') . " " . number_format($this->difference, 2) . "/-";
                         GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
                             ->date(date('Y-m-d'))->approve()->description($description)->execute();
-                        if(!empty($this->cash_surplus_account_id)){
+                        if (!empty($this->cash_surplus_account_id)) {
                             GeneralJournal::instance()->account($this->cash_surplus_account_id)->credit($this->difference)->voucherNo($vno)
-                            ->date(date('Y-m-d'))->approve()->description($description)->execute();
-                        }else{
+                                ->date(date('Y-m-d'))->approve()->description($description)->execute();
+                        } else {
                             GeneralJournal::instance()->account(67)->credit($this->difference)->voucherNo($vno)
-                            ->date(date('Y-m-d'))->approve()->description($description)->execute();
+                                ->date(date('Y-m-d'))->approve()->description($description)->execute();
                         }
-                        
+
 
                         if ($this->retained_cash > 0) {
                             GeneralJournal::instance()->account($this->user_account_id)->debit($this->retained_cash)->voucherNo($vno)
@@ -206,18 +240,17 @@ class Close extends Component
 
                     } else if ($this->difference < 0) {
 
-                        
 
-                        $description .= " Shortage " . env('CURRENCY','PKR') . " " . number_format(abs($this->difference), 2) . "/-";
+                        $description .= " Shortage " . env('CURRENCY', 'PKR') . " " . number_format(abs($this->difference), 2) . "/-";
                         GeneralJournal::instance()->account($this->user_account_id)->credit($transfer_amount + $this->retained_cash)->voucherNo($vno)
                             ->date(date('Y-m-d'))->approve()->description($description)->execute();
 
-                        if(!empty($this->cash_shortage_account_id)){
+                        if (!empty($this->cash_shortage_account_id)) {
                             GeneralJournal::instance()->account($this->cash_shortage_account_id)->debit(abs($this->difference))->voucherNo($vno)
-                            ->date(date('Y-m-d'))->approve()->description($description)->execute();
-                        }else{
+                                ->date(date('Y-m-d'))->approve()->description($description)->execute();
+                        } else {
                             GeneralJournal::instance()->account(82)->debit(abs($this->difference))->voucherNo($vno)
-                            ->date(date('Y-m-d'))->approve()->description($description)->execute();
+                                ->date(date('Y-m-d'))->approve()->description($description)->execute();
                         }
 
                         GeneralJournal::instance()->account($this->cash_shortage_account_id)->debit(abs($this->difference))->voucherNo($vno)

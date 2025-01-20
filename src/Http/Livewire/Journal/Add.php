@@ -208,6 +208,12 @@ class Add extends Component
 
     public function draft()
     {
+//        if (function_exists('validateEmployeesLedgerEntries')){
+//            if (!validateEmployeesLedgerEntries()){
+//                return;
+//            }
+//        }
+
         $this->resetErrorBag();
         try {
             DB::beginTransaction();
