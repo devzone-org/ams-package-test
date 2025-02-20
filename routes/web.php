@@ -146,3 +146,8 @@ Route::group(['middleware' => ['permission:3.view.petty-expenses']], function ()
         return view('ams::petty-expenses.approved-petty-expenses-list');
     });
 });
+
+Route::get('ams/customer-list', function () {
+    return view('ams::customers.customer-list');
+});
+

@@ -47,7 +47,12 @@ class CoaExportController
             })
             ->when(!empty($this->type), function ($q) {
                 return $q->where('coa.type', $this->type);
-            })->select('coa.*', DB::raw('SUM(l.debit) as debit'), DB::raw('SUM(l.credit) as credit'),
+            })
+            ->where(function ($query) {
+                $query->where('coa.reference', '!=', 'ams-customers-l4')
+                    ->orWhereNull('coa.reference');
+            })
+            ->select('coa.*', DB::raw('SUM(l.debit) as debit'), DB::raw('SUM(l.credit) as credit'),
                 DB::raw('max(l.posting_date) as posting_date'))
             ->groupBy('coa.id')
             ->orderByRaw('FIELD(coa.type,"Assets","Liabilities","Equity","Income","Expenses")')

@@ -8,6 +8,7 @@ use Devzone\Ams\Http\Livewire\ChartOfAccount\Add;
 use Devzone\Ams\Http\Livewire\ChartOfAccount\EquityRatio;
 use Devzone\Ams\Http\Livewire\ChartOfAccount\Listing;
 use Devzone\Ams\Http\Livewire\Closing\ClosingFiscalYear;
+use Devzone\Ams\Http\Livewire\Closing\CustomerList;
 use Devzone\Ams\Http\Livewire\Journal\Close;
 use Devzone\Ams\Http\Livewire\Journal\Edit;
 use Devzone\Ams\Http\Livewire\Journal\TempList;
@@ -96,6 +97,7 @@ class AmsServiceProvider extends ServiceProvider
         Livewire::component('chart-of-accounts.equity-ratio', EquityRatio::class);
 
         Livewire::component('closing.closing-fiscal-year', ClosingFiscalYear::class);
+        Livewire::component('customers.customer-list', \Devzone\Ams\Http\Livewire\Customers\CustomerList::class);
     }
 
     /**

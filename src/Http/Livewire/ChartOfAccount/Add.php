@@ -56,6 +56,10 @@ class Add extends Component
         if (!empty($this->at_level) && !empty($this->account_type)) {
             $this->sub_accounts = ChartOfAccount::where('level', $this->at_level)
                 ->where('type', $this->account_type)
+                ->where(function ($query) {
+                    $query->where('reference', '!=', 'ams-customers-l4')
+                        ->orWhereNull('reference');
+                })
                 ->when(!empty($this->restriction_accounts) && env('RESTRICT_CERTAIN_ACCOUNTS'), function ($q) {
                     return $q->whereNotIn('id', $this->restriction_accounts);
                 })

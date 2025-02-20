@@ -352,6 +352,13 @@
             </div>
         </div>
     </div>
+
+    @if(env('AMS_CUSTOMER', false) === true)
+        <a href="{{ url('accounts/ams/customer-list') }}"
+           class="{{ Request::segment(3)=='customer-list' ? $a_current : '' }} rounded-md py-2 px-3 inline-flex items-center text-sm font-medium text-gray-900 hover:bg-gray-50 hover:text-gray-900 active:bg-gray-50">
+            Customers List </a>
+    @endif
 </nav>
+
 
 
