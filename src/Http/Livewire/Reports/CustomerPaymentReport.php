@@ -16,7 +16,6 @@ class CustomerPaymentReport extends Component
 
     public function mount()
     {
-//        $this->from_date = date('Y-m', strtotime('-1 month'));
         $this->to_date = date('Y-m');
         $this->from_date = date('Y-m');
         $this->customer_list = AmsCustomer::select('id', 'name')->get()->toArray();
