@@ -6,6 +6,7 @@
             </h3>
         </div>
 
+    @can('4.add.customers')
         <form wire:submit.prevent="create">
             <div class="shadow sm:rounded-md sm:overflow-hidden">
                 <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
@@ -74,7 +75,7 @@
                 </div>
             </div>
         </form>
-
+    @endcan
         <div class="mt-5 shadow sm:rounded-md sm:overflow-hidden">
             <!-- This example requires Tailwind CSS v2.0+ -->
             <div class="flex flex-col">
@@ -131,8 +132,10 @@
                                                 {{ $c->status }}
                                             </td>
                                             <td class="px-3 py-3 text-right text-sm font-medium">
-                                                <p wire:click="openEditModal('{{ $c->id }}')"
-                                                   class="cursor-pointer text-indigo-600 hover:text-indigo-900">Edit</p>
+                                                @can('4.edit.customers')
+                                                    <p wire:click="openEditModal('{{ $c->id }}')"
+                                                       class="cursor-pointer text-indigo-600 hover:text-indigo-900">Edit</p>
+                                                @endcan
                                             </td>
                                         </tr>
                                     @endforeach

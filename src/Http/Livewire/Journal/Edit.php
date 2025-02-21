@@ -4,6 +4,7 @@
 namespace Devzone\Ams\Http\Livewire\Journal;
 
 
+use Devzone\Ams\Models\AmsCustomerPayment;
 use Devzone\Ams\Models\ChartOfAccount;
 use Devzone\Ams\Models\Ledger;
 use Devzone\Ams\Models\LedgerAttachment;
@@ -32,6 +33,11 @@ class Edit extends Component
     public $account_list = [];
     public $highlightIndex = 0;
 
+    public $customer_coa_level_4_id;
+    public $customer_account_present = false;
+    public $invoice_paid = 'f';
+    public $selected_month;
+
 
     protected $rules = [
         'entries.*.account_id' => 'required|integer',
@@ -56,12 +62,29 @@ class Edit extends Component
 //        $this->account_list = ChartOfAccount::where('level', 5)->orderBy('type')->get()->toArray();
 //        $this->accounts = $this->account_list;
         $temp_entries = $this->getTempEntries();
+        $customer_coa = ChartOfAccount::where('reference', 'ams-customers-l4')->select('id')->first();
 
+        if(!empty($customer_coa['id'])){
+            $this->customer_coa_level_4_id = $customer_coa['id'];
+        }
 
         if ($temp_entries->isNotEmpty()) {
             $this->posting_date = date('d M Y', strtotime($temp_entries->first()->posting_date));
             $this->voucher_no = $temp_entries->max('voucher_no');
             $this->entries = $temp_entries->toArray();
+
+            $coas_data = ChartOfAccount::whereIn('id', array_column($this->entries, 'account_id'))->pluck('sub_account')->toArray();
+            if(in_array($this->customer_coa_level_4_id, $coas_data)) {
+                $this->customer_account_present = true;
+            }
+
+            $payment_entry_found = AmsCustomerPayment::where('voucher_no', $this->voucher_no)->where('temp_voucher', 't')->first();
+            if(!empty($payment_entry_found)){
+                $this->selected_month = $payment_entry_found['month'];
+                $this->invoice_paid = 't';
+                $this->customer_account_present = true;
+            }
+
             $attachments = LedgerAttachment::where('type', '0')->where('voucher_no', $this->voucher_no)->get();
             if ($attachments->isNotEmpty()) {
                 $this->attachment_entries = $attachments->toArray();
@@ -127,6 +150,23 @@ class Edit extends Component
         if (isset($entry['id'])) {
             $this->deleted[] = $entry['id'];
         }
+        $this->checkForExistenceOfCustomerAccount();
+    }
+
+    private function checkForExistenceOfCustomerAccount()
+    {
+        if(!empty(array_column($this->entries, 'account_id'))){
+            $coas_data = ChartOfAccount::whereIn('id', array_column($this->entries, 'account_id'))->pluck('sub_account')->toArray();
+            if(!in_array($this->customer_coa_level_4_id, $coas_data)) {
+                $this->customer_account_present = false;
+                $this->selected_month = '';
+                $this->invoice_paid = 'f';
+            }
+        } else {
+            $this->customer_account_present = false;
+            $this->selected_month = '';
+            $this->invoice_paid = 'f';
+        }
     }
 
     public function searchAccounts($key)
@@ -154,11 +194,22 @@ class Edit extends Component
 
     public function chooseAccount($id, $name)
     {
+        //finding if the account is from customers
+        if($this->customer_account_present === false){
+            $find_coa = ChartOfAccount::select('sub_account')->find($id);
+            if(!empty($find_coa['sub_account']) && $find_coa['sub_account'] == $this->customer_coa_level_4_id){
+                $this->customer_account_present = true;
+            }
+        }
+
         $this->entries[$this->key_id]['account_id'] = $id;
         $this->entries[$this->key_id]['account_name'] = $name;
         $this->search_accounts_modal = false;
         $this->accounts = [];
         $this->search_accounts = '';
+
+        $this->checkForExistenceOfCustomerAccount();
+
         $this->entries[$this->key_id]['description'] = $this->entries[0]['description'];
         if (env('AMS_BOOTSTRAP') == 'true') {
             $this->dispatchBrowserEvent('close-modal');
@@ -207,6 +258,10 @@ class Edit extends Component
                 $this->file_upload = false;
             }
         }
+
+        if($name == 'invoice_paid' && $value == 'f'){
+            $this->selected_month = '';
+        }
     }
 
     public function incrementHighlight()
@@ -246,6 +301,8 @@ class Edit extends Component
             if (!empty($this->deleted)) {
                 Ledger::where('is_approve', 'f')->whereIn('id', $this->deleted)->delete();
             }
+
+            $this->addEntryInAmsCustomerPayment();
 
             foreach ($this->entries as $entry) {
                 if (isset($entry['id'])) {
@@ -312,6 +369,34 @@ class Edit extends Component
             DB::rollBack();
         }
         return true;
+    }
+
+    private function addEntryInAmsCustomerPayment()
+    {
+        $payment_entry_found = AmsCustomerPayment::where('voucher_no', $this->voucher_no)->where('temp_voucher', 't')->exists();
+
+        if($this->customer_account_present && $this->invoice_paid == 't'){
+            if(empty($this->selected_month)){
+                throw new \Exception("If 'Invoice Paid' is set to 'Yes,' the selected month is required.");
+            }
+            if($payment_entry_found){
+                AmsCustomerPayment::where('voucher_no', $this->voucher_no)->where('temp_voucher', 't')->update([
+                    'voucher_no' => $this->voucher_no,
+                    'month' => $this->selected_month,
+                    'temp_voucher' => 't'
+                ]);
+            }else{
+                AmsCustomerPayment::create([
+                    'voucher_no' => $this->voucher_no,
+                    'month' => $this->selected_month,
+                    'temp_voucher' => 't'
+                ]);
+            }
+        }else{
+            if($payment_entry_found){
+                AmsCustomerPayment::where('voucher_no', $this->voucher_no)->where('temp_voucher', 't')->delete();
+            }
+        }
     }
 
     private function formatDate($date)

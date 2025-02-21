@@ -69,6 +69,10 @@ class CustomerList extends Component
         try{
             DB::beginTransaction();
 
+            if (auth()->user()->cannot('4.add.customers')){
+                throw new \Exception('You do not have permission to create customers.');
+            }
+
             //if status selected was active then coa will be created
             $account_id = null;
             if($this->customer_data['status'] == 'Active'){
@@ -113,6 +117,10 @@ class CustomerList extends Component
         ]);
         try {
             DB::BeginTransaction();
+
+            if (auth()->user()->cannot('4.edit.customers')){
+                throw new \Exception('You do not have permission to edit customers.');
+            }
 
             $cus_data = AmsCustomer::find($this->edit_id);
             if(!empty($cus_data)){
