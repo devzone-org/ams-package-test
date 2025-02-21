@@ -15,6 +15,7 @@ use Devzone\Ams\Http\Livewire\Journal\TempList;
 use Devzone\Ams\Http\Livewire\Journal\TraceVoucher;
 use Devzone\Ams\Http\Livewire\Post\Show;
 use Devzone\Ams\Http\Livewire\Reports\BalanceSheet;
+use Devzone\Ams\Http\Livewire\Reports\CustomerPaymentReport;
 use Devzone\Ams\Http\Livewire\Reports\DayClosing;
 use Devzone\Ams\Http\Livewire\Reports\Ledger;
 use Devzone\Ams\Http\Livewire\Reports\ProfitLoss;
@@ -98,6 +99,7 @@ class AmsServiceProvider extends ServiceProvider
 
         Livewire::component('closing.closing-fiscal-year', ClosingFiscalYear::class);
         Livewire::component('customers.customer-list', \Devzone\Ams\Http\Livewire\Customers\CustomerList::class);
+        Livewire::component('reports.customer-payment-report', CustomerPaymentReport::class);
     }
 
     /**
