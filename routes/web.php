@@ -146,3 +146,18 @@ Route::group(['middleware' => ['permission:3.view.petty-expenses']], function ()
         return view('ams::petty-expenses.approved-petty-expenses-list');
     });
 });
+
+if(env('AMS_CUSTOMER', false) === true) {
+    Route::get('ams/customer-list', function () {
+        return view('ams::customers.customer-list');
+    })->middleware('permission:4.view.customers');
+
+    Route::group(['middleware' => ['permission:3.customer-payment-report']], function () {
+        Route::get('reports/customer-payments', function () {
+            return view('ams::reports.customer-payment-report');
+        });
+
+//    Route::get('reports/trial-balance/export', [\Devzone\Ams\Http\Controllers\Exports\TrialExportController::class, 'downloadTrial']);
+    });
+}
+

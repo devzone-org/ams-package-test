@@ -362,7 +362,7 @@
 
                 </div>
 
-                <div class="grid grid-cols-6 gap-6">
+                <div class="grid grid-cols-12 gap-6">
                     <div class="col-span-6 sm:col-span-3">
                         <label for="posting_date" class="block text-sm font-medium text-gray-700">Posting Date</label>
                         <input type="text" readonly wire:model.lazy="posting_date" id="posting_date" autocomplete="off"
@@ -374,6 +374,27 @@
                         <input type="text" wire:model="voucher_no" readonly id="voucher_no" autocomplete="off"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
+
+                    @if(env('AMS_CUSTOMER', false) === true)
+                        @if($customer_account_present)
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="voucher_no" class="block text-sm font-medium text-gray-700">Invoice Paid</label>
+                                <select wire:model="invoice_paid"
+                                        class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value=""></option>
+                                    <option value="t">Yes</option>
+                                    <option value="f">No</option>
+                                </select>
+                            </div>
+                            @if($invoice_paid == 't')
+                                <div class="col-span-6 sm:col-span-3">
+                                    <label for="voucher_no" class="block text-sm font-medium text-gray-700">Month</label>
+                                    <input type="month" wire:model="selected_month"  id="month" autocomplete="off"
+                                           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                </div>
+                            @endif
+                        @endif
+                    @endif
 
                 </div>
                 @if ($errors->any())

@@ -61,6 +61,13 @@ class DumpMasterDataPermissions extends Command
 
         Permission::updateOrCreate(['name' => '2.transfer-entry'], ['guard_name' => 'web', 'description' => 'payment and receiving transaction - transfer entry ', 'portal' => 'accounts', 'section' => 'accounts']);
 
+        if(env('AMS_CUSTOMER', false) === true){
+            Permission::updateOrCreate(['name' => '4.add.customers'], ['guard_name' => 'web', 'description' => 'Add Customers', 'portal' => 'accounts', 'section' => 'accounts']);
+            Permission::updateOrCreate(['name' => '4.edit.customers'], ['guard_name' => 'web', 'description' => 'Edit Customers', 'portal' => 'accounts', 'section' => 'accounts']);
+            Permission::updateOrCreate(['name' => '4.view.customers'], ['guard_name' => 'web', 'description' => 'View Customers', 'portal' => 'accounts', 'section' => 'accounts']);
+            Permission::updateOrCreate(['name' => '3.customer-payment-report'], ['guard_name' => 'web', 'description' => 'Customer Payment Report', 'portal' => 'accounts', 'section' => 'accounts']);
+        }
+
 
 
         $this->info('Dumping Permissions Finished...');

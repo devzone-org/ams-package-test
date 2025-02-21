@@ -5,6 +5,7 @@ namespace Devzone\Ams\Http\Livewire\Journal;
 
 
 use Devzone\Ams\Helper\Voucher;
+use Devzone\Ams\Models\AmsCustomerPayment;
 use Devzone\Ams\Models\Ledger;
 use Devzone\Ams\Models\LedgerAttachment;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +35,9 @@ class TempList extends Component
         if (auth()->user()->can('2.delete.transfer.unapproved')) {
             Ledger::where('is_approve', 'f')->where('voucher_no', $voucher_no)->delete();
             LedgerAttachment::where('type', '0')->where('voucher_no', $voucher_no)->delete();
+            if(env('AMS_CUSTOMER', false) === true) {
+                AmsCustomerPayment::where('voucher_no', $voucher_no)->where('temp_voucher', 't')->delete();
+            }
             $this->success = 'Voucher #' . $voucher_no . ' has been deleted.';
         } else {
             $this->addError('success', env('PERMISSION_ERROR'));
@@ -61,6 +65,13 @@ class TempList extends Component
                 ]);
 
                 $ledger_entries = Ledger::where('is_approve', 'f')->where('voucher_no', $voucher_no)->select('id')->get();
+
+                if(env('AMS_CUSTOMER', false) === true) {
+                    AmsCustomerPayment::where('voucher_no', $voucher_no)->where('temp_voucher', 't')->update([
+                        'voucher_no' => $vno,
+                        'temp_voucher' => 'f',
+                    ]);
+                }
 
                 foreach ($ledger_entries as $e) {
                     Ledger::find($e->id)->update([

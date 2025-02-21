@@ -8,12 +8,14 @@ use Devzone\Ams\Http\Livewire\ChartOfAccount\Add;
 use Devzone\Ams\Http\Livewire\ChartOfAccount\EquityRatio;
 use Devzone\Ams\Http\Livewire\ChartOfAccount\Listing;
 use Devzone\Ams\Http\Livewire\Closing\ClosingFiscalYear;
+use Devzone\Ams\Http\Livewire\Closing\CustomerList;
 use Devzone\Ams\Http\Livewire\Journal\Close;
 use Devzone\Ams\Http\Livewire\Journal\Edit;
 use Devzone\Ams\Http\Livewire\Journal\TempList;
 use Devzone\Ams\Http\Livewire\Journal\TraceVoucher;
 use Devzone\Ams\Http\Livewire\Post\Show;
 use Devzone\Ams\Http\Livewire\Reports\BalanceSheet;
+use Devzone\Ams\Http\Livewire\Reports\CustomerPaymentReport;
 use Devzone\Ams\Http\Livewire\Reports\DayClosing;
 use Devzone\Ams\Http\Livewire\Reports\Ledger;
 use Devzone\Ams\Http\Livewire\Reports\ProfitLoss;
@@ -96,6 +98,8 @@ class AmsServiceProvider extends ServiceProvider
         Livewire::component('chart-of-accounts.equity-ratio', EquityRatio::class);
 
         Livewire::component('closing.closing-fiscal-year', ClosingFiscalYear::class);
+        Livewire::component('customers.customer-list', \Devzone\Ams\Http\Livewire\Customers\CustomerList::class);
+        Livewire::component('reports.customer-payment-report', CustomerPaymentReport::class);
     }
 
     /**

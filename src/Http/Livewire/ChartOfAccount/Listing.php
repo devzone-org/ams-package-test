@@ -22,6 +22,10 @@ class Listing extends Component
             ->when(!empty($this->type), function ($q) {
                 return $q->where('coa.type', $this->type);
             })
+            ->where(function ($query) {
+                $query->where('coa.reference', '!=', 'ams-customers-l4')
+                    ->orWhereNull('coa.reference');
+            })
             ->select(
                 'coa.*',
                 DB::raw('SUM(l.debit) as debit'),
