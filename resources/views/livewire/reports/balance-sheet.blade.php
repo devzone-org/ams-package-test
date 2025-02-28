@@ -101,7 +101,7 @@
                                                     <td class="border-0 px-2 py-1">
 
 
-                                                        @if($type == 'Assets')
+                                                        @if($type == 'Assets' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                             @cannot('2.hide-assets')
                                                                 @if($l3['balance']>=0)
                                                                     {{ number_format($l3['balance'],2) }}
@@ -109,7 +109,7 @@
                                                                 ({{ number_format(abs($l3['balance']),2) }})
                                                                 @endif
                                                             @endcannot
-                                                        @elseif($type == 'Liabilities')
+                                                        @elseif($type == 'Liabilities' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                             @cannot('2.hide-liabilities')
                                                                 @if($l3['balance']>=0)
                                                                     {{ number_format($l3['balance'],2) }}
@@ -117,7 +117,7 @@
                                                                 ({{ number_format(abs($l3['balance']),2) }})
                                                                 @endif
                                                             @endcannot
-                                                        @elseif($type == 'Equity')
+                                                        @elseif($type == 'Equity' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                             @cannot('2.hide-equity')
                                                                 @if($l3['balance']>=0)
                                                                     {{ number_format($l3['balance'],2) }}
@@ -125,7 +125,7 @@
                                                                 ({{ number_format(abs($l3['balance']),2) }})
                                                                 @endif
                                                             @endcannot
-                                                        @elseif($type == 'Income')
+                                                        @elseif($type == 'Income' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                             @cannot('2.hide-income')
                                                                 @if($l3['balance']>=0)
                                                                     {{ number_format($l3['balance'],2) }}
@@ -133,7 +133,7 @@
                                                                 ({{ number_format(abs($l3['balance']),2) }})
                                                                 @endif
                                                             @endcannot
-                                                        @elseif($type == 'Expenses')
+                                                        @elseif($type == 'Expenses' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                             @cannot('2.hide-expenses')
                                                                 @if($l3['balance']>=0)
                                                                     {{ number_format($l3['balance'],2) }}
@@ -184,7 +184,7 @@
                                                         <td class="border-0 px-2 py-1">
 
 
-                                                            @if($type == 'Assets')
+                                                            @if($type == 'Assets' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                                 @cannot('2.hide-assets')
                                                                     @if($l4['balance']>=0)
                                                                         {{ number_format($l4['balance'],2) }}
@@ -192,7 +192,7 @@
                                                                     ({{ number_format(abs($l4['balance']),2) }})
                                                                     @endif
                                                                 @endcannot
-                                                            @elseif($type == 'Liabilities')
+                                                            @elseif($type == 'Liabilities' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                                 @cannot('2.hide-liabilities')
                                                                     @if($l4['balance']>=0)
                                                                         {{ number_format($l4['balance'],2) }}
@@ -200,7 +200,7 @@
                                                                     ({{ number_format(abs($l4['balance']),2) }})
                                                                     @endif
                                                                 @endcannot
-                                                            @elseif($type == 'Equity')
+                                                            @elseif($type == 'Equity' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                                 @cannot('2.hide-equity')
                                                                     @if($l4['balance']>=0)
                                                                         {{ number_format($l4['balance'],2) }}
@@ -208,7 +208,7 @@
                                                                     ({{ number_format(abs($l4['balance']),2) }})
                                                                     @endif
                                                                 @endcannot
-                                                            @elseif($type == 'Income')
+                                                            @elseif($type == 'Income' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                                 @cannot('2.hide-income')
                                                                     @if($l4['balance']>=0)
                                                                         {{ number_format($l4['balance'],2) }}
@@ -216,7 +216,7 @@
                                                                     ({{ number_format(abs($l4['balance']),2) }})
                                                                     @endif
                                                                 @endcannot
-                                                            @elseif($type == 'Expenses')
+                                                            @elseif($type == 'Expenses' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                                 @cannot('2.hide-expenses')
                                                                     @if($l4['balance']>=0)
                                                                         {{ number_format($l4['balance'],2) }}
@@ -252,7 +252,7 @@
 
 
 
-                                                                        @if($type == 'Assets')
+                                                                        @if($type == 'Assets' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                                             @cannot('2.hide-assets')
                                                                                 @if($l5['balance']>=0)
                                                                                     {{ number_format($l5['balance'],2) }}
@@ -260,7 +260,7 @@
                                                                                 ({{ number_format(abs($l5['balance']),2) }})
                                                                                 @endif
                                                                             @endcannot
-                                                                        @elseif($type == 'Liabilities')
+                                                                        @elseif($type == 'Liabilities' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                                             @cannot('2.hide-liabilities')
                                                                                 @if($l5['balance']>=0)
                                                                                     {{ number_format($l5['balance'],2) }}
@@ -268,7 +268,7 @@
                                                                                 ({{ number_format(abs($l5['balance']),2) }})
                                                                                 @endif
                                                                             @endcannot
-                                                                        @elseif($type == 'Equity')
+                                                                        @elseif($type == 'Equity' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                                             @cannot('2.hide-equity')
                                                                                 @if($l5['balance']>=0)
                                                                                     {{ number_format($l5['balance'],2) }}
@@ -276,7 +276,7 @@
                                                                                 ({{ number_format(abs($l5['balance']),2) }})
                                                                                 @endif
                                                                             @endcannot
-                                                                        @elseif($type == 'Income')
+                                                                        @elseif($type == 'Income' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                                             @cannot('2.hide-income')
                                                                                 @if($l5['balance']>=0)
                                                                                     {{ number_format($l5['balance'],2) }}
@@ -284,7 +284,7 @@
                                                                                 ({{ number_format(abs($l5['balance']),2) }})
                                                                                 @endif
                                                                             @endcannot
-                                                                        @elseif($type == 'Expenses')
+                                                                        @elseif($type == 'Expenses' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                                             @cannot('2.hide-expenses')
                                                                                 @if($l5['balance']>=0)
                                                                                     {{ number_format($l5['balance'],2) }}
@@ -320,7 +320,7 @@
                                                         $total = collect($level3)->where('type',$type)->sum('balance');
                                                     @endphp
 
-                                                    @if($type == 'Assets')
+                                                    @if($type == 'Assets' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                         @cannot('2.hide-assets')
                                                             @if($total>=0)
                                                                 {{ number_format($total,2) }}
@@ -328,7 +328,7 @@
                                                             ({{ number_format(abs($total),2) }})
                                                             @endif
                                                         @endcannot
-                                                    @elseif($type == 'Liabilities')
+                                                    @elseif($type == 'Liabilities' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                         @cannot('2.hide-liabilities')
                                                             @if($total>=0)
                                                                 {{ number_format($total,2) }}
@@ -336,7 +336,7 @@
                                                             ({{ number_format(abs($total),2) }})
                                                             @endif
                                                         @endcannot
-                                                    @elseif($type == 'Equity')
+                                                    @elseif($type == 'Equity' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                         @cannot('2.hide-equity')
                                                             @if($total>=0)
                                                                 {{ number_format($total,2) }}
@@ -344,7 +344,7 @@
                                                             ({{ number_format(abs($total),2) }})
                                                             @endif
                                                         @endcannot
-                                                    @elseif($type == 'Income')
+                                                    @elseif($type == 'Income' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                         @cannot('2.hide-income')
                                                             @if($total>=0)
                                                                 {{ number_format($total,2) }}
@@ -352,7 +352,7 @@
                                                             ({{ number_format(abs($total),2) }})
                                                             @endif
                                                         @endcannot
-                                                    @elseif($type == 'Expenses')
+                                                    @elseif($type == 'Expenses' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                         @cannot('2.hide-expenses')
                                                             @if($total>=0)
                                                                 {{ number_format($total,2) }}
@@ -384,15 +384,17 @@
                                                     $equity = collect($level3)->where('type','Equity')->sum('balance');
                                                     $total = $liabilities + $equity;
                                                 @endphp
-                                                @cannot('2.hide-liabilities')
-                                                    @cannot('2.hide-equity')
+                                                @if(auth()->user()->cannot('2.hide-liabilities')  || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
+                                                    @if(auth()->user()->cannot('2.hide-equity')  || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
+
                                                         @if($total>=0)
                                                             {{ number_format($total,2) }}
                                                         @else
                                                         ({{ number_format(abs($total),2) }})
                                                         @endif
-                                                    @endcannot
-                                                @endcannot
+
+                                                    @endif
+                                                @endif
                                             </th>
                                         </tr>
                                         </tbody>
@@ -544,7 +546,7 @@
 
                             </td>
                             <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-900 font-medium">
-                                @if($type == 'Assets')
+                                @if($type == 'Assets' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                     @cannot('2.hide-assets')
                                         @if($l3['balance']>=0)
                                             {{ number_format($l3['balance'],2) }}
@@ -552,7 +554,7 @@
                                         ({{ number_format(abs($l3['balance']),2) }})
                                         @endif
                                     @endcannot
-                                @elseif($type == 'Liabilities')
+                                @elseif($type == 'Liabilities'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                     @cannot('2.hide-liabilities')
                                         @if($l3['balance']>=0)
                                             {{ number_format($l3['balance'],2) }}
@@ -560,7 +562,7 @@
                                         ({{ number_format(abs($l3['balance']),2) }})
                                         @endif
                                     @endcannot
-                                @elseif($type == 'Equity')
+                                @elseif($type == 'Equity' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                     @cannot('2.hide-equity')
                                         @if($l3['balance']>=0)
                                             {{ number_format($l3['balance'],2) }}
@@ -568,7 +570,7 @@
                                         ({{ number_format(abs($l3['balance']),2) }})
                                         @endif
                                     @endcannot
-                                @elseif($type == 'Income')
+                                @elseif($type == 'Income' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                     @cannot('2.hide-income')
                                         @if($l3['balance']>=0)
                                             {{ number_format($l3['balance'],2) }}
@@ -576,7 +578,7 @@
                                         ({{ number_format(abs($l3['balance']),2) }})
                                         @endif
                                     @endcannot
-                                @elseif($type == 'Expenses')
+                                @elseif($type == 'Expenses' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                     @cannot('2.hide-expenses')
                                         @if($l3['balance']>=0)
                                             {{ number_format($l3['balance'],2) }}
@@ -628,7 +630,7 @@
 
                                 </td>
                                 <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-900 font-medium ">
-                                    @if($type == 'Assets')
+                                    @if($type == 'Assets' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                         @cannot('2.hide-assets')
                                             @if($l4['balance']>=0)
                                                 {{ number_format($l4['balance'],2) }}
@@ -636,7 +638,7 @@
                                             ({{ number_format(abs($l4['balance']),2) }})
                                             @endif
                                         @endcannot
-                                    @elseif($type == 'Liabilities')
+                                    @elseif($type == 'Liabilities' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                         @cannot('2.hide-liabilities')
                                             @if($l4['balance']>=0)
                                                 {{ number_format($l4['balance'],2) }}
@@ -644,7 +646,7 @@
                                             ({{ number_format(abs($l4['balance']),2) }})
                                             @endif
                                         @endcannot
-                                    @elseif($type == 'Equity')
+                                    @elseif($type == 'Equity' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                         @cannot('2.hide-equity')
                                             @if($l4['balance']>=0)
                                                 {{ number_format($l4['balance'],2) }}
@@ -652,7 +654,7 @@
                                             ({{ number_format(abs($l4['balance']),2) }})
                                             @endif
                                         @endcannot
-                                    @elseif($type == 'Income')
+                                    @elseif($type == 'Income' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                         @cannot('2.hide-income')
                                             @if($l4['balance']>=0)
                                                 {{ number_format($l4['balance'],2) }}
@@ -660,7 +662,7 @@
                                             ({{ number_format(abs($l4['balance']),2) }})
                                             @endif
                                         @endcannot
-                                    @elseif($type == 'Expenses')
+                                    @elseif($type == 'Expenses' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                         @cannot('2.hide-expenses')
                                             @if($l4['balance']>=0)
                                                 {{ number_format($l4['balance'],2) }}
@@ -694,7 +696,7 @@
 
 
 
-                                                @if($type == 'Assets')
+                                                @if($type == 'Assets' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                     @cannot('2.hide-assets')
                                                         @if($l5['balance']>=0)
                                                             {{ number_format($l5['balance'],2) }}
@@ -702,7 +704,7 @@
                                                         ({{ number_format(abs($l5['balance']),2) }})
                                                         @endif
                                                     @endcannot
-                                                @elseif($type == 'Liabilities')
+                                                @elseif($type == 'Liabilities' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                     @cannot('2.hide-liabilities')
                                                         @if($l5['balance']>=0)
                                                             {{ number_format($l5['balance'],2) }}
@@ -710,7 +712,7 @@
                                                         ({{ number_format(abs($l5['balance']),2) }})
                                                         @endif
                                                     @endcannot
-                                                @elseif($type == 'Equity')
+                                                @elseif($type == 'Equity' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                     @cannot('2.hide-equity')
                                                         @if($l5['balance']>=0)
                                                             {{ number_format($l5['balance'],2) }}
@@ -718,7 +720,7 @@
                                                         ({{ number_format(abs($l5['balance']),2) }})
                                                         @endif
                                                     @endcannot
-                                                @elseif($type == 'Income')
+                                                @elseif($type == 'Income' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                     @cannot('2.hide-income')
                                                         @if($l5['balance']>=0)
                                                             {{ number_format($l5['balance'],2) }}
@@ -726,7 +728,7 @@
                                                         ({{ number_format(abs($l5['balance']),2) }})
                                                         @endif
                                                     @endcannot
-                                                @elseif($type == 'Expenses')
+                                                @elseif($type == 'Expenses' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                     @cannot('2.hide-expenses')
                                                         @if($l5['balance']>=0)
                                                             {{ number_format($l5['balance'],2) }}
@@ -763,7 +765,7 @@
                                 $total = collect($level3)->where('type',$type)->sum('balance');
                             @endphp
 
-                            @if($type == 'Assets')
+                            @if($type == 'Assets' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                 @cannot('2.hide-assets')
                                     @if($total>=0)
                                         {{ number_format($total,2) }}
@@ -771,7 +773,7 @@
                                     ({{ number_format(abs($total),2) }})
                                     @endif
                                 @endcannot
-                            @elseif($type == 'Liabilities')
+                            @elseif($type == 'Liabilities' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                 @cannot('2.hide-liabilities')
                                     @if($total>=0)
                                         {{ number_format($total,2) }}
@@ -779,7 +781,7 @@
                                     ({{ number_format(abs($total),2) }})
                                     @endif
                                 @endcannot
-                            @elseif($type == 'Equity')
+                            @elseif($type == 'Equity' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                 @cannot('2.hide-equity')
                                     @if($total>=0)
                                         {{ number_format($total,2) }}
@@ -787,7 +789,7 @@
                                     ({{ number_format(abs($total),2) }})
                                     @endif
                                 @endcannot
-                            @elseif($type == 'Income')
+                            @elseif($type == 'Income' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                 @cannot('2.hide-income')
                                     @if($total>=0)
                                         {{ number_format($total,2) }}
@@ -795,7 +797,7 @@
                                     ({{ number_format(abs($total),2) }})
                                     @endif
                                 @endcannot
-                            @elseif($type == 'Expenses')
+                            @elseif($type == 'Expenses' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                 @cannot('2.hide-expenses')
                                     @if($total>=0)
                                         {{ number_format($total,2) }}
@@ -828,15 +830,15 @@
                             $equity = collect($level3)->where('type','Equity')->sum('balance');
                             $total = $liabilities + $equity;
                         @endphp
-                        @cannot('2.hide-liabilities')
-                            @cannot('2.hide-equity')
+                        @if(auth()->user()->cannot('2.hide-liabilities')  || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
+                            @if(auth()->user()->cannot('2.hide-equity')  || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
                                 @if($total>=0)
                                     {{ number_format($total,2) }}
                                 @else
                                 ({{ number_format(abs($total),2) }})
                                 @endif
-                            @endcannot
-                        @endcannot
+                            @endif
+                        @endif
 
                     </th>
                 </tr>

@@ -131,7 +131,7 @@
                                                                 </td>
                                                                 <td class="add-services-table align-middle col-2"
                                                                     style="border-left: none;border-right: none">
-                                                                    @if ($one->name == 'Assets')
+                                                                    @if ($one->name == 'Assets' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                                         @cannot('2.hide-assets')
                                                                             @php
                                                                                 $clo = \Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature, $five->is_contra, $five->debit, $five->credit);
@@ -142,7 +142,7 @@
                                                                                 }
                                                                             @endphp
                                                                         @endcannot
-                                                                    @elseif($one->name == 'Liabilities')
+                                                                    @elseif($one->name == 'Liabilities' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                                         @cannot('2.hide-liabilities')
                                                                             @php
                                                                                 $clo = \Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature, $five->is_contra, $five->debit, $five->credit);
@@ -153,7 +153,7 @@
                                                                                 }
                                                                             @endphp
                                                                         @endcannot
-                                                                    @elseif($one->name == 'Equity')
+                                                                    @elseif($one->name == 'Equity' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                                         @cannot('2.hide-equity')
                                                                             @php
                                                                                 $clo = \Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature, $five->is_contra, $five->debit, $five->credit);
@@ -164,7 +164,7 @@
                                                                                 }
                                                                             @endphp
                                                                         @endcannot
-                                                                    @elseif($one->name == 'Income')
+                                                                    @elseif($one->name == 'Income' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                                         @cannot('2.hide-income')
                                                                             @php
                                                                                 $clo = \Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature, $five->is_contra, $five->debit, $five->credit);
@@ -175,7 +175,7 @@
                                                                                 }
                                                                             @endphp
                                                                         @endcannot
-                                                                    @elseif($one->name == 'Expenses')
+                                                                    @elseif($one->name == 'Expenses' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                                         @cannot('2.hide-expenses')
                                                                             @php
                                                                                 $clo = \Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature, $five->is_contra, $five->debit, $five->credit);
@@ -386,7 +386,7 @@
                                             <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
                                                 {{ $five->code }}</td>
                                             <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                @if ($one->name == 'Assets')
+                                                @if ($one->name == 'Assets' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                     @cannot('2.hide-assets')
                                                         @php
                                                             $clo = \Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature, $five->is_contra, $five->debit, $five->credit);
@@ -397,7 +397,7 @@
                                                             }
                                                         @endphp
                                                     @endcannot
-                                                @elseif($one->name == 'Liabilities')
+                                                @elseif($one->name == 'Liabilities' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                     @cannot('2.hide-liabilities')
                                                         @php
                                                             $clo = \Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature, $five->is_contra, $five->debit, $five->credit);
@@ -408,7 +408,7 @@
                                                             }
                                                         @endphp
                                                     @endcannot
-                                                @elseif($one->name == 'Equity')
+                                                @elseif($one->name == 'Equity' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                     @cannot('2.hide-equity')
                                                         @php
                                                             $clo = \Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature, $five->is_contra, $five->debit, $five->credit);
@@ -419,7 +419,7 @@
                                                             }
                                                         @endphp
                                                     @endcannot
-                                                @elseif($one->name == 'Income')
+                                                @elseif($one->name == 'Income' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                     @cannot('2.hide-income')
                                                         @php
                                                             $clo = \Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature, $five->is_contra, $five->debit, $five->credit);
@@ -430,7 +430,7 @@
                                                             }
                                                         @endphp
                                                     @endcannot
-                                                @elseif($one->name == 'Expenses')
+                                                @elseif($one->name == 'Expenses' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
                                                     @cannot('2.hide-expenses')
                                                     @php
                                                         $clo = (\Devzone\Ams\Helper\GeneralJournal::closingBalance($five->nature,$five->is_contra,$five->debit,$five->credit));

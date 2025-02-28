@@ -69,7 +69,7 @@ class CoaExportController
                         foreach ($sth->where('sub_account', $four->id) as $five) {
                             $bal = '';
                             if ($one->name == 'Assets') {
-                                if (auth()->user()->cannot('2.hide-assets')) {
+                                if (auth()->user()->cannot('2.hide-assets')  || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) {
                                     $clo = $this->closingBalance($five['nature'], $five['is_contra'], $five['debit'], $five['credit']);
                                     if ($clo < 0) {
                                         $bal = number_format($clo, 2);
@@ -78,7 +78,7 @@ class CoaExportController
                                     }
                                 }
                             } elseif ($one->name == 'Liabilities') {
-                                if (auth()->user()->cannot('2.hide-liabilities')) {
+                                if (auth()->user()->cannot('2.hide-liabilities')  || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) {
 
                                     $clo = $this->closingBalance($five['nature'], $five['is_contra'], $five['debit'], $five['credit']);
                                     if ($clo < 0) {
@@ -88,7 +88,7 @@ class CoaExportController
                                     }
                                 }
                             } elseif ($one->name == 'Equity') {
-                                if (auth()->user()->cannot('2.hide-equity')) {
+                                if (auth()->user()->cannot('2.hide-equity') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) {
                                     $clo = $this->closingBalance($five['nature'], $five['is_contra'], $five['debit'], $five['credit']);
                                     if ($clo < 0) {
                                         $bal = number_format($clo, 2);
@@ -97,7 +97,7 @@ class CoaExportController
                                     }
                                 }
                             } elseif ($one->name == 'Income') {
-                                if (auth()->user()->cannot('2.hide-income')) {
+                                if (auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) {
                                     $clo = $this->closingBalance($five['nature'], $five['is_contra'], $five['debit'], $five['credit']);
                                     if ($clo < 0) {
                                         $bal = number_format($clo, 2);
@@ -106,7 +106,7 @@ class CoaExportController
                                     }
                                 }
                             } elseif ($one->name == 'Expenses') {
-                                if (auth()->user()->cannot('2.hide-expenses')) {
+                                if (auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) {
                                     $clo = $this->closingBalance($five['nature'], $five['is_contra'], $five['debit'], $five['credit']);
                                     if ($clo < 0) {
                                         $bal = number_format($clo, 2);

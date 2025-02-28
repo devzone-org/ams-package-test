@@ -105,8 +105,7 @@
                                                             $first =  collect($report)->where('account_id',$key)->where('month',$h)->first();
                                                         @endphp
                                                         <td class="text-center px-2 py-1">
-                                                            @cannot('2.hide-income')
-
+                                                            @if(auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
                                                                 @if(!empty($first))
                                                                     <a target="_blank" class="text-muted"
                                                                        href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($h.'-01'))}}&to={{date('t M Y',strtotime($h.'-01'))}}">
@@ -115,16 +114,16 @@
                                                                 @else
                                                                     -
                                                                 @endif
-                                                            @endcannot
+                                                            @endif
                                                         </td>
                                                     @endforeach
                                                     <td class="text-center px-2 py-1">
-                                                        @cannot('2.hide-income')
+                                                        @if(auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
                                                             <a target="_blank" class="text-muted"
                                                                href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
                                                                 {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
                                                             </a>
-                                                        @endcannot
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -137,20 +136,20 @@
                                                 @foreach($heading as $h)
                                                     <th scope="col"
                                                         class="text-center bg-white px-2 py-1">
-                                                        @cannot('2.hide-income')
+                                                        @if(auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
 
                                                             {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance'),2) }}
-                                                        @endcannot
+                                                        @endif
                                                     </th>
 
                                                 @endforeach
 
                                                 <th scope="col"
                                                     class="text-center bg-white px-2 py-1">
-                                                    @cannot('2.hide-income')
+                                                    @if(auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
 
                                                         {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance'),2) }}
-                                                    @endcannot
+                                                    @endif
                                                 </th>
 
                                             </tr>
@@ -179,7 +178,7 @@
                                                             $first =  collect($report)->where('account_id',$key)->where('month',$h)->first();
                                                         @endphp
                                                         <td class="text-center px-2 py-1">
-                                                            @cannot('2.hide-expenses')
+                                                            @if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
                                                                 @if(!empty($first))
                                                                     <a target="_blank" class="text-muted"
                                                                        href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($h.'-01'))}}&to={{date('t M Y',strtotime($h.'-01'))}}">
@@ -188,16 +187,16 @@
                                                                 @else
                                                                     -
                                                                 @endif
-                                                            @endcannot
+                                                            @endif
                                                         </td>
                                                     @endforeach
                                                     <td class="text-center px-2 py-1">
-                                                        @cannot('2.hide-expenses')
-                                                            <a target="_blank" class="text-muted"
+                                                        @if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
+                                                        <a target="_blank" class="text-muted"
                                                                href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
                                                                 {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
                                                             </a>
-                                                        @endcannot
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -210,18 +209,18 @@
                                                 @foreach($heading as $h)
                                                     <th scope="col"
                                                         class="text-center px-2 py-1 bg-white">
-                                                        @cannot('2.hide-expenses')
+                                                        @if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
                                                             {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('p_ref','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
-                                                        @endcannot
+                                                        @endif
                                                     </th>
 
                                                 @endforeach
 
                                                 <th scope="col"
                                                     class="text-center px-2 py-1 bg-white">
-                                                    @cannot('2.hide-expenses')
+                                                    @if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
                                                         {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('p_ref','cost-of-sales-4')->sum('balance'),2) }}
-                                                    @endcannot
+                                                    @endif
                                                 </th>
                                             </tr>
 
@@ -242,20 +241,20 @@
                                                 @foreach($heading as $h)
                                                     <th scope="col"
                                                         class="text-center px-2 py-1 bg-white">
-                                                        @cannot('2.hide-income')
+                                                        @if(auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
 
                                                             {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance') - collect($report)->where('p_ref','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
-                                                        @endcannot
+                                                        @endif
                                                     </th>
 
                                                 @endforeach
 
                                                 <th scope="col"
                                                     class="text-center px-2 py-1 bg-white">
-                                                    @cannot('2.hide-income')
+                                                    @if(auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
 
                                                         {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance') - collect($report)->where('p_ref','cost-of-sales-4')->sum('balance'),2) }}
-                                                    @endcannot
+                                                    @endif
                                                 </th>
 
                                             </tr>
@@ -284,9 +283,9 @@
                                                             $first =  collect($report)->where('account_id',$key)->where('month',$h)->first();
                                                         @endphp
                                                         <td class="text-center px-2 py-1 ">
-                                                            @cannot('2.hide-expenses')
+                                                            @if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
 
-                                                                @if(!empty($first))
+                                                            @if(!empty($first))
                                                                     <a target="_blank" class="text-muted"
                                                                        href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($h.'-01'))}}&to={{date('t M Y',strtotime($h.'-01'))}}">
                                                                         {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
@@ -294,15 +293,15 @@
                                                                 @else
                                                                     -
                                                                 @endif
-                                                            @endcannot
+                                                            @endif
                                                         </td>
                                                     @endforeach
                                                     <td class="text-center px-2 py-1 ">
                                                         <a target="_blank" class="text-muted"
-                                                           @cannot('2.hide-expenses')
+                                                           @if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
                                                                href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
                                                             {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
-                                                            @endcannot
+                                                            @endif
                                                         </a>
                                                     </td>
                                                 </tr>
@@ -316,18 +315,18 @@
                                                 @foreach($heading as $h)
                                                     <th scope="col"
                                                         class="text-center px-2 py-1 bg-white ">
-                                                        @cannot('2.hide-expenses')
-                                                            {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
-                                                        @endcannot
+                                                        @if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
+                                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
+                                                        @endif
                                                     </th>
 
                                                 @endforeach
 
                                                 <th scope="col"
                                                     class="text-center px-2 py-1 bg-white">
-                                                    @cannot('2.hide-expenses')
-                                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->sum('balance'),2) }}
-                                                    @endcannot
+                                                    @if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
+                                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->sum('balance'),2) }}
+                                                    @endif
                                                 </th>
 
                                             </tr>
@@ -348,19 +347,19 @@
                                                 @foreach($heading as $h)
                                                     <th scope="col"
                                                         class="text-center px-2 py-1 bg-white">
-                                                        @cannot('2.hide-income')
+                                                        @if(auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
                                                             {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance') - collect($report)->where('type','Expenses')->where('month',$h)->sum('balance'),2) }}
-                                                        @endcannot
+                                                        @endif
                                                     </th>
 
                                                 @endforeach
 
                                                 <th scope="col"
                                                     class="text-center px-2 py-1 bg-white">
-                                                    @cannot('2.hide-income')
+                                                    @if(auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
 
                                                         {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance') - collect($report)->where('type','Expenses')->sum('balance'),2) }}
-                                                    @endcannot
+                                                    @endif
                                                 </th>
 
                                             </tr>
@@ -493,7 +492,8 @@
                                         $first =  collect($report)->where('account_id',$key)->where('month',$h)->first();
                                     @endphp
                                     <td class="px-2   py-2   text-center border-r text-sm text-gray-500">
-                                        @cannot('2.hide-income')
+
+                                        @if(auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
                                             @if(!empty($first))
                                                 <a target="_blank" class="hover:text-gray-900"
                                                    href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($h.'-01'))}}&to={{date('t M Y',strtotime($h.'-01'))}}">
@@ -502,17 +502,17 @@
                                             @else
                                                 -
                                             @endif
-                                        @endcannot
+                                        @endif
                                     </td>
                                 @endforeach
                                 <td class="px-2   py-2   text-center border-r text-sm text-gray-500">
-                                    @cannot('2.hide-income')
+                                    @if(auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
 
                                         <a target="_blank" class="hover:text-gray-900"
                                            href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
                                             {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
                                         </a>
-                                    @endcannot
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -525,19 +525,19 @@
                             @foreach($heading as $h)
                                 <th scope="col"
                                     class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
-                                    @cannot('2.hide-income')
+                                    @if(auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
                                         {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance'),2) }}
-                                    @endcannot
+                                    @endif
                                 </th>
 
                             @endforeach
 
                             <th scope="col"
                                 class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
-                                @cannot('2.hide-income')
+                                @if(auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
 
                                     {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance'),2) }}
-                                @endcannot
+                                @endif
 
                             </th>
 
@@ -566,8 +566,8 @@
                                         $first =  collect($report)->where('account_id',$key)->where('month',$h)->first();
                                     @endphp
                                     <td class="px-2   py-2   text-center border-r text-sm text-gray-500">
-                                        @cannot('2.hide-expenses')
-                                            @if(!empty($first))
+                                        @if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
+                                        @if(!empty($first))
                                                 <a target="_blank" class="hover:text-gray-900"
                                                    href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($h.'-01'))}}&to={{date('t M Y',strtotime($h.'-01'))}}">
                                                     {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
@@ -575,16 +575,16 @@
                                             @else
                                                 -
                                             @endif
-                                        @endcannot
+                                        @endif
                                     </td>
                                 @endforeach
                                 <td class="px-2   py-2   text-center border-r text-sm text-gray-500">
-                                    @cannot('2.hide-expenses')
-                                        <a target="_blank" class="hover:text-gray-900"
+                                    @if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
+                                    <a target="_blank" class="hover:text-gray-900"
                                            href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
                                             {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
                                         </a>
-                                    @endcannot
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -597,18 +597,18 @@
                             @foreach($heading as $h)
                                 <th scope="col"
                                     class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
-                                    @cannot('2.hide-expenses')
-                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('p_ref','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
-                                    @endcannot
+                                    @if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
+                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('p_ref','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
+                                    @endif
                                 </th>
 
                             @endforeach
 
                             <th scope="col"
                                 class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
-                                @cannot('2.hide-expenses')
-                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('p_ref','cost-of-sales-4')->sum('balance'),2) }}
-                                @endcannot
+                                @if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
+                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('p_ref','cost-of-sales-4')->sum('balance'),2) }}
+                                @endif
                             </th>
 
                         </tr>
@@ -628,18 +628,18 @@
                             @foreach($heading as $h)
                                 <th scope="col"
                                     class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
-                                    @cannot('2.hide-income')
+                                    @if(auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
                                         {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance') - collect($report)->where('p_ref','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
-                                    @endcannot
+                                    @endif
                                 </th>
 
                             @endforeach
 
                             <th scope="col"
                                 class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
-                                @cannot('2.hide-income')
+                                @if(auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
                                     {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance') - collect($report)->where('p_ref','cost-of-sales-4')->sum('balance'),2) }}
-                                @endcannot
+                                @endif
                             </th>
 
                         </tr>
@@ -667,9 +667,9 @@
                                         $first =  collect($report)->where('account_id',$key)->where('month',$h)->first();
                                     @endphp
                                     <td class="px-2   py-2   text-center border-r text-sm text-gray-500">
-                                        @cannot('2.hide-expenses')
+                                        @if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
 
-                                            @if(!empty($first))
+                                        @if(!empty($first))
                                                 <a target="_blank" class="hover:text-gray-900"
                                                    href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($h.'-01'))}}&to={{date('t M Y',strtotime($h.'-01'))}}">
                                                     {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat($first['balance'],2) }}
@@ -677,16 +677,16 @@
                                             @else
                                                 -
                                             @endif
-                                        @endcannot
+                                        @endif
                                     </td>
                                 @endforeach
                                 <td class="px-2   py-2   text-center border-r text-sm text-gray-500">
-                                    @cannot('2.hide-expenses')
-                                        <a target="_blank" class="hover:text-gray-900"
+                                    @if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
+                                    <a target="_blank" class="hover:text-gray-900"
                                            href="{{ url('accounts/accountant/ledger') }}?account_id={{$key}}&from={{date('d M Y',strtotime($from_date))}}&to={{date('t M Y',strtotime($to_date))}}">
                                             {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('account_id',$key)->sum('balance'),2) }}
                                         </a>
-                                    @endcannot
+                                    @endif
 
                                 </td>
                             </tr>
@@ -700,9 +700,9 @@
                             @foreach($heading as $h)
                                 <th scope="col"
                                     class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
-                                    @cannot('2.hide-expenses')
-                                        {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
-                                    @endcannot
+                                    @if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
+                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->where('month',$h)->sum('balance'),2) }}
+                                    @endif
 
                                 </th>
 
@@ -710,9 +710,9 @@
 
                             <th scope="col"
                                 class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
-                                @cannot('2.hide-expenses')
-                                    {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->sum('balance'),2) }}
-                                @endcannot
+                                @if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
+                                {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Expenses')->where('p_ref','!=','cost-of-sales-4')->sum('balance'),2) }}
+                                @endif
                             </th>
 
                         </tr>
@@ -731,20 +731,20 @@
                             @foreach($heading as $h)
                                 <th scope="col"
                                     class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
-                                    @cannot('2.hide-income')
+                                    @if(auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
 
                                         {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->where('month',$h)->sum('balance') - collect($report)->where('type','Expenses')->where('month',$h)->sum('balance'),2) }}
-                                    @endcannot
+                                    @endif
                                 </th>
 
                             @endforeach
 
                             <th scope="col"
                                 class="  px-2   border-r py-2 text-center text-sm font-bold text-gray-500  tracking-wider">
-                                @cannot('2.hide-income')
+                                @if(auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true)
 
                                     {{ \Devzone\Ams\Helper\GeneralJournal::numberFormat(collect($report)->where('type','Income')->sum('balance') - collect($report)->where('type','Expenses')->sum('balance'),2) }}
-                                @endcannot
+                                @endif
                             </th>
 
                         </tr>
