@@ -112,7 +112,7 @@ class ProfitLossExportController
             $bal = [];
             foreach ($heading as $h) {
                 $first = collect($report)->where('account_id', $key)->where('month', $h)->first();
-                if (auth()->user()->cannot('2.hide-income')) {
+                if (auth()->user()->cannot('2.hide-income')  || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) {
                     if (!empty($first)) {
                         $bal[] = $first['balance'];
                     } else {
@@ -125,14 +125,14 @@ class ProfitLossExportController
             $data[] = [
                 'name' => $en->first()['name'],
                 'balance' => $bal,
-                'total' => (auth()->user()->cannot('2.hide-income')) ? number_format(collect($report)->where('account_id', $key)->sum('balance'), 2) : '',
+                'total' => (auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) ? number_format(collect($report)->where('account_id', $key)->sum('balance'), 2) : '',
             ];
 
         }
 
         $bal = [];
         foreach ($heading as $h) {
-            if (auth()->user()->cannot('2.hide-income')) {
+            if (auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) {
 
                 $bal[] = collect($report)->where('type', 'Income')->where('month', $h)->sum('balance');
             }
@@ -141,7 +141,7 @@ class ProfitLossExportController
         $data [] = [
             'name' => 'Total Revenue',
             'balance' => $bal,
-            'total' => (auth()->user()->cannot('2.hide-income')) ? number_format(collect($report)->where('type', 'Income')->sum('balance'), 2) : '',
+            'total' => (auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) ? number_format(collect($report)->where('type', 'Income')->sum('balance'), 2) : '',
         ];
 
         $data[] = [
@@ -160,7 +160,7 @@ class ProfitLossExportController
             $bal = [];
             foreach ($heading as $h) {
                 $first = collect($report)->where('account_id', $key)->where('month', $h)->first();
-                if (auth()->user()->cannot('2.hide-expenses')) {
+                if (auth()->user()->cannot('2.hide-expenses')  || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) {
                     if (!empty($first)) {
                         $bal[] = $first['balance'];
                     } else {
@@ -172,20 +172,20 @@ class ProfitLossExportController
             $data[] = [
                 'name' => $en->first()['name'],
                 'balance' => $bal,
-                'total' => (auth()->user()->cannot('2.hide-expenses')) ? number_format(collect($report)->where('account_id', $key)->sum('balance'), 2) : '',
+                'total' => (auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) ? number_format(collect($report)->where('account_id', $key)->sum('balance'), 2) : '',
             ];
         }
 
         $bal = [];
         foreach ($heading as $h) {
-            if(auth()->user()->cannot('2.hide-expenses')) {
+            if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) {
                 $bal[] = collect($report)->where('p_ref', 'cost-of-sales-4')->where('month', $h)->sum('balance');
             }
         }
         $data [] = [
             'name' => 'Total Expenses',
             'balance' => $bal,
-            'total' => (auth()->user()->cannot('2.hide-expenses')) ? number_format(collect($report)->where('p_ref', 'cost-of-sales-4')->sum('balance'), 2): '',
+            'total' => (auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) ? number_format(collect($report)->where('p_ref', 'cost-of-sales-4')->sum('balance'), 2): '',
         ];
 
         $data[] = [
@@ -196,14 +196,14 @@ class ProfitLossExportController
 
         $bal = [];
         foreach ($heading as $h) {
-            if (auth()->user()->cannot('2.hide-income')) {
+            if (auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) {
                 $bal[] = collect($report)->where('type', 'Income')->where('month', $h)->sum('balance') - collect($report)->where('p_ref', 'cost-of-sales-4')->where('month', $h)->sum('balance');
             }
         }
         $data [] = [
             'name' => 'Gross Profit',
             'balance' => $bal,
-            'total' => (auth()->user()->cannot('2.hide-income')) ? number_format(collect($report)->where('type', 'Income')->sum('balance') - collect($report)->where('p_ref', 'cost-of-sales-4')->sum('balance'), 2) : '',
+            'total' => (auth()->user()->cannot('2.hide-income') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) ? number_format(collect($report)->where('type', 'Income')->sum('balance') - collect($report)->where('p_ref', 'cost-of-sales-4')->sum('balance'), 2) : '',
         ];
 
         $data[] = [
@@ -221,7 +221,7 @@ class ProfitLossExportController
             $bal = [];
             foreach ($heading as $h) {
                 $first = collect($report)->where('account_id', $key)->where('month', $h)->first();
-                if (auth()->user()->cannot('2.hide-expenses')) {
+                if (auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) {
                     if (!empty($first)) {
                         $bal[] = $first['balance'];
                     } else {
@@ -233,21 +233,21 @@ class ProfitLossExportController
             $data[] = [
                 'name' => $en->first()['name'],
                 'balance' => $bal,
-                'total' => (auth()->user()->cannot('2.hide-expenses')) ? number_format(collect($report)->where('account_id', $key)->sum('balance'), 2) : '',
+                'total' => (auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) ? number_format(collect($report)->where('account_id', $key)->sum('balance'), 2) : '',
             ];
 
         }
 
         $bal = [];
         foreach ($heading as $h) {
-            if (auth()->user()->cannot('2.hide-expenses')) {
+            if (auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) {
                 $bal[] = collect($report)->where('type', 'Expenses')->where('p_ref', '!=', 'cost-of-sales-4')->where('month', $h)->sum('balance');
             }
         }
         $data [] = [
             'name' => 'Total Other Expenses',
             'balance' => $bal,
-            'total' => (auth()->user()->cannot('2.hide-expenses')) ? number_format(collect($report)->where('type', 'Expenses')->where('p_ref', '!=', 'cost-of-sales-4')->sum('balance'), 2) : '',
+            'total' => (auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) ? number_format(collect($report)->where('type', 'Expenses')->where('p_ref', '!=', 'cost-of-sales-4')->sum('balance'), 2) : '',
         ];
 
         $data[] = [
@@ -257,14 +257,14 @@ class ProfitLossExportController
         ];
         $bal = [];
         foreach ($heading as $h) {
-            if(auth()->user()->cannot('2.hide-expenses')) {
+            if(auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) {
                 $bal[] = collect($report)->where('type', 'Income')->where('month', $h)->sum('balance') - collect($report)->where('type', 'Expenses')->where('month', $h)->sum('balance');
             }
         }
         $data [] = [
             'name' => 'Net Profit/(Loss)',
             'balance' => $bal,
-            'total' => (auth()->user()->cannot('2.hide-expenses')) ? number_format(collect($report)->where('type', 'Income')->sum('balance') - collect($report)->where('type', 'Expenses')->sum('balance'), 2) : '',
+            'total' => (auth()->user()->cannot('2.hide-expenses') || env('SKIP_ACCOUNTANT_RESTRICTION', false) === true) ? number_format(collect($report)->where('type', 'Income')->sum('balance') - collect($report)->where('type', 'Expenses')->sum('balance'), 2) : '',
         ];
 
 

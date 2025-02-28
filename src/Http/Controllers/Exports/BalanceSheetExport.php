@@ -139,23 +139,23 @@ class BalanceSheetExport
             foreach ($lvl3 as $l3) {
                 $l3_balance = '';
 
-                if ($type == 'Assets') {
+                if ($type == 'Assets'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                     if (auth()->user()->cannot('2.hide-assets')) {
                         $l3_balance = number_format($l3['balance'], 2);
                     }
-                } elseif ($type == 'Liabilities') {
+                } elseif ($type == 'Liabilities'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                     if (auth()->user()->cannot('2.hide-liabilities')) {
                         $l3_balance = number_format($l3['balance'], 2);
                     }
-                } elseif ($type == 'Equity') {
+                } elseif ($type == 'Equity'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                     if (auth()->user()->cannot('2.hide-equity')) {
                         $l3_balance = number_format($l3['balance'], 2);
                     }
-                } elseif ($type == 'Income') {
+                } elseif ($type == 'Income'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                     if (auth()->user()->cannot('2.hide-income')) {
                         $l3_balance = number_format($l3['balance'], 2);
                     }
-                } elseif ($type == 'Expenses') {
+                } elseif ($type == 'Expenses'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                     if (auth()->user()->cannot('2.hide-expenses')) {
                         $l3_balance = number_format($l3['balance'], 2);
                     }
@@ -180,23 +180,23 @@ class BalanceSheetExport
 
                     $l4_balance = '';
 
-                    if ($type == 'Assets') {
+                    if ($type == 'Assets'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                         if (auth()->user()->cannot('2.hide-assets')) {
                             $l4_balance = number_format($l4['balance'], 2);
                         }
-                    } elseif ($type == 'Liabilities') {
+                    } elseif ($type == 'Liabilities' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                         if (auth()->user()->cannot('2.hide-liabilities')) {
                             $l4_balance = number_format($l4['balance'], 2);
                         }
-                    } elseif ($type == 'Equity') {
+                    } elseif ($type == 'Equity' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                         if (auth()->user()->cannot('2.hide-equity')) {
                             $l4_balance = number_format($l4['balance'], 2);
                         }
-                    } elseif ($type == 'Income') {
+                    } elseif ($type == 'Income' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                         if (auth()->user()->cannot('2.hide-income')) {
                             $l4_balance = number_format($l4['balance'], 2);
                         }
-                    } elseif ($type == 'Expenses') {
+                    } elseif ($type == 'Expenses' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                         if (auth()->user()->cannot('2.hide-expenses')) {
                             $l4_balance = number_format($l4['balance'], 2);
                         }
@@ -216,23 +216,23 @@ class BalanceSheetExport
                     foreach (collect($level5)->where('sub_account', $l4['id']) as $l5) {
                         $l5_balance = '';
 
-                        if ($type == 'Assets') {
+                        if ($type == 'Assets' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                             if (auth()->user()->cannot('2.hide-assets')) {
                                 $l5_balance = number_format($l5['balance'], 2);
                             }
-                        } elseif ($type == 'Liabilities') {
+                        } elseif ($type == 'Liabilities' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                             if (auth()->user()->cannot('2.hide-liabilities')) {
                                 $l5_balance = number_format($l5['balance'], 2);
                             }
-                        } elseif ($type == 'Equity') {
+                        } elseif ($type == 'Equity' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                             if (auth()->user()->cannot('2.hide-equity')) {
                                 $l5_balance = number_format($l5['balance'], 2);
                             }
-                        } elseif ($type == 'Income') {
+                        } elseif ($type == 'Income' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                             if (auth()->user()->cannot('2.hide-income')) {
                                 $l5_balance = number_format($l5['balance'], 2);
                             }
-                        } elseif ($type == 'Expenses') {
+                        } elseif ($type == 'Expenses' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                             if (auth()->user()->cannot('2.hide-expenses')) {
                                 $l5_balance = number_format($l5['balance'], 2);
                             }
@@ -253,23 +253,23 @@ class BalanceSheetExport
             }
             $type_total = '';
 
-            if ($type == 'Assets') {
+            if ($type == 'Assets'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                 if (auth()->user()->cannot('2.hide-assets')) {
                     $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
                 }
-            } elseif ($type == 'Liabilities') {
+            } elseif ($type == 'Liabilities'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                 if (auth()->user()->cannot('2.hide-liabilities')) {
                     $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
                 }
-            } elseif ($type == 'Equity') {
+            } elseif ($type == 'Equity'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                 if (auth()->user()->cannot('2.hide-equity')) {
                     $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
                 }
-            } elseif ($type == 'Income') {
+            } elseif ($type == 'Income'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                 if (auth()->user()->cannot('2.hide-income')) {
                     $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
                 }
-            } elseif ($type == 'Expenses') {
+            } elseif ($type == 'Expenses'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                 if (auth()->user()->cannot('2.hide-expenses')) {
                     $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
                 }
@@ -306,8 +306,8 @@ class BalanceSheetExport
         $total = $liabilities + $equity;
         $equity_and_liabilities = '';
 
-        if(auth()->user()->cannot('2.hide-liabilities')){
-            if(auth()->user()->cannot('2.hide-equity'))
+        if(auth()->user()->cannot('2.hide-liabilities') || env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true){
+            if(auth()->user()->cannot('2.hide-equity') || env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true)
             {
                 $equity_and_liabilities = number_format($total, 2);
             }

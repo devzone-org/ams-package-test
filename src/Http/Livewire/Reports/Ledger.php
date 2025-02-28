@@ -73,9 +73,8 @@ class Ledger extends Component
         $this->from_d = $this->from_date;
         $this->to_d = $this->to_date;
 
-
         $this->reset(['ledger','error']);
-        if (auth()->user()->can('2.hide-data-beyond-3-months')) {
+        if (auth()->user()->can('2.hide-data-beyond-3-months') && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
             $date = Carbon::parse($this->formatDate($this->from_date));
             $now = Carbon::now();
             $diff = $date->diffInDays($now);
@@ -84,35 +83,35 @@ class Ledger extends Component
                 return;
             }
         }
-        if (auth()->user()->can('2.hide-assets')) {
+        if (auth()->user()->can('2.hide-assets') && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
             $account = ChartOfAccount::find($this->account_id);
             if ($account['type'] == 'Assets') {
                 $this->error = 'This ledger is not accessible.';
                 return;
             }
         }
-        if (auth()->user()->can('2.hide-liabilities')) {
+        if (auth()->user()->can('2.hide-liabilities') && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
             $account = ChartOfAccount::find($this->account_id);
             if ($account['type'] == 'Liabilities') {
                 $this->error = 'This ledger is not accessible.';
                 return;
             }
         }
-        if (auth()->user()->can('2.hide-equity')) {
+        if (auth()->user()->can('2.hide-equity') && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
             $account = ChartOfAccount::find($this->account_id);
             if ($account['type'] == 'Equity') {
                 $this->error = 'This ledger is not accessible.';
                 return;
             }
         }
-        if (auth()->user()->can('2.hide-income')) {
+        if (auth()->user()->can('2.hide-income') && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
             $account = ChartOfAccount::find($this->account_id);
             if ($account['type'] == 'Income') {
                 $this->error = 'This ledger is not accessible.';
                 return;
             }
         }
-        if (auth()->user()->can('2.hide-expenses')) {
+        if (auth()->user()->can('2.hide-expenses') && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
             $account = ChartOfAccount::find($this->account_id);
             if ($account['type'] == 'Expenses') {
                 $this->error = 'This ledger is not accessible.';
