@@ -51,7 +51,7 @@ Route::group(['middleware' => ['permission:2.create.transfer.any-date|2.create.t
 
 Route::group(['middleware' => ['permission:2.day.closing']], function () {
     Route::get('accountant/day-close', function () {
-        return view('ams::jou   rnal.close');
+        return view('ams::journal.close');
     });
 });
 
