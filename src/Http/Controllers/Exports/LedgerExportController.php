@@ -155,7 +155,7 @@ class LedgerExportController
 
         $csv->insertAll($data);
 
-        $csv->output('GL ' . $this->coa['name'] . ' - ' . date('d M Y h:i A') . '.csv');
+        $csv->output('GL ' . preg_replace('/[^A-Za-z0-9 ]/', '', $this->coa['name']) . ' - ' . date('d M Y h:i A') . '.csv');
 
 //        $request = request();
 //        $account_id = $request['id'];
