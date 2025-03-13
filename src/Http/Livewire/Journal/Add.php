@@ -108,6 +108,7 @@ class Add extends Component
                 $payment_entry_found = AmsCustomerPayment::where('voucher_no', $this->voucher_no)->where('temp_voucher', 't')->get()->toArray();
                 if (!empty($payment_entry_found)) {
                     $this->selected_month = array_column($payment_entry_found, 'month');
+                    $this->selected_month = array_unique($this->selected_month);
                     $this->invoice_paid = 't';
                     $this->customer_account_present = true;
                 }
@@ -394,8 +395,11 @@ class Add extends Component
 
             $existed_customer_accounts = AmsCustomer::whereIn('account_id', array_column($this->entries, 'account_id'))->pluck('account_id')->toArray();
 
+            $this->selected_month = array_unique($this->selected_month);
+
             if($payment_entry_found){
                 AmsCustomerPayment::where('voucher_no', $this->voucher_no)->where('temp_voucher', 't')->delete();
+
                 foreach($existed_customer_accounts as $eca){
                     foreach($this->selected_month as $sm){
                         if(empty($this->months_array[$sm])){
