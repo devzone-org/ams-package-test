@@ -23,6 +23,7 @@ use Devzone\Ams\Http\Livewire\Reports\ProfitLossDateWise;
 use Devzone\Ams\Http\Livewire\Reports\Trial;
 use Devzone\Ams\Http\Livewire\Sidebar\SidebarLinks;
 use Devzone\Ams\Http\Livewire\PettyExpenses;
+use Devzone\Ams\Http\Livewire\Customers\PaidUnpaidCustomerPayments;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -100,6 +101,7 @@ class AmsServiceProvider extends ServiceProvider
         Livewire::component('closing.closing-fiscal-year', ClosingFiscalYear::class);
         Livewire::component('customers.customer-list', \Devzone\Ams\Http\Livewire\Customers\CustomerList::class);
         Livewire::component('reports.customer-payment-report', CustomerPaymentReport::class);
+        Livewire::component('customers.paid-unpaid-customer-payments', PaidUnpaidCustomerPayments::class);
     }
 
     /**

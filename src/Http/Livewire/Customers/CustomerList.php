@@ -128,7 +128,7 @@ class CustomerList extends Component
 
                 if(!empty($account_id)){
                     ChartOfAccount::find($account_id)->update([
-                        'name' => $this->edit_customer_data['name'],
+                        'name' => 'Client - ' . $this->edit_customer_data['name'],
                         'status' => ($this->edit_customer_data['status'] != 'In-Active') ? 't' : 'f',
                     ]);
                 }
@@ -178,7 +178,7 @@ class CustomerList extends Component
         $code = Voucher::instance()->coa()->get();
         $code = str_pad($code, 7, "0", STR_PAD_LEFT);
         $account_id = ChartOfAccount::create([
-            'name' => $name,
+            'name' => 'Client - ' . $name,
             'type' => $type,
             'sub_account' => $sub_account,
             'level' => '5',

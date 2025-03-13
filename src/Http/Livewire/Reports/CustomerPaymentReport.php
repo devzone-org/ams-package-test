@@ -36,8 +36,7 @@ class CustomerPaymentReport extends Component
             ->get()
             ->toArray();
 
-        $this->customer_payment_data = AmsCustomer::leftJoin('ledgers as l', 'l.account_id', 'ams_customers.account_id')
-            ->leftJoin('ams_customer_payments as acp', 'acp.voucher_no', 'l.voucher_no')
+        $this->customer_payment_data = AmsCustomer::leftjoin('ams_customer_payments as acp', 'acp.customer_account_id', 'ams_customers.account_id')
             ->where('acp.temp_voucher', 'f')
             ->where('acp.month', '>=', $this->from_date)
             ->where('acp.month', '<=', $this->to_date)
@@ -56,6 +55,7 @@ class CustomerPaymentReport extends Component
             ->get()
             ->groupBy(['id'])
             ->toArray();
+
     }
 
     private function getMonthsBetween($from_date, $to_date) {

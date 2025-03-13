@@ -16,7 +16,7 @@ class CreateAmsCustomerPaymentsTable extends Migration
         Schema::create('ams_customer_payments', function (Blueprint $table) {
             $table->id();
             $table->string('month');
-            $table->string('voucher_no');
+            $table->string('voucher_no')->nullable();
             $table->enum('temp_voucher', ['t', 'f'])->default('t');
             $table->timestamps();
         });
