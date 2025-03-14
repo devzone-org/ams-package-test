@@ -122,7 +122,7 @@
                                         @if(!empty($vouchers_pluck))
                                             @foreach($vouchers_pluck as $vp)
                                                 <a wire:click="print('{{ $vp }}','true')" style="cursor: pointer">
-                                                    <span class="text-green-500">Paid ({{$vp}})</span><br>
+                                                    <span class="text-green-500">Paid {{ !empty($vp) ? '(' . $vp . ')' : ''}}</span><br>
                                                 </a>
                                             @endforeach
                                         @else
