@@ -156,8 +156,10 @@ if(env('AMS_CUSTOMER', false) === true) {
         Route::get('reports/customer-payments', function () {
             return view('ams::reports.customer-payment-report');
         });
-
-//    Route::get('reports/trial-balance/export', [\Devzone\Ams\Http\Controllers\Exports\TrialExportController::class, 'downloadTrial']);
     });
+
+    Route::get('ams/paid/unpaid/customer-payments', function () {
+        return view('ams::customers.paid-unpaid-customer-payments');
+    })->middleware('permission:4.paid-unpaid-customer-payments');
 }
 

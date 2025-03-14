@@ -116,12 +116,15 @@
                                             return $item['month'] === $ma;
                                         });
                                         $filtered_data = array_values($filtered_data);
+                                        $vouchers_pluck = array_column($filtered_data, 'voucher_no');
                                     @endphp
                                     <td class="px-2 py-2 border-r text-sm text-gray-500 text-center">
-                                        @if(!empty($filtered_data[0]['voucher_no']))
-                                            <a wire:click="print('{{ $filtered_data[0]['voucher_no'] }}','true')" style="cursor: pointer">
-                                                <span class="text-green-500">Paid ({{$filtered_data[0]['voucher_no']}})</span>
-                                            </a>
+                                        @if(!empty($vouchers_pluck))
+                                            @foreach($vouchers_pluck as $vp)
+                                                <a wire:click="print('{{ $vp }}','true')" style="cursor: pointer">
+                                                    <span class="text-green-500">Paid ({{$vp}})</span><br>
+                                                </a>
+                                            @endforeach
                                         @else
                                             <span class="text-red-500">Un-paid</span>
                                         @endif

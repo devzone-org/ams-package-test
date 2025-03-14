@@ -66,6 +66,7 @@ class DumpMasterDataPermissions extends Command
             Permission::updateOrCreate(['name' => '4.edit.customers'], ['guard_name' => 'web', 'description' => 'Edit Customers', 'portal' => 'accounts', 'section' => 'accounts']);
             Permission::updateOrCreate(['name' => '4.view.customers'], ['guard_name' => 'web', 'description' => 'View Customers', 'portal' => 'accounts', 'section' => 'accounts']);
             Permission::updateOrCreate(['name' => '3.customer-payment-report'], ['guard_name' => 'web', 'description' => 'Customer Payment Report', 'portal' => 'accounts', 'section' => 'accounts']);
+            Permission::updateOrCreate(['name' => '4.paid-unpaid-customer-payments'], ['guard_name' => 'web', 'description' => 'Paid/Unpaid Customer Payments', 'portal' => 'accounts', 'section' => 'accounts']);
         }
 
 

@@ -6,6 +6,7 @@ namespace Devzone\Ams\Http\Livewire\Journal;
 
 use Carbon\Carbon;
 use Devzone\Ams\Helper\Voucher;
+use Devzone\Ams\Models\AmsCustomer;
 use Devzone\Ams\Models\AmsCustomerPayment;
 use Devzone\Ams\Models\ChartOfAccount;
 use Devzone\Ams\Models\Ledger;
@@ -39,6 +40,7 @@ class Add extends Component
     public $customer_account_present = false;
     public $invoice_paid = 'f';
     public $selected_month;
+    public $months_array = [];
 
     protected $rules = [
         'entries.*.account_id' => 'required|integer',
@@ -67,6 +69,21 @@ class Add extends Component
             if(!empty($customer_coa['id'])){
                 $this->customer_coa_level_4_id = $customer_coa['id'];
             }
+
+            $today = Carbon::today();
+            $this->months_array = [];
+            // Get last 6 months with year
+            for ($i = 6; $i > 0; $i--) {
+                $this->months_array[$today->copy()->subMonths($i)->format('Y-m')] = $today->copy()->subMonths($i)->format('F Y');
+            }
+            // Add current month
+            $this->months_array[$today->format('Y-m')] = $today->format('F Y');
+
+            // Get next 6 months with year
+            for ($i = 1; $i <= 6; $i++) {
+                $this->months_array[$today->copy()->addMonths($i)->format('Y-m')] = $today->copy()->addMonths($i)->format('F Y');
+            }
+
         }
 
         if ($temp_entries->isNotEmpty()) {
@@ -88,9 +105,10 @@ class Add extends Component
                     $this->customer_account_present = true;
                 }
 
-                $payment_entry_found = AmsCustomerPayment::where('voucher_no', $this->voucher_no)->where('temp_voucher', 't')->first();
+                $payment_entry_found = AmsCustomerPayment::where('voucher_no', $this->voucher_no)->where('temp_voucher', 't')->get()->toArray();
                 if (!empty($payment_entry_found)) {
-                    $this->selected_month = $payment_entry_found['month'];
+                    $this->selected_month = array_column($payment_entry_found, 'month');
+                    $this->selected_month = array_unique($this->selected_month);
                     $this->invoice_paid = 't';
                     $this->customer_account_present = true;
                 }
@@ -374,18 +392,41 @@ class Add extends Component
             if(empty($this->selected_month)){
                 throw new \Exception("If 'Invoice Paid' is set to 'Yes,' the selected month is required.");
             }
+
+            $existed_customer_accounts = AmsCustomer::whereIn('account_id', array_column($this->entries, 'account_id'))->pluck('account_id')->toArray();
+
+            $this->selected_month = array_unique($this->selected_month);
+
             if($payment_entry_found){
-                AmsCustomerPayment::where('voucher_no', $this->voucher_no)->where('temp_voucher', 't')->update([
-                    'voucher_no' => $this->voucher_no,
-                    'month' => $this->selected_month,
-                    'temp_voucher' => 't'
-                ]);
+                AmsCustomerPayment::where('voucher_no', $this->voucher_no)->where('temp_voucher', 't')->delete();
+
+                foreach($existed_customer_accounts as $eca){
+                    foreach($this->selected_month as $sm){
+                        if(empty($this->months_array[$sm])){
+                            throw new \Exception(date('F Y', strtotime($sm)) . ' is not available in the month options.');
+                        }
+                        AmsCustomerPayment::create([
+                            'customer_account_id' => $eca,
+                            'voucher_no' => $this->voucher_no,
+                            'month' => $sm,
+                            'temp_voucher' => 't'
+                        ]);
+                    }
+                }
             }else{
-                AmsCustomerPayment::create([
-                    'voucher_no' => $this->voucher_no,
-                    'month' => $this->selected_month,
-                    'temp_voucher' => 't'
-                ]);
+                foreach($existed_customer_accounts as $eca) {
+                    foreach ($this->selected_month as $sm) {
+                        if (empty($this->months_array[$sm])) {
+                            throw new \Exception(date('F Y', strtotime($sm)) . ' is not available in the month options.');
+                        }
+                        AmsCustomerPayment::create([
+                            'customer_account_id' => $eca,
+                            'voucher_no' => $this->voucher_no,
+                            'month' => $sm,
+                            'temp_voucher' => 't'
+                        ]);
+                    }
+                }
             }
         }else{
             if($payment_entry_found){
