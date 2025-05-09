@@ -560,9 +560,7 @@
 
                                             foreach ($words as $w) {
                                             if(!empty($w[0])){
-                                              if(!empty($w[0])){
                                                 $acronym .= $w[0];
-                                              }
                                             }
 
                                             }
