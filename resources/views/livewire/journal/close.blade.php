@@ -68,7 +68,9 @@
                                                                 $words = explode(" ", $current_user['name']);
                                                                 $acronym = "";
                                                                 foreach ($words as $w) {
+                                                                    if(!empty($w[0])){
                                                                     $acronym .= $w[0];
+                                                                    }
                                                                 }
                                                             @endphp
                                                             {{  $acronym }}
@@ -526,7 +528,9 @@
                                             $acronym = "";
 
                                             foreach ($words as $w) {
-                                              $acronym .= $w[0];
+                                              if(!empty($w[0])){
+                                                $acronym .= $w[0];
+                                              }
                                             }
                                         @endphp
                                       {{  $acronym }}
@@ -556,7 +560,7 @@
 
                                             foreach ($words as $w) {
                                             if(!empty($w[0])){
-                                              $acronym .= $w[0];
+                                                $acronym .= $w[0];
                                             }
 
                                             }
