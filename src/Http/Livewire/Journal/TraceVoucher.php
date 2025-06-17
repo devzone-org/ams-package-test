@@ -36,6 +36,7 @@ class TraceVoucher extends Component
 
     public function search()
     {
+        $this->manageDateRange();
         $this->temp_list = Ledger::from('ledgers as l')
             ->join('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
             ->join('users as u', 'u.id', '=', 'l.posted_by')
@@ -87,32 +88,32 @@ class TraceVoucher extends Component
 
     public function updatedRange($val)
     {
-        if ($val == 'custom_range') {
+        $this->manageDateRange();
+        if ($this->range != 'custom_range') {
+            $this->dispatchBrowserEvent('resetPikaday');
+        }
+    }
+
+    public function manageDateRange()
+    {
+        if ($this->range == 'custom_range') {
             $this->date_range = true;
-        } elseif ($val == 'seven_days') {
+        } elseif ($this->range == 'seven_days') {
             $this->date_range = false;
             $this->from = date('d M Y', strtotime('-7 days'));
             $this->to = date('d M Y');
-            $this->dispatchBrowserEvent('resetPikaday');
-            // $this->search();
-        } elseif ($val == 'thirty_days') {
+        } elseif ($this->range == 'thirty_days') {
             $this->date_range = false;
             $this->from = date('d M Y', strtotime('-30 days'));
             $this->to = date('d M Y');
-            $this->dispatchBrowserEvent('resetPikaday');
-            // $this->search();
-        } elseif ($val == 'yesterday') {
+        } elseif ($this->range == 'yesterday') {
             $this->date_range = false;
             $this->from = date('d M Y', strtotime('-1 days'));
             $this->to = date('d M Y', strtotime('-1 days'));
-            $this->dispatchBrowserEvent('resetPikaday');
-            // $this->search();
-        } elseif ($val == 'today') {
+        } elseif ($this->range == 'today') {
             $this->date_range = false;
             $this->from = date('d M Y');
             $this->to = date('d M Y');
-            $this->dispatchBrowserEvent('resetPikaday');
-            // $this->search();
         }
     }
 
