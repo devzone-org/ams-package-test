@@ -40,7 +40,7 @@ class ProfitLossExportController
         $report = \Devzone\Ams\Models\Ledger::from('ledgers as l')
             ->join('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
             ->when(!empty($this->closing_vouchers) && strtolower($this->closing_vouchers) == 'hide', function ($q) {
-                return $q->leftJoin('day_closing as dc','dc.voucher_no','l.voucher_no')
+                return $q->leftJoin('closing_summary_accounts as dc','dc.voucher_no','l.voucher_no')
                     ->whereNull('dc.voucher_no');
             })
             ->select(
