@@ -12,12 +12,15 @@ class ProfitLossDateWiseExport
 
     protected $from_date;
     protected $to_date;
+    protected $closing_vouchers = 'hide';
+
 
     public function __construct()
     {
         $request = request();
         $this->from_date = $request['from_date'];
         $this->to_date = $request['to_date'];
+        $this->closing_vouchers = $request['closing_vouchers'];
     }
 
 
@@ -37,6 +40,10 @@ class ProfitLossDateWiseExport
 
         $report = \Devzone\Ams\Models\Ledger::from('ledgers as l')
             ->join('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
+            ->when(!empty($this->closing_vouchers) && strtolower($this->closing_vouchers) == 'hide', function ($q) {
+                return $q->leftJoin('closing_summary_accounts as dc','dc.voucher_no','l.voucher_no')
+                    ->whereNull('dc.voucher_no');
+            })
             ->select(
                 DB::raw('sum(l.debit) as debit'),
                 DB::raw('sum(l.credit) as credit'),

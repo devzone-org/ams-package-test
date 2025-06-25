@@ -27,7 +27,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-xs-6 col-sm-4">
+                                        <div class="col-xs-6 col-sm-3">
                                             <div class="form-group">
                                                 <label for="from_date" class="font-weight-normal">From Date</label>
                                                 <input type="text" wire:model.lazy="from_date" id="from_date"
@@ -35,7 +35,7 @@
                                                        class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-xs-6 col-sm-4">
+                                        <div class="col-xs-6 col-sm-3">
                                             <div class="form-group">
 
                                                 <label for="to_date" class="font-weight-normal">To Date</label>
@@ -44,7 +44,15 @@
                                                        class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-xs-6 col-sm-4 pt-4">
+                                        <div class="col-xs-6 col-sm-3">
+                                            <label for="closing_vouchers" class="font-weight-normal">Closing Vouchers</label>
+                                            <select wire:model.defer='closing_vouchers'
+                                                    class="form-control">
+                                                <option value="show">Show</option>
+                                                <option value="hide">Hide</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-6 col-sm-3 pt-4">
                                             <div class="form-group">
                                                 <button type="button" wire:click="search" wire:loading.attr="disabled"
                                                         class="btn btn-primary">
@@ -57,7 +65,7 @@
                                                 {{--                                                    Reset--}}
                                                 {{--                                                </button>--}}
                                                 @if(!empty($report))
-                                                    <a href="{{'date-wise/export'}}?from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}"
+                                                    <a href="{{'date-wise/export'}}?from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}&closing_vouchers={{$closing_vouchers}}"
                                                        target="_blank"
                                                        class="btn btn-success">
                                                         Export.csv
@@ -452,7 +460,7 @@
             <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 
 
-                <div class="grid grid-cols-6 gap-6">
+                <div class="grid grid-cols-8 gap-6">
                     <div class="col-span-6 sm:col-span-2">
                         <label for="from_date" class="block text-sm font-medium text-gray-700">From Date</label>
                         <input type="text" wire:model.lazy="from_date" readonly id="from_date" autocomplete="off"
@@ -464,6 +472,15 @@
                         <label for="to_date" class="block text-sm font-medium text-gray-700">To Date</label>
                         <input type="text" readonly wire:model.lazy="to_date" id="to_date" autocomplete="off"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+
+                    <div class="col-span-6 sm:col-span-2">
+                        <label for="closing_vouchers" class="block text-sm font-medium text-gray-700">Closing Vouchers</label>
+                        <select wire:model.defer='closing_vouchers'
+                                class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="show">Show</option>
+                            <option value="hide">Hide</option>
+                        </select>
                     </div>
                     <div class="col-span-6 sm:col-span-2">
                         <div class="mt-6 flex-shrink-0 flex ">
@@ -477,7 +494,7 @@
                             {{--                            Reset--}}
                             {{--                        </button>--}}
                             @if(!empty($report))
-                                <a href="{{'date-wise/export'}}?from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}"
+                                <a href="{{'date-wise/export'}}?from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}&closing_vouchers={{$closing_vouchers}}"
                                    target="_blank"
                                    class="ml-3 disabled:opacity-30 bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none ">
                                     Export.csv
