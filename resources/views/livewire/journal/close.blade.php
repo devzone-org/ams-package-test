@@ -68,8 +68,9 @@
                                                                 $words = explode(" ", $current_user['name']);
                                                                 $acronym = "";
                                                                 foreach ($words as $w) {
+                                                                    $w = str_replace(" ","",$w);
                                                                     if(!empty($w[0])){
-                                                                    $acronym .= $w[0];
+                                                                      $acronym .= $w[0];
                                                                     }
                                                                 }
                                                             @endphp
@@ -98,10 +99,10 @@
                                                                     $words = explode(" ", Auth::user()->name);
                                                                     $acronym = "";
                                                                     foreach ($words as $w) {
-                                                                    if(!empty($w[0])){
-                                                                    $acronym .= $w[0];
-                                                                    }
-
+                                                                        $w = str_replace(" ","",$w);
+                                                                        if(!empty($w[0])){
+                                                                          $acronym .= $w[0];
+                                                                        }
                                                                     }
                                                                 @endphp
                                                                     {{  $acronym }}
@@ -528,9 +529,10 @@
                                             $acronym = "";
 
                                             foreach ($words as $w) {
-                                              if(!empty($w[0])){
-                                                $acronym .= $w[0];
-                                              }
+                                                $w = str_replace(" ","",$w);
+                                                if(!empty($w[0])){
+                                                  $acronym .= $w[0];
+                                                }
                                             }
                                         @endphp
                                       {{  $acronym }}
@@ -557,12 +559,11 @@
                                         @php
                                             $words = explode(" ", Auth::user()->name);
                                             $acronym = "";
-
                                             foreach ($words as $w) {
-                                            if(!empty($w[0])){
-                                                $acronym .= $w[0];
-                                            }
-
+                                                $w = str_replace(" ","",$w);
+                                                if(!empty($w[0])){
+                                                  $acronym .= $w[0];
+                                                }
                                             }
                                         @endphp
                                       {{  $acronym }}
