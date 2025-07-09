@@ -333,7 +333,7 @@
             <div class="shadow mb-5 overflow-hidden border-b border-gray-200 sm:rounded-lg">
                 <div class="bg-white py-6 px-4 space-y-6 sm:p-6 ">
                     <div class="grid grid-cols-8 gap-6">
-                        <div class="col-span-8 sm:col-span-2">
+                        <div class="col-span-8 sm:col-span-2" wire:key="voucher-type" id="voucher-type">
                             <label for="salesman" class="block text-sm font-medium text-gray-700">
                                 Search Type
                             </label>
@@ -347,7 +347,7 @@
                         </div>
 
                         @if ($type == 'voucher' || empty($type))
-                            <div class=" col-span-8 sm:col-span-2">
+                            <div class=" col-span-8 sm:col-span-2" wire:key="voucher-number" id="voucher-number">
                                 <label for="doctor" class="block text-sm font-medium text-gray-700">
                                     Voucher #
                                 </label>
@@ -358,7 +358,7 @@
 
 
                         @if ($type == 'voucher_range')
-                            <div class="col-span-8 sm:col-span-2">
+                            <div class="col-span-8 sm:col-span-2" wire:key="voucher-from" id="voucher-from">
                                 <label for="doctor" class="block text-sm font-medium text-gray-700">
                                     Voucher From
                                 </label>
@@ -367,7 +367,7 @@
                             </div>
 
 
-                            <div class="col-span-8 sm:col-span-2">
+                            <div class="col-span-8 sm:col-span-2" wire:key="voucher-to" id="voucher-to">
                                 <label for="doctor" class="block text-sm font-medium text-gray-700">
                                     Voucher To
                                 </label>
@@ -376,7 +376,7 @@
                             </div>
                         @endif
 
-                        <div class="col-span-8 sm:col-span-2 {{ $type != 'date_range' ? 'hidden' : 'block' }}">
+                        <div class="col-span-8 sm:col-span-2 {{ $type != 'date_range' ? 'hidden' : 'block' }}" wire:key="voucher-range" id="voucher-range">
                             <label for="salesman" class="block text-sm font-medium text-gray-700">Date Range</label>
                             <select wire:model="range"
                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -389,20 +389,20 @@
                         </div>
 
                         <div
-                            class="{{ $type == 'date_range' && $date_range ? 'block' : 'hidden' }} col-span-8 sm:col-span-2">
+                            class="{{ $type == 'date_range' && $date_range ? 'block' : 'hidden' }} col-span-8 sm:col-span-2" wire:key="date-from" id="date-from">
                             <label for="from" class="block text-sm font-medium text-gray-700">Date From</label>
                             <input type="text" wire:model.lazy="from" autocomplete="off" id="from" readonly
                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
                         <div
-                            class="{{ $type == 'date_range' && $date_range ? 'block' : 'hidden' }} col-span-8 sm:col-span-2">
+                            class="{{ $type == 'date_range' && $date_range ? 'block' : 'hidden' }} col-span-8 sm:col-span-2" wire:key="date-to" id="date-to">
                             <label for="to" class="block text-sm font-medium text-gray-700">Date To</label>
                             <input type="text" wire:model.lazy="to" autocomplete="off" id="to" readonly
                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
-                        <div class="col-span-8 sm:col-span-2">
+                        <div class="col-span-8 sm:col-span-2" wire:key="search-reset-btn" id="search-reset-btn">
                             <button type="submit"
                                 class="bg-white mt-6 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 <div wire:loading wire:target="search">
