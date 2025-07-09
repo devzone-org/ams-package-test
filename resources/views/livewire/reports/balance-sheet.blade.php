@@ -36,19 +36,21 @@
 
                                         <div class="col-xs-6 col-sm-4 pt-4">
 
-                                            <div class="form-group">
+                                            <div class="form-group" id="action-buttons" wire:key="action-buttons">
                                                 <button type="button" wire:click="search" wire:loading.attr="disabled"
-                                                        class="btn btn-primary">
+                                                        class="btn btn-primary" id="search-btn" wire:key="search-btn">
                                                     <span wire:loading wire:target="search">Searching ...</span>
                                                     <span wire:loading.remove wire:target="search">Search</span>
                                                 </button>
+
                                                 <button type="button" wire:click="resetSearch"
                                                         wire:loading.attr="disabled"
-                                                        class="btn btn-danger">
+                                                        class="btn btn-danger" id="reset-btn" wire:key="reset-btn">
                                                     Reset
                                                 </button>
+
                                                 <a href="{{'balance-sheet/export'}}?asat={{$asat}}" target="_blank"
-                                                   class="btn btn-success">
+                                                   class="btn btn-success" id="export-btn" wire:key="export-btn">
                                                     Export.csv
                                                 </a>
                                             </div>
@@ -458,7 +460,7 @@
 
 
                     <div class="col-span-6 sm:col-span-2">
-                        <div class="mt-6 flex-shrink-0 flex ">
+                        <div class="mt-6 flex-shrink-0 flex" id="action-toolbar" wire:key="action-toolbar">
                             <button type="button" wire:click="search" wire:loading.attr="disabled"
                                     class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 <span wire:loading wire:target="search">Searching ...</span>

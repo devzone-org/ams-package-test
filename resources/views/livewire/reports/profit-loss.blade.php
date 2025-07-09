@@ -26,7 +26,7 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-xs-6 col-sm-3">
-                                            <div class="form-group">
+                                            <div class="form-group" id="from-date-group" wire:key="from-date-group">
                                                 <label for="from_date" class="font-weight-normal">From Date</label>
                                                 <input type="text" wire:model.lazy="from_date" id="from_date"
                                                        autocomplete="off"
@@ -34,8 +34,7 @@
                                             </div>
                                         </div>
                                         <div class="col-xs-6 col-sm-3">
-                                            <div class="form-group">
-
+                                            <div class="form-group" id="to-date-group" wire:key="to-date-group">
                                                 <label for="to_date" class="font-weight-normal">To Date</label>
                                                 <input type="text" wire:model.lazy="to_date" id="to_date"
                                                        autocomplete="off"
@@ -43,31 +42,34 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-xs-6 col-sm-3">
+                                        <div class="col-xs-6 col-sm-3" id="closing-vouchers-group" wire:key="closing-vouchers-group">
                                             <label for="closing_vouchers" class="font-weight-normal">Closing Vouchers</label>
                                             <select wire:model.defer='closing_vouchers'
-                                                    class="form-control">
+                                                    class="form-control"
+                                                    id="closing_vouchers">
                                                 <option value="show">Show</option>
                                                 <option value="hide">Hide</option>
                                             </select>
                                         </div>
 
                                         <div class="col-xs-6 col-sm-3 pt-4">
-                                            <div class="form-group">
+                                            <div class="form-group" id="button-group" wire:key="button-group">
                                                 <button type="button" wire:click="search" wire:loading.attr="disabled"
-                                                        class="btn btn-primary">
+                                                        class="btn btn-primary" id="search-btn" wire:key="search-btn">
                                                     <span wire:loading wire:target="search">Searching ...</span>
                                                     <span wire:loading.remove wire:target="search">Search</span>
                                                 </button>
-                                                <button type="button" wire:click="resetSearch"
-                                                        wire:loading.attr="disabled"
-                                                        class="btn btn-danger">
+
+                                                <button type="button" wire:click="resetSearch" wire:loading.attr="disabled"
+                                                        class="btn btn-danger" id="reset-btn" wire:key="reset-btn">
                                                     Reset
                                                 </button>
+
                                                 @if(!empty($report))
                                                     <a href="{{'profit-and-loss/export'}}?from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}&closing_vouchers={{$closing_vouchers}}"
                                                        target="_blank"
-                                                       class="btn btn-success">
+                                                       class="btn btn-success"
+                                                       id="export-btn" wire:key="export-btn">
                                                         Export.csv
                                                     </a>
                                                 @endif
@@ -432,21 +434,26 @@
                             <option value="hide">Hide</option>
                         </select>
                     </div>
-                    <div class="col-span-6 sm:col-span-2">
-                        <div class="mt-6 flex-shrink-0 flex ">
+                    <div class="col-span-6 sm:col-span-2" id="button-col" wire:key="button-col">
+                        <div class="mt-6 flex-shrink-0 flex" id="button-toolbar" wire:key="button-toolbar">
                             <button type="button" wire:click="search" wire:loading.attr="disabled"
-                                    class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    id="search-btn" wire:key="search-btn">
                                 <span wire:loading wire:target="search">Searching ...</span>
                                 <span wire:loading.remove wire:target="search">Search</span>
                             </button>
+
                             <button type="button" wire:click="resetSearch" wire:loading.attr="disabled"
-                                    class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                    class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                    id="reset-btn" wire:key="reset-btn">
                                 Reset
                             </button>
+
                             @if(!empty($report))
                                 <a href="{{'profit-and-loss/export'}}?from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}&closing_vouchers={{$closing_vouchers}}"
                                    target="_blank"
-                                   class="ml-3 disabled:opacity-30 bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none ">
+                                   class="ml-3 disabled:opacity-30 bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none"
+                                   id="export-btn" wire:key="export-btn">
                                     Export.csv
                                 </a>
                             @endif

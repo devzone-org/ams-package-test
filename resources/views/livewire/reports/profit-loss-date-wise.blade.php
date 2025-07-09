@@ -28,7 +28,7 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-xs-6 col-sm-3">
-                                            <div class="form-group">
+                                            <div class="form-group" id="from-date-group" wire:key="from-date-group">
                                                 <label for="from_date" class="font-weight-normal">From Date</label>
                                                 <input type="text" wire:model.lazy="from_date" id="from_date"
                                                        autocomplete="off"
@@ -36,8 +36,7 @@
                                             </div>
                                         </div>
                                         <div class="col-xs-6 col-sm-3">
-                                            <div class="form-group">
-
+                                            <div class="form-group" id="to-date-group" wire:key="to-date-group">
                                                 <label for="to_date" class="font-weight-normal">To Date</label>
                                                 <input type="text" wire:model.lazy="to_date" id="to_date"
                                                        autocomplete="off"
@@ -45,25 +44,30 @@
                                             </div>
                                         </div>
                                         <div class="col-xs-6 col-sm-3">
-                                            <label for="closing_vouchers" class="font-weight-normal">Closing Vouchers</label>
-                                            <select wire:model.defer='closing_vouchers'
-                                                    class="form-control">
-                                                <option value="show">Show</option>
-                                                <option value="hide">Hide</option>
-                                            </select>
+                                            <div class="form-group" id="closing-vouchers-group" wire:key="closing-vouchers-group">
+                                                <label for="closing_vouchers" class="font-weight-normal">Closing Vouchers</label>
+                                                <select wire:model.defer='closing_vouchers'
+                                                        class="form-control"
+                                                        id="closing_vouchers">
+                                                    <option value="show">Show</option>
+                                                    <option value="hide">Hide</option>
+                                                </select>
+                                            </div>
                                         </div>
                                         <div class="col-xs-6 col-sm-3 pt-4">
-                                            <div class="form-group">
+                                            <div class="form-group" id="search-button-group" wire:key="search-button-group">
                                                 <button type="button" wire:click="search" wire:loading.attr="disabled"
                                                         class="btn btn-primary">
                                                     <span wire:loading wire:target="search">Searching ...</span>
                                                     <span wire:loading.remove wire:target="search">Search</span>
                                                 </button>
-                                                {{--                                                <button type="button" wire:click="resetSearch"--}}
-                                                {{--                                                        wire:loading.attr="disabled"--}}
-                                                {{--                                                        class="btn btn-danger">--}}
-                                                {{--                                                    Reset--}}
-                                                {{--                                                </button>--}}
+                                                {{--
+                                                <button type="button" wire:click="resetSearch"
+                                                        wire:loading.attr="disabled"
+                                                        class="btn btn-danger">
+                                                    Reset
+                                                </button>
+                                                --}}
                                                 @if(!empty($report))
                                                     <a href="{{'date-wise/export'}}?from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}&closing_vouchers={{$closing_vouchers}}"
                                                        target="_blank"
