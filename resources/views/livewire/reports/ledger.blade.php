@@ -28,8 +28,8 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-6 col-sm-4">
-                                        <div class="form-group">
+                                    <div class="col-xs-6 col-sm-4" wire:key="account-name" id="account-name">
+                                        <div class="form-group" >
                                             <label for="account" class="font-weight-normal">Account Name</label>
                                             <input type="text"
                                                    wire:click="searchableOpenModal('account_id','account_name','accounts')"
@@ -38,7 +38,7 @@
                                                    class="form-control">
                                         </div>
                                     </div>
-                                    <div class="col-xs-6 col-sm-4">
+                                    <div class="col-xs-6 col-sm-4" wire:key="from-date" id="from-date">
                                         <div class="form-group">
 
                                             <label for="from_date" class="font-weight-normal">From Date</label>
@@ -47,7 +47,7 @@
                                                    class="form-control">
                                         </div>
                                     </div>
-                                    <div class="col-xs-6 col-sm-4">
+                                    <div class="col-xs-6 col-sm-4" wire:key="to-date" id="to-date" >
                                         <div class="form-group">
                                             <label for="to_date" class="font-weight-normal">To Date</label>
                                             <input type="text" wire:model.lazy="to_date" id="to_date"
@@ -56,7 +56,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-12 pt-3">
+                                    <div class="col-12 pt-3" wire:key="search-export-btn" id="search-export">
                                         <div class="form-group">
                                             <button type="button" class="btn btn-primary" wire:click="search"
                                                     wire:loading.attr="disabled">

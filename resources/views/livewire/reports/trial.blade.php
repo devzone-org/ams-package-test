@@ -21,14 +21,14 @@
                                 <div class="card-body m-0 p-0 p-2 px-3">
                                     <div class="row">
                                         <div class="col-xs-6 col-sm-4">
-                                            <div class="form-group">
+                                            <div class="form-group" id="from-date-div" wire:key="from-date-div">
                                                 <label for="from_date" class="font-weight-normal">From Date</label>
                                                 <input type="text" wire:model.lazy="from_date" id="from_date"
                                                        autocomplete="off"
                                                        class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-xs-6 col-sm-4">
+                                        <div class="col-xs-6 col-sm-4" id="to-date-div" wire:key="to-date-div">
                                             <div class="form-group">
 
                                                 <label for="to_date" class="font-weight-normal">To Date</label>
@@ -37,7 +37,7 @@
                                                        class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-xs-6 col-sm-4 pt-4">
+                                        <div class="col-xs-6 col-sm-4 pt-4" id="export-div" wire:key="export-div">
                                             <div class="form-group">
                                                 @if(!empty($ledger))
                                                     <a href="{{'trial-balance/export'}}?from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}"
@@ -150,19 +150,19 @@
                 </div>
 
                 <div class="grid grid-cols-6 gap-6">
-                    <div class="col-span-6 sm:col-span-2">
+                    <div class="col-span-6 sm:col-span-2" id="from-date-div" wire:key="from-date-div">
                         <label for="from_date" class="block text-sm font-medium text-gray-700">From Date</label>
                         <input type="text" readonly wire:model.lazy="from_date" id="from_date" autocomplete="off"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
 
-                    <div class="col-span-6 sm:col-span-2">
+                    <div class="col-span-6 sm:col-span-2" id="to-date-div" wire:key="to-date-div">
                         <label for="to_date" class="block text-sm font-medium text-gray-700">To Date</label>
                         <input type="text" readonly wire:model.lazy="to_date" id="to_date" autocomplete="off"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
 
-                    <div class="col-span-6 sm:col-span-2 mt-6">
+                    <div class="col-span-6 sm:col-span-2 mt-6" id="export-div" wire:key="export-div">
                         @if(!empty($ledger))
                             <a href="{{'trial-balance/export'}}?from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}"
                                target="_blank"
