@@ -300,18 +300,18 @@
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
 
-                    <div class="col-span-6 sm:col-span-2">
+                    <div class="col-span-6 sm:col-span-2" wire:key="from-date" id="from-date">
                         <label for="from_date" class="block text-sm font-medium text-gray-700">From Date</label>
                         <input type="text" readonly wire:model.lazy="from_date" id="from_date" autocomplete="off"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
 
-                    <div class="col-span-6 sm:col-span-2">
+                    <div class="col-span-6 sm:col-span-2" wire:key="to-date" id="to-date">
                         <label for="to_date" class="block text-sm font-medium text-gray-700">To Date</label>
                         <input type="text" readonly wire:model.lazy="to_date" id="to_date" autocomplete="off"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
-                    <div class="col-span-6 sm:col-span-2">
+                    <div class="col-span-6 sm:col-span-2" wire:key="action-btn" id="action-btn">
                         <div class="mt-6 flex-shrink-0 flex ">
                             <button type="button" wire:click="search" wire:loading.attr="disabled"
                                     class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">

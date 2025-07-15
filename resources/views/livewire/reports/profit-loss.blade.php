@@ -414,21 +414,22 @@
 
 
                 <div class="grid grid-cols-8 gap-6">
-                    <div class="col-span-6 sm:col-span-2">
+                    <div class="col-span-6 sm:col-span-2" id="from-date-group" wire:key="from-date-group">
                         <label for="from_date" class="block text-sm font-medium text-gray-700">From Date</label>
-                        <input type="text" wire:model.lazy="from_date" readonly id="from_date" autocomplete="off"
+                        <input type="text" wire:model.lazy="from_date" wire:key="from-date-input" readonly id="from_date" autocomplete="off"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
 
 
-                    <div class="col-span-6 sm:col-span-2">
+                    <div class="col-span-6 sm:col-span-2" id="to-date-group" wire:key="to-date-group">
                         <label for="to_date" class="block text-sm font-medium text-gray-700">To Date</label>
-                        <input type="text" readonly wire:model.lazy="to_date" id="to_date" autocomplete="off"
+                        <input type="text" readonly wire:model.lazy="to_date" wire:key="to-date-input" id="to_date" autocomplete="off"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
-                    <div class="col-span-6 sm:col-span-2">
+                    <div class="col-span-6 sm:col-span-2" id="closing-vouchers-group" wire:key="closing-vouchers-group">
                         <label for="closing_vouchers" class="block text-sm font-medium text-gray-700">Closing Vouchers</label>
                         <select wire:model.defer='closing_vouchers'
+                                wire:key="closing-vouchers-select"
                                 class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             <option value="show">Show</option>
                             <option value="hide">Hide</option>
