@@ -180,7 +180,7 @@ class ClosingFiscalYear extends Component
                     if ($temp_1 > 0) {
                         $credit = $temp_1;
                     } else {
-                        $debit = $temp_1;
+                        $debit = abs($temp_1);
                     }
 
                     $voucher_id = $debit_voucher_id;
@@ -190,7 +190,7 @@ class ClosingFiscalYear extends Component
                     if ($temp_2 > 0) {
                         $debit = $temp_2;
                     } else {
-                        $credit = $temp_2;
+                        $credit = abs($temp_2);
                     }
 
                     $voucher_id = $credit_voucher_id;
