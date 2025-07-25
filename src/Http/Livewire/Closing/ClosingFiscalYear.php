@@ -206,7 +206,7 @@ class ClosingFiscalYear extends Component
                     'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
                     'posted_by' => \Auth::user()->id,
                     'is_approve' => 't',
-                    'approved_at' => date('Y-m-d'),
+                    'approved_at' => date('Y-m-d H:i:s'),
                     'approved_by' => \Auth::user()->id
                 ]);
             }
@@ -240,7 +240,7 @@ class ClosingFiscalYear extends Component
                     'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
                     'posted_by' => \Auth::user()->id,
                     'is_approve' => 't',
-                    'approved_at' => date('Y-m-d'),
+                    'approved_at' => date('Y-m-d H:i:s'),
                     'approved_by' => \Auth::user()->id
                 ]);
 
@@ -356,7 +356,7 @@ class ClosingFiscalYear extends Component
             'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
             'posted_by' => \Auth::user()->id,
             'is_approve' => 't',
-            'approved_at' => date('Y-m-d'),
+            'approved_at' => date('Y-m-d H:i:s'),
             'approved_by' => \Auth::user()->id
         ]);
 
@@ -370,7 +370,7 @@ class ClosingFiscalYear extends Component
             'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
             'posted_by' => \Auth::user()->id,
             'is_approve' => 't',
-            'approved_at' => date('Y-m-d'),
+            'approved_at' => date('Y-m-d H:i:s'),
             'approved_by' => \Auth::user()->id
         ]);
 
@@ -395,7 +395,7 @@ class ClosingFiscalYear extends Component
             'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
             'posted_by' => \Auth::user()->id,
             'is_approve' => 't',
-            'approved_at' => date('Y-m-d'),
+            'approved_at' => date('Y-m-d H:i:s'),
             'approved_by' => \Auth::user()->id
         ]);
     }
