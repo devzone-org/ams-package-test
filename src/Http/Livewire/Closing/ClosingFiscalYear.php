@@ -350,6 +350,7 @@ class ClosingFiscalYear extends Component
         Ledger::create([
             'account_id' => $income_sumamry_account_id,
             'voucher_no' => $debit_voucher_id,
+            'type' => $found['type'],
             'debit' => $debit,
             'credit' => 0,
             'description' => 'Fiscal Year ' . $this->selected_year['year'] . ' Closed to Summary Account.',
@@ -364,6 +365,7 @@ class ClosingFiscalYear extends Component
         Ledger::create([
             'account_id' => $income_sumamry_account_id,
             'voucher_no' => $credit_voucher_id,
+            'type' => $found['type'],
             'debit' => 0,
             'credit' => $credit,
             'description' => 'Fiscal Year ' . $this->selected_year['year'] . ' Closed to Summary Account.',
@@ -389,6 +391,7 @@ class ClosingFiscalYear extends Component
         Ledger::create([
             'account_id' => $income_sumamry_account_id,
             'voucher_no' => $equity_voucher_id,
+            'type' => $found['type'],
             'debit' => $equity_debit,
             'credit' => $equity_credit,
             'description' => 'Fiscal Year ' . $this->selected_year['year'] . ' Closed to Summary Account.',
