@@ -18,6 +18,8 @@ use Devzone\Ams\Http\Livewire\Reports\BalanceSheet;
 use Devzone\Ams\Http\Livewire\Reports\CustomerPaymentReport;
 use Devzone\Ams\Http\Livewire\Reports\DayClosing;
 use Devzone\Ams\Http\Livewire\Reports\Ledger;
+use Devzone\Ams\Http\Livewire\Reports\PnlTemplateManager;
+use Devzone\Ams\Http\Livewire\Reports\PnlTemplateReport;
 use Devzone\Ams\Http\Livewire\Reports\ProfitLoss;
 use Devzone\Ams\Http\Livewire\Reports\ProfitLossDateWise;
 use Devzone\Ams\Http\Livewire\Reports\Trial;
@@ -102,6 +104,8 @@ class AmsServiceProvider extends ServiceProvider
         Livewire::component('customers.customer-list', \Devzone\Ams\Http\Livewire\Customers\CustomerList::class);
         Livewire::component('reports.customer-payment-report', CustomerPaymentReport::class);
         Livewire::component('customers.paid-unpaid-customer-payments', PaidUnpaidCustomerPayments::class);
+        Livewire::component('report.pnl-template-manager', PnlTemplateManager::class);
+        Livewire::component('report.pnl-template-report', PnlTemplateReport::class);
     }
 
     /**

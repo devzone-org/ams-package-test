@@ -112,6 +112,13 @@ Route::group(['middleware' => ['permission:3.pnl']], function () {
     Route::get('reports/profit-and-loss/date-wise/export', [\Devzone\Ams\Http\Controllers\Exports\ProfitLossDateWiseExport::class, 'download']);
 
 });
+
+Route::get('reports/pnl-template-manager', function () {
+    return view('ams::reports.pnl-template-manager');
+})->middleware('permission:4.pnl-template-manager-view');
+Route::get('reports/pnl-template-report', function () {
+    return view('ams::reports.pnl-template-report');
+})->middleware('permission:4.pnl-template-report');
 Route::group(['middleware' => ['permission:3.balance-sheet']], function () {
 
     Route::get('reports/balance-sheet', function () {

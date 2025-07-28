@@ -3,6 +3,7 @@
 namespace Devzone\Ams\Http\Controllers\Exports;
 
 use Devzone\Ams\Models\ChartOfAccount;
+use Devzone\Ams\Models\PnlTemplateManager;
 use Illuminate\Support\Facades\DB;
 use League\Csv\Writer;
 use SplTempFileObject;
@@ -12,6 +13,7 @@ class ProfitLossDateWiseExport
 
     protected $from_date;
     protected $to_date;
+    protected $template_id;
     protected $closing_vouchers = 'hide';
 
 
@@ -21,6 +23,7 @@ class ProfitLossDateWiseExport
         $this->from_date = $request['from_date'];
         $this->to_date = $request['to_date'];
         $this->closing_vouchers = $request['closing_vouchers'];
+        $this->template_id = $request['template_id'];
     }
 
 
@@ -38,6 +41,11 @@ class ProfitLossDateWiseExport
         $from = \Carbon\Carbon::parse($this->from_date);
         $to = \Carbon\Carbon::parse($this->to_date);
 
+        $lvl_5_account_ids = null;
+        if(!empty($this->template_id)){
+            $template = PnlTemplateManager::where('id', $this->template_id)->first();
+            $lvl_5_account_ids = array_merge($template['income_accounts'],$template['expense_accounts']);
+        }
         $report = \Devzone\Ams\Models\Ledger::from('ledgers as l')
             ->join('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
             ->when(!empty($this->closing_vouchers) && strtolower($this->closing_vouchers) == 'hide', function ($q) {
@@ -58,6 +66,9 @@ class ProfitLossDateWiseExport
                 DB::raw("DATE_FORMAT(l.posting_date,'%Y-%m-%d') as date"))
             ->where('l.posting_date', '>=', $this->formatDate($this->from_date))
             ->where('l.posting_date', '<=', $this->formatDate($this->to_date))
+            ->when(!empty($lvl_5_account_ids),function ($q) use($lvl_5_account_ids){
+                $q->whereIn('l.account_id', $lvl_5_account_ids);
+            })
             ->where('l.is_approve', 't')
             ->whereIn('coa.type', ['Income', 'Expenses'])
             ->groupBy(DB::raw("DATE_FORMAT(l.posting_date,'%d %M')"))
