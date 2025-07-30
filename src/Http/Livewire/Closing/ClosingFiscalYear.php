@@ -206,7 +206,7 @@ class ClosingFiscalYear extends Component
                     'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
                     'posted_by' => \Auth::user()->id,
                     'is_approve' => 't',
-                    'approved_at' => date('Y-m-d'),
+                    'approved_at' => date('Y-m-d H:i:s'),
                     'approved_by' => \Auth::user()->id
                 ]);
             }
@@ -240,9 +240,22 @@ class ClosingFiscalYear extends Component
                     'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
                     'posted_by' => \Auth::user()->id,
                     'is_approve' => 't',
-                    'approved_at' => date('Y-m-d'),
+                    'approved_at' => date('Y-m-d H:i:s'),
                     'approved_by' => \Auth::user()->id
                 ]);
+
+                ClosingSummaryAccounts::create([
+                    'account_id' => $data->id,
+                    'voucher_no' => $equity_voucher_id,
+                    'type' => $data->type,
+                    'fiscal_year' => $this->selected_year['year'],
+                    'debit' => $details['debit'] > 0 ? round($details['debit'] / $total_partner, 2) : 0,
+                    'credit' => $details['credit'] > 0 ? round($details['credit'] / $total_partner, 2) : 0,
+                    'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
+                    'description' => 'Fiscal Year ' . $this->selected_year['year'] . ' Closed to Summary Account.',
+                    'posted_by' => \Auth::user()->id
+                ]);
+
 
                 if ($details['debit'] > 0) {
                     $total_equity_amount += round($details['debit'] / $total_partner, 2);
@@ -280,7 +293,7 @@ class ClosingFiscalYear extends Component
             if ($temp_1 > 0) {
                 $credit = $temp_1;
             } else {
-                $debit = $temp_1;
+                $debit = abs($temp_1);
             }
 
             $voucher_id = $voucher_id['dvid'];
@@ -290,7 +303,7 @@ class ClosingFiscalYear extends Component
             if ($temp_2 > 0) {
                 $debit = $temp_2;
             } else {
-                $credit = $temp_2;
+                $credit = abs($temp_2);
             }
 
             $voucher_id = $voucher_id['cvid'];
@@ -350,13 +363,14 @@ class ClosingFiscalYear extends Component
         Ledger::create([
             'account_id' => $income_sumamry_account_id,
             'voucher_no' => $debit_voucher_id,
+            'type' => $found['type'],
             'debit' => $debit,
             'credit' => 0,
             'description' => 'Fiscal Year ' . $this->selected_year['year'] . ' Closed to Summary Account.',
             'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
             'posted_by' => \Auth::user()->id,
             'is_approve' => 't',
-            'approved_at' => date('Y-m-d'),
+            'approved_at' => date('Y-m-d H:i:s'),
             'approved_by' => \Auth::user()->id
         ]);
 
@@ -364,13 +378,14 @@ class ClosingFiscalYear extends Component
         Ledger::create([
             'account_id' => $income_sumamry_account_id,
             'voucher_no' => $credit_voucher_id,
+            'type' => $found['type'],
             'debit' => 0,
             'credit' => $credit,
             'description' => 'Fiscal Year ' . $this->selected_year['year'] . ' Closed to Summary Account.',
             'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
             'posted_by' => \Auth::user()->id,
             'is_approve' => 't',
-            'approved_at' => date('Y-m-d'),
+            'approved_at' => date('Y-m-d H:i:s'),
             'approved_by' => \Auth::user()->id
         ]);
 
@@ -389,13 +404,14 @@ class ClosingFiscalYear extends Component
         Ledger::create([
             'account_id' => $income_sumamry_account_id,
             'voucher_no' => $equity_voucher_id,
+            'type' => $found['type'],
             'debit' => $equity_debit,
             'credit' => $equity_credit,
             'description' => 'Fiscal Year ' . $this->selected_year['year'] . ' Closed to Summary Account.',
             'posting_date' => date('Y-m-d', strtotime($this->selected_year['to'])),
             'posted_by' => \Auth::user()->id,
             'is_approve' => 't',
-            'approved_at' => date('Y-m-d'),
+            'approved_at' => date('Y-m-d H:i:s'),
             'approved_by' => \Auth::user()->id
         ]);
     }
