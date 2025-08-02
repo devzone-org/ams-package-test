@@ -3,6 +3,7 @@
 namespace Devzone\Ams\Http\Livewire\Reports;
 use Devzone\Ams\Models\ChartOfAccount;
 use Livewire\Component;
+use Illuminate\Validation\Rule;
 class PnlTemplateManager extends Component
 {
 
@@ -17,7 +18,14 @@ class PnlTemplateManager extends Component
     protected function rules(): array
     {
         return [
-            'detail.report_name' => 'required|string|unique:pnl_template_managers,report_name,' . ($this->detail['id'] ?? '') . ',id|max:255',
+            'detail.report_name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('pnl_template_managers', 'report_name')
+                    ->ignore($this->detail['id'] ?? null)
+                    ->whereNull('deleted_at'),
+            ],
             'detail.expense_accounts' => 'required|array',
             'detail.income_accounts' => 'required|array',
         ];
