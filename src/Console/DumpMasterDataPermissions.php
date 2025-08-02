@@ -60,6 +60,11 @@ class DumpMasterDataPermissions extends Command
         Permission::updateOrCreate(['name' => '2.hide-data-beyond-3-months'], ['guard_name' => 'web', 'description' => 'Restrict To Last 3 Months', 'portal' => 'accounts', 'section' => 'accounts']);
 
         Permission::updateOrCreate(['name' => '2.transfer-entry'], ['guard_name' => 'web', 'description' => 'payment and receiving transaction - transfer entry ', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '4.pnl-template-manager-view'], ['guard_name' => 'web', 'description' => 'View pnl template', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '4.pnl-template-manager-add'], ['guard_name' => 'web', 'description' => 'Add pnl template', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '4.pnl-template-manager-edit'], ['guard_name' => 'web', 'description' => 'Edit pnl template', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '4.pnl-template-manager-delete'], ['guard_name' => 'web', 'description' => 'Delete pnl template', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '4.pnl-template-report'], ['guard_name' => 'web', 'description' => 'Generate pnl template report', 'portal' => 'accounts', 'section' => 'accounts']);
 
         if(env('AMS_CUSTOMER', false) === true){
             Permission::updateOrCreate(['name' => '4.add.customers'], ['guard_name' => 'web', 'description' => 'Add Customers', 'portal' => 'accounts', 'section' => 'accounts']);
