@@ -620,6 +620,14 @@
                                                     role="menuitem">
                                                     Approve
                                                 </button>
+                                                @if(auth()->user()->can('2.payments.edit'))
+                                                    <a href="/accounts/accountant/payments/add/?edit_id={{ $e->id }}"
+                                                       target="_blank"
+                                                       class="text-gray-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                                                       role="menuitem">
+                                                        Edit
+                                                    </a>
+                                                @endif
 
                                                 <button type="button" wire:click="delete('{{ $e->id }}')"
                                                     class="text-red-700 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"

@@ -534,6 +534,13 @@
                             <input
                                     class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     type="file" wire:model="attachment">
+                            @if(!empty($preview_attachment))
+                                <div class="mt-2">
+                                    <a href="{{ $preview_attachment }}" target="_blank" class="text-indigo-600 hover:text-blue-900 underline">
+                                        View Current Attachment
+                                    </a>
+                                </div>
+                            @endif
                         </div>
 
                     @endif
@@ -545,8 +552,8 @@
                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                     <button type="button" wire:click="save" wire:loading.attr="disabled"
                             class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <span wire:loading wire:target="save">Saving ...</span>
-                        <span wire:loading.remove wire:target="save">Save</span>
+                        <span wire:loading wire:target="save">{{$is_edit ? 'Updating' : 'Saving...'}}</span>
+                        <span wire:loading.remove wire:target="save">{{$is_edit ? 'Update' : 'Save'}}</span>
                     </button>
                 </div>
             @endif
