@@ -9,14 +9,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('payments_receiving', function (Blueprint $table) {
-            $table->date('cheque_date')->nullable()->after('posting_date');
+            $table->date('approval_date')->nullable()->after('posting_date');
         });
     }
 
     public function down(): void
     {
         Schema::table('payments_receiving', function (Blueprint $table) {
-            $table->dropColumn('cheque_date');
+            $table->dropColumn('approval_date');
         });
     }
 };
