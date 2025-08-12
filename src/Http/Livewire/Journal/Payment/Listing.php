@@ -162,6 +162,9 @@ class Listing extends Component
             if (!empty($payment['approved_at'])) {
                 throw new \Exception('Transaction already has been approved.');
             }
+            if(!empty($payment['cheque_date'])){
+                    $payment['posting_date'] = $payment['cheque_date'];
+            }
             $vno = Voucher::instance()->voucher()->get();
 
             $description = $payment->description;

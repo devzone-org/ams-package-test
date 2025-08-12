@@ -20,6 +20,7 @@ class Add extends Component
 
     public $nature;
     public $posting_date;
+    public $cheque_date;
     public $first_account_name;
     public $first_account_id;
     public $second_account_name;
@@ -57,6 +58,7 @@ class Add extends Component
             $this->setData($edit_id);
         }else{
             $this->posting_date = date('d M Y');
+            $this->cheque_date = date('d M Y');
             if (auth()->user()->can('2.payments.own') && !auth()->user()->can('2.payments.any')) {
                 $this->second_account_id = Auth::user()->account_id;
                 $this->second_account_name = Auth::user()->account_name;
@@ -83,6 +85,7 @@ class Add extends Component
         $this->edit_id   = $edit_id;
         $this->nature            = $payment->nature;
         $this->posting_date      = $payment->posting_date ? date('d M Y', strtotime($payment->posting_date)) : null;
+        $this->cheque_date      = $payment->cheque_date ? date('d M Y', strtotime($payment->cheque_date)) : date('d M Y');
         $this->first_account_id  = $payment->first_account_id;
         $this->second_account_id = $payment->second_account_id;
         $this->amount            = $payment->amount;
@@ -167,6 +170,17 @@ class Add extends Component
                 if ($this->formatDate($this->posting_date) > date('Y-m-d')) {
                     throw new \Exception('Future date not allowed.');
                 }
+                if ($this->mode === "cheque") {
+                    if (empty($this->cheque_date)) {
+                        throw new \Exception('Cheque date cannot be empty.');
+                    }
+
+                    $chequeDateFormatted = $this->formatDate($this->cheque_date);
+
+                    if ($chequeDateFormatted > date('Y-m-d')) {
+                        throw new \Exception('Cheque date cannot be in the future.');
+                    }
+                }
                 $date = Carbon::now()->subDays(env('JOURNAL_RESTRICTION_DAYS'))->toDateString();
                 if (!auth()->user()->can('2.create.transfer.any-date') && $date > $this->formatDate($this->posting_date)) {
                     throw new \Exception('Posting date must be equal or greater than ' . date('d M, Y', strtotime($date)));
@@ -184,6 +198,7 @@ class Add extends Component
                     $payment->update([
                         'nature'           => $this->nature,
                         'posting_date'     => $this->formatDate($this->posting_date),
+                        'cheque_date'     => !empty($this->cheque_date) ? $this->formatDate($this->cheque_date) : null ,
                         'first_account_id' => $this->first_account_id,
                         'second_account_id'=> $this->second_account_id,
                         'amount'           => $this->amount,
@@ -199,6 +214,7 @@ class Add extends Component
                     PaymentReceiving::create([
                         'nature'           => $this->nature,
                         'posting_date'     => $this->formatDate($this->posting_date),
+                        'cheque_date'     => !empty($this->cheque_date) ? $this->formatDate($this->cheque_date) : null ,
                         'first_account_id' => $this->first_account_id,
                         'second_account_id'=> $this->second_account_id,
                         'amount'           => $this->amount,
@@ -247,8 +263,11 @@ class Add extends Component
     }
     public function updatedMode($val)
     {
-        if(empty($val) || $val == 'cash'){
-            $this->reset('instrument_no');
+        if (empty($val) || $val === 'cash') {
+            $this->reset('instrument_no', 'cheque_date');
+        } elseif ($val === 'cheque') {
+            $this->cheque_date = date('d M Y');
+            $this->dispatchBrowserEvent('setDatePicker', ['date' => $this->cheque_date]);
         }
     }
 
