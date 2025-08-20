@@ -29,6 +29,9 @@ class Listing extends Component
     public $status;
     public $reversal_id;
     public $reverse_modal = false;
+    public $approval_date_modal = false;
+    public $approval_id;
+    public $approval_date;
 
 
     public function render()
@@ -148,9 +151,16 @@ class Listing extends Component
             $this->addError('success', 'Record has already been approved so unable to delete.');
         }
     }
+    public function showApprovalDateModal($id){
+        $this->resetErrorBag();
+        $this->approval_id  = $id;
+        $this->approval_date = date('Y-m-d');
+        $this->approval_date_modal = true;
+    }
 
     public function approve($id)
     {
+        $this->resetErrorBag();
         try {
             DB::beginTransaction();
 
@@ -162,9 +172,17 @@ class Listing extends Component
             if (!empty($payment['approved_at'])) {
                 throw new \Exception('Transaction already has been approved.');
             }
-            if(!empty($payment['approval_date'])){
-                    $payment['posting_date'] = $payment['approval_date'];
+            if ($payment['mode'] === 'cheque') {
+                if (empty($this->approval_date)) {
+                    $this->addError('approval_date', 'Cheque date cannot be empty.');
+                    return;
+                }
+                if ($this->approval_date > date('Y-m-d')) {
+                    $this->addError('approval_date','Cheque date cannot be in the future.');
+                    return;
+                }
             }
+            $payment['posting_date'] = $this->approval_date;
             $vno = Voucher::instance()->voucher()->get();
 
             $description = $payment->description;
@@ -227,9 +245,11 @@ class Listing extends Component
 //                    ->date($payment['posting_date'])->approve()->description($description)->execute();
 //            }
 
+            $payment->syncOriginal();
             $payment->update([
                 'approved_by' => Auth::user()->id,
                 'approved_at' => date('Y-m-d H:i:s'),
+                'approval_date' =>!empty($this->approval_date) ? $this->approval_date : null,
                 'voucher_no' => $vno
             ]);
             if (!empty($payment['attachment'])) {
@@ -242,6 +262,7 @@ class Listing extends Component
             }
 
             $this->success = 'Entry has been approved.';
+            $this->approval_date_modal = false;
             DB::commit();
         } catch
         (\Exception $e) {
