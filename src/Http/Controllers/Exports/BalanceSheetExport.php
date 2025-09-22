@@ -3,6 +3,7 @@
 namespace Devzone\Ams\Http\Controllers\Exports;
 
 use Devzone\Ams\Models\ChartOfAccount;
+use Devzone\Ams\Models\EquityRatio;
 use League\Csv\Writer;
 use SplTempFileObject;
 use Illuminate\Support\Facades\DB;
@@ -10,6 +11,11 @@ use Illuminate\Support\Facades\DB;
 
 class BalanceSheetExport
 {
+    protected $level3 = [];
+    protected $level4 = [];
+    protected $level5 = [];
+    protected $data;
+    protected $pnl;
     protected $asat;
 
     public function __construct()
@@ -24,11 +30,11 @@ class BalanceSheetExport
             ->format('Y-m-d');
     }
 
-    public function download()
+    public function search()
     {
-        $level3 = [];
-        $level4 = [];
-        $level5 = [];
+        $this->level3 = $this->level4 = $this->level5 = [];
+        $this->data = null;
+        $this->pnl = null;
 
         $report = \Devzone\Ams\Models\Ledger::from('ledgers as l')
             ->join('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
@@ -51,7 +57,7 @@ class BalanceSheetExport
             ->orderBy('coa.name', 'asc')
             ->get();
 
-        $this->calculateProfit($report);
+        $this->calculateProfit();
 
         $l4 = array_unique($report->pluck('sub_account')->toArray());
         $l4_accounts = ChartOfAccount::whereIn('id', $l4)->get();
@@ -63,10 +69,10 @@ class BalanceSheetExport
 
         foreach ($l3_accounts as $l3) {
             $balance_v3 = 0;
-//            $this->data['l3' . $l3['id']] = true;
+            $this->data['l3' . $l3['id']] = true;
             foreach ($l4_accounts->where('sub_account', $l3->id) as $l4) {
                 $balance_v4 = 0;
-//                $this->data['l4' . $l4->id] = false;
+                $this->data['l4' . $l4->id] = false;
                 foreach ($report->where('sub_account', $l4->id) as $r) {
                     $balance = 0;
                     if ($r->type == 'Equity' && $r->is_contra == 't') {
@@ -87,10 +93,25 @@ class BalanceSheetExport
                         }
                     }
                     if ($r->type == 'Equity') {
-                        $balance = $balance + $this->pnl;
+
+                        $acc = EquityRatio::where('account_id', $r->id)->first();
+                        if(!empty($acc)){
+                            $draw = $report->firstWhere('id', optional($acc)->drawing_account_id);
+                            $drawings = 0;
+                            if (!empty($draw)) {
+                                $drawings = $draw['debit'] - $draw['credit'];
+                            }
+                            $balance = $balance + ($this->pnl * optional($acc)->ratio) - $drawings;
+                        }
+
                     }
                     $balance_v4 += $balance;
-                    $level5[] = [
+//                  Converting -0 to 0 if the amount is effectively zero
+                    if ($balance == 0) {
+                        $balance = 0;
+                    }
+
+                    $this->level5[] = [
                         'name' => $r->name,
                         'type' => $r->type,
                         'nature' => $r->nature,
@@ -101,7 +122,7 @@ class BalanceSheetExport
                         'sub_account' => $r->sub_account,
                     ];
                 }
-                $level4[] = [
+                $this->level4[] = [
                     'name' => $l4->name,
                     'type' => $l4->type,
                     'nature' => $l4->nature,
@@ -113,7 +134,7 @@ class BalanceSheetExport
                 ];
                 $balance_v3 += $balance_v4;
             }
-            $level3[] = [
+            $this->level3[] = [
                 'name' => $l3->name,
                 'type' => $l3->type,
                 'nature' => $l3->nature,
@@ -124,8 +145,47 @@ class BalanceSheetExport
                 'sub_account' => $l3->sub_account,
             ];
         }
+
+
+        $this->data = json_encode($this->data);
+    }
+
+    private function calculateProfit()
+    {
+        $pnl = \Devzone\Ams\Models\Ledger::from('ledgers as l')
+            ->join('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
+            ->select(
+                DB::raw('sum(l.debit) as debit'),
+                DB::raw('sum(l.credit) as credit'),
+                'coa.type'
+            )
+            ->where('l.is_approve', 't')
+            ->where('l.posting_date', '<=', $this->formatDate($this->asat))
+            ->whereIn('coa.type', ['Income', 'Expenses'])
+            ->groupBy('coa.type')
+            ->get();
+        $total_expense = 0;
+        $total_income = 0;
+        $expense = $pnl->where('type', 'Expenses')->first();
+        if (!empty($expense)) {
+            $total_expense = $expense['debit'] - $expense['credit'];
+        }
+        $income = $pnl->where('type', 'Income')->first();
+        if (!empty($income)) {
+            $total_income = $income['credit'] - $income['debit'];
+        }
+
+
+        $this->pnl = ($total_income - $total_expense);
+
+    }
+
+    public function download()
+    {
+        $this->search();
+
         $data = [];
-        foreach (collect($level3)->groupBy('type')->toArray() as $type => $lvl3) {
+        foreach (collect($this->level3)->groupBy('type')->toArray() as $type => $lvl3) {
             $data[] = [
                 'name' => $type,
                 '2' => null,
@@ -176,7 +236,10 @@ class BalanceSheetExport
                 ];
 
 
-                foreach (collect($level4)->where('sub_account', $l3['id']) as $l4) {
+                foreach (collect($this->level4)->where('sub_account', $l3['id']) as $l4) {
+                    if ($l4['name'] == 'Drawings')
+                        continue;
+                    }
 
                     $l4_balance = '';
 
@@ -213,7 +276,7 @@ class BalanceSheetExport
                         'balance' => $l4_balance,
 
                     ];
-                    foreach (collect($level5)->where('sub_account', $l4['id']) as $l5) {
+                    foreach (collect($this->level5)->where('sub_account', $l4['id']) as $l5) {
                         $l5_balance = '';
 
                         if ($type == 'Assets' && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
@@ -255,26 +318,26 @@ class BalanceSheetExport
 
             if ($type == 'Assets'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                 if (auth()->user()->cannot('2.hide-assets')) {
-                    $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
+                    $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'));
                 }
             } elseif ($type == 'Liabilities'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                 if (auth()->user()->cannot('2.hide-liabilities')) {
-                    $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
+                    $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'));
                 }
             } elseif ($type == 'Equity'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                 if (auth()->user()->cannot('2.hide-equity')) {
-                    $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
+                    $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'));
                 }
             } elseif ($type == 'Income'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                 if (auth()->user()->cannot('2.hide-income')) {
-                    $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
+                    $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'));
                 }
             } elseif ($type == 'Expenses'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                 if (auth()->user()->cannot('2.hide-expenses')) {
-                    $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
+                    $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'));
                 }
             } else {
-                $type_total = number_format(collect($level3)->where('type', $type)->sum('balance'));
+                $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'));
             }
 
             $data[] = [
@@ -299,10 +362,9 @@ class BalanceSheetExport
                 '7' => null,
 
             ];
-        }
 
-        $liabilities = collect($level3)->where('type', 'Liabilities')->sum('balance');
-        $equity = collect($level3)->where('type', 'Equity')->sum('balance');
+        $liabilities = collect($this->level3)->where('type', 'Liabilities')->sum('balance');
+        $equity = collect($this->level3)->where('type', 'Equity')->sum('balance');
         $total = $liabilities + $equity;
         $equity_and_liabilities = '';
 
@@ -333,38 +395,6 @@ class BalanceSheetExport
         $csv->insertAll($data);
 
         $csv->output('Statement of Financial Position' . date('d M Y h:i A') . '.csv');
-    }
-
-    private function calculateProfit($report)
-    {
-        $pnl = \Devzone\Ams\Models\Ledger::from('ledgers as l')
-            ->join('chart_of_accounts as coa', 'coa.id', '=', 'l.account_id')
-            ->select(
-                DB::raw('sum(l.debit) as debit'),
-                DB::raw('sum(l.credit) as credit'),
-                'coa.type'
-            )
-            ->where('l.is_approve', 't')
-            ->where('l.posting_date', '<=', $this->formatDate($this->asat))
-            ->whereIn('coa.type', ['Income', 'Expenses'])
-            ->groupBy('coa.type')
-            ->get();
-        $total_expense = 0;
-        $total_income = 0;
-        $expense = $pnl->where('type', 'Expenses')->first();
-        if (!empty($expense)) {
-            $total_expense = $expense['debit'] - $expense['credit'];
-        }
-        $income = $pnl->where('type', 'Income')->first();
-        if (!empty($income)) {
-            $total_income = $income['credit'] - $income['debit'];
-        }
-
-        $total_partner = $report->where('type', 'Equity')->where('level', '5')->count();
-        if (empty($total_partner)) {
-            $total_partner = 1;
-        }
-        $this->pnl = ($total_income - $total_expense) / $total_partner;
     }
 
 }
