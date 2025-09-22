@@ -602,7 +602,7 @@
                             @if ($l4['name']  == 'Drawings')
                                 @continue
                             @endif
-                            <tr class="bg-white hover:bg-gray-100" x-show="l3{{$l3['id']}}"
+                            <tr class="bg-white hover:bg-gray-100" x-show="l3{{$l3['id']}}" wire:key="l3{{$l3['id']}}"
                             >
                                 <td class="pl-20 px-2 py-1 whitespace-nowrap text-sm font-medium  text-gray-900 flex">
                                     <div @click="l4{{$l4['id']}} = ! l4{{$l4['id']}}" class="cursor-pointer">
@@ -682,7 +682,7 @@
                                 </td>
                             </tr>
                             @foreach(collect($level5)->where('sub_account',$l4['id']) as $l5)
-                                <tr class="bg-white hover:bg-gray-100" x-show="l4{{$l4['id']}} && l3{{$l3['id']}}">
+                                <tr class="bg-white hover:bg-gray-100" x-show="l4{{$l4['id']}} && l3{{$l3['id']}}" wire:key="l4{{$l4['id']}}">
                                     <td class="pl-32 px-2 py-1 whitespace-nowrap text-sm   text-gray-500">
                                         {{ $l5['name'] }}
                                     </td>
