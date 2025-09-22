@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\DB;
 
 class BalanceSheetExport
 {
-    protected $level3 = [];
-    protected $level4 = [];
-    protected $level5 = [];
-    protected $data;
-    protected $pnl;
-    protected $asat;
+    public $level3 = [];
+    public $level4 = [];
+    public $level5 = [];
+    public $data;
+    public $pnl;
+    public $asat;
 
     public function __construct()
     {
