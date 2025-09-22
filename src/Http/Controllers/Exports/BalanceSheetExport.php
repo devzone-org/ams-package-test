@@ -318,26 +318,26 @@ class BalanceSheetExport
 
             if ($type == 'Assets'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                 if (auth()->user()->cannot('2.hide-assets')) {
-                    $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'));
+                    $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'), 2);
                 }
             } elseif ($type == 'Liabilities'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                 if (auth()->user()->cannot('2.hide-liabilities')) {
-                    $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'));
+                    $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'), 2);
                 }
             } elseif ($type == 'Equity'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                 if (auth()->user()->cannot('2.hide-equity')) {
-                    $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'));
+                    $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'), 2);
                 }
             } elseif ($type == 'Income'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                 if (auth()->user()->cannot('2.hide-income')) {
-                    $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'));
+                    $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'), 2);
                 }
             } elseif ($type == 'Expenses'  && env('SKIP_ACCOUNTANT_RESTRICTION', false) !== true) {
                 if (auth()->user()->cannot('2.hide-expenses')) {
-                    $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'));
+                    $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'), 2);
                 }
             } else {
-                $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'));
+                $type_total = number_format(collect($this->level3)->where('type', $type)->sum('balance'), 2);
             }
 
             $data[] = [
