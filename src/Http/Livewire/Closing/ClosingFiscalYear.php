@@ -2,6 +2,7 @@
 
 namespace Devzone\Ams\Http\Livewire\Closing;
 
+use Devzone\Ams\Helper\Voucher;
 use Devzone\Ams\Models\ChartOfAccount;
 use Devzone\Ams\Models\ClosingSummaryAccounts;
 use Devzone\Ams\Models\Ledger;
@@ -113,15 +114,7 @@ class ClosingFiscalYear extends Component
 
     public function getAndUpdateVoucher()
     {
-        $voucher = \Devzone\Ams\Models\Voucher::where('name', 'voucher')
-            ->lockForUpdate()
-            ->select('value')
-            ->first()
-            ->value;
-        $temp = \Devzone\Ams\Models\Voucher::where('name', 'voucher')
-            ->update(['value' => $voucher + 1]);
-
-        return $voucher;
+        return Voucher::instance()->voucher()->get();
     }
 
     public function getSummary()
@@ -447,7 +440,7 @@ class ClosingFiscalYear extends Component
     public function render()
     {
         $this->summary_account = ClosingSummaryAccounts::groupBy('fiscal_year')
-            ->select('fiscal_year', 'voucher_no')
+            ->select('fiscal_year', DB::raw('GROUP_CONCAT(DISTINCT voucher_no) as voucher_no'))
             ->get();
 
         return view('ams::livewire.closing.closing-fiscal-year');

@@ -475,7 +475,7 @@
 
                 </div>
             </div>
-            <div>
+            <div class="overflow-auto">
                 @if(!empty($heading))
                     <table class="min-w-full table-fixed divide-y divide-gray-200">
                         <thead class="bg-gray-100">
