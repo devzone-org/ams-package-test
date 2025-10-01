@@ -116,6 +116,27 @@ class DumpMasterData extends Command
 
         ChartOfAccount::firstOrCreate(['id' => '79'], ['name' => 'Customers Receivable', 'type' => 'Assets', 'reference' => 'commission-receivable-4', 'sub_account' => '10', 'level' => '4', 'nature' => 'd']);
         ChartOfAccount::firstOrCreate(['reference' => 'customer-receivable-4'], ['name' => 'Customers Receivable', 'type' => 'Assets', 'sub_account' => '10', 'level' => '4', 'nature' => 'd']);
+        ChartOfAccount::firstOrCreate(['reference' => 'owner-share-payable-3'],['name' => 'Owner Share Payable', 'type' => 'Liabilities', 'sub_account' => '23', 'level' => '3', 'nature' => 'c']);
+        $level3 = ChartOfAccount::firstOrCreate(
+            ['reference' => 'owner-share-payable-3'],
+            [
+                'name' => 'Owner Share Payable',
+                'type' => 'Liabilities',
+                'sub_account' => 23,
+                'level' => 3,
+                'nature' => 'c'
+            ]
+        );
+        ChartOfAccount::firstOrCreate(
+            ['reference' => 'owner-share-payable-4'],
+            [
+                'name' => 'Owner Share Payable',
+                'type' => 'Liabilities',
+                'sub_account' => $level3->id,
+                'level' => 4,
+                'nature' => 'c'
+            ]
+        );
 
         $cash_suplus = ChartOfAccount::where('reference', 'inc-cash-surplus')->exists();
         if(!$cash_suplus){
