@@ -4,8 +4,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title') - {{ config('app.name') }}</title>
+    <script>
+        (function() {
+            const stored = localStorage.getItem('theme');
+            const osPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const shouldUseDark = stored ? stored === 'dark' : osPrefersDark;
+            document.documentElement.classList.toggle('dark', shouldUseDark);
+        })();
+    </script>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <link href="{{ asset('ams/css/app.css') }}" rel="stylesheet">
+
+    @if (file_exists(public_path('css/dark-mode.css')))
+        <link href="{{ asset('css/dark-mode.css') }}" rel="stylesheet">
+    @endif
     @livewireStyles
     <style>
         [x-cloak] {
