@@ -13,7 +13,7 @@ use Livewire\Component;
 
 class ManualAllocation extends Component
 {
-    public $customers = [], $selected_customer, $selected_type, $voucher_no, $posting_date, $from_date, $to_date;
+    public $customers = [], $selected_customer, $voucher_no, $posting_date, $from_date, $to_date;
     public $unsettled_debit_entries = [], $unsettled_credit_entries = [], $customer_details = [], $closing_balance;
     public $debit_checkbox = [], $credit_checkbox = [], $selected_debit_amount = 0, $selected_credit_amount = 0;
     public $select_all_debit, $select_all_credit;
@@ -97,9 +97,6 @@ class ManualAllocation extends Component
                     ->when(!empty($this->to_date), function ($q) {
                         $q->where('ledgers.posting_date', '<=', $this->to_date);
                     })
-                    ->when(!empty($this->selected_type), function ($q) {
-                        $q->where('ledgers.type', $this->selected_type);
-                    })
                     ->select(
                         'ledgers.posting_date',
                         'ledgers.voucher_no',
@@ -131,9 +128,6 @@ class ManualAllocation extends Component
                     })
                     ->when(!empty($this->to_date), function ($q) {
                         $q->where('ledgers.posting_date', '<=', $this->to_date);
-                    })
-                    ->when(!empty($this->selected_type), function ($q) {
-                        $q->where('ledgers.type', $this->selected_type);
                     })
                     ->select(
                         'ls.amount',
@@ -201,9 +195,6 @@ class ManualAllocation extends Component
                     ->when(!empty($this->to_date), function ($q) {
                         $q->where('ledgers.posting_date', '<=', $this->to_date);
                     })
-                    ->when(!empty($this->selected_type), function ($q) {
-                        $q->where('ledgers.type', $this->selected_type);
-                    })
                     ->select(
                         'ledgers.id as ledger_id',
                         'ledgers.account_id',
@@ -249,9 +240,6 @@ class ManualAllocation extends Component
                     })
                     ->when(!empty($this->to_date), function ($q) {
                         $q->where('ledgers.posting_date', '<=', $this->to_date);
-                    })
-                    ->when(!empty($this->selected_type), function ($q) {
-                        $q->where('ledgers.type', $this->selected_type);
                     })
                     ->select(
                         'ls.id as settled_ledger_id',

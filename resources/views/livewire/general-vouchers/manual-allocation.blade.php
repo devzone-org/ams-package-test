@@ -69,23 +69,8 @@
                                             <input type="text" placeholder="Voucher No. Sales Invoice"
                                                    class="form-control" wire:model.defer="voucher_no">
                                         </div>
-
-
                                     </div>
                                     <div class="row pt-3">
-                                        <div class="col-4" wire:ignore>
-                                            <label for="">Transaction Type</label>
-                                            <select name="" id="type" class="form-control select2-danger"
-                                                    data-dropdown-css-class="select2-danger" wire:model="selected_type">
-                                                <option value="">Select Type</option>
-                                                <option value="jv">Journal Voucher (JV)</option>
-                                                <option value="pv">Payment Voucher (PV)</option>
-                                                <option value="rv">Receipt Voucher (RV)</option>
-                                                <option value="dv">Contra Voucher (DV)</option>
-                                                <option value="si">Sales Invoice (SI)</option>
-                                            </select>
-                                        </div>
-
                                         <div class="col-4">
                                             <label for="">From Date</label>
                                             <input type="date" class="form-control" wire:model.defer="from_date">
@@ -94,10 +79,6 @@
                                             <label for="">To Date</label>
                                             <input type="date" class="form-control" wire:model.defer="to_date">
                                         </div>
-
-                                    </div>
-
-                                    <div class="row pt-3">
                                         <div class="col-4">
                                             <label for="">Allocate/Deallocate</label>
                                             <div class="input-group">
@@ -293,7 +274,7 @@
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="w-100 d-flex justify-content-between">
-                                        <div class="w-50 table-responsive pl-2 pr-1 pt-2">
+                                        <div class="w-50 table-responsive pr-1">
                                             <table class="table table-bordered table-striped table-sm">
                                                 <thead>
                                                     <tr>
@@ -342,7 +323,7 @@
                                             </table>
 
                                         </div>
-                                        <div class="w-50 table-responsive pl-1 pr-2 pt-2">
+                                        <div class="w-50 table-responsive pl-1">
                                             <table class="table table-bordered table-striped table-sm">
                                                 <thead>
                                                     <tr>
@@ -397,66 +378,60 @@
                                     </div>
                                     @if (!empty($unsettled_debit_entries) || !empty($unsettled_credit_entries))
                                         <div class='w-100 d-flex justify-content-between'>
-                                            <div class="w-50">
-                                                &nbsp;
-                                            </div>
-
-                                            <div class="w-50">
-                                                <table class="table table-sm">
-                                                    <tr>
-                                                        <td class="border-0">
-                                                            <div class="d-flex justify-content-end">
-                                                                <div class="px-3 pt-1">
-                                                                    <b>Selected Credit Transactions - Unallocated Deposits</b>
-                                                                </div>
-                                                                <div>
-                                                                    <div class="input-group">
-                                                                        <div class="input-group-prepend">
-                                                                            <span class="input-group-text py-0 bg-transparent">
-                                                                                <input type="text"
-                                                                                       class="border-0 text-center bg-transparent"
-                                                                                       value="{{ !empty($credit_checkbox) ? count($credit_checkbox) : 0 }}"
-                                                                                       disabled style="width: 15px">
-                                                                            </span>
-                                                                        </div>
-                                                                        <input type="text" tabindex=-1
-                                                                               class="form-control text-right bg-transparent"
-                                                                               value="{{ number_format($selected_credit_amount, 2) }}"
-                                                                               readonly>
+                                            <table class="table table-sm">
+                                                <tr>
+                                                    <td class="border-0">
+                                                        <div class="d-flex justify-content-end">
+                                                            <div class="px-3 pt-1">
+                                                                <b>Selected Credit Transactions - Unallocated Deposits</b>
+                                                            </div>
+                                                            <div>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text py-0 bg-transparent">
+                                                                            <input type="text"
+                                                                                   class="border-0 text-center bg-transparent"
+                                                                                   value="{{ !empty($credit_checkbox) ? count($credit_checkbox) : 0 }}"
+                                                                                   disabled style="width: 25px">
+                                                                        </span>
                                                                     </div>
+                                                                    <input type="text" tabindex=-1
+                                                                           class="form-control text-right bg-transparent"
+                                                                           value="{{ number_format($selected_credit_amount, 2) }}"
+                                                                           readonly>
                                                                 </div>
                                                             </div>
-                                                        </td>
-                                                    </tr>
+                                                        </div>
+                                                    </td>
+                                                </tr>
 
-                                                    <tr>
-                                                        <td class="border-0">
-                                                            <div class="d-flex justify-content-end">
-                                                                <div class="px-3 pt-1">
-                                                                    <b>Selected Unpaid - Sales Invoices</b>
-                                                                </div>
+                                                <tr>
+                                                    <td class="border-0">
+                                                        <div class="d-flex justify-content-end">
+                                                            <div class="px-3 pt-1">
+                                                                <b>Selected Unpaid - Sales Invoices</b>
+                                                            </div>
 
-                                                                <div>
-                                                                    <div class="input-group">
-                                                                        <div class="input-group-prepend">
-                                                                            <span class="input-group-text py-0 bg-transparent">
-                                                                                <input type="text"
-                                                                                       class="border-0 text-center bg-transparent"
-                                                                                       value="{{ !empty($debit_checkbox) ? count($debit_checkbox) : 0 }}"
-                                                                                       disabled style="width: 15px">
-                                                                            </span>
-                                                                        </div>
-                                                                        <input type="text" tabindex=-1
-                                                                               class="form-control text-right bg-transparent"
-                                                                               value="{{ number_format($selected_debit_amount, 2) }}"
-                                                                               readonly>
+                                                            <div>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text py-0 bg-transparent">
+                                                                            <input type="text"
+                                                                                   class="border-0 text-center bg-transparent"
+                                                                                   value="{{ !empty($debit_checkbox) ? count($debit_checkbox) : 0 }}"
+                                                                                   disabled style="width: 25px">
+                                                                        </span>
                                                                     </div>
+                                                                    <input type="text" tabindex=-1
+                                                                           class="form-control text-right bg-transparent"
+                                                                           value="{{ number_format($selected_debit_amount, 2) }}"
+                                                                           readonly>
                                                                 </div>
                                                             </div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
                                         </div>
                                     @endif
                                 </div>
