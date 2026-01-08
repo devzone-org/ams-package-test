@@ -47,8 +47,6 @@ class ManualAllocation extends Component
         if ($map['code']) {
             $selects[] = $map['code'] . ' as customer_code';
         } else {
-            // If no code column, select id as code or empty string?
-            // Let's rely on accessors or just use ID if code is missing in view
              $selects[] = 'id as customer_code';
         }
 
@@ -82,7 +80,6 @@ class ManualAllocation extends Component
                         ->where('account_id', $this->selected_customer)
                         ->groupBy('ledger_id', 'account_id');
                 }, 'ls', 'ledgers.id', '=', 'ls.ledger_id')
-                    ->leftJoin('ledger_details as ld', 'ld.voucher_no', 'ledgers.voucher_no')
                     ->where('ledgers.account_id', $this->selected_customer)
                     ->where('ls.status', 'f')
                     ->where('debit', '>', 0)
@@ -96,12 +93,12 @@ class ManualAllocation extends Component
                         $q->where('ledgers.posting_date', '<=', $this->to_date);
                     })
                     ->when(!empty($this->selected_type), function ($q) {
-                        $q->where('ld.type', $this->selected_type);
+                        $q->where('ledgers.type', $this->selected_type);
                     })
                     ->select(
                         'ledgers.posting_date',
                         'ledgers.voucher_no',
-                        'ld.reference_no',
+                        'ledgers.reference as reference_no',
                         'ledgers.debit',
                         'ledgers.id',
                         DB::raw('COALESCE(ls.amount, 0) as settled_amount'),
@@ -119,7 +116,6 @@ class ManualAllocation extends Component
                         ->where('account_id', $this->selected_customer)
                         ->groupBy('voucher_no', 'account_id', 'cr_ledger_id');
                 }, 'ls', 'ledgers.id', '=', 'ls.cr_ledger_id')->where('ledgers.credit', '>', 0)
-                    ->leftJoin('ledger_details as ld', 'ld.voucher_no', 'ledgers.voucher_no')
                     ->where('ledgers.account_id', $this->selected_customer)
                     ->where('ledgers.credit', '<>',  DB::raw('COALESCE(ls.amount, 0)'))
                     ->when(!empty($this->voucher_no_for_credit), function ($q) {
@@ -132,14 +128,14 @@ class ManualAllocation extends Component
                         $q->where('ledgers.posting_date', '<=', $this->to_date);
                     })
                     ->when(!empty($this->selected_type), function ($q) {
-                        $q->where('ld.type', $this->selected_type);
+                        $q->where('ledgers.type', $this->selected_type);
                     })
                     ->select(
                         'ls.amount',
                         'ls.cr_ledger_id',
                         'ledgers.posting_date',
                         'ledgers.voucher_no',
-                        'ld.reference_no',
+                        'ledgers.reference as reference_no',
                         'ledgers.credit',
                         'ledgers.id',
                         DB::raw('ledgers.credit - COALESCE(ls.amount, 0) as unallocated'),
@@ -188,11 +184,10 @@ class ManualAllocation extends Component
                         ->where('account_id', $this->selected_customer)
                         ->groupBy('ledger_id', 'account_id');
                 }, 'ls', 'ledgers.id', '=', 'ls.ledger_id')
-                    ->leftJoin('ledger_details as ld', 'ld.voucher_no', 'ledgers.voucher_no')
                     ->where('ledgers.account_id', $this->selected_customer)
                     // ->where('ls.status', 'f')
                     ->when(!empty($this->voucher_no), function ($q) {
-                        $q->where('ld.voucher_no', $this->voucher_no);
+                        $q->where('ledgers.voucher_no', $this->voucher_no);
                     })
                     ->where('debit', '>', 0)
                     ->where('ls.amount', '>', 0)
@@ -203,14 +198,14 @@ class ManualAllocation extends Component
                         $q->where('ledgers.posting_date', '<=', $this->to_date);
                     })
                     ->when(!empty($this->selected_type), function ($q) {
-                        $q->where('ld.type', $this->selected_type);
+                        $q->where('ledgers.type', $this->selected_type);
                     })
                     ->select(
                         'ledgers.id as ledger_id',
                         'ledgers.account_id',
                         'ledgers.posting_date',
                         'ledgers.voucher_no',
-                        'ld.reference_no',
+                        'ledgers.reference as reference_no',
                         'ledgers.debit',
                         'ls.cr_ledger_id',
                         DB::raw('COALESCE(ls.amount, 0) as settled_amount'),
@@ -234,7 +229,6 @@ class ManualAllocation extends Component
                         ->where('account_id', $this->selected_customer)
                         ->groupBy('ledger_id', 'account_id', 'cr_ledger_id');
                 }, 'ls', 'ledgers.id', '=', 'ls.cr_ledger_id')
-                    ->leftJoin('ledger_details as ld', 'ld.voucher_no', 'ledgers.voucher_no')
                     ->where('ledgers.account_id', $this->selected_customer)
                     ->where('credit', '>', 0)
                     ->where(function ($q) use ($ledger_ids) {
@@ -243,7 +237,7 @@ class ManualAllocation extends Component
                         })
                             ->Where(function ($innerQ) {
                                 $innerQ->when(!empty($this->voucher_no_for_credit), function ($subQ) {
-                                    $subQ->where('ld.voucher_no', $this->voucher_no_for_credit);
+                                    $subQ->where('ledgers.voucher_no', $this->voucher_no_for_credit);
                                 });
                             });
                     })
@@ -254,7 +248,7 @@ class ManualAllocation extends Component
                         $q->where('ledgers.posting_date', '<=', $this->to_date);
                     })
                     ->when(!empty($this->selected_type), function ($q) {
-                        $q->where('ld.type', $this->selected_type);
+                        $q->where('ledgers.type', $this->selected_type);
                     })
                     ->select(
                         'ls.id as settled_ledger_id',
@@ -262,7 +256,7 @@ class ManualAllocation extends Component
                         'ledgers.id as ledger_id',
                         'ledgers.posting_date',
                         'ledgers.voucher_no',
-                        'ld.reference_no',
+                        'ledgers.reference as reference_no',
                         'ledgers.credit',
                         DB::raw('COALESCE(ls.amount, 0) as allocated'),
                     )
