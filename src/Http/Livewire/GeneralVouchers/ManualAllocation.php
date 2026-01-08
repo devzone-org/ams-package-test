@@ -81,7 +81,10 @@ class ManualAllocation extends Component
                         ->groupBy('ledger_id', 'account_id');
                 }, 'ls', 'ledgers.id', '=', 'ls.ledger_id')
                     ->where('ledgers.account_id', $this->selected_customer)
-                    ->where('ls.status', 'f')
+                    ->where(function ($q) {
+                        $q->where('ls.status', 'f')
+                          ->orWhereNull('ls.status');
+                    })
                     ->where('debit', '>', 0)
                     ->when(!empty($this->voucher_no), function ($q) {
                         $q->where('ledgers.voucher_no', $this->voucher_no);
