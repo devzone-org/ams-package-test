@@ -525,12 +525,12 @@
                                         <h3 class="card-title text-bold ">
                                             Activity Log</h3>
                                     </div>
-                                        @livewire('audit-log.audit-log', ['log_name' => ['Allocation', 'Deallocation'], 'target_id' => $customer_account_id]) --}}
-                {{--                </div>--}}
-                {{--            </div>--}}
-                {{--        </div>--}}
-                {{--    </div>--}}
-                {{--@endif --}}
+                                    @livewire('audit-log.audit-log', ['log_name' => ['Allocation', 'Deallocation'], 'target_id' => $customer_account_id])
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif --}}
             </div>
         </div>
     </div>
@@ -577,7 +577,6 @@
                     placeholder: "Select Transaction Type",
                 });
 
-                // customers
                 $('#submitButton').on('click', function(e) {
                     var data = $('#type').select2("val");
                     @this.
