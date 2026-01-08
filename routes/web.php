@@ -170,3 +170,7 @@ if(env('AMS_CUSTOMER', false) === true) {
     })->middleware('permission:4.paid-unpaid-customer-payments');
 }
 
+if(config('ams.ledger_settlement_enabled') === true) {
+    Route::get('ams/ledger-allocations', \Devzone\Ams\Http\Livewire\GeneralVouchers\ManualAllocation::class)->middleware('auth');
+}
+
