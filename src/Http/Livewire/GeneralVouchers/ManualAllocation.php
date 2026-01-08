@@ -2,7 +2,6 @@
 
 namespace Devzone\Ams\Http\Livewire\GeneralVouchers;
 
-use Devzone\Ams\Models\AmsCustomer as Customer;
 use Devzone\Ams\Models\Ledger;
 use Devzone\Ams\Models\LedgerSettlement;
 use Exception;
@@ -30,8 +29,30 @@ class ManualAllocation extends Component
              abort(404);
         }
 
-        $this->customers = Customer::where('status', 'Active')
-            ->select('id', 'customer_code', 'name as customer_name', 'account_id')
+        $customerModel = config('ams.customer_model');
+        $map = config('ams.customer_table_map');
+
+        $query = $customerModel::query();
+
+        if ($map['status_column'] && $map['active_status_value']) {
+            $query->where($map['status_column'], $map['active_status_value']);
+        }
+
+        $selects = [
+            'id',
+            $map['account_id'] . ' as account_id',
+            $map['name'] . ' as customer_name'
+        ];
+
+        if ($map['code']) {
+            $selects[] = $map['code'] . ' as customer_code';
+        } else {
+            // If no code column, select id as code or empty string?
+            // Let's rely on accessors or just use ID if code is missing in view
+             $selects[] = 'id as customer_code';
+        }
+
+        $this->customers = $query->select($selects)
             ->get()
             ->toArray();
 
@@ -50,11 +71,6 @@ class ManualAllocation extends Component
                     throw new \Exception('Customer field is required!!!');
                 }
                 
-                // Permission check commented out or should be adapted to package's permission system if available
-                // if (auth()->user()->cannot('004-transaction_allocation-view')) {
-                //     throw new \Exception("You don't have the permission to perform this action.");
-                // }
-
                 $this->customer_account_id = $this->selected_customer;
                 $this->settled_debit_entries = [];
                 $this->settled_credit_entries = [];
@@ -128,15 +144,25 @@ class ManualAllocation extends Component
                         'ledgers.id',
                         DB::raw('ledgers.credit - COALESCE(ls.amount, 0) as unallocated'),
                     )
-                    // ->havingRaw('SUM(ledgers.credit) - COALESCE(ls.amount, 0) <> 0')
                     ->orderBy('ledgers.posting_date', 'asc')
                     ->orderBy('ledgers.voucher_no', 'asc')
                     ->get()->toArray();
 
+                $customerModel = config('ams.customer_model');
+                $map = config('ams.customer_table_map');
+                
+                $selects = [];
+                if ($map['payment_terms']) $selects[] = $map['payment_terms'] . ' as frequency';
+                if ($map['credit_limit']) $selects[] = $map['credit_limit'] . ' as amount';
+                if ($map['grace_period']) $selects[] = $map['grace_period'] . ' as grace_period';
 
-                $this->customer_details =  Customer::where('account_id', $this->selected_customer)
-                    ->select('frequency', 'amount', 'grace_period')
+                if (!empty($selects)) {
+                     $this->customer_details =  $customerModel::where($map['account_id'], $this->selected_customer)
+                    ->select($selects)
                     ->get()->toArray();
+                } else {
+                    $this->customer_details = [];
+                }
 
                 $ledger = Ledger::where('account_id', $this->selected_customer)
                     ->select(
