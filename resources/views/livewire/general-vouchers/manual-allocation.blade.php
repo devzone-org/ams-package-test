@@ -102,10 +102,10 @@
                                             <label for="">Allocate/Deallocate</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
-                                                        <span class="input-group-text">
-                                                            <input type="checkbox" wire:model.defer="deallocate"
-                                                                   id="toggle_allocate">
-                                                        </span>
+                                                    <span class="input-group-text">
+                                                        <input type="checkbox" wire:model.debounce.300ms="deallocate"
+                                                               id="toggle_allocate">
+                                                    </span>
                                                 </div>
                                                 <input type="text" tabindex=-1 id="toggle_allocate_text"
                                                        class="form-control {{ !$deallocate ? 'text-danger' : 'text-success' }}"
@@ -191,30 +191,29 @@
                                     <table class="table table-bordered table-sm">
                                         <thead>
                                             <tr>
-                                                <th class="bg-dark" colspan="6">Credit
-                                                    Transactions - Allocated Deposits
+                                                <th class="bg-dark" colspan="6">
+                                                    Credit Transactions - Allocated Deposits
                                                 </th>
                                                 <th></th>
-                                                <th class="bg-dark" colspan="5">Paid
-                                                    - Sales Invoices
+                                                <th class="bg-dark" colspan="5">
+                                                    Paid - Sales Invoices
                                                 </th>
                                             </tr>
-                                            <tr class="bg-dark">
-                                                <th class=" text-center align-middle"><input type="checkbox"
-                                                                                             class="form-control"
-                                                                                             wire:model="deallocate_checkbox_all">
+                                            <tr>
+                                                <th class="text-center align-middle">
+                                                    <input type="checkbox" wire:model="deallocate_checkbox_all">
                                                 </th>
-                                                <th class="text-center">Posting Date</th>
-                                                <th>Voucher No.</th>
-                                                <th>Reference No.</th>
-                                                <th class="text-right">Amount</th>
-                                                <th class="text-right">Allocated</th>
+                                                <th class="text-center align-middle">Posting Date</th>
+                                                <th class="align-middle">Voucher No.</th>
+                                                <th class="align-middle">Reference No.</th>
+                                                <th class="text-right align-middle">Amount</th>
+                                                <th class="text-right align-middle">Allocated</th>
                                                 <th class="border-top-0 bg-light-gray"></th>
-                                                <th class="text-center">Posting Date</th>
-                                                <th>Voucher No.</th>
-                                                <th>Reference No.</th>
-                                                <th class="text-right">Amount</th>
-                                                <th class="text-right">Allocated</th>
+                                                <th class="text-center align-middle">Posting Date</th>
+                                                <th class="align-middle">Voucher No.</th>
+                                                <th class="align-middle">Reference No.</th>
+                                                <th class="text-right align-middle">Amount</th>
+                                                <th class="text-right align-middle">Allocated</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -231,8 +230,7 @@
                                                         @if ($i == 0)
                                                             <td class="text-center align-middle"
                                                                 rowspan="{{ $credit_count }}">
-                                                                <input type="checkbox" class="form-control"
-                                                                       wire:model="deallocate_checkbox.{{ $data['debit'][0]['ledger_id'] }}">
+                                                                <input type="checkbox" wire:model="deallocate_checkbox.{{ $data['debit'][0]['ledger_id'] }}">
                                                             </td>
                                                         @endif
                                                         <td class="text-center align-middle">
@@ -300,54 +298,42 @@
                                                 <thead>
                                                     <tr>
                                                         <th colspan="7" class="bg-dark" style="font-size: 15px">
-                                                            Credit
-                                                            Transactions - Unallocated Deposits
+                                                            Credit Transactions - Unallocated Deposits
                                                         </th>
                                                     </tr>
                                                     <tr>
                                                         <th class="align-middle text-center">
-                                                                <span>
-                                                                    <input type="checkbox" class="form-control"
-                                                                           wire:model="select_all_credit">
-                                                                </span>
+                                                            <input type="checkbox" wire:model="select_all_credit">
                                                         </th>
-                                                        <th class="text-center">#</th>
-                                                        <th class="text-center">Posting Date</th>
-                                                        <th>Voucher No.</th>
-                                                        <th>Reference No.</th>
-                                                        <th class="text-right">Amount</th>
-                                                        <th class="text-right">Unallocated</th>
+                                                        <th class="text-center align-middle">#</th>
+                                                        <th class="text-center align-middle">Posting Date</th>
+                                                        <th class="align-middle">Voucher No.</th>
+                                                        <th class="align-middle">Reference No.</th>
+                                                        <th class="text-right align-middle">Amount</th>
+                                                        <th class="text-right align-middle">Unallocated</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @if (!empty($unsettled_credit_entries))
-
                                                         @foreach ($unsettled_credit_entries as $k => $uce)
                                                             <tr>
                                                                 <td class="align-middle text-center">
-                                                                        <span>
-                                                                            <input type="checkbox" class="form-control"
-                                                                                   wire:model="credit_checkbox.{{ $uce['id'] }}">
-                                                                        </span>
+                                                                    <input type="checkbox" wire:model="credit_checkbox.{{ $uce['id'] }}">
                                                                 </td>
-                                                                <td class="text-center">{{ $loop->iteration }}</td>
-                                                                <td class="text-center">
-                                                                    {{ date('d/m/Y', strtotime($uce['posting_date'])) }}
-                                                                </td>
-                                                                <td>{{ $uce['voucher_no'] }}</td>
-                                                                <td>{{ $uce['reference_no'] }}</td>
-                                                                <td class="text-right">
-                                                                    {{ number_format($uce['credit'], 2) }}</td>
-                                                                <td class="text-right">
-                                                                    {{ number_format($uce['unallocated'], 2) }}</td>
+                                                                <td class="text-center align-middle">{{ $loop->iteration }}</td>
+                                                                <td class="text-center align-middle">{{ date('d/m/Y', strtotime($uce['posting_date'])) }}</td>
+                                                                <td class="align-middle">{{ $uce['voucher_no'] }}</td>
+                                                                <td class="align-middle">{{ $uce['reference_no'] }}</td>
+                                                                <td class="text-right align-middle">{{ number_format($uce['credit'], 2) }}</td>
+                                                                <td class="text-right align-middle">{{ number_format($uce['unallocated'], 2) }}</td>
                                                             </tr>
                                                         @endforeach
                                                         <tr>
-                                                            <th colspan="5" class="text-right">Total</th>
-                                                            <th class="text-right">
+                                                            <th colspan="5" class="text-right align-middle">Total</th>
+                                                            <th class="text-right align-middle">
                                                                 {{ number_format(collect($unsettled_credit_entries)->sum('credit'), 2) }}
                                                             </th>
-                                                            <th class="text-right">
+                                                            <th class="text-right align-middle">
                                                                 {{ number_format(collect($unsettled_credit_entries)->sum('unallocated'), 2) }}
                                                             </th>
                                                         </tr>
@@ -361,53 +347,45 @@
                                                 <thead>
                                                     <tr>
                                                         <th colspan="7" class="bg-dark" style="font-size: 15px">
-                                                            Unpaid
-                                                            - Sales Invoices
+                                                            Unpaid - Sales Invoices
                                                         </th>
                                                     </tr>
                                                     <tr>
                                                         <th class="align-middle text-center">
-                                                                <span>
-                                                                    <input type="checkbox" class="form-control"
-                                                                           wire:model="select_all_debit">
-                                                                </span>
+                                                            <input type="checkbox" wire:model="select_all_debit">
                                                         </th>
-                                                        <th class="text-center">#</th>
-                                                        <th class="text-center">Posting Date</th>
-                                                        <th>Voucher No.</th>
-                                                        <th>Reference No.</th>
-                                                        <th class="text-right">Amount</th>
-                                                        <th class="text-right">Unallocated</th>
+                                                        <th class="text-center align-middle">#</th>
+                                                        <th class="text-center align-middle">Posting Date</th>
+                                                        <th class="align-middle">Voucher No.</th>
+                                                        <th class="align-middle">Reference No.</th>
+                                                        <th class="text-right align-middle">Amount</th>
+                                                        <th class="text-right align-middle">Unallocated</th>
                                                     </tr>
                                                 </thead>
                                                 @if (!empty($unsettled_debit_entries))
-
                                                     @foreach ($unsettled_debit_entries as $k => $ude)
                                                         <tr>
                                                             <td class="align-middle text-center">
-                                                                    <span>
-                                                                        <input type="checkbox" class="form-control"
-                                                                               wire:model="debit_checkbox.{{ $ude['id'] }}">
-                                                                    </span>
+                                                                <input type="checkbox" wire:model="debit_checkbox.{{ $ude['id'] }}">
                                                             </td>
-                                                            <td class="text-center">{{ $loop->iteration }}</td>
-                                                            <td class="text-center">
+                                                            <td class="text-center align-middle">{{ $loop->iteration }}</td>
+                                                            <td class="text-center align-middle">
                                                                 {{ date('d/m/Y', strtotime($ude['posting_date'])) }}
                                                             </td>
-                                                            <td>{{ $ude['voucher_no'] }}</td>
-                                                            <td>{{ $ude['reference_no'] }}</td>
-                                                            <td class="text-right">
+                                                            <td class="align-middle">{{ $ude['voucher_no'] }}</td>
+                                                            <td class="align-middle">{{ $ude['reference_no'] }}</td>
+                                                            <td class="text-right align-middle">
                                                                 {{ number_format($ude['debit'], 2) }}</td>
-                                                            <td class="text-right">
+                                                            <td class="text-right align-middle">
                                                                 {{ number_format($ude['unallocated'], 2) }}</td>
                                                         </tr>
                                                     @endforeach
                                                     <tr>
-                                                        <th colspan="5" class="text-right">Total</th>
-                                                        <th class="text-right">
+                                                        <th colspan="5" class="text-right align-middle">Total</th>
+                                                        <th class="text-right align-middle">
                                                             {{ number_format(collect($unsettled_debit_entries)->sum('debit'), 2) }}
                                                         </th>
-                                                        <th class="text-right">
+                                                        <th class="text-right align-middle">
                                                             {{ number_format(collect($unsettled_debit_entries)->sum('unallocated'), 2) }}
                                                         </th>
                                                     </tr>
@@ -419,31 +397,27 @@
                                     </div>
                                     @if (!empty($unsettled_debit_entries) || !empty($unsettled_credit_entries))
                                         <div class='w-100 d-flex justify-content-between'>
-
                                             <div class="w-50">
                                                 &nbsp;
                                             </div>
 
                                             <div class="w-50">
-
                                                 <table class="table table-sm">
                                                     <tr>
                                                         <td class="border-0">
                                                             <div class="d-flex justify-content-end">
                                                                 <div class="px-3 pt-1">
-                                                                    <b>Selected Credit Transactions - Unallocated
-                                                                        Deposits</b>
+                                                                    <b>Selected Credit Transactions - Unallocated Deposits</b>
                                                                 </div>
                                                                 <div>
                                                                     <div class="input-group">
-                                                                        <div class="input-group-prepend ">
-                                                                                <span
-                                                                                        class="input-group-text py-0 bg-transparent">
-                                                                                    <input type="text"
-                                                                                           class="border-0 text-center bg-transparent"
-                                                                                           value="{{ !empty($credit_checkbox) ? count($credit_checkbox) : 0 }}"
-                                                                                           disabled style="width: 15px">
-                                                                                </span>
+                                                                        <div class="input-group-prepend">
+                                                                            <span class="input-group-text py-0 bg-transparent">
+                                                                                <input type="text"
+                                                                                       class="border-0 text-center bg-transparent"
+                                                                                       value="{{ !empty($credit_checkbox) ? count($credit_checkbox) : 0 }}"
+                                                                                       disabled style="width: 15px">
+                                                                            </span>
                                                                         </div>
                                                                         <input type="text" tabindex=-1
                                                                                class="form-control text-right bg-transparent"
@@ -465,13 +439,12 @@
                                                                 <div>
                                                                     <div class="input-group">
                                                                         <div class="input-group-prepend">
-                                                                                <span
-                                                                                        class="input-group-text py-0 bg-transparent">
-                                                                                    <input type="text"
-                                                                                           class="border-0 text-center bg-transparent"
-                                                                                           value="{{ !empty($debit_checkbox) ? count($debit_checkbox) : 0 }}"
-                                                                                           disabled style="width: 15px">
-                                                                                </span>
+                                                                            <span class="input-group-text py-0 bg-transparent">
+                                                                                <input type="text"
+                                                                                       class="border-0 text-center bg-transparent"
+                                                                                       value="{{ !empty($debit_checkbox) ? count($debit_checkbox) : 0 }}"
+                                                                                       disabled style="width: 15px">
+                                                                            </span>
                                                                         </div>
                                                                         <input type="text" tabindex=-1
                                                                                class="form-control text-right bg-transparent"
@@ -499,22 +472,6 @@
                     </div>
                 </div>
             @endif
-
-            {{-- @if (!empty($customer_account_id))
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card card-dark card-outline">
-                            <div class="card-light ">
-                                <div class="card-header bg-white">
-                                    <h3 class="card-title text-bold ">
-                                        Activity Log</h3>
-                                </div>
-                                @livewire('audit-log.audit-log', ['log_name' => ['Allocation', 'Deallocation'], 'target_id' => $customer_account_id])
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif --}}
         </div>
     </div>
 </div>
@@ -555,11 +512,13 @@
             });
 
             $('#customers').on('change', function (e) {
-                @this.set('selected_customer', $(this).val());
+                @this.
+                set('selected_customer', $(this).val());
             });
 
             $('#type').on('change', function (e) {
-                @this.set('selected_type', $(this).val());
+                @this.
+                set('selected_type', $(this).val());
             });
         });
 
