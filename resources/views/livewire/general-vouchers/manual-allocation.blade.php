@@ -1,4 +1,7 @@
 @if(env('AMS_BOOTSTRAP') == 'true')
+    @section('title')
+        Transaction Allocation
+    @endsection
     @section('content')
     <div class="content-wrapper">
         <style>
