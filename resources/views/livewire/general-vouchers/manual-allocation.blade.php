@@ -117,7 +117,6 @@
                                 </div>
                                 <div class="card-footer">
                                     <div class="float-right">
-                                        {{-- <a href="/master/data/chart-of-accounts" class="btn btn-danger px-3">Back</a> --}}
                                         <button type="submit" class="btn btn-dark px-3"
                                                 wire:loading.attr='disabled'>Fetch
                                         </button>
@@ -200,7 +199,6 @@
                                                     - Sales Invoices
                                                 </th>
                                             </tr>
-                                            {{-- <th class="text-center">#</th> --}}
                                             <tr class="bg-dark">
                                                 <th class=" text-center align-middle"><input type="checkbox"
                                                                                              class="form-control"
@@ -212,7 +210,6 @@
                                                 <th class="text-right">Amount</th>
                                                 <th class="text-right">Allocated</th>
                                                 <th class="border-top-0 bg-light-gray"></th>
-                                                {{-- <th class="text-center">#</th> --}}
                                                 <th class="text-center">Posting Date</th>
                                                 <th>Voucher No.</th>
                                                 <th>Reference No.</th>
