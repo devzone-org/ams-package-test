@@ -118,7 +118,7 @@
                                 <div class="card-footer">
                                     <div class="float-right">
                                         {{-- <a href="/master/data/chart-of-accounts" class="btn btn-danger px-3">Back</a> --}}
-                                        <button type="submit" id="submitButton" class="btn btn-dark px-3"
+                                        <button type="submit" class="btn btn-dark px-3"
                                                 wire:loading.attr='disabled'>Fetch
                                         </button>
                                     </div>
@@ -277,15 +277,9 @@
                                 </div>
                                 <div class="card-footer">
                                     <div class="float-right">
-                                        @if (auth()->user()->can('004-transaction_allocation-delete'))
-                                            <button type="button" class="btn btn-dark px-3"
-                                                    wire:click="deallocate">Deallocate
-                                            </button>
-                                        @else
-                                            <button type="button" class="btn btn-dark px-3"
-                                                    disabled>Deallocate
-                                            </button>
-                                        @endif
+                                        <button type="button" class="btn btn-dark px-3"
+                                                wire:click="deallocate">Deallocate
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -317,8 +311,7 @@
                                                         <th class="align-middle text-center">
                                                                 <span>
                                                                     <input type="checkbox" class="form-control"
-                                                                           wire:model="select_all_credit"
-                                                                           @if (empty($select_all_credit)) disabled @endif>
+                                                                           wire:model="select_all_credit">
                                                                 </span>
                                                         </th>
                                                         <th class="text-center">#</th>
@@ -337,8 +330,7 @@
                                                                 <td class="align-middle text-center">
                                                                         <span>
                                                                             <input type="checkbox" class="form-control"
-                                                                                   wire:model="credit_checkbox.{{ $uce['id'] }}"
-                                                                                   @if ($first_check == 'credit' && $first_voucher != $uce['id']) disabled @endif>
+                                                                                   wire:model="credit_checkbox.{{ $uce['id'] }}">
                                                                         </span>
                                                                 </td>
                                                                 <td class="text-center">{{ $loop->iteration }}</td>
@@ -380,8 +372,7 @@
                                                         <th class="align-middle text-center">
                                                                 <span>
                                                                     <input type="checkbox" class="form-control"
-                                                                           wire:model="select_all_debit"
-                                                                           @if (empty($select_all_debit)) disabled @endif>
+                                                                           wire:model="select_all_debit">
                                                                 </span>
                                                         </th>
                                                         <th class="text-center">#</th>
@@ -399,8 +390,7 @@
                                                             <td class="align-middle text-center">
                                                                     <span>
                                                                         <input type="checkbox" class="form-control"
-                                                                               wire:model="debit_checkbox.{{ $ude['id'] }}"
-                                                                               @if ($first_check == 'debit' && $first_voucher != $ude['id']) disabled @endif>
+                                                                               wire:model="debit_checkbox.{{ $ude['id'] }}">
                                                                     </span>
                                                             </td>
                                                             <td class="text-center">{{ $loop->iteration }}</td>
@@ -502,16 +492,9 @@
                                 </div>
                                 <div class="card-footer">
                                     <div class="float-right">
-                                        @if (auth()->user()->can('004-transaction_allocation-add'))
-                                            <button type="button" class="btn btn-dark px-3"
-                                                    wire:click="allocate">Allocate
-                                            </button>
-                                        @else
-                                            <button type="button" class="btn btn-dark px-3"
-                                                    disabled>Allocate
-                                            </button>
-                                        @endif
-
+                                        <button type="button" class="btn btn-dark px-3"
+                                                wire:click="allocate">Allocate
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -570,21 +553,16 @@
                 }
             });
 
-            // customers
-            $('#submitButton').on('click', function (e) {
-                var data = $('#customers').select2("val");
-                @this.
-                set(`selected_customer`, data);
-            });
-
             $('#type').select2({
                 placeholder: "Select Transaction Type",
             });
 
-            $('#submitButton').on('click', function (e) {
-                var data = $('#type').select2("val");
-                @this.
-                set(`selected_type`, data);
+            $('#customers').on('change', function (e) {
+                @this.set('selected_customer', $(this).val());
+            });
+
+            $('#type').on('change', function (e) {
+                @this.set('selected_type', $(this).val());
             });
         });
 

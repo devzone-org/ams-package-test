@@ -16,7 +16,7 @@ class ManualAllocation extends Component
     public $customers = [], $selected_customer, $selected_type, $voucher_no, $posting_date, $from_date, $to_date;
     public $unsettled_debit_entries = [], $unsettled_credit_entries = [], $customer_details = [], $closing_balance;
     public $debit_checkbox = [], $credit_checkbox = [], $selected_debit_amount = 0, $selected_credit_amount = 0;
-    public $first_check, $first_voucher, $select_all_debit, $select_all_credit;
+    public $select_all_debit, $select_all_credit;
     public $settled_debit_entries = [], $settled_credit_entries = [];
     public $customer_account_id, $deallocate = true, $settled_data = [];
     public $deallocate_checkbox;
@@ -62,6 +62,9 @@ class ManualAllocation extends Component
 
     public function SearchAmount()
     {
+        // Reset state on search
+        $this->reset('debit_checkbox', 'credit_checkbox', 'selected_debit_amount', 'selected_credit_amount', 'select_all_debit', 'select_all_credit');
+
         try {
             if ($this->deallocate == true) {
                 $this->settled_data = [];
@@ -308,23 +311,10 @@ class ManualAllocation extends Component
             }
 
             if ($value['0'] == 'debit_checkbox') {
-                if (empty($this->credit_checkbox) && count($this->debit_checkbox) == 1) {
-                    if ($val == true) {
-                        $this->first_check = 'debit';
-                        $this->first_voucher = array_keys($this->debit_checkbox)[0];
-                    } else {
-                        $this->first_check = '';
-                        $this->first_voucher = '';
-                    }
-                }
                 if ($val == false) {
                     unset($this->debit_checkbox[$value[1]]);
                 }
-                if ($this->selected_credit_amount < $this->selected_debit_amount && !empty($this->credit_checkbox) && !empty($this->debit_checkbox) && $val != false) {
-                    unset($this->debit_checkbox[$value[1]]);
-                    $this->selected_debit_amount = Collect($this->unsettled_debit_entries)->whereIn('id', array_keys($this->debit_checkbox))->sum('unallocated');
-                    throw new \Exception('Please select more Credit Transactions - Unallocated Deposits to select more Unpaid - Sales Invoices!!!');
-                }
+                
                 if (count($this->debit_checkbox) > 1) {
                     $this->select_all_debit = true;
                 } else {
@@ -334,24 +324,10 @@ class ManualAllocation extends Component
             }
 
             if ($value['0'] == 'credit_checkbox') {
-                if (empty($this->debit_checkbox) && count($this->credit_checkbox) == 1) {
-                    if ($val == true) {
-                        $this->first_check = 'credit';
-                        $this->first_voucher = array_keys($this->credit_checkbox)[0];
-                    } else {
-                        $this->first_check = '';
-                        $this->first_voucher = '';
-                    }
-                }
                 if ($val == false) {
                     unset($this->credit_checkbox[$value[1]]);
                 }
 
-                if ($this->selected_credit_amount > $this->selected_debit_amount && !empty($this->credit_checkbox) && !empty($this->debit_checkbox) && $val != false) {
-                    unset($this->credit_checkbox[$value[1]]);
-                    $this->selected_credit_amount = Collect($this->unsettled_credit_entries)->whereIn('id', array_keys($this->credit_checkbox))->sum('unallocated');
-                    throw new \Exception('Please select more Unpaid - Sales Invoices to select more Credit Transactions - Unallocated Deposits!!!');
-                }
                 if (count($this->credit_checkbox) > 1) {
                     $this->select_all_credit = true;
                 } else {
@@ -362,13 +338,27 @@ class ManualAllocation extends Component
             }
 
             if ($key == 'select_all_credit') {
-                $this->credit_checkbox = [];
-                $this->selected_credit_amount = 0;
+                if($val == false){
+                    $this->credit_checkbox = [];
+                    $this->selected_credit_amount = 0;
+                } else {
+                    foreach($this->unsettled_credit_entries as $uce){
+                        $this->credit_checkbox[$uce['id']] = true;
+                    }
+                    $this->selected_credit_amount = Collect($this->unsettled_credit_entries)->sum('unallocated');
+                }
             }
 
             if ($key == 'select_all_debit') {
-                $this->debit_checkbox = [];
-                $this->selected_debit_amount = 0;
+                if($val == false){
+                    $this->debit_checkbox = [];
+                    $this->selected_debit_amount = 0;
+                } else {
+                    foreach($this->unsettled_debit_entries as $ude){
+                        $this->debit_checkbox[$ude['id']] = true;
+                    }
+                    $this->selected_debit_amount = Collect($this->unsettled_debit_entries)->sum('unallocated');
+                }
             }
         } catch (\Exception $e) {
             $this->dispatchBrowserEvent('show-errors', ['bag' => [$e->getMessage()]]);
@@ -405,7 +395,7 @@ class ManualAllocation extends Component
                 DB::commit();
                 $this->dispatchBrowserEvent('show-success', ['bag' => ["Allocation Completed!!!"]]);
                 $this->SearchAmount();
-                $this->reset('selected_credit_amount', 'selected_debit_amount', 'credit_checkbox', 'debit_checkbox', 'select_all_credit', 'select_all_debit', 'first_voucher', 'first_check');
+                $this->reset('selected_credit_amount', 'selected_debit_amount', 'credit_checkbox', 'debit_checkbox', 'select_all_credit', 'select_all_debit');
                 optional($lock)->release();
             }
         } catch (\Exception $e) {
@@ -449,7 +439,7 @@ class ManualAllocation extends Component
 
     public function render()
     {
-        return view('ams::livewire.general-vouchers.manual-allocation');
+        return view('ams::livewire.general-vouchers.manual-allocation')->extends('ams::layouts.master');
     }
 
     private function customerAllocation($account_id, $debit_voucher_nos = null, $credit_voucher_nos = null)
@@ -462,7 +452,10 @@ class ManualAllocation extends Component
                 ->groupBy('ledger_id', 'account_id');
         }, 'ls', 'ledgers.id', '=', 'ls.ledger_id')
             ->where('ledgers.account_id', $account_id)
-            ->where('ls.status', 'f')
+            ->where(function ($q) {
+                $q->where('ls.status', 'f')
+                  ->orWhereNull('ls.status');
+            })
             ->where('debit', '>', 0)
             ->when(!empty($debit_voucher_nos), function ($q) use ($debit_voucher_nos) {
                 $q->whereIn('ledgers.id',  $debit_voucher_nos);
@@ -517,6 +510,16 @@ class ManualAllocation extends Component
                                 $updateData['location'] = '6';
                                 LedgerSettlement::create($updateData);
                             }
+                        } else {
+                             // Create if doesn't exist (new logic for null status)
+                             LedgerSettlement::create([
+                                'ledger_id' => $debit_data_to_settle[$k]['id'], // Corrected: get ledger_id from the debit entry itself
+                                'amount' => $credit_amount,
+                                'voucher_no' => $cdts['voucher_no'],
+                                'account_id' => $account_id,
+                                'cr_ledger_id' => $credit_data_to_settle[$key]['id'],
+                                'location' => '6'
+                             ]);
                         }
                         $debit_data_to_settle[$k]['debit_amount'] = $debit_amount - $credit_amount;
                         $credit_data_to_settle[$key]['amount'] = 0;
