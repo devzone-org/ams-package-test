@@ -44,8 +44,12 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-4" wire:ignore>
-                                            <label for="">Choose Customer<sup><i class="fas fa-asterisk fa-xs"
-                                                                                 style="color: #c52128;"></i></sup></label>
+                                            <label for="">
+                                                Choose Customer
+                                                <sup>
+                                                    <i class="fas fa-asterisk fa-xs" style="color: #c52128;"></i>
+                                                </sup>
+                                            </label>
                                             <select name="" id="customers" class="form-control select2-danger"
                                                     data-dropdown-css-class="select2-danger"
                                                     wire:model="selected_customer">
@@ -453,7 +457,6 @@
 @push('scripts')
     <script>
         $(document).ready(function () {
-
             $('#toggle_allocate').on('change', function (e) {
                 toggleCheckBoxEvent('toggle_allocate', 'toggle_allocate_text', 'Deallocated', 'Allocated');
             });
@@ -466,41 +469,6 @@
                     .addClass(toggle_checkbox ? 'text-success' : 'text-danger')
                     .val(toggle_checkbox ? true_text : false_text);
             }
-
-            $('#customers').select2({
-                placeholder: "Select Customer",
-                ajax: {
-                    url: '/dropdown/customer-account',
-                    dataType: 'json',
-                    delay: 250,
-                    processResults: function (data) {
-                        return {
-                            results: data
-                        };
-                    },
-                    cache: true
-                }
-            });
-
-            $('#type').select2({
-                placeholder: "Select Transaction Type",
-            });
-
-            $('#customers').on('change', function (e) {
-                @this.
-                set('selected_customer', $(this).val());
-            });
-
-            $('#type').on('change', function (e) {
-                @this.
-                set('selected_type', $(this).val());
-            });
         });
-
-        document.addEventListener('resetSelect2Fields', function () {
-            $('#level').val('').trigger('change');
-            $('#account_type').val('').trigger('change');
-            $('#parent_account').val('').trigger('change');
-        })
     </script>
 @endpush
