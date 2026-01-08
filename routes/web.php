@@ -171,6 +171,9 @@ if(env('AMS_CUSTOMER', false) === true) {
 }
 
 if(config('ams.ledger_settlement_enabled') === true) {
-    Route::get('ams/ledger-allocations', \Devzone\Ams\Http\Livewire\GeneralVouchers\ManualAllocation::class)->middleware('auth');
+//    Route::get('ams/ledger-allocations', \Devzone\Ams\Http\Livewire\GeneralVouchers\ManualAllocation::class)->middleware('auth');
+    Route::get('ams/ledger-allocations', function () {
+        return view('ams::general-vouchers.general-voucher');
+    })->middleware('auth');
 }
 

@@ -452,7 +452,7 @@ class ManualAllocation extends Component
 
     public function render()
     {
-        return view('ams::livewire.general-vouchers.manual-allocation')->extends('ams::layouts.master');
+        return view('ams::livewire.general-vouchers.manual-allocation');
     }
 
     private function customerAllocation($account_id, $debit_voucher_nos = null, $credit_voucher_nos = null)
