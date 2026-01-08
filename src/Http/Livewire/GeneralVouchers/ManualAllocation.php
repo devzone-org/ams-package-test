@@ -1,0 +1,551 @@
+<?php
+
+namespace Devzone\Ams\Http\Livewire\GeneralVouchers;
+
+use Devzone\Ams\Models\AmsCustomer as Customer;
+use Devzone\Ams\Models\Ledger;
+use Devzone\Ams\Models\LedgerSettlement;
+use Exception;
+use Livewire\Component;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Validator;
+use Illuminate\Support\Facades\Cache;
+
+class ManualAllocation extends Component
+{
+    public $customers = [], $selected_customer, $selected_type, $voucher_no, $posting_date, $from_date, $to_date;
+    public $unsettled_debit_entries = [], $unsettled_credit_entries = [], $customer_details = [], $closing_balance;
+    public $debit_checkbox = [], $credit_checkbox = [], $selected_debit_amount = 0, $selected_credit_amount = 0;
+    public $first_check, $first_voucher, $select_all_debit, $select_all_credit;
+    public $settled_debit_entries = [], $settled_credit_entries = [];
+    public $customer_account_id, $deallocate = true, $settled_data = [];
+    public $deallocate_checkbox;
+    public $deallocate_checkbox_all;
+    public $voucher_no_for_credit;
+
+    public function mount(Request $req)
+    {
+        if (config('ams.ledger_settlement_enabled') !== true) {
+             abort(404);
+        }
+
+        $this->customers = Customer::where('status', 'Active')
+            ->select('id', 'customer_code', 'name as customer_name', 'account_id')
+            ->get()
+            ->toArray();
+
+        if (!empty($req->account_id)) {
+            $this->selected_customer = $req->account_id;
+            $this->SearchAmount();
+        }
+    }
+
+    public function SearchAmount()
+    {
+        try {
+            if ($this->deallocate == true) {
+                $this->settled_data = [];
+                if (empty($this->selected_customer)) {
+                    throw new \Exception('Customer field is required!!!');
+                }
+                
+                // Permission check commented out or should be adapted to package's permission system if available
+                // if (auth()->user()->cannot('004-transaction_allocation-view')) {
+                //     throw new \Exception("You don't have the permission to perform this action.");
+                // }
+
+                $this->customer_account_id = $this->selected_customer;
+                $this->settled_debit_entries = [];
+                $this->settled_credit_entries = [];
+                $this->unsettled_debit_entries = [];
+
+                $this->unsettled_debit_entries = Ledger::leftJoinSub(function ($query) {
+                    $query->select('ledger_id', 'status', 'id', 'voucher_no', 'account_id', DB::raw('SUM(amount) as amount'))
+                        ->from('ledger_settlements as ls')
+                        ->where('account_id', $this->selected_customer)
+                        ->groupBy('ledger_id', 'account_id');
+                }, 'ls', 'ledgers.id', '=', 'ls.ledger_id')
+                    ->leftJoin('ledger_details as ld', 'ld.voucher_no', 'ledgers.voucher_no')
+                    ->where('ledgers.account_id', $this->selected_customer)
+                    ->where('ls.status', 'f')
+                    ->where('debit', '>', 0)
+                    ->when(!empty($this->voucher_no), function ($q) {
+                        $q->where('ledgers.voucher_no', $this->voucher_no);
+                    })
+                    ->when(!empty($this->from_date), function ($q) {
+                        $q->where('ledgers.posting_date', '>=', $this->from_date);
+                    })
+                    ->when(!empty($this->to_date), function ($q) {
+                        $q->where('ledgers.posting_date', '<=', $this->to_date);
+                    })
+                    ->when(!empty($this->selected_type), function ($q) {
+                        $q->where('ld.type', $this->selected_type);
+                    })
+                    ->select(
+                        'ledgers.posting_date',
+                        'ledgers.voucher_no',
+                        'ld.reference_no',
+                        'ledgers.debit',
+                        'ledgers.id',
+                        DB::raw('COALESCE(ls.amount, 0) as settled_amount'),
+                        DB::raw('ledgers.debit - COALESCE(ls.amount, 0) as unallocated'),
+
+                    )
+                    ->orderBy('ledgers.posting_date', 'asc')
+                    ->orderBy('ledgers.voucher_no', 'asc')
+                    ->get()->toArray();
+
+
+                $this->unsettled_credit_entries = Ledger::leftJoinSub(function ($query) {
+                    $query->select('account_id', 'voucher_no', DB::raw('SUM(amount) as amount'), 'cr_ledger_id')
+                        ->from('ledger_settlements as ls')
+                        ->where('account_id', $this->selected_customer)
+                        ->groupBy('voucher_no', 'account_id', 'cr_ledger_id');
+                }, 'ls', 'ledgers.id', '=', 'ls.cr_ledger_id')->where('ledgers.credit', '>', 0)
+                    ->leftJoin('ledger_details as ld', 'ld.voucher_no', 'ledgers.voucher_no')
+                    ->where('ledgers.account_id', $this->selected_customer)
+                    ->where('ledgers.credit', '<>',  DB::raw('COALESCE(ls.amount, 0)'))
+                    ->when(!empty($this->voucher_no_for_credit), function ($q) {
+                        $q->where('ledgers.voucher_no', $this->voucher_no_for_credit);
+                    })
+                    ->when(!empty($this->from_date), function ($q) {
+                        $q->where('ledgers.posting_date', '>=', $this->from_date);
+                    })
+                    ->when(!empty($this->to_date), function ($q) {
+                        $q->where('ledgers.posting_date', '<=', $this->to_date);
+                    })
+                    ->when(!empty($this->selected_type), function ($q) {
+                        $q->where('ld.type', $this->selected_type);
+                    })
+                    ->select(
+                        'ls.amount',
+                        'ls.cr_ledger_id',
+                        'ledgers.posting_date',
+                        'ledgers.voucher_no',
+                        'ld.reference_no',
+                        'ledgers.credit',
+                        'ledgers.id',
+                        DB::raw('ledgers.credit - COALESCE(ls.amount, 0) as unallocated'),
+                    )
+                    // ->havingRaw('SUM(ledgers.credit) - COALESCE(ls.amount, 0) <> 0')
+                    ->orderBy('ledgers.posting_date', 'asc')
+                    ->orderBy('ledgers.voucher_no', 'asc')
+                    ->get()->toArray();
+
+
+                $this->customer_details =  Customer::where('account_id', $this->selected_customer)
+                    ->select('frequency', 'amount', 'grace_period')
+                    ->get()->toArray();
+
+                $ledger = Ledger::where('account_id', $this->selected_customer)
+                    ->select(
+                        DB::raw('sum(debit) as debit'),
+                        DB::raw('sum(credit) as credit'),
+                    )
+                    ->first();
+                $this->closing_balance = $ledger['debit'] - $ledger['credit'];
+            } else {
+                if (empty($this->selected_customer)) {
+                    throw new \Exception('Customer field is required!!!');
+                }
+
+                $this->unsettled_debit_entries = [];
+                $this->unsettled_credit_entries = [];
+                $this->customer_details = [];
+
+                $this->settled_debit_entries = [];
+
+                $this->settled_debit_entries = Ledger::leftJoinSub(function ($query) {
+                    $query->select('ledger_id', 'cr_ledger_id', 'status', 'id', 'voucher_no', 'account_id', DB::raw('SUM(amount) as amount'))
+                        ->from('ledger_settlements as ls')
+                        ->where('account_id', $this->selected_customer)
+                        ->groupBy('ledger_id', 'account_id');
+                }, 'ls', 'ledgers.id', '=', 'ls.ledger_id')
+                    ->leftJoin('ledger_details as ld', 'ld.voucher_no', 'ledgers.voucher_no')
+                    ->where('ledgers.account_id', $this->selected_customer)
+                    // ->where('ls.status', 'f')
+                    ->when(!empty($this->voucher_no), function ($q) {
+                        $q->where('ld.voucher_no', $this->voucher_no);
+                    })
+                    ->where('debit', '>', 0)
+                    ->where('ls.amount', '>', 0)
+                    ->when(!empty($this->from_date), function ($q) {
+                        $q->where('ledgers.posting_date', '>=', $this->from_date);
+                    })
+                    ->when(!empty($this->to_date), function ($q) {
+                        $q->where('ledgers.posting_date', '<=', $this->to_date);
+                    })
+                    ->when(!empty($this->selected_type), function ($q) {
+                        $q->where('ld.type', $this->selected_type);
+                    })
+                    ->select(
+                        'ledgers.id as ledger_id',
+                        'ledgers.account_id',
+                        'ledgers.posting_date',
+                        'ledgers.voucher_no',
+                        'ld.reference_no',
+                        'ledgers.debit',
+                        'ls.cr_ledger_id',
+                        DB::raw('COALESCE(ls.amount, 0) as settled_amount'),
+                        DB::raw('ledgers.debit - COALESCE(ls.amount, 0) as unallocated'),
+
+                    )
+                    ->orderBy('ledgers.posting_date', 'asc')
+                    ->orderBy('ledgers.voucher_no', 'asc')
+                    ->get();
+
+
+                $ledger_ids = $this->settled_debit_entries->pluck('ledger_id');
+                $this->settled_debit_entries = $this->settled_debit_entries->groupBy('ledger_id')->toArray();
+
+                $this->settled_credit_entries = [];
+
+                $this->settled_credit_entries =  Ledger::leftJoinSub(function ($query) {
+                    // $query->select('ledger_id', 'cr_ledger_id', 'status', 'id', 'voucher_no', 'account_id', 'amount')
+                    $query->select('ledger_id', 'cr_ledger_id', 'status', 'id', 'voucher_no', 'account_id', DB::raw('SUM(amount) as amount'))
+                        ->from('ledger_settlements as ls')
+                        ->where('account_id', $this->selected_customer)
+                        ->groupBy('ledger_id', 'account_id', 'cr_ledger_id');
+                }, 'ls', 'ledgers.id', '=', 'ls.cr_ledger_id')
+                    ->leftJoin('ledger_details as ld', 'ld.voucher_no', 'ledgers.voucher_no')
+                    ->where('ledgers.account_id', $this->selected_customer)
+                    ->where('credit', '>', 0)
+                    ->where(function ($q) use ($ledger_ids) {
+                        $q->when(!empty($ledger_ids), function ($innerQ) use ($ledger_ids) {
+                            $innerQ->whereIn('ls.ledger_id', $ledger_ids);
+                        })
+                            ->Where(function ($innerQ) {
+                                $innerQ->when(!empty($this->voucher_no_for_credit), function ($subQ) {
+                                    $subQ->where('ld.voucher_no', $this->voucher_no_for_credit);
+                                });
+                            });
+                    })
+                    ->when(!empty($this->from_date), function ($q) {
+                        $q->where('ledgers.posting_date', '>=', $this->from_date);
+                    })
+                    ->when(!empty($this->to_date), function ($q) {
+                        $q->where('ledgers.posting_date', '<=', $this->to_date);
+                    })
+                    ->when(!empty($this->selected_type), function ($q) {
+                        $q->where('ld.type', $this->selected_type);
+                    })
+                    ->select(
+                        'ls.id as settled_ledger_id',
+                        'ls.ledger_id as ledger_settlement_id',
+                        'ledgers.id as ledger_id',
+                        'ledgers.posting_date',
+                        'ledgers.voucher_no',
+                        'ld.reference_no',
+                        'ledgers.credit',
+                        DB::raw('COALESCE(ls.amount, 0) as allocated'),
+                    )
+                    ->orderBy('ledgers.posting_date', 'asc')
+                    ->orderBy('ledgers.voucher_no', 'asc')
+                    ->get();
+
+                $this->settled_credit_entries = $this->settled_credit_entries->groupBy('ledger_settlement_id')->toArray();
+                $this->settled_data = [];
+                foreach ($this->settled_debit_entries as $ledger_id => $data) {
+                    $credit = !empty($this->settled_credit_entries[$ledger_id]) ? $this->settled_credit_entries[$ledger_id] : [];
+                    $this->settled_data[$ledger_id]['debit'] = $this->settled_debit_entries[$ledger_id];
+                    $this->settled_data[$ledger_id]['credit'] = $credit;
+                }
+                if (empty($this->settled_data)) {
+                    $this->dispatchBrowserEvent('show-errors', ['bag' => ['No record found!!']]);
+                }
+            }
+        } catch (\Exception $e) {
+            $this->dispatchBrowserEvent('show-errors', ['bag' => [$e->getMessage()]]);
+        }
+    }
+
+    public function updated($key, $val)
+    {
+        try {
+            $value = explode('.', $key);
+            if ($value['0'] == 'deallocate_checkbox') {
+                if ($val == false) {
+                    unset($this->deallocate_checkbox[$value[1]]);
+                }
+                if (count($this->settled_data) == count($this->deallocate_checkbox)) {
+                    $this->deallocate_checkbox_all = true;
+                } else {
+                    $this->deallocate_checkbox_all = false;
+                }
+            }
+            if ($value[0] == 'deallocate_checkbox_all') {
+                if ($val == false) {
+                    $this->deallocate_checkbox = [];
+                } else {
+                    foreach ($this->settled_data as $k => $v) {
+                        $this->deallocate_checkbox[$k] = true;
+                    }
+                }
+            }
+
+            if ($value['0'] == 'debit_checkbox') {
+                if (empty($this->credit_checkbox) && count($this->debit_checkbox) == 1) {
+                    if ($val == true) {
+                        $this->first_check = 'debit';
+                        $this->first_voucher = array_keys($this->debit_checkbox)[0];
+                    } else {
+                        $this->first_check = '';
+                        $this->first_voucher = '';
+                    }
+                }
+                if ($val == false) {
+                    unset($this->debit_checkbox[$value[1]]);
+                }
+                if ($this->selected_credit_amount < $this->selected_debit_amount && !empty($this->credit_checkbox) && !empty($this->debit_checkbox) && $val != false) {
+                    unset($this->debit_checkbox[$value[1]]);
+                    $this->selected_debit_amount = Collect($this->unsettled_debit_entries)->whereIn('id', array_keys($this->debit_checkbox))->sum('unallocated');
+                    throw new \Exception('Please select more Credit Transactions - Unallocated Deposits to select more Unpaid - Sales Invoices!!!');
+                }
+                if (count($this->debit_checkbox) > 1) {
+                    $this->select_all_debit = true;
+                } else {
+                    $this->select_all_debit = false;
+                }
+                $this->selected_debit_amount = Collect($this->unsettled_debit_entries)->whereIn('id', array_keys($this->debit_checkbox))->sum('unallocated');
+            }
+
+            if ($value['0'] == 'credit_checkbox') {
+                if (empty($this->debit_checkbox) && count($this->credit_checkbox) == 1) {
+                    if ($val == true) {
+                        $this->first_check = 'credit';
+                        $this->first_voucher = array_keys($this->credit_checkbox)[0];
+                    } else {
+                        $this->first_check = '';
+                        $this->first_voucher = '';
+                    }
+                }
+                if ($val == false) {
+                    unset($this->credit_checkbox[$value[1]]);
+                }
+
+                if ($this->selected_credit_amount > $this->selected_debit_amount && !empty($this->credit_checkbox) && !empty($this->debit_checkbox) && $val != false) {
+                    unset($this->credit_checkbox[$value[1]]);
+                    $this->selected_credit_amount = Collect($this->unsettled_credit_entries)->whereIn('id', array_keys($this->credit_checkbox))->sum('unallocated');
+                    throw new \Exception('Please select more Unpaid - Sales Invoices to select more Credit Transactions - Unallocated Deposits!!!');
+                }
+                if (count($this->credit_checkbox) > 1) {
+                    $this->select_all_credit = true;
+                } else {
+                    $this->select_all_credit = false;
+                }
+
+                $this->selected_credit_amount = Collect($this->unsettled_credit_entries)->whereIn('id', array_keys($this->credit_checkbox))->sum('unallocated');
+            }
+
+            if ($key == 'select_all_credit') {
+                $this->credit_checkbox = [];
+                $this->selected_credit_amount = 0;
+            }
+
+            if ($key == 'select_all_debit') {
+                $this->debit_checkbox = [];
+                $this->selected_debit_amount = 0;
+            }
+        } catch (\Exception $e) {
+            $this->dispatchBrowserEvent('show-errors', ['bag' => [$e->getMessage()]]);
+        }
+    }
+
+    public function allocate()
+    {
+        $this->withValidator(function (Validator $validator) {
+            if ($validator->fails()) {
+                $this->dispatchBrowserEvent('show-errors', ['bag' => $validator->errors()->all()]);
+            }
+        })->validate(
+            [
+                'selected_customer' => 'required',
+                'debit_checkbox' => 'required',
+                'credit_checkbox' => 'required',
+            ],
+            [],
+            [
+                'selected_customer' => 'Customer',
+                'debit_checkbox' => 'Debit Amount',
+                'credit_checkbox' => 'Credit Amount',
+            ]
+        );
+        $lock = Cache::lock('Customer' . $this->selected_customer, 60);
+        try {
+            if ($lock->get()) {
+                // if (auth()->user()->cannot('004-transaction_allocation-add')) {
+                //     throw new \Exception("You don't have the permission to perform this action.");
+                // }
+                DB::beginTransaction();
+                $this->customerAllocation($this->selected_customer, array_keys($this->debit_checkbox), array_keys($this->credit_checkbox));
+                DB::commit();
+                $this->dispatchBrowserEvent('show-success', ['bag' => ["Allocation Completed!!!"]]);
+                $this->SearchAmount();
+                $this->reset('selected_credit_amount', 'selected_debit_amount', 'credit_checkbox', 'debit_checkbox', 'select_all_credit', 'select_all_debit', 'first_voucher', 'first_check');
+                optional($lock)->release();
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            optional($lock)->release();
+            $this->dispatchBrowserEvent('show-errors', ['bag' => [$e->getMessage()]]);
+        }
+    }
+
+    public function deallocate()
+    {
+        try {
+            // if (auth()->user()->cannot('004-transaction_allocation-delete')) {
+            //     throw new \Exception("You don't have the permission to perform this action.");
+            // }
+            DB::beginTransaction();
+            $description = '';
+            if (!empty($this->deallocate_checkbox)) {
+                foreach (array_keys($this->deallocate_checkbox) as $ids) {
+                    $found = LedgerSettlement::where('ledger_id', $ids);
+                    $found->update([
+                        'amount' => 0.00,
+                        'status' => 'f',
+                        'voucher_no' => null,
+                        'cr_ledger_id' => null,
+                    ]);
+                    $f = Ledger::find($ids);
+                }
+            } else {
+                throw new \Exception('No entry is selected!!!');
+            }
+
+            DB::commit();
+            $this->dispatchBrowserEvent('show-success', ['bag' => ["Deallocation Completed!!!"]]);
+            $this->reset('settled_debit_entries', 'settled_credit_entries', 'customer_account_id', 'settled_data');
+        } catch (\Exception $e) {
+            DB::rollback();
+            $this->dispatchBrowserEvent('show-errors', ['bag' => [$e->getMessage()]]);
+        }
+    }
+
+    public function render()
+    {
+        return view('ams::livewire.general-vouchers.manual-allocation')->extends('ams::layouts.master');
+    }
+
+    private function customerAllocation($account_id, $debit_voucher_nos = null, $credit_voucher_nos = null)
+    {
+        $debit_data_to_settle = Ledger::leftJoinSub(function ($query) use ($account_id) {
+            $query->select('ledger_id', 'status', 'id', 'voucher_no', 'account_id', DB::raw('SUM(amount) as amount'))
+                ->from('ledger_settlements as ls')
+                ->where('account_id', $account_id)
+                ->where('status', 'f')
+                ->groupBy('ledger_id', 'account_id');
+        }, 'ls', 'ledgers.id', '=', 'ls.ledger_id')
+            ->where('ledgers.account_id', $account_id)
+            ->where('ls.status', 'f')
+            ->where('debit', '>', 0)
+            ->when(!empty($debit_voucher_nos), function ($q) use ($debit_voucher_nos) {
+                $q->whereIn('ledgers.id',  $debit_voucher_nos);
+            })
+            ->select(
+                'ledgers.voucher_no',
+                'ls.id as ledger_settlement_id',
+                DB::raw('ledgers.debit - COALESCE(ls.amount, 0) as debit_amount'),
+            )
+            ->orderBy('ledgers.posting_date', 'asc')
+            ->get()->toArray();
+
+        $credit_data_to_settle = Ledger::leftJoinSub(function ($query) use ($account_id) {
+            $query->select('account_id', 'cr_ledger_id', 'voucher_no', DB::raw('SUM(amount) as amount'))
+                ->from('ledger_settlements as ls')
+                ->where('account_id', $account_id)
+                ->groupBy('voucher_no', 'account_id', 'cr_ledger_id');
+        }, 'ls', 'ledgers.id', '=', 'ls.cr_ledger_id')->where('ledgers.credit', '>', 0)
+            ->where('ledgers.account_id', $account_id)
+            ->where('ledgers.credit', '<>',  DB::raw('COALESCE(ls.amount, 0)'))
+            ->when(!empty($credit_voucher_nos), function ($q) use ($credit_voucher_nos) {
+                $q->whereIn('ledgers.id', $credit_voucher_nos);
+            })
+            ->select(
+                'ledgers.voucher_no',
+                DB::raw('ledgers.credit - COALESCE(ls.amount, 0) as amount'),
+                'ledgers.posting_date',
+                'ledgers.id'
+            )
+            ->orderBy('ledgers.posting_date', 'asc')
+            ->get()->toArray();
+
+        foreach ($debit_data_to_settle as $k => $ddts) {
+            foreach ($credit_data_to_settle as $key => $cdts) {
+                if (round($credit_data_to_settle[$key]['amount'], 2) > 0 && round($debit_data_to_settle[$k]['debit_amount'], 2) > 0) {
+                    $debit_amount = round($debit_data_to_settle[$k]['debit_amount'], 2);
+                    $credit_amount = round($credit_data_to_settle[$key]['amount'], 2);
+
+                    if ($debit_amount > $credit_amount) {
+                        $f = LedgerSettlement::find($ddts['ledger_settlement_id']);
+                        if (!empty($f)) {
+                            $updateData = [
+                                'amount' => $credit_amount,
+                                'voucher_no' => $cdts['voucher_no'],
+                                'account_id' => $account_id,
+                                'cr_ledger_id' => $credit_data_to_settle[$key]['id']
+                            ];
+                            if ($f['amount'] == 0) {
+                                $f->update($updateData);
+                            } else {
+                                $updateData['ledger_id'] = $f['ledger_id'];
+                                $updateData['location'] = '6';
+                                LedgerSettlement::create($updateData);
+                            }
+                        }
+                        $debit_data_to_settle[$k]['debit_amount'] = $debit_amount - $credit_amount;
+                        $credit_data_to_settle[$key]['amount'] = 0;
+                    } elseif ($debit_amount < $credit_amount) {
+                        $f = LedgerSettlement::find($ddts['ledger_settlement_id']);
+                        if (!empty($f)) {
+                            $updateData = [
+                                'amount' => $debit_amount,
+                                'voucher_no' => $cdts['voucher_no'],
+                                'account_id' => $account_id,
+                                'status' => 't',
+                                'cr_ledger_id' => $credit_data_to_settle[$key]['id']
+                            ];
+                            if ($f['amount'] == 0) {
+                                $f->update($updateData);
+                            } else {
+                                $updateData['ledger_id'] = $f['ledger_id'];
+                                $updateData['location'] = '6';
+                                LedgerSettlement::create($updateData);
+                            }
+                            LedgerSettlement::where('ledger_id', $f['ledger_id'])->where('status', 'f')->update([
+                                'status' => 't'
+                            ]);
+                        }
+                        $credit_data_to_settle[$key]['amount'] = $credit_amount - $debit_amount;
+                        $debit_data_to_settle[$k]['debit_amount'] = 0;
+                    } else {
+                        $f = LedgerSettlement::find($ddts['ledger_settlement_id']);
+                        if (!empty($f)) {
+                            $updateData = [
+                                'amount' => $debit_amount,
+                                'voucher_no' => $cdts['voucher_no'],
+                                'account_id' => $account_id,
+                                'status' => 't',
+                                'cr_ledger_id' => $credit_data_to_settle[$key]['id']
+                            ];
+                            if ($f['amount'] == 0) {
+                                $f->update($updateData);
+                            } else {
+                                $updateData['ledger_id'] = $f['ledger_id'];
+                                $updateData['location'] = '6';
+                                LedgerSettlement::create($updateData);
+                            }
+                            LedgerSettlement::where('ledger_id', $f['ledger_id'])->where('status', 'f')->update([
+                                'status' => 't'
+                            ]);
+                        }
+                        $debit_data_to_settle[$k]['debit_amount'] = 0;
+                        $credit_data_to_settle[$key]['amount'] = 0;
+                    }
+                }
+            }
+        }
+    }
+}

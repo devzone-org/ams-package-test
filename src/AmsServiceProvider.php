@@ -26,6 +26,7 @@ use Devzone\Ams\Http\Livewire\Reports\Trial;
 use Devzone\Ams\Http\Livewire\Sidebar\SidebarLinks;
 use Devzone\Ams\Http\Livewire\PettyExpenses;
 use Devzone\Ams\Http\Livewire\Customers\PaidUnpaidCustomerPayments;
+use Devzone\Ams\Http\Livewire\GeneralVouchers\ManualAllocation;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -106,6 +107,7 @@ class AmsServiceProvider extends ServiceProvider
         Livewire::component('customers.paid-unpaid-customer-payments', PaidUnpaidCustomerPayments::class);
         Livewire::component('report.pnl-template-manager', PnlTemplateManager::class);
         Livewire::component('report.pnl-template-report', PnlTemplateReport::class);
+        Livewire::component('general-vouchers.manual-allocation', ManualAllocation::class);
     }
 
     /**
