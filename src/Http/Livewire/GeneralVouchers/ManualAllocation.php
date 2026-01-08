@@ -5,11 +5,11 @@ namespace Devzone\Ams\Http\Livewire\GeneralVouchers;
 use Devzone\Ams\Models\Ledger;
 use Devzone\Ams\Models\LedgerSettlement;
 use Exception;
-use Livewire\Component;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Validator;
-use Illuminate\Support\Facades\Cache;
+use Livewire\Component;
 
 class ManualAllocation extends Component
 {
@@ -26,7 +26,7 @@ class ManualAllocation extends Component
     public function mount(Request $req)
     {
         if (config('ams.ledger_settlement_enabled') !== true) {
-             abort(404);
+            abort(404);
         }
 
         $customerModel = config('ams.customer_model');
@@ -47,7 +47,7 @@ class ManualAllocation extends Component
         if ($map['code']) {
             $selects[] = $map['code'] . ' as customer_code';
         } else {
-             $selects[] = 'id as customer_code';
+            $selects[] = 'id as customer_code';
         }
 
         $this->customers = $query->select($selects)
@@ -62,16 +62,15 @@ class ManualAllocation extends Component
 
     public function SearchAmount()
     {
-        // Reset state on search
         $this->reset('debit_checkbox', 'credit_checkbox', 'selected_debit_amount', 'selected_credit_amount', 'select_all_debit', 'select_all_credit');
 
         try {
             if ($this->deallocate == true) {
                 $this->settled_data = [];
                 if (empty($this->selected_customer)) {
-                    throw new \Exception('Customer field is required!!!');
+                    throw new Exception('Customer field is required!!!');
                 }
-                
+
                 $this->customer_account_id = $this->selected_customer;
                 $this->settled_debit_entries = [];
                 $this->settled_credit_entries = [];
@@ -86,7 +85,7 @@ class ManualAllocation extends Component
                     ->where('ledgers.account_id', $this->selected_customer)
                     ->where(function ($q) {
                         $q->where('ls.status', 'f')
-                          ->orWhereNull('ls.status');
+                            ->orWhereNull('ls.status');
                     })
                     ->where('debit', '>', 0)
                     ->when(!empty($this->voucher_no), function ($q) {
@@ -123,7 +122,7 @@ class ManualAllocation extends Component
                         ->groupBy('voucher_no', 'account_id', 'cr_ledger_id');
                 }, 'ls', 'ledgers.id', '=', 'ls.cr_ledger_id')->where('ledgers.credit', '>', 0)
                     ->where('ledgers.account_id', $this->selected_customer)
-                    ->where('ledgers.credit', '<>',  DB::raw('COALESCE(ls.amount, 0)'))
+                    ->where('ledgers.credit', '<>', DB::raw('COALESCE(ls.amount, 0)'))
                     ->when(!empty($this->voucher_no_for_credit), function ($q) {
                         $q->where('ledgers.voucher_no', $this->voucher_no_for_credit);
                     })
@@ -152,16 +151,16 @@ class ManualAllocation extends Component
 
                 $customerModel = config('ams.customer_model');
                 $map = config('ams.customer_table_map');
-                
+
                 $selects = [];
                 if ($map['payment_terms']) $selects[] = $map['payment_terms'] . ' as frequency';
                 if ($map['credit_limit']) $selects[] = $map['credit_limit'] . ' as amount';
                 if ($map['grace_period']) $selects[] = $map['grace_period'] . ' as grace_period';
 
                 if (!empty($selects)) {
-                     $this->customer_details =  $customerModel::where($map['account_id'], $this->selected_customer)
-                    ->select($selects)
-                    ->get()->toArray();
+                    $this->customer_details = $customerModel::where($map['account_id'], $this->selected_customer)
+                        ->select($selects)
+                        ->get()->toArray();
                 } else {
                     $this->customer_details = [];
                 }
@@ -175,7 +174,7 @@ class ManualAllocation extends Component
                 $this->closing_balance = $ledger['debit'] - $ledger['credit'];
             } else {
                 if (empty($this->selected_customer)) {
-                    throw new \Exception('Customer field is required!!!');
+                    throw new Exception('Customer field is required!!!');
                 }
 
                 $this->unsettled_debit_entries = [];
@@ -191,7 +190,6 @@ class ManualAllocation extends Component
                         ->groupBy('ledger_id', 'account_id');
                 }, 'ls', 'ledgers.id', '=', 'ls.ledger_id')
                     ->where('ledgers.account_id', $this->selected_customer)
-                    // ->where('ls.status', 'f')
                     ->when(!empty($this->voucher_no), function ($q) {
                         $q->where('ledgers.voucher_no', $this->voucher_no);
                     })
@@ -228,8 +226,7 @@ class ManualAllocation extends Component
 
                 $this->settled_credit_entries = [];
 
-                $this->settled_credit_entries =  Ledger::leftJoinSub(function ($query) {
-                    // $query->select('ledger_id', 'cr_ledger_id', 'status', 'id', 'voucher_no', 'account_id', 'amount')
+                $this->settled_credit_entries = Ledger::leftJoinSub(function ($query) {
                     $query->select('ledger_id', 'cr_ledger_id', 'status', 'id', 'voucher_no', 'account_id', DB::raw('SUM(amount) as amount'))
                         ->from('ledger_settlements as ls')
                         ->where('account_id', $this->selected_customer)
@@ -281,7 +278,7 @@ class ManualAllocation extends Component
                     $this->dispatchBrowserEvent('show-errors', ['bag' => ['No record found!!']]);
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->dispatchBrowserEvent('show-errors', ['bag' => [$e->getMessage()]]);
         }
     }
@@ -314,7 +311,7 @@ class ManualAllocation extends Component
                 if ($val == false) {
                     unset($this->debit_checkbox[$value[1]]);
                 }
-                
+
                 if (count($this->debit_checkbox) > 1) {
                     $this->select_all_debit = true;
                 } else {
@@ -338,11 +335,11 @@ class ManualAllocation extends Component
             }
 
             if ($key == 'select_all_credit') {
-                if($val == false){
+                if ($val == false) {
                     $this->credit_checkbox = [];
                     $this->selected_credit_amount = 0;
                 } else {
-                    foreach($this->unsettled_credit_entries as $uce){
+                    foreach ($this->unsettled_credit_entries as $uce) {
                         $this->credit_checkbox[$uce['id']] = true;
                     }
                     $this->selected_credit_amount = Collect($this->unsettled_credit_entries)->sum('unallocated');
@@ -350,17 +347,17 @@ class ManualAllocation extends Component
             }
 
             if ($key == 'select_all_debit') {
-                if($val == false){
+                if ($val == false) {
                     $this->debit_checkbox = [];
                     $this->selected_debit_amount = 0;
                 } else {
-                    foreach($this->unsettled_debit_entries as $ude){
+                    foreach ($this->unsettled_debit_entries as $ude) {
                         $this->debit_checkbox[$ude['id']] = true;
                     }
                     $this->selected_debit_amount = Collect($this->unsettled_debit_entries)->sum('unallocated');
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->dispatchBrowserEvent('show-errors', ['bag' => [$e->getMessage()]]);
         }
     }
@@ -395,7 +392,7 @@ class ManualAllocation extends Component
                 $this->reset('selected_credit_amount', 'selected_debit_amount', 'credit_checkbox', 'debit_checkbox', 'select_all_credit', 'select_all_debit');
                 optional($lock)->release();
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             optional($lock)->release();
             $this->dispatchBrowserEvent('show-errors', ['bag' => [$e->getMessage()]]);
@@ -419,13 +416,13 @@ class ManualAllocation extends Component
                     $f = Ledger::find($ids);
                 }
             } else {
-                throw new \Exception('No entry is selected!!!');
+                throw new Exception('No entry is selected!!!');
             }
 
             DB::commit();
             $this->dispatchBrowserEvent('show-success', ['bag' => ["Deallocation Completed!!!"]]);
             $this->reset('settled_debit_entries', 'settled_credit_entries', 'customer_account_id', 'settled_data');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             $this->dispatchBrowserEvent('show-errors', ['bag' => [$e->getMessage()]]);
         }
@@ -447,11 +444,11 @@ class ManualAllocation extends Component
             ->where('ledgers.account_id', $account_id)
             ->where(function ($q) {
                 $q->where('ls.status', 'f')
-                  ->orWhereNull('ls.status');
+                    ->orWhereNull('ls.status');
             })
             ->where('debit', '>', 0)
             ->when(!empty($debit_voucher_nos), function ($q) use ($debit_voucher_nos) {
-                $q->whereIn('ledgers.id',  $debit_voucher_nos);
+                $q->whereIn('ledgers.id', $debit_voucher_nos);
             })
             ->select(
                 'ledgers.id',
@@ -469,7 +466,7 @@ class ManualAllocation extends Component
                 ->groupBy('voucher_no', 'account_id', 'cr_ledger_id');
         }, 'ls', 'ledgers.id', '=', 'ls.cr_ledger_id')->where('ledgers.credit', '>', 0)
             ->where('ledgers.account_id', $account_id)
-            ->where('ledgers.credit', '<>',  DB::raw('COALESCE(ls.amount, 0)'))
+            ->where('ledgers.credit', '<>', DB::raw('COALESCE(ls.amount, 0)'))
             ->when(!empty($credit_voucher_nos), function ($q) use ($credit_voucher_nos) {
                 $q->whereIn('ledgers.id', $credit_voucher_nos);
             })
@@ -505,14 +502,14 @@ class ManualAllocation extends Component
                                 LedgerSettlement::create($updateData);
                             }
                         } else {
-                             LedgerSettlement::create([
-                                'ledger_id' => $ddts['id'], 
+                            LedgerSettlement::create([
+                                'ledger_id' => $ddts['id'],
                                 'amount' => $credit_amount,
                                 'voucher_no' => $cdts['voucher_no'],
                                 'account_id' => $account_id,
                                 'cr_ledger_id' => $credit_data_to_settle[$key]['id'],
                                 'location' => '6'
-                             ]);
+                            ]);
                         }
                         $debit_data_to_settle[$k]['debit_amount'] = $debit_amount - $credit_amount;
                         $credit_data_to_settle[$key]['amount'] = 0;
@@ -538,13 +535,13 @@ class ManualAllocation extends Component
                             ]);
                         } else {
                             LedgerSettlement::create([
-                               'ledger_id' => $ddts['id'], 
-                               'amount' => $debit_amount,
-                               'voucher_no' => $cdts['voucher_no'],
-                               'account_id' => $account_id,
-                               'status' => 't',
-                               'cr_ledger_id' => $credit_data_to_settle[$key]['id'],
-                               'location' => '6'
+                                'ledger_id' => $ddts['id'],
+                                'amount' => $debit_amount,
+                                'voucher_no' => $cdts['voucher_no'],
+                                'account_id' => $account_id,
+                                'status' => 't',
+                                'cr_ledger_id' => $credit_data_to_settle[$key]['id'],
+                                'location' => '6'
                             ]);
                         }
                         $credit_data_to_settle[$key]['amount'] = $credit_amount - $debit_amount;
@@ -571,13 +568,13 @@ class ManualAllocation extends Component
                             ]);
                         } else {
                             LedgerSettlement::create([
-                               'ledger_id' => $ddts['id'], 
-                               'amount' => $debit_amount,
-                               'voucher_no' => $cdts['voucher_no'],
-                               'account_id' => $account_id,
-                               'status' => 't',
-                               'cr_ledger_id' => $credit_data_to_settle[$key]['id'],
-                               'location' => '6'
+                                'ledger_id' => $ddts['id'],
+                                'amount' => $debit_amount,
+                                'voucher_no' => $cdts['voucher_no'],
+                                'account_id' => $account_id,
+                                'status' => 't',
+                                'cr_ledger_id' => $credit_data_to_settle[$key]['id'],
+                                'location' => '6'
                             ]);
                         }
                         $debit_data_to_settle[$k]['debit_amount'] = 0;
