@@ -387,9 +387,6 @@ class ManualAllocation extends Component
         $lock = Cache::lock('Customer' . $this->selected_customer, 60);
         try {
             if ($lock->get()) {
-                // if (auth()->user()->cannot('004-transaction_allocation-add')) {
-                //     throw new \Exception("You don't have the permission to perform this action.");
-                // }
                 DB::beginTransaction();
                 $this->customerAllocation($this->selected_customer, array_keys($this->debit_checkbox), array_keys($this->credit_checkbox));
                 DB::commit();
@@ -408,9 +405,6 @@ class ManualAllocation extends Component
     public function deallocate()
     {
         try {
-            // if (auth()->user()->cannot('004-transaction_allocation-delete')) {
-            //     throw new \Exception("You don't have the permission to perform this action.");
-            // }
             DB::beginTransaction();
             $description = '';
             if (!empty($this->deallocate_checkbox)) {
@@ -445,10 +439,9 @@ class ManualAllocation extends Component
     private function customerAllocation($account_id, $debit_voucher_nos = null, $credit_voucher_nos = null)
     {
         $debit_data_to_settle = Ledger::leftJoinSub(function ($query) use ($account_id) {
-            $query->select('ledger_id', 'status', 'id', 'voucher_no', 'account_id', DB::raw('SUM(amount) as amount'))
+            $query->select('ledger_id', 'status', 'id as ls_id', 'voucher_no', 'account_id', DB::raw('SUM(amount) as amount'))
                 ->from('ledger_settlements as ls')
                 ->where('account_id', $account_id)
-                ->where('status', 'f')
                 ->groupBy('ledger_id', 'account_id');
         }, 'ls', 'ledgers.id', '=', 'ls.ledger_id')
             ->where('ledgers.account_id', $account_id)
@@ -461,8 +454,9 @@ class ManualAllocation extends Component
                 $q->whereIn('ledgers.id',  $debit_voucher_nos);
             })
             ->select(
+                'ledgers.id',
                 'ledgers.voucher_no',
-                'ls.id as ledger_settlement_id',
+                'ls.ls_id as ledger_settlement_id',
                 DB::raw('ledgers.debit - COALESCE(ls.amount, 0) as debit_amount'),
             )
             ->orderBy('ledgers.posting_date', 'asc')
@@ -511,9 +505,8 @@ class ManualAllocation extends Component
                                 LedgerSettlement::create($updateData);
                             }
                         } else {
-                             // Create if doesn't exist (new logic for null status)
                              LedgerSettlement::create([
-                                'ledger_id' => $debit_data_to_settle[$k]['id'], // Corrected: get ledger_id from the debit entry itself
+                                'ledger_id' => $ddts['id'], 
                                 'amount' => $credit_amount,
                                 'voucher_no' => $cdts['voucher_no'],
                                 'account_id' => $account_id,
@@ -543,6 +536,16 @@ class ManualAllocation extends Component
                             LedgerSettlement::where('ledger_id', $f['ledger_id'])->where('status', 'f')->update([
                                 'status' => 't'
                             ]);
+                        } else {
+                            LedgerSettlement::create([
+                               'ledger_id' => $ddts['id'], 
+                               'amount' => $debit_amount,
+                               'voucher_no' => $cdts['voucher_no'],
+                               'account_id' => $account_id,
+                               'status' => 't',
+                               'cr_ledger_id' => $credit_data_to_settle[$key]['id'],
+                               'location' => '6'
+                            ]);
                         }
                         $credit_data_to_settle[$key]['amount'] = $credit_amount - $debit_amount;
                         $debit_data_to_settle[$k]['debit_amount'] = 0;
@@ -565,6 +568,16 @@ class ManualAllocation extends Component
                             }
                             LedgerSettlement::where('ledger_id', $f['ledger_id'])->where('status', 'f')->update([
                                 'status' => 't'
+                            ]);
+                        } else {
+                            LedgerSettlement::create([
+                               'ledger_id' => $ddts['id'], 
+                               'amount' => $debit_amount,
+                               'voucher_no' => $cdts['voucher_no'],
+                               'account_id' => $account_id,
+                               'status' => 't',
+                               'cr_ledger_id' => $credit_data_to_settle[$key]['id'],
+                               'location' => '6'
                             ]);
                         }
                         $debit_data_to_settle[$k]['debit_amount'] = 0;
