@@ -180,7 +180,7 @@
                                                     Credit Transactions - Allocated Deposits
                                                 </th>
                                                 <th></th>
-                                                <th class="bg-dark" colspan="5">
+                                                <th class="bg-dark pl-3" colspan="5">
                                                     Paid - Sales Invoices
                                                 </th>
                                             </tr>
