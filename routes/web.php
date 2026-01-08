@@ -172,7 +172,7 @@ if(env('AMS_CUSTOMER', false) === true) {
 
 if(config('ams.ledger_settlement_enabled') === true) {
     Route::get('ams/ledger-allocations', function () {
-        return view('ams::general-vouchers.general-voucher');
+        return view('ams::general-vouchers.manual-allocation');
     })->middleware('auth');
 }
 
