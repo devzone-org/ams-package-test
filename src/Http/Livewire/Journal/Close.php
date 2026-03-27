@@ -111,6 +111,20 @@ class Close extends Component
 
             $this->closing_balance_heads = $closing_balance->pluck('reference')->toArray();
 
+            $this->denomination_counting = [
+                ['currency' => '5000', 'count' => '0', 'total' => '0'],
+                ['currency' => '1000', 'count' => '0', 'total' => '0'],
+                ['currency' => '500', 'count' => '0', 'total' => '0'],
+                ['currency' => '100', 'count' => '0', 'total' => '0'],
+                ['currency' => '50', 'count' => '0', 'total' => '0'],
+                ['currency' => '20', 'count' => '0', 'total' => '0'],
+                ['currency' => '10', 'count' => '0', 'total' => '0'],
+                ['currency' => '5', 'count' => '0', 'total' => '0'],
+                ['currency' => '2', 'count' => '0', 'total' => '0'],
+                ['currency' => '1', 'count' => '0', 'total' => '0']
+            ];
+            $this->difference = 0;
+
         }
     }
 
@@ -178,7 +192,7 @@ class Close extends Component
                 }
 
                 if (!empty($this->cash_surplus_account_id)) {
-                    $cash_surplus_account_exists = ChartOfAccount::where('id', $this->cash_shortage_account_id)->exists();
+                    $cash_surplus_account_exists = ChartOfAccount::where('id', $this->cash_surplus_account_id)->exists();
                     if (!$cash_surplus_account_exists) {
                         throw new \Exception("Cash - Surplus account not found!");
                     }
@@ -255,8 +269,8 @@ class Close extends Component
                             ->date(date('Y-m-d'))->approve()->description($description)->execute();
                         }
 
-                        GeneralJournal::instance()->account($this->cash_shortage_account_id)->debit(abs($this->difference))->voucherNo($vno)
-                            ->date(date('Y-m-d'))->approve()->description($description)->execute();
+//                        GeneralJournal::instance()->account($this->cash_shortage_account_id)->debit(abs($this->difference))->voucherNo($vno)
+//                            ->date(date('Y-m-d'))->approve()->description($description)->execute();
                         if ($this->retained_cash > 0) {
                             GeneralJournal::instance()->account($this->user_account_id)->debit($this->retained_cash)->voucherNo($vno)
                                 ->date(date('Y-m-d'))->approve()->description($description)->execute();
