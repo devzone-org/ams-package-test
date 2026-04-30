@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Devzone\Ams\Models\ChartOfAccount;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use App\Models\User;
 use function Couchbase\defaultDecoder;
 
 class ProfitLossDateWise extends Component
@@ -19,12 +20,24 @@ class ProfitLossDateWise extends Component
     public $heading = [];
     public $report = [];
     public $year;
+    public $selected_user ;
+    public $users = [];
 
     public function mount()
     {
         $this->from_date = Carbon::now()->startOfMonth()->format('d M Y');
         $this->to_date = date('d M Y');
+        $this->loadUsers();
         $this->search();
+    }
+
+    public function loadUsers()
+    {
+        $this->users = User::select('id', 'name')
+            ->orderBy('name', 'asc')
+            ->where('status', 't')
+            ->get()
+            ->toArray();
     }
 
     public function render()
@@ -55,6 +68,9 @@ class ProfitLossDateWise extends Component
             ->when(!empty($this->closing_vouchers) && strtolower($this->closing_vouchers) == 'hide', function ($q) {
                 return $q->leftJoin('closing_summary_accounts as dc','dc.voucher_no','l.voucher_no')
                     ->whereNull('dc.voucher_no');
+            })
+            ->when(!empty($this->selected_user), function ($q) {
+                return $q->where('l.posted_by', $this->selected_user);
             })
             ->select(
                 DB::raw('sum(l.debit) as debit'),

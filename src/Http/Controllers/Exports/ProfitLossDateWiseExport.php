@@ -14,6 +14,7 @@ class ProfitLossDateWiseExport
     protected $from_date;
     protected $to_date;
     protected $template_id;
+    protected $selected_user;
     protected $closing_vouchers = 'hide';
 
 
@@ -23,6 +24,7 @@ class ProfitLossDateWiseExport
         $this->from_date = $request['from_date'];
         $this->to_date = $request['to_date'];
         $this->closing_vouchers = $request['closing_vouchers'];
+        $this->selected_user = $request['selected_user'];
         $this->template_id = $request['template_id'];
     }
 
@@ -68,6 +70,9 @@ class ProfitLossDateWiseExport
             ->where('l.posting_date', '<=', $this->formatDate($this->to_date))
             ->when(!empty($lvl_5_account_ids),function ($q) use($lvl_5_account_ids){
                 $q->whereIn('l.account_id', $lvl_5_account_ids);
+            })
+            ->when(!empty($this->selected_user), function ($q) {
+                return $q->where('l.posted_by', $this->selected_user);
             })
             ->where('l.is_approve', 't')
             ->whereIn('coa.type', ['Income', 'Expenses'])
