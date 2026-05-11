@@ -108,8 +108,12 @@ Route::group(['middleware' => ['permission:3.pnl']], function () {
     Route::get('reports/profit-and-loss/date-wise', function () {
         return view('ams::reports.profit-loss-datewise');
     });
+    Route::get('reports/profit-and-loss/user-wise', function () {
+        return view('ams::reports.profit-loss-userwise');
+    });
 
     Route::get('reports/profit-and-loss/date-wise/export', [\Devzone\Ams\Http\Controllers\Exports\ProfitLossDateWiseExport::class, 'download']);
+    Route::get('reports/profit-and-loss/user-wise/export', [\Devzone\Ams\Http\Controllers\Exports\ProfitLossUserWiseExport::class, 'download']);
 
 });
 

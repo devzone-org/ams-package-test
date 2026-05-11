@@ -8,12 +8,13 @@ use Illuminate\Support\Facades\DB;
 use League\Csv\Writer;
 use SplTempFileObject;
 
-class ProfitLossDateWiseExport
+class ProfitLossUserWiseExport
 {
 
     protected $from_date;
     protected $to_date;
     protected $template_id;
+    protected $selected_user;
     protected $closing_vouchers = 'hide';
 
 
@@ -24,6 +25,7 @@ class ProfitLossDateWiseExport
         $this->to_date = $request['to_date'];
         $this->closing_vouchers = $request['closing_vouchers'];
         $this->template_id = $request['template_id'];
+        $this->selected_user = $request['selected_user'];
     }
 
 
@@ -51,6 +53,9 @@ class ProfitLossDateWiseExport
             ->when(!empty($this->closing_vouchers) && strtolower($this->closing_vouchers) == 'hide', function ($q) {
                 return $q->leftJoin('closing_summary_accounts as dc','dc.voucher_no','l.voucher_no')
                     ->whereNull('dc.voucher_no');
+            })
+            ->when(!empty($this->selected_user), function ($q) {
+                return $q->where('l.posted_by', $this->selected_user);
             })
             ->select(
                 DB::raw('sum(l.debit) as debit'),
