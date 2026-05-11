@@ -315,7 +315,7 @@ class ProfitLossUserWiseExport
             }
         }
 
-        $csv->output('P&L Datewise ' . date('d M Y h:i A') . '.csv');
+        $csv->output('P&L UserWise ' . date('d M Y h:i A') . '.csv');
 
 
     }

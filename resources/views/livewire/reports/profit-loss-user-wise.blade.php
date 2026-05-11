@@ -533,7 +533,7 @@
                 </div>
 
                 <div>
-                    <h3 class="text-lg leading-6 text-center font-medium text-gray-900">Profit and Loss (P&L) - Date
+                    <h3 class="text-lg leading-6 text-center font-medium text-gray-900">Profit and Loss (P&L) - User
                         Wise</h3>
                     <p class="text-md  font-sm text-gray-500 text-center">{{ env('APP_NAME') }}</p>
                     <p class="text-md  font-sm text-gray-500 text-center">Statement
