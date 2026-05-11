@@ -22,6 +22,7 @@ use Devzone\Ams\Http\Livewire\Reports\PnlTemplateManager;
 use Devzone\Ams\Http\Livewire\Reports\PnlTemplateReport;
 use Devzone\Ams\Http\Livewire\Reports\ProfitLoss;
 use Devzone\Ams\Http\Livewire\Reports\ProfitLossDateWise;
+use Devzone\Ams\Http\Livewire\Reports\ProfitLossUserWise;
 use Devzone\Ams\Http\Livewire\Reports\Trial;
 use Devzone\Ams\Http\Livewire\Sidebar\SidebarLinks;
 use Devzone\Ams\Http\Livewire\PettyExpenses;
@@ -86,6 +87,7 @@ class AmsServiceProvider extends ServiceProvider
         Livewire::component('reports.profit-loss', ProfitLoss::class);
 
         Livewire::component('reports.profit-loss-datewise', ProfitLossDateWise::class);
+        Livewire::component('reports.profit-loss-userwise', ProfitLossUserWise::class);
         Livewire::component('reports.day-closing', DayClosing::class);
         Livewire::component('reports.balance-sheet', BalanceSheet::class);
         Livewire::component('journal.close', Close::class);
