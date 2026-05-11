@@ -309,7 +309,7 @@
                             </p>
                         </div>
                     </a>
-                    @if(env('CLIENT_CODE') == 'abh')
+                    @if(strtolower(env('CLIENT_CODE')) == 'abh')
                         <a href="{{ url('accounts/reports/profit-and-loss/user-wise') }}"
                            class="-m-3 p-3 flex items-center rounded-lg hover:bg-gray-100 {{ Request::segment(4)=='user-wise' && Request::segment(3)=='profit-and-loss'  ? 'bg-gray-100' : ''}} ">
 
