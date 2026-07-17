@@ -19,7 +19,7 @@ $favourite = [];
 <nav class="flex-1 px-2 mt-5 space-y-1 bg-white"
      @if(env('SIDEBAR_NAME') == 'pos') style="background-color:rgb(30 41 59 / var(--tw-bg-opacity));" @endif>
 
-    <div @if(Request::segment(2)=='accountant') x-data="{ isExpanded: true }" @else x-data="{ isExpanded: false }"
+    <div @if(Request::segment(2)=='accountant' || (Request::segment(2) == 'admin-expenses' || Request::segment(2) == 'admin-expenses-list')) x-data="{ isExpanded: true }" @else x-data="{ isExpanded: false }"
          @endif x-cloak
          class="space-y-1">
         <button
@@ -238,6 +238,18 @@ $favourite = [];
                         </svg>
                     @endif
                 </div>
+            </div>
+        </div>
+
+        <div x-show="isExpanded" class="space-y-1"
+        >
+            <div class="flex flex-row item-center {{ (Request::segment(2) == 'admin-expenses' || Request::segment(2) == 'admin-expenses-list') ? $a_current : $a_default}}">
+
+                <a href="javascript:void(0)"
+                   class=" group w-full rounded-md pr-2 pl-11 pl-3 py-2 flex items-center text-sm font-normal"
+                >
+                    Admin Expenses
+                </a>
             </div>
         </div>
 
