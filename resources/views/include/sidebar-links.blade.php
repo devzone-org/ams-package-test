@@ -113,14 +113,16 @@
             </a>
         </div>
 
-        <div x-show="isExpanded" class="space-y-1"
-        >
-            <a href="javascript:void(0)"
-               class=" {{     (Request::segment(2) == 'admin-expenses' || Request::segment(2) == 'admin-expenses-list') ? $a_current : $a_default}} group rounded-md pr-2 pl-11 pl-3 py-2 flex items-center text-sm font-normal"
+        @can('3.view.admin-expenses')
+            <div x-show="isExpanded" class="space-y-1"
             >
-                Admin Expenses
-            </a>
-        </div>
+                <a href="javascript:void(0)"
+                   class=" {{     (Request::segment(2) == 'admin-expenses' || Request::segment(2) == 'admin-expenses-list') ? $a_current : $a_default}} group rounded-md pr-2 pl-11 pl-3 py-2 flex items-center text-sm font-normal"
+                >
+                    Admin Expenses
+                </a>
+            </div>
+        @endcan
 
 
         <div x-show="isExpanded" class="space-y-1"

@@ -46,6 +46,11 @@ class DumpMasterDataPermissions extends Command
         Permission::updateOrCreate(['name' => '3.reject.petty-expenses'], ['guard_name' => 'web', 'description' => 'Reject Petty Expenses', 'portal' => 'accounts', 'section' => 'accounts']);
         Permission::updateOrCreate(['name' => '3.view.petty-expenses'], ['guard_name' => 'web', 'description' => 'View Petty Expenses', 'portal' => 'accounts', 'section' => 'accounts']);
 
+        Permission::updateOrCreate(['name' => '3.view.admin-expenses'], ['guard_name' => 'web', 'description' => 'View Admin Expenses', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '3.add.admin-expenses'], ['guard_name' => 'web', 'description' => 'Add Admin Expenses', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '3.delete.admin-expenses.unclaimed'], ['guard_name' => 'web', 'description' => 'Delete Unclaimed Admin Expenses', 'portal' => 'accounts', 'section' => 'accounts']);
+        Permission::updateOrCreate(['name' => '3.update.admin-expenses.unclaimed'], ['guard_name' => 'web', 'description' => 'Update Unclaimed Admin Expenses', 'portal' => 'accounts', 'section' => 'accounts']);
+
 
         Permission::updateOrCreate(['name' => '2.coa.equity-ratio'], ['guard_name' => 'web', 'description' => 'Equity Ratio ', 'portal' => 'accounts', 'section' => 'accounts']);
 

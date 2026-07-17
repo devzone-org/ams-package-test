@@ -241,17 +241,19 @@ $favourite = [];
             </div>
         </div>
 
-        <div x-show="isExpanded" class="space-y-1"
-        >
-            <div class="flex flex-row item-center {{ (Request::segment(2) == 'admin-expenses' || Request::segment(2) == 'admin-expenses-list') ? $a_current : $a_default}}">
+        @can('3.view.admin-expenses')
+            <div x-show="isExpanded" class="space-y-1"
+            >
+                <div class="flex flex-row item-center {{ (Request::segment(2) == 'admin-expenses' || Request::segment(2) == 'admin-expenses-list') ? $a_current : $a_default}}">
 
-                <a href="javascript:void(0)"
-                   class=" group w-full rounded-md pr-2 pl-11 pl-3 py-2 flex items-center text-sm font-normal"
-                >
-                    Admin Expenses
-                </a>
+                    <a href="javascript:void(0)"
+                       class=" group w-full rounded-md pr-2 pl-11 pl-3 py-2 flex items-center text-sm font-normal"
+                    >
+                        Admin Expenses
+                    </a>
+                </div>
             </div>
-        </div>
+        @endcan
 
         <div x-show="isExpanded" class="space-y-1"
         >
