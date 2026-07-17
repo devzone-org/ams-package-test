@@ -21,6 +21,9 @@ class AddAdminExpenses extends Component
     public $fetch_users = [];
     public $success;
 
+    public $is_edit = false;
+    public $is_view = false;
+
     public $vendor_modal = false;
     public $vendor_create = false;
     public $vendor_search = '';
@@ -49,8 +52,22 @@ class AddAdminExpenses extends Component
         'attachment' => 'Attachment',
     ];
 
-    public function mount()
+    public function mount($id = null)
     {
+        if (!empty($id)) {
+            $found = AdminExpense::find($id);
+            if (empty($found)) {
+                return $this->redirectTo = '/accounts/admin-expenses/list';
+            }
+            $this->admin_expenses = $found->toArray();
+            unset($this->admin_expenses['created_at'], $this->admin_expenses['updated_at'], $this->admin_expenses['deleted_at']);
+            $this->admin_expenses['vendor_name'] = AccVendor::where('id', $found->vendor_id)->value('business_name');
+            $this->admin_expenses['expense_account_name'] = ChartOfAccount::where('id', $found->expense_account_id)->value('name');
+            $this->is_edit = true;
+            // once claimed the record is locked: open it read-only
+            $this->is_view = $found->status != 'unclaimed';
+        }
+
         // users table differs per host app: only filter on columns that exist.
         $this->fetch_users = User::select('id', 'name')
             ->when(Schema::hasColumn('users', 'type'), function ($q) {
@@ -64,6 +81,9 @@ class AddAdminExpenses extends Component
 
     public function openVendorModal()
     {
+        if ($this->is_view) {
+            return;
+        }
         $this->resetErrorBag();
         $this->vendor_create = false;
         $this->vendor_search = '';
@@ -148,12 +168,12 @@ class AddAdminExpenses extends Component
 
     public function save()
     {
+        if ($this->is_view) {
+            return;
+        }
+
         $this->validate();
         try {
-            if (!Auth::user()->can('3.add.admin-expenses')) {
-                throw new \Exception(env('PERMISSION_ERROR'));
-            }
-
             $data = $this->admin_expenses;
             unset($data['expense_account_name'], $data['vendor_name']);
 
@@ -166,12 +186,38 @@ class AddAdminExpenses extends Component
                 $data['attachment'] = $this->attachment->storePublicly(config('app.aws_folder') . 'admin_expenses', 's3');
             }
 
-            $data['added_by'] = Auth::id();
-            $data['status'] = 'unclaimed';
+            if (!$this->is_edit) {
+                if (!Auth::user()->can('3.add.admin-expenses')) {
+                    throw new \Exception(env('PERMISSION_ERROR'));
+                }
 
-            AdminExpense::create($data);
-            $this->success = 'Admin Expense Added Successfully';
-            $this->clear();
+                $data['added_by'] = Auth::id();
+                $data['status'] = 'unclaimed';
+
+                AdminExpense::create($data);
+                $this->success = 'Admin Expense Added Successfully';
+                $this->clear();
+            } else {
+                if (!Auth::user()->can('3.update.admin-expenses.unclaimed')) {
+                    throw new \Exception(env('PERMISSION_ERROR'));
+                }
+
+                $found = AdminExpense::find($this->admin_expenses['id']);
+                if (empty($found)) {
+                    throw new \Exception('No Record Found.');
+                }
+
+                if ($found->status != 'unclaimed') {
+                    throw new \Exception("This record has already been claimed. You can't edit.");
+                }
+
+                // status / added_by are never changed from this form
+                unset($data['status'], $data['added_by']);
+                $data['updated_by'] = Auth::id();
+
+                $found->update($data);
+                $this->success = 'Admin Expense Updated Successfully';
+            }
         } catch (\Exception $ex) {
             $this->addError('error', $ex->getMessage());
         }
@@ -180,7 +226,13 @@ class AddAdminExpenses extends Component
     public function clear()
     {
         $this->resetErrorBag();
+        if (!empty($this->admin_expenses['id'])) {
+            $id = $this->admin_expenses['id'];
+        }
         $this->reset('admin_expenses', 'attachment');
+        if (!empty($id)) {
+            $this->admin_expenses['id'] = $id;
+        }
     }
 
     public function render()

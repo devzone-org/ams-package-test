@@ -162,7 +162,7 @@ Route::group(['middleware' => ['permission:3.view.admin-expenses']], function ()
     Route::get('admin-expenses/list', function () {
         return view('ams::admin-expenses.admin-expenses-list');
     });
-    Route::get('admin-expenses/add', function () {
+    Route::get('admin-expenses/add/{id?}', function () {
         return view('ams::admin-expenses.add-admin-expenses');
     });
 });

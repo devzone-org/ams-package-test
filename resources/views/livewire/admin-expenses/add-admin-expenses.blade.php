@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col">
-                        <h1>Add Admin Expense</h1>
+                        <h1>{{ $is_view ? "View" : ($is_edit ? "Update" : "Add") }} Admin Expense</h1>
                     </div>
                 </div>
             </div>
@@ -15,7 +15,7 @@
                     <div class="col">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <h3 class="card-title"><b>Add Admin Expenses</b></h3>
+                                <h3 class="card-title"><b>{{ $is_view ? "View" : ($is_edit ? "Update" : "Add") }} Admin Expenses</b></h3>
                             </div>
                             <div class="card-body">
                                 <form wire:submit.prevent="save">
@@ -24,7 +24,7 @@
                                             <div class="form-group">
                                                 <label class="font-weight-normal">Expense On Date<span
                                                             class="text-danger">*</span> </label>
-                                                <input type="date" wire:model.lazy="admin_expenses.expense_date"
+                                                <input type="date" wire:model.lazy="admin_expenses.expense_date" @if($is_view) disabled @endif
                                                        autocomplete="off"
                                                        class="form-control @error('admin_expenses.expense_date')  is-invalid @enderror">
                                             </div>
@@ -35,7 +35,7 @@
                                                 <label class="font-weight-normal">Vendor <span
                                                             class="text-danger">*</span></label>
                                                 <input type="text" readonly autocomplete="off"
-                                                       wire:click="openVendorModal"
+                                                       @if(!$is_view) wire:click="openVendorModal" @endif
                                                        wire:model="admin_expenses.vendor_name"
                                                        class="form-control @error('admin_expenses.vendor_id')  is-invalid @enderror">
                                             </div>
@@ -44,7 +44,7 @@
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
                                                 <label class="font-weight-normal">Invoice # </label>
-                                                <input type="text" wire:model.lazy="admin_expenses.invoice_no"
+                                                <input type="text" wire:model.lazy="admin_expenses.invoice_no" @if($is_view) disabled @endif
                                                        autocomplete="off"
                                                        class="form-control @error('admin_expenses.invoice_no')  is-invalid @enderror">
                                             </div>
@@ -55,7 +55,7 @@
                                                 <label class="font-weight-normal">Amount <span
                                                             class="text-danger">*</span></label>
                                                 <input type="number" step="0.1"
-                                                       wire:model.lazy="admin_expenses.amount" autocomplete="off"
+                                                       wire:model.lazy="admin_expenses.amount" @if($is_view) disabled @endif autocomplete="off"
                                                        class="form-control @error('admin_expenses.amount')  is-invalid @enderror">
                                             </div>
                                         </div>
@@ -65,7 +65,7 @@
                                                 <label class="font-weight-normal">Expense on A/C Of <span
                                                             class="text-danger">*</span></label>
                                                 <input type="text" readonly autocomplete="off"
-                                                       wire:click="searchableOpenModal('admin_expenses.expense_account_id','admin_expenses.expense_account_name','accounts')"
+                                                       @if(!$is_view) wire:click="searchableOpenModal('admin_expenses.expense_account_id','admin_expenses.expense_account_name','accounts')" @endif
                                                        wire:model="admin_expenses.expense_account_name"
                                                        class="form-control @error('admin_expenses.expense_account_id')  is-invalid @enderror">
                                             </div>
@@ -74,7 +74,7 @@
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
                                                 <label class="font-weight-normal">Requisite By </label>
-                                                <select wire:model.defer="admin_expenses.requisite_by"
+                                                <select wire:model.defer="admin_expenses.requisite_by" @if($is_view) disabled @endif
                                                         class="form-control @error('admin_expenses.requisite_by')  is-invalid @enderror">
                                                     <option value=""></option>
                                                     @foreach($fetch_users as $u)
@@ -87,7 +87,7 @@
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
                                                 <label class="font-weight-normal">Attachment </label>
-                                                <input type="file" wire:model.lazy="attachment" autocomplete="off"
+                                                <input type="file" wire:model.lazy="attachment" @if($is_view) disabled @endif autocomplete="off"
                                                        class="form-control p-0 m-0 pt-1 px-1">
                                             </div>
                                         </div>
@@ -95,7 +95,7 @@
                                         <div class="col-12 pt-3">
                                             <div class="form-group">
                                                 <label class="font-weight-normal">Description </label>
-                                                <textarea wire:model.lazy="admin_expenses.description"
+                                                <textarea wire:model.lazy="admin_expenses.description" @if($is_view) disabled @endif
                                                           autocomplete="off" rows="5"
                                                           class="form-control @error('admin_expenses.description')  is-invalid @enderror"></textarea>
                                             </div>
@@ -103,16 +103,18 @@
 
                                         <div class="col-12 pt-3">
                                             <div class="form-group d-flex justify-content-end">
-                                                <button type="submit" wire:loading.attr="disabled"
-                                                        class="btn btn-success mx-1">
-                                                    Save
-                                                </button>
+                                                @if(!$is_view)
+                                                    <button type="submit" wire:loading.attr="disabled"
+                                                            class="btn btn-success mx-1">
+                                                        {{ $is_edit ? 'Update' : 'Save' }}
+                                                    </button>
 
-                                                <button type="button" wire:click="clear"
-                                                        wire:loading.attr="disabled"
-                                                        class="btn btn-danger mx-1">
-                                                    Reset
-                                                </button>
+                                                    <button type="button" wire:click="clear"
+                                                            wire:loading.attr="disabled"
+                                                            class="btn btn-danger mx-1">
+                                                        Reset
+                                                    </button>
+                                                @endif
                                                 <a href="{{url('/accounts/admin-expenses/list')}}"
                                                    class="btn btn-secondary mx-1">
                                                     Go Back
@@ -209,7 +211,7 @@
             @endif
 
             <div class="py-6 px-4 sm:p-6 flex justify-between border-b">
-                <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">Add
+                <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">{{ $is_view ? 'View' : ($is_edit ? 'Update' : 'Add') }}
                     Admin Expenses</h3>
             </div>
             <form wire:submit.prevent="save">
@@ -218,7 +220,7 @@
                         <div class="col-span-6 sm:col-span-1">
                             <label class="block text-sm font-medium text-gray-700">Expense On Date <span
                                         class="text-red-500">*</span></label>
-                            <input type="date" wire:model.lazy="admin_expenses.expense_date" autocomplete="off"
+                            <input type="date" wire:model.lazy="admin_expenses.expense_date" @if($is_view) disabled @endif autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
@@ -226,21 +228,21 @@
                             <label class="block text-sm font-medium text-gray-700">Vendor <span
                                         class="text-red-500">*</span></label>
                             <input type="text" readonly autocomplete="off"
-                                   wire:click="openVendorModal"
+                                   @if(!$is_view) wire:click="openVendorModal" @endif
                                    wire:model="admin_expenses.vendor_name"
                                    class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
                         <div class="col-span-6 sm:col-span-1">
                             <label class="block text-sm font-medium text-gray-700">Invoice # </label>
-                            <input type="text" wire:model.lazy="admin_expenses.invoice_no" autocomplete="off"
+                            <input type="text" wire:model.lazy="admin_expenses.invoice_no" @if($is_view) disabled @endif autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
                         <div class="col-span-6 sm:col-span-1">
                             <label class="block text-sm font-medium text-gray-700">Amount <span
                                         class="text-red-500">*</span></label>
-                            <input type="number" step="0.1" wire:model.lazy="admin_expenses.amount" autocomplete="off"
+                            <input type="number" step="0.1" wire:model.lazy="admin_expenses.amount" @if($is_view) disabled @endif autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
@@ -248,14 +250,14 @@
                             <label class="block text-sm font-medium text-gray-700">Expense on A/C Of <span
                                         class="text-red-500">*</span></label>
                             <input type="text" readonly autocomplete="off"
-                                   wire:click="searchableOpenModal('admin_expenses.expense_account_id','admin_expenses.expense_account_name','accounts')"
+                                   @if(!$is_view) wire:click="searchableOpenModal('admin_expenses.expense_account_id','admin_expenses.expense_account_name','accounts')" @endif
                                    wire:model="admin_expenses.expense_account_name"
                                    class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
                         <div class="col-span-6 sm:col-span-1">
                             <label class="block text-sm font-medium text-gray-700">Requisite By </label>
-                            <select wire:model.defer="admin_expenses.requisite_by"
+                            <select wire:model.defer="admin_expenses.requisite_by" @if($is_view) disabled @endif
                                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <option value=""></option>
                                 @foreach($fetch_users as $u)
@@ -266,28 +268,30 @@
 
                         <div class="col-span-6 sm:col-span-1">
                             <label class="block text-sm font-medium text-gray-700">Attachment </label>
-                            <input type="file" wire:model.lazy="attachment" autocomplete="off"
+                            <input type="file" wire:model.lazy="attachment" @if($is_view) disabled @endif autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
                     </div>
 
                     <div class="col-span-6">
                         <label class="block text-sm font-medium text-gray-700">Description </label>
-                        <textarea wire:model.lazy="admin_expenses.description" autocomplete="off" rows="5"
+                        <textarea wire:model.lazy="admin_expenses.description" @if($is_view) disabled @endif autocomplete="off" rows="5"
                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
                     </div>
 
                     <div class="w-full flex justify-end">
                         <div>
-                            <button type="submit" wire:loading.attr="disabled"
-                                    class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                Save
-                            </button>
+                            @if(!$is_view)
+                                <button type="submit" wire:loading.attr="disabled"
+                                        class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    {{ $is_edit ? 'Update' : 'Save' }}
+                                </button>
 
-                            <button type="button" wire:click="clear" wire:loading.attr="disabled"
-                                    class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                Reset
-                            </button>
+                                <button type="button" wire:click="clear" wire:loading.attr="disabled"
+                                        class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                    Reset
+                                </button>
+                            @endif
                             <a href="{{url('/accounts/admin-expenses/list')}}"
                                class="ml-1 inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md shadow-sm disabled:opacity-25 hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 Go Back

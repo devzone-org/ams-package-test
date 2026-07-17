@@ -150,7 +150,17 @@
                                             @endif
                                         </td>
                                         <td>
+                                            @if($ae['status'] == 'unclaimed')
+                                                <a href="/accounts/admin-expenses/add/{{$ae['id']}}" class="">
+                                                    Edit
+                                                </a>
+                                            @else
+                                                <a href="/accounts/admin-expenses/add/{{$ae['id']}}" class="">
+                                                    View
+                                                </a>
+                                            @endif
                                             @if(!empty($ae['attachment']))
+                                                <br>
                                                 <a href="{{ env('AWS_URL').$ae['attachment'] }}"
                                                    class="" target="_blank">
                                                     View Attachment
@@ -368,7 +378,19 @@
                                 @endif
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
+                                @if($ae['status'] == 'unclaimed')
+                                    <a href="/accounts/admin-expenses/add/{{$ae['id']}}"
+                                       class="text-indigo-500 font-medium">
+                                        Edit
+                                    </a>
+                                @else
+                                    <a href="/accounts/admin-expenses/add/{{$ae['id']}}"
+                                       class="text-gray-500 font-medium">
+                                        View
+                                    </a>
+                                @endif
                                 @if(!empty($ae['attachment']))
+                                    <br>
                                     <a href="{{ env('AWS_URL').$ae['attachment'] }}"
                                        class="text-yellow-500 font-medium" target="_blank">
                                         View Attachment
