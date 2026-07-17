@@ -12,6 +12,10 @@ class AdminExpensesList extends Component
     public $admin_expenses_list = [];
     public $fetch_account_heads = [];
     public $fetch_added_by = [];
+    public $success;
+    public $delete_modal = false;
+    public $delete_id;
+    public $delete_modal_msg;
 
     public function mount()
     {
@@ -62,6 +66,76 @@ class AdminExpensesList extends Component
     {
         $this->reset('filter');
         $this->search();
+    }
+
+    public function openDeleteModal($id)
+    {
+        $this->resetErrorBag();
+        $this->success = '';
+
+        try {
+            if (auth()->user()->cannot('3.delete.admin-expenses.unclaimed')) {
+                throw new \Exception("You don't have permission to perform this action.");
+            }
+
+            $found = AdminExpense::select('id', 'status')->find($id);
+            if (empty($found)) {
+                throw new \Exception('Admin expense not found.');
+            }
+            if ($found->status != 'unclaimed') {
+                throw new \Exception("This record has already been claimed. You can't delete it.");
+            }
+
+            $this->delete_modal = true;
+            $this->delete_id = $id;
+            $this->delete_modal_msg = 'delete this admin expense';
+
+            if (env('AMS_BOOTSTRAP') == 'true') {
+                $this->dispatchBrowserEvent('open-delete-modal');
+            }
+        } catch (\Exception $ex) {
+            $this->addError('error', $ex->getMessage());
+        }
+    }
+
+    public function closeDeleteModal()
+    {
+        $this->resetErrorBag();
+        $this->reset('success', 'delete_modal', 'delete_id', 'delete_modal_msg');
+
+        if (env('AMS_BOOTSTRAP') == 'true') {
+            $this->dispatchBrowserEvent('close-delete-modal');
+        }
+    }
+
+    public function deleteRecord()
+    {
+        try {
+            if (auth()->user()->cannot('3.delete.admin-expenses.unclaimed')) {
+                throw new \Exception("You don't have permission to perform this action.");
+            }
+
+            $found = AdminExpense::find($this->delete_id);
+            if (empty($found)) {
+                throw new \Exception('Admin expense not found.');
+            }
+            // re-check: it could have been claimed after the modal was opened
+            if ($found->status != 'unclaimed') {
+                throw new \Exception("This record has already been claimed. You can't delete it.");
+            }
+
+            $found->delete();
+            $this->success = 'Admin expense deleted successfully.';
+            $this->reset('delete_modal', 'delete_id', 'delete_modal_msg');
+
+            if (env('AMS_BOOTSTRAP') == 'true') {
+                $this->dispatchBrowserEvent('close-delete-modal');
+            }
+
+            $this->search();
+        } catch (\Exception $ex) {
+            $this->addError('error', $ex->getMessage());
+        }
     }
 
     public function render()

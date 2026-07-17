@@ -3,6 +3,13 @@
         <div class="content-wrapper">
             <div class="content">
                 <div class="container-fluid">
+                    @if(!empty($success))
+                        <div class="alert alert-success">{{ $success }}</div>
+                    @endif
+                    @error('error')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+
                     <div class="card card-primary card-outline">
                         <div class="card-header">
                             <div class="d-flex justify-content-between">
@@ -154,6 +161,13 @@
                                                 <a href="/accounts/admin-expenses/add/{{$ae['id']}}" class="">
                                                     Edit
                                                 </a>
+                                                @can('3.delete.admin-expenses.unclaimed')
+                                                    |
+                                                    <button type="button" class="btn btn-link p-0 text-danger"
+                                                            wire:click.prevent="openDeleteModal({{$ae['id']}})">
+                                                        Delete
+                                                    </button>
+                                                @endcan
                                             @else
                                                 <a href="/accounts/admin-expenses/add/{{$ae['id']}}" class="">
                                                     View
@@ -193,10 +207,108 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="DeleteConfirm" wire:ignore.self="" tabindex="-1" role="dialog"
+             aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header py-2">
+                        <h5 class="modal-title" id="deleteModalLabel">Attention !</h5>
+                        <button type="button" class="close" wire:click.prevent="closeDeleteModal()"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-0">Are you sure you want to {!! $delete_modal_msg !!}? This can't be undone.</p>
+                    </div>
+                    <div class="modal-footer py-2">
+                        <button type="button" wire:click.prevent="closeDeleteModal()" class="btn btn-sm btn-light">
+                            Cancel
+                        </button>
+                        <button type="button" wire:click="deleteRecord" wire:loading.attr="disabled"
+                                class="btn btn-sm btn-danger">
+                            <span wire:loading.remove wire:target="deleteRecord">Delete</span>
+                            <span wire:loading wire:target="deleteRecord">Deleting...</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    @push('js')
+        <script>
+            document.addEventListener('open-delete-modal', function () {
+                $('#DeleteConfirm').modal('show');
+            })
+            document.addEventListener('close-delete-modal', function () {
+                $('#DeleteConfirm').modal('hide');
+            })
+        </script>
+    @endpush
 @else
     <div>
         <div class="mb-5 shadow sm:rounded-md sm:overflow-hidden bg-white">
+            @error('error')
+            <div class="px-6 pt-6">
+                <div class="p-4 rounded-md bg-red-50">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="w-5 h-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                 fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                      clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-red-800">
+                                There was an error with your submission.
+                            </h3>
+                            <div class="mt-2 text-sm text-red-700">
+                                <p>{{ $message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @enderror
+
+            @if(!empty($success))
+                <div class="px-6 pt-6">
+                    <div class="p-4  rounded-md bg-green-50">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <!-- Heroicon name: check-circle -->
+                                <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd"
+                                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                          clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-green-800">{{ $success }}</p>
+                            </div>
+                            <div class="ml-auto pl-3">
+                                <div class="-mx-1.5 -my-1.5">
+                                    <button type="button" wire:click="$set('success', '')"
+                                            class="inline-flex bg-green-50 rounded-md p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600">
+                                        <span class="sr-only">Dismiss</span>
+                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                             fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                  clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="p-4 px-6 flex justify-between border-b">
                 <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">Search Filters</h3>
                 @can('3.add.admin-expenses')
@@ -383,6 +495,14 @@
                                        class="text-indigo-500 font-medium">
                                         Edit
                                     </a>
+                                    @can('3.delete.admin-expenses.unclaimed')
+                                        |
+                                        <button type="button" class="text-red-500 font-medium"
+                                                @click="$dispatch('open-delete-modal')"
+                                                wire:click.prevent="openDeleteModal({{$ae['id']}})">
+                                            Delete
+                                        </button>
+                                    @endcan
                                 @else
                                     <a href="/accounts/admin-expenses/add/{{$ae['id']}}"
                                        class="text-gray-500 font-medium">
@@ -420,5 +540,6 @@
                 </table>
             </div>
         </div>
+        @include("ams::include.new-delete-modal")
     </div>
 @endif
