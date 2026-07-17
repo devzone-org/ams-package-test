@@ -167,6 +167,12 @@ Route::group(['middleware' => ['permission:3.view.admin-expenses']], function ()
     });
 });
 
+Route::group(['middleware' => ['permission:3.claim.admin-expenses']], function () {
+    Route::get('admin-expenses/claim', function () {
+        return view('ams::admin-expenses.claim-admin-expenses');
+    });
+});
+
 if(env('AMS_CUSTOMER', false) === true) {
     Route::get('ams/customer-list', function () {
         return view('ams::customers.customer-list');

@@ -14,11 +14,20 @@
                         <div class="card-header">
                             <div class="d-flex justify-content-between">
                                 <p class="card-title pt-1"><b>Search Filters</b></p>
-                                @can('3.add.admin-expenses')
-                                    <a href="{{ url('accounts/admin-expenses/add') }}" class="btn btn-primary btn-sm">
-                                        Add Expense
-                                    </a>
-                                @endcan
+                                <div>
+                                    @can('3.claim.admin-expenses')
+                                        <a href="{{ url('accounts/admin-expenses/claim') }}"
+                                           class="btn btn-outline-primary btn-sm">
+                                            Claim Reimbursement
+                                        </a>
+                                    @endcan
+                                    @can('3.add.admin-expenses')
+                                        <a href="{{ url('accounts/admin-expenses/add') }}"
+                                           class="btn btn-primary btn-sm">
+                                            Add Expense
+                                        </a>
+                                    @endcan
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -311,12 +320,20 @@
 
             <div class="p-4 px-6 flex justify-between border-b">
                 <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">Search Filters</h3>
-                @can('3.add.admin-expenses')
-                    <a href="{{ url('accounts/admin-expenses/add') }}"
-                       class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Add Expense
-                    </a>
-                @endcan
+                <div class="flex">
+                    @can('3.claim.admin-expenses')
+                        <a href="{{ url('accounts/admin-expenses/claim') }}"
+                           class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                            Claim Reimbursement
+                        </a>
+                    @endcan
+                    @can('3.add.admin-expenses')
+                        <a href="{{ url('accounts/admin-expenses/add') }}"
+                           class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                            Add Expense
+                        </a>
+                    @endcan
+                </div>
             </div>
             <form wire:submit.prevent="search">
                 <div class="py-6 px-4 space-y-6 sm:p-6">
