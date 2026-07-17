@@ -30,19 +30,14 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-xs-6 col-sm-4">
+                                        <div class="col-xs-6 col-sm-4" wire:key="vendor-name">
                                             <div class="form-group">
                                                 <label class="font-weight-normal">Vendor <span
                                                             class="text-danger">*</span></label>
-                                                <div class="input-group">
-                                                    <input type="text" readonly autocomplete="off"
-                                                           class="form-control @error('admin_expenses.vendor_id')  is-invalid @enderror">
-                                                    <div class="input-group-append">
-                                                        <button type="button" class="btn btn-outline-secondary">
-                                                            New Vendor
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                                <input type="text" readonly autocomplete="off"
+                                                       wire:click="openVendorModal"
+                                                       wire:model="admin_expenses.vendor_name"
+                                                       class="form-control @error('admin_expenses.vendor_id')  is-invalid @enderror">
                                             </div>
                                         </div>
 
@@ -134,6 +129,7 @@
             </div>
         </div>
         @include("ams::include.searchable")
+        @include("ams::livewire.admin-expenses.vendor-modal")
     </div>
 @else
     <div>
@@ -226,17 +222,13 @@
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
-                        <div class="col-span-6 sm:col-span-1">
+                        <div class="col-span-6 sm:col-span-1" wire:key="vendor-name">
                             <label class="block text-sm font-medium text-gray-700">Vendor <span
                                         class="text-red-500">*</span></label>
-                            <div class="mt-1 flex">
-                                <input type="text" readonly autocomplete="off"
-                                       class="block w-full bg-white border border-gray-300 rounded-l-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <button type="button"
-                                        class="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 rounded-r-md bg-gray-50 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    New
-                                </button>
-                            </div>
+                            <input type="text" readonly autocomplete="off"
+                                   wire:click="openVendorModal"
+                                   wire:model="admin_expenses.vendor_name"
+                                   class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
                         <div class="col-span-6 sm:col-span-1">
@@ -306,6 +298,7 @@
             </form>
         </div>
         @include("ams::include.searchable")
+        @include("ams::livewire.admin-expenses.vendor-modal")
         <script>
             document.addEventListener('livewire:load', () => {
                 Livewire.on('focusInput', postId => {
