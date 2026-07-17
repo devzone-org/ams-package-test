@@ -153,8 +153,8 @@
                     </a>
 
                     @can('3.view.admin-expenses')
-                        <a href="javascript:void(0)"
-                           class="-m-3 p-3 flex items-center rounded-lg hover:bg-gray-100 {{     (Request::segment(2) == 'admin-expenses' || Request::segment(2) == 'admin-expenses-list') ? 'bg-gray-100' : ''}} ">
+                        <a href="{{ url('accounts/admin-expenses/list') }}"
+                           class="-m-3 p-3 flex items-center rounded-lg hover:bg-gray-100 {{     (Request::segment(2) == 'admin-expenses') ? 'bg-gray-100' : ''}} ">
                             <svg class="flex-shrink-0 h-6 w-6 text-indigo-600" fill="none" stroke="currentColor"
                                  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

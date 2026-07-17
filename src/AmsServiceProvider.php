@@ -26,6 +26,7 @@ use Devzone\Ams\Http\Livewire\Reports\ProfitLossUserWise;
 use Devzone\Ams\Http\Livewire\Reports\Trial;
 use Devzone\Ams\Http\Livewire\Sidebar\SidebarLinks;
 use Devzone\Ams\Http\Livewire\PettyExpenses;
+use Devzone\Ams\Http\Livewire\AdminExpenses;
 use Devzone\Ams\Http\Livewire\Customers\PaidUnpaidCustomerPayments;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -99,6 +100,9 @@ class AmsServiceProvider extends ServiceProvider
         Livewire::component('petty-expenses.claimed-petty-expenses-list', PettyExpenses\ClaimedPettyExpensesList::class);
         Livewire::component('petty-expenses.approved-petty-expenses-list', PettyExpenses\ApprovedPettyExpensesList::class);
         Livewire::component('petty-expenses.tab', PettyExpenses\Tab::class);
+
+        Livewire::component('admin-expenses.admin-expenses-list', AdminExpenses\AdminExpensesList::class);
+        Livewire::component('admin-expenses.add-admin-expenses', AdminExpenses\AddAdminExpenses::class);
 
         Livewire::component('chart-of-accounts.equity-ratio', EquityRatio::class);
 
