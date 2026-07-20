@@ -11,12 +11,43 @@ use Livewire\Component;
 class ClaimAdminExpenses extends Component
 {
     public $admin_expenses_list = [];
-    public $selected_expenses = [];
+    public $checked_admin_expenses = [];
+    public $checked_all;
     public $success;
+
+    /**
+     * The ticked rows, for the "Selected Bills" modal.
+     */
+    public function getSelectedExpensesProperty()
+    {
+        return collect($this->admin_expenses_list)
+            ->whereIn('id', array_keys(array_filter($this->checked_admin_expenses)))
+            ->values()->toArray();
+    }
+
+    public function removeSelected($id)
+    {
+        unset($this->checked_admin_expenses[$id]);
+        $this->checked_all = false;
+    }
 
     public function mount()
     {
         $this->search();
+    }
+
+    public function updatedCheckedAdminExpenses()
+    {
+        $this->checked_all = count(array_filter($this->checked_admin_expenses)) == count($this->admin_expenses_list);
+    }
+
+    public function updatedCheckedAll($checked)
+    {
+        if ($checked) {
+            $this->checked_admin_expenses = array_fill_keys(array_column($this->admin_expenses_list, 'id'), true);
+        } else {
+            $this->checked_admin_expenses = [];
+        }
     }
 
     public function search()
@@ -41,7 +72,7 @@ class ClaimAdminExpenses extends Component
 
             DB::beginTransaction();
 
-            $ids = array_unique(array_filter($this->selected_expenses));
+            $ids = array_keys(array_filter($this->checked_admin_expenses));
             if (empty($ids)) {
                 throw new \Exception('Please select any record to proceed.');
             }
@@ -58,9 +89,9 @@ class ClaimAdminExpenses extends Component
             }
 
             $this->success = 'Admin Expenses Claimed Successfully.';
-            $this->reset('selected_expenses');
+            $this->reset('checked_admin_expenses', 'checked_all');
+            $this->dispatchBrowserEvent('close-selected-modal');
             $this->search();
-            $this->dispatchBrowserEvent('resetCheckboxes');
 
             DB::commit();
         } catch (\Exception $ex) {
