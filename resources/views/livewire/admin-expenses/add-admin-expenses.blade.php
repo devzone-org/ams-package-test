@@ -9,6 +9,7 @@
                 </div>
             </div>
         </div>
+
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
@@ -24,7 +25,7 @@
                                             <div class="form-group">
                                                 <label class="font-weight-normal">Expense On Date<span
                                                             class="text-danger">*</span> </label>
-                                                <input type="date" wire:model.lazy="admin_expenses.expense_date" @if($is_view) disabled @endif
+                                                <input type="date" wire:model.defer="admin_expenses.expense_date" @if($is_view) disabled @endif
                                                        autocomplete="off"
                                                        class="form-control @error('admin_expenses.expense_date')  is-invalid @enderror">
                                             </div>
@@ -35,7 +36,8 @@
                                                 <label class="font-weight-normal">Vendor <span
                                                             class="text-danger">*</span></label>
                                                 <input type="text" readonly autocomplete="off"
-                                                       @if(!$is_view) wire:click="openVendorModal" @endif
+                                                       @if(!$is_view) onclick="window.dispatchEvent(new CustomEvent('open-vendor-modal'))"
+                                                       wire:click="vendorOpenModal('admin_expenses.vendor_id','admin_expenses.vendor_name')" @endif
                                                        wire:model="admin_expenses.vendor_name"
                                                        class="form-control @error('admin_expenses.vendor_id')  is-invalid @enderror">
                                             </div>
@@ -44,7 +46,7 @@
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
                                                 <label class="font-weight-normal">Invoice # </label>
-                                                <input type="text" wire:model.lazy="admin_expenses.invoice_no" @if($is_view) disabled @endif
+                                                <input type="text" wire:model.defer="admin_expenses.invoice_no" @if($is_view) disabled @endif
                                                        autocomplete="off"
                                                        class="form-control @error('admin_expenses.invoice_no')  is-invalid @enderror">
                                             </div>
@@ -55,7 +57,7 @@
                                                 <label class="font-weight-normal">Amount <span
                                                             class="text-danger">*</span></label>
                                                 <input type="number" step="0.1"
-                                                       wire:model.lazy="admin_expenses.amount" @if($is_view) disabled @endif autocomplete="off"
+                                                       wire:model.defer="admin_expenses.amount" @if($is_view) disabled @endif autocomplete="off"
                                                        class="form-control @error('admin_expenses.amount')  is-invalid @enderror">
                                             </div>
                                         </div>
@@ -87,7 +89,7 @@
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
                                                 <label class="font-weight-normal">Attachment </label>
-                                                <input type="file" wire:model.lazy="attachment" @if($is_view) disabled @endif autocomplete="off"
+                                                <input type="file" wire:model.defer="attachment" @if($is_view) disabled @endif autocomplete="off"
                                                        class="form-control p-0 m-0 pt-1 px-1">
                                             </div>
                                         </div>
@@ -95,7 +97,7 @@
                                         <div class="col-12 pt-3">
                                             <div class="form-group">
                                                 <label class="font-weight-normal">Description </label>
-                                                <textarea wire:model.lazy="admin_expenses.description" @if($is_view) disabled @endif
+                                                <textarea wire:model.defer="admin_expenses.description" @if($is_view) disabled @endif
                                                           autocomplete="off" rows="5"
                                                           class="form-control @error('admin_expenses.description')  is-invalid @enderror"></textarea>
                                             </div>
@@ -131,7 +133,8 @@
             </div>
         </div>
         @include("ams::include.searchable")
-        @include("ams::livewire.admin-expenses.vendor-modal")
+        @include("ams::include.vendor-searchable")
+        @include("ams::livewire.admin-expenses.vendor-create-modal")
     </div>
 @else
     <div>
@@ -220,29 +223,30 @@
                         <div class="col-span-6 sm:col-span-1">
                             <label class="block text-sm font-medium text-gray-700">Expense On Date <span
                                         class="text-red-500">*</span></label>
-                            <input type="date" wire:model.lazy="admin_expenses.expense_date" @if($is_view) disabled @endif autocomplete="off"
+                            <input type="date" wire:model.defer="admin_expenses.expense_date" @if($is_view) disabled @endif autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
-                        <div class="col-span-6 sm:col-span-1" wire:key="vendor-name">
+                        <div class="col-span-6 sm:col-span-1" wire:key="vendor-name" x-data="{}">
                             <label class="block text-sm font-medium text-gray-700">Vendor <span
                                         class="text-red-500">*</span></label>
                             <input type="text" readonly autocomplete="off"
-                                   @if(!$is_view) wire:click="openVendorModal" @endif
+                                   @if(!$is_view) @click="$dispatch('open-vendor-modal')"
+                                   wire:click="vendorOpenModal('admin_expenses.vendor_id','admin_expenses.vendor_name')" @endif
                                    wire:model="admin_expenses.vendor_name"
                                    class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
                         <div class="col-span-6 sm:col-span-1">
                             <label class="block text-sm font-medium text-gray-700">Invoice # </label>
-                            <input type="text" wire:model.lazy="admin_expenses.invoice_no" @if($is_view) disabled @endif autocomplete="off"
+                            <input type="text" wire:model.defer="admin_expenses.invoice_no" @if($is_view) disabled @endif autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
                         <div class="col-span-6 sm:col-span-1">
                             <label class="block text-sm font-medium text-gray-700">Amount <span
                                         class="text-red-500">*</span></label>
-                            <input type="number" step="0.1" wire:model.lazy="admin_expenses.amount" @if($is_view) disabled @endif autocomplete="off"
+                            <input type="number" step="0.1" wire:model.defer="admin_expenses.amount" @if($is_view) disabled @endif autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
@@ -268,14 +272,14 @@
 
                         <div class="col-span-6 sm:col-span-1">
                             <label class="block text-sm font-medium text-gray-700">Attachment </label>
-                            <input type="file" wire:model.lazy="attachment" @if($is_view) disabled @endif autocomplete="off"
+                            <input type="file" wire:model.defer="attachment" @if($is_view) disabled @endif autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
                     </div>
 
                     <div class="col-span-6">
                         <label class="block text-sm font-medium text-gray-700">Description </label>
-                        <textarea wire:model.lazy="admin_expenses.description" @if($is_view) disabled @endif autocomplete="off" rows="5"
+                        <textarea wire:model.defer="admin_expenses.description" @if($is_view) disabled @endif autocomplete="off" rows="5"
                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
                     </div>
 
@@ -302,7 +306,8 @@
             </form>
         </div>
         @include("ams::include.searchable")
-        @include("ams::livewire.admin-expenses.vendor-modal")
+        @include("ams::include.vendor-searchable")
+        @include("ams::livewire.admin-expenses.vendor-create-modal")
         <script>
             document.addEventListener('livewire:load', () => {
                 Livewire.on('focusInput', postId => {

@@ -4,6 +4,7 @@ namespace Devzone\Ams\Http\Livewire\AdminExpenses;
 
 use App\Models\User;
 use Devzone\Ams\Http\Traits\Searchable;
+use Devzone\Ams\Http\Traits\VendorSearchable;
 use Devzone\Ams\Models\AccVendor;
 use Devzone\Ams\Models\AdminExpense;
 use Devzone\Ams\Models\ChartOfAccount;
@@ -14,7 +15,7 @@ use Livewire\WithFileUploads;
 
 class AddAdminExpenses extends Component
 {
-    use Searchable, WithFileUploads;
+    use Searchable, VendorSearchable, WithFileUploads;
 
     public $admin_expenses = [];
     public $attachment;
@@ -24,10 +25,6 @@ class AddAdminExpenses extends Component
     public $is_edit = false;
     public $is_view = false;
 
-    public $vendor_modal = false;
-    public $vendor_create = false;
-    public $vendor_search = '';
-    public $vendors = [];
     public $new_vendor = [];
 
     protected $rules = [
@@ -79,57 +76,15 @@ class AddAdminExpenses extends Component
             ->orderBy('name')->get()->toArray();
     }
 
-    public function openVendorModal()
+    public function createVendor()
     {
         if ($this->is_view) {
             return;
         }
-        $this->resetErrorBag();
-        $this->vendor_create = false;
-        $this->vendor_search = '';
-        $this->reset('new_vendor');
-        $this->searchVendors();
-        $this->vendor_modal = true;
-        if (env('AMS_BOOTSTRAP') == 'true') {
-            $this->dispatchBrowserEvent('open-vendor-modal');
-        }
-    }
-
-    public function updatedVendorSearch()
-    {
-        $this->searchVendors();
-    }
-
-    public function searchVendors()
-    {
-        $this->vendors = AccVendor::when(!empty($this->vendor_search), function ($q) {
-            return $q->where(function ($q) {
-                return $q->orWhere('business_name', 'LIKE', '%' . $this->vendor_search . '%')
-                    ->orWhere('owner_name', 'LIKE', '%' . $this->vendor_search . '%')
-                    ->orWhere('contact_no', 'LIKE', '%' . $this->vendor_search . '%');
-            });
-        })->orderBy('business_name')->limit(50)->get()->toArray();
-    }
-
-    public function selectVendor($id)
-    {
-        $vendor = AccVendor::find($id);
-        if (empty($vendor)) {
-            $this->addError('error', 'Vendor not found.');
-            return;
-        }
-        $this->admin_expenses['vendor_id'] = $vendor->id;
-        $this->admin_expenses['vendor_name'] = $vendor->business_name;
-        $this->closeVendorModal();
-    }
-
-    public function createVendor()
-    {
+        // opened from inside the vendor search modal: close that first
+        $this->vendorReset();
         $this->resetErrorBag();
         $this->reset('new_vendor');
-        // carry whatever they typed in the search into the form
-        $this->new_vendor['business_name'] = $this->vendor_search;
-        $this->vendor_create = true;
     }
 
     public function saveVendor()
@@ -148,22 +103,20 @@ class AddAdminExpenses extends Component
 
         try {
             $vendor = AccVendor::create($this->new_vendor);
-            $this->selectVendor($vendor->id);
+            // a freshly created vendor is what they wanted: select it straight away
+            $this->admin_expenses['vendor_id'] = $vendor->id;
+            $this->admin_expenses['vendor_name'] = $vendor->business_name;
+            $this->closeVendorCreate();
         } catch (\Exception $ex) {
             $this->addError('error', $ex->getMessage());
         }
     }
 
-    public function closeVendorModal()
+    public function closeVendorCreate()
     {
-        $this->vendor_modal = false;
-        $this->vendor_create = false;
-        $this->vendor_search = '';
-        $this->vendors = [];
+        $this->resetErrorBag();
         $this->reset('new_vendor');
-        if (env('AMS_BOOTSTRAP') == 'true') {
-            $this->dispatchBrowserEvent('close-vendor-modal');
-        }
+        $this->dispatchBrowserEvent('close-vendor-create-modal');
     }
 
     public function save()
