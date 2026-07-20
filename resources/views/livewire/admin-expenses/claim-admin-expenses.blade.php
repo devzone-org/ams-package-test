@@ -52,26 +52,24 @@
                                     </tr>
                                     @if($loop->last)
                                         <tr>
-                                            <td class="px-2 py-2 text-right" colspan="6">
+                                            <td class="px-2 py-2 text-right" colspan="7">
                                                 <b>Total</b>
                                             </td>
                                             <td class="px-2 py-2 text-right">
                                                 <b>{{ number_format(collect($admin_expenses_list)->sum('amount'),2) }}</b>
                                             </td>
-                                            <td class="px-2 py-2"></td>
                                         </tr>
                                         <tr>
-                                            <td class="px-2 py-2 text-right" colspan="6">
-                                                <b>Selected Bills</b>
+                                            <td class="px-2 py-2 text-right" colspan="7">
+                                                <b>No. Of Selected</b>
                                             </td>
                                             <td class="px-2 py-2 text-right">
                                                 <b>{{ number_format(count(array_filter($checked_admin_expenses))) }}</b>
                                             </td>
-                                            <td class="px-2 py-2"></td>
                                         </tr>
                                         <tr>
-                                            <td class="px-2 py-2 text-right" colspan="6">
-                                                <b>Selected Amount</b>
+                                            <td class="px-2 py-2 text-right" colspan="7">
+                                                <b>Amount Claiming</b>
                                             </td>
                                             <td class="px-2 py-2 text-right">
                                                 @php
@@ -79,7 +77,6 @@
                                                 @endphp
                                                 <b>{{ number_format($amount,2) }}</b>
                                             </td>
-                                            <td class="px-2 py-2"></td>
                                         </tr>
                                     @endif
                                 @empty
@@ -243,26 +240,24 @@
                         </tr>
                         @if($loop->last)
                             <tr class="border-b">
-                                <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="6">
+                                <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="7">
                                     <b>Total</b>
                                 </td>
                                 <td class="px-2 py-2 border-r text-right text-sm text-gray-500">
                                     <b>{{ number_format(collect($admin_expenses_list)->sum('amount'),2) }}</b>
                                 </td>
-                                <td class="px-2 py-2 border-r text-sm text-gray-500"></td>
                             </tr>
                             <tr class="border-b">
-                                <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="6">
-                                    <b>Selected Bills</b>
+                                <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="7">
+                                    <b>No. Of Selected</b>
                                 </td>
                                 <td class="px-2 py-2 border-r text-right text-sm text-gray-500">
                                     <b>{{ number_format(count(array_filter($checked_admin_expenses))) }}</b>
                                 </td>
-                                <td class="px-2 py-2 border-r text-sm text-gray-500"></td>
                             </tr>
                             <tr class="border-b">
-                                <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="6">
-                                    <b>Selected Amount</b>
+                                <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="7">
+                                    <b>Amount Claiming</b>
                                 </td>
                                 <td class="px-2 py-2 border-r text-right text-sm text-gray-500">
                                     @php
@@ -270,7 +265,6 @@
                                     @endphp
                                     <b>{{ number_format($amount,2) }}</b>
                                 </td>
-                                <td class="px-2 py-2 border-r text-sm text-gray-500"></td>
                             </tr>
                         @endif
                     @empty

@@ -41,7 +41,7 @@
                                 @if($loop->last)
                                     <tr>
                                         <td class="px-2 py-2 text-right" colspan="4">
-                                            <b>Selected Amount</b>
+                                            <b>Amount Claiming</b>
                                         </td>
                                         <td class="px-2 py-2 text-right">
                                             <b>{{ number_format(collect($this->selectedExpenses)->sum('amount'),2) }}</b>
@@ -173,7 +173,7 @@
                             @if($loop->last)
                                 <tr class="border-b">
                                     <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="4">
-                                        <b>Selected Amount</b>
+                                        <b>Amount Claiming</b>
                                     </td>
                                     <td class="px-2 py-2 border-r text-right text-sm text-gray-500">
                                         <b>{{ number_format(collect($this->selectedExpenses)->sum('amount'),2) }}</b>
