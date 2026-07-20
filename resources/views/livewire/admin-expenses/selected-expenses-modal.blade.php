@@ -52,8 +52,8 @@
                             @empty
                                 <tr>
                                     <td colspan="6" class="text-danger rounded-md overflow-hidden">
-                                        <div class="alert alert-danger mb-0">
-                                            No Records Found.
+                                        <div class="alert alert-danger mb-0 py-4 text-center">
+                                            <b>No Records Found.</b>
                                         </div>
                                     </td>
                                 </tr>
@@ -184,7 +184,9 @@
                         @empty
                             <tr class="border-t border-b">
                                 <td colspan="6" class="text-sm text-red-500 rounded-md overflow-hidden">
-                                    No Records Found.
+                                    <div class="flex items-center justify-center py-5">
+                                        <b>No Records Found.</b>
+                                    </div>
                                 </td>
                             </tr>
                         @endforelse
