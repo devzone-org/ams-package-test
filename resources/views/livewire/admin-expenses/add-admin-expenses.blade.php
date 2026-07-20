@@ -67,7 +67,8 @@
                                                 <label class="font-weight-normal">Expense on A/C Of <span
                                                             class="text-danger">*</span></label>
                                                 <input type="text" readonly autocomplete="off"
-                                                       @if(!$is_view) wire:click="searchableOpenModal('admin_expenses.expense_account_id','admin_expenses.expense_account_name','accounts')" @endif
+                                                       @if(!$is_view) onclick="$('#SelectAccount').modal('show')"
+                                                       wire:click="searchableOpenModal('admin_expenses.expense_account_id','admin_expenses.expense_account_name','accounts')" @endif
                                                        wire:model="admin_expenses.expense_account_name"
                                                        class="form-control @error('admin_expenses.expense_account_id')  is-invalid @enderror">
                                             </div>
@@ -252,11 +253,12 @@
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
-                        <div class="col-span-6 sm:col-span-1" wire:key="expense-account-name">
+                        <div class="col-span-6 sm:col-span-1" wire:key="expense-account-name" x-data="{}">
                             <label class="block text-sm font-medium text-gray-700">Expense on A/C Of <span
                                         class="text-red-500">*</span></label>
                             <input type="text" readonly autocomplete="off"
-                                   @if(!$is_view) wire:click="searchableOpenModal('admin_expenses.expense_account_id','admin_expenses.expense_account_name','accounts')" @endif
+                                   @if(!$is_view) @click="$dispatch('open-modal')"
+                                   wire:click="searchableOpenModal('admin_expenses.expense_account_id','admin_expenses.expense_account_name','accounts')" @endif
                                    wire:model="admin_expenses.expense_account_name"
                                    class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>

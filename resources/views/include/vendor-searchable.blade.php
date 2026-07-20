@@ -110,6 +110,16 @@
                  class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
                  role="dialog" aria-modal="true" aria-labelledby="vendor-modal-headline">
 
+                {{--                Loader--}}
+                <div wire:loading wire:target="vendorOpenModal" class="w-full pt-5 pb-5">
+                    <div class="flex justify-center items-center w-full">
+                        {{-- border-top-color inline: this package ships tailwind v2, which has no border-t-{color} --}}
+                        <div style="border-top-color: #2563eb;"
+                             class="h-12 w-12 animate-spin rounded-full border-4 border-gray-300"></div>
+                    </div>
+                </div>
+
+                <div wire:loading.remove wire:target="vendorOpenModal">
                 <div class="px-2 pt-2 pb-2">
                     <div class="flex items-center justify-between">
                         <label for="vendor_query" id="vendor-modal-headline"
@@ -170,8 +180,22 @@
                         @endif
                     @endif
                 </div>
+                </div>
 
             </div>
         </div>
     </div>
+    <script>
+        // vendorOpenModal() emits this once the list has loaded and the input is on screen
+        document.addEventListener('livewire:load', () => {
+            Livewire.on('focusVendorInput', () => {
+                setTimeout(() => {
+                    let input = document.getElementById('vendor_query');
+                    if (input) {
+                        input.focus();
+                    }
+                }, 100);
+            });
+        });
+    </script>
 @endif
