@@ -108,13 +108,15 @@
                                                 @if(!$is_view)
                                                     <button type="submit" wire:loading.attr="disabled"
                                                             class="btn btn-success mx-1">
-                                                        {{ $is_edit ? 'Update' : 'Save' }}
+                                                        <span wire:loading.remove wire:target="save">{{ $is_edit ? 'Update' : 'Save' }}</span>
+                                                        <span wire:loading wire:target="save">{{ $is_edit ? 'Updating...' : 'Saving...' }}</span>
                                                     </button>
 
                                                     <button type="button" wire:click="clear"
                                                             wire:loading.attr="disabled"
                                                             class="btn btn-danger mx-1">
-                                                        Reset
+                                                        <span wire:loading.remove wire:target="clear">Reset</span>
+                                                        <span wire:loading wire:target="clear">Resetting...</span>
                                                     </button>
                                                 @endif
                                                 <a href="{{url('/accounts/admin-expenses/list')}}"
@@ -288,12 +290,14 @@
                             @if(!$is_view)
                                 <button type="submit" wire:loading.attr="disabled"
                                         class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    {{ $is_edit ? 'Update' : 'Save' }}
+                                    <span wire:loading.remove wire:target="save">{{ $is_edit ? 'Update' : 'Save' }}</span>
+                                    <span wire:loading wire:target="save">{{ $is_edit ? 'Updating...' : 'Saving...' }}</span>
                                 </button>
 
                                 <button type="button" wire:click="clear" wire:loading.attr="disabled"
                                         class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                    Reset
+                                    <span wire:loading.remove wire:target="clear">Reset</span>
+                                    <span wire:loading wire:target="clear">Resetting...</span>
                                 </button>
                             @endif
                             <a href="{{url('/accounts/admin-expenses/list')}}"

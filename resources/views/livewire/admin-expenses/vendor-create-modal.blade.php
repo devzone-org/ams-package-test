@@ -6,7 +6,8 @@
                 <div class="modal-content">
                     <div class="modal-header py-2">
                         <h5 class="modal-title" id="vendorCreateLabel">New Vendor</h5>
-                        <button type="button" class="close" wire:click.prevent="closeVendorCreate" aria-label="Close">
+                        <button type="button" class="close" wire:click.prevent="closeVendorCreate"
+                                onclick="$('#CreateVendor').modal('hide')" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -17,7 +18,7 @@
                             <input type="text" wire:model.lazy="new_vendor.business_name" autocomplete="off"
                                    class="form-control form-control-sm @error('new_vendor.business_name') is-invalid @enderror">
                             @error('new_vendor.business_name')
-                            <span class="invalid-feedback d-block">{{ $message }}</span>
+                            <span class="invalid-feedback d-block">{!! $message !!}</span>
                             @enderror
                         </div>
                         <div class="form-group mb-2">
@@ -25,7 +26,7 @@
                             <input type="text" wire:model.lazy="new_vendor.business_address" autocomplete="off"
                                    class="form-control form-control-sm @error('new_vendor.business_address') is-invalid @enderror">
                             @error('new_vendor.business_address')
-                            <span class="invalid-feedback d-block">{{ $message }}</span>
+                            <span class="invalid-feedback d-block">{!! $message !!}</span>
                             @enderror
                         </div>
                         <div class="form-row">
@@ -35,7 +36,7 @@
                                     <input type="text" wire:model.lazy="new_vendor.contact_no" autocomplete="off"
                                            class="form-control form-control-sm @error('new_vendor.contact_no') is-invalid @enderror">
                                     @error('new_vendor.contact_no')
-                                    <span class="invalid-feedback d-block">{{ $message }}</span>
+                                    <span class="invalid-feedback d-block">{!! $message !!}</span>
                                     @enderror
                                 </div>
                             </div>
@@ -45,14 +46,15 @@
                                     <input type="text" wire:model.lazy="new_vendor.owner_name" autocomplete="off"
                                            class="form-control form-control-sm @error('new_vendor.owner_name') is-invalid @enderror">
                                     @error('new_vendor.owner_name')
-                                    <span class="invalid-feedback d-block">{{ $message }}</span>
+                                    <span class="invalid-feedback d-block">{!! $message !!}</span>
                                     @enderror
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer py-2">
-                        <button type="button" wire:click.prevent="closeVendorCreate" class="btn btn-sm btn-light">
+                        <button type="button" wire:click.prevent="closeVendorCreate"
+                                onclick="$('#CreateVendor').modal('hide')" class="btn btn-sm btn-light">
                             Cancel
                         </button>
                         <button type="button" wire:click="saveVendor" wire:loading.attr="disabled"
@@ -100,7 +102,7 @@
                     <h3 class="flex-1 text-base font-medium text-gray-900" id="vendor-create-headline">
                         New Vendor
                     </h3>
-                    <button type="button" wire:click="closeVendorCreate"
+                    <button type="button" wire:click="closeVendorCreate" @click="open = false"
                             class="-mr-1 p-1 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                         <span class="sr-only">Close</span>
                         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -121,7 +123,7 @@
                                autocomplete="off"
                                class="shadow-sm mt-1 block w-full sm:text-sm rounded-md @error('new_vendor.business_name') border-red-300 focus:ring-red-500 focus:border-red-500 @else border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 @enderror">
                         @error('new_vendor.business_name')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-xs text-red-600">{!! $message !!}</p>
                         @enderror
                     </div>
 
@@ -133,7 +135,7 @@
                                autocomplete="off"
                                class="shadow-sm mt-1 block w-full sm:text-sm rounded-md @error('new_vendor.business_address') border-red-300 focus:ring-red-500 focus:border-red-500 @else border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 @enderror">
                         @error('new_vendor.business_address')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-xs text-red-600">{!! $message !!}</p>
                         @enderror
                     </div>
 
@@ -146,7 +148,7 @@
                                    autocomplete="off"
                                    class="shadow-sm mt-1 block w-full sm:text-sm rounded-md @error('new_vendor.contact_no') border-red-300 focus:ring-red-500 focus:border-red-500 @else border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 @enderror">
                             @error('new_vendor.contact_no')
-                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                            <p class="mt-1 text-xs text-red-600">{!! $message !!}</p>
                             @enderror
                         </div>
                         <div>
@@ -157,14 +159,14 @@
                                    autocomplete="off"
                                    class="shadow-sm mt-1 block w-full sm:text-sm rounded-md @error('new_vendor.owner_name') border-red-300 focus:ring-red-500 focus:border-red-500 @else border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 @enderror">
                             @error('new_vendor.owner_name')
-                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                            <p class="mt-1 text-xs text-red-600">{!! $message !!}</p>
                             @enderror
                         </div>
                     </div>
                 </div>
 
                 <div class="px-4 py-3 bg-gray-50 border-t border-gray-200 flex justify-end">
-                    <button type="button" wire:click="closeVendorCreate"
+                    <button type="button" wire:click="closeVendorCreate" @click="open = false"
                             class="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Cancel
                     </button>

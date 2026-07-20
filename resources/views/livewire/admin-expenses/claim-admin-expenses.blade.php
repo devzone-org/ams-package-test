@@ -7,7 +7,7 @@
                         <div class="alert alert-success">{{ $success }}</div>
                     @endif
                     @error('error')
-                    <div class="alert alert-danger">{{ $message }}</div>
+                    <div class="alert alert-danger">{!! $message !!}</div>
                     @enderror
 
                     <div class="card card-primary card-outline">
@@ -212,7 +212,7 @@
                                     There was an error with your submission.
                                 </h3>
                                 <div class="mt-2 text-sm text-red-700">
-                                    <p>{{ $message }}</p>
+                                    <p>{!! $message !!}</p>
                                 </div>
                             </div>
                         </div>
