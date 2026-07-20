@@ -12,20 +12,7 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header">
-                            <div class="d-flex justify-content-between">
-                                <p class="card-title pt-1"><b>Unclaimed Admin Expenses</b></p>
-                                <div>
-                                    @if(count(array_filter($checked_admin_expenses)) > 0)
-                                        <button type="button" class="btn btn-outline-primary btn-sm"
-                                                onclick="$('#SelectedExpenses').modal('show')">
-                                            View Selected ({{ count(array_filter($checked_admin_expenses)) }})
-                                        </button>
-                                    @endif
-                                    <a href="{{ url('accounts/admin-expenses/list') }}" class="btn btn-secondary btn-sm">
-                                        Go Back
-                                    </a>
-                                </div>
-                            </div>
+                            <p class="card-title pt-1"><b>Unclaimed Admin Expenses</b></p>
                         </div>
                         <div class="card-body">
                             <form wire:submit.prevent="claim">
@@ -107,14 +94,21 @@
                                 </tbody>
                             </table>
 
-                            @if(count(array_filter($checked_admin_expenses)) > 0)
-                                <div class="d-flex justify-content-end">
-                                    <button type="submit" wire:loading.attr="disabled" class="btn btn-primary">
+                            <div class="d-flex justify-content-end align-items-center pt-2">
+                                @if(count(array_filter($checked_admin_expenses)) > 0)
+                                    <button type="submit" wire:loading.attr="disabled" class="btn btn-primary mx-1">
                                         <span wire:loading.remove wire:target="claim">Claim</span>
                                         <span wire:loading wire:target="claim">Claiming...</span>
                                     </button>
-                                </div>
-                            @endif
+                                    <button type="button" class="btn btn-outline-primary mx-1"
+                                            onclick="$('#SelectedExpenses').modal('show')">
+                                        View Selected ({{ count(array_filter($checked_admin_expenses)) }})
+                                    </button>
+                                @endif
+                                <a href="{{ url('accounts/admin-expenses/list') }}" class="btn btn-secondary mx-1">
+                                    Go Back
+                                </a>
+                            </div>
                             </form>
                         </div>
                     </div>
@@ -175,18 +169,6 @@
                 <div class="py-6 px-4 sm:p-6 flex justify-between">
                     <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">Unclaimed Admin
                         Expenses</h3>
-                    <div>
-                        @if(count(array_filter($checked_admin_expenses)) > 0)
-                            <button type="button" x-data="{}" @click="$dispatch('open-selected-modal')"
-                                    class="inline-flex justify-center px-4 py-2 text-sm font-medium text-indigo-600 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                View Selected ({{ count(array_filter($checked_admin_expenses)) }})
-                            </button>
-                        @endif
-                        <a href="{{ url('accounts/admin-expenses/list') }}"
-                           class="ml-1 inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            Go Back
-                        </a>
-                    </div>
                 </div>
                 <form wire:submit.prevent="claim">
                 <table class="min-w-full table-fixed  ">
@@ -301,15 +283,23 @@
                     </tbody>
                 </table>
 
-                @if(count(array_filter($checked_admin_expenses)) > 0)
-                    <div class="w-full flex justify-end py-6 px-4 sm:p-6">
+                <div class="w-full flex justify-end items-center py-6 px-4 sm:p-6">
+                    @if(count(array_filter($checked_admin_expenses)) > 0)
                         <button type="submit" wire:loading.attr="disabled"
                                 class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             <span wire:loading.remove wire:target="claim">Claim</span>
                             <span wire:loading wire:target="claim">Claiming...</span>
                         </button>
-                    </div>
-                @endif
+                        <button type="button" x-data="{}" @click="$dispatch('open-selected-modal')"
+                                class="ml-2 inline-flex justify-center px-4 py-2 text-sm font-medium text-indigo-600 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            View Selected ({{ count(array_filter($checked_admin_expenses)) }})
+                        </button>
+                    @endif
+                    <a href="{{ url('accounts/admin-expenses/list') }}"
+                       class="ml-1 inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Go Back
+                    </a>
+                </div>
                 </form>
             </div>
         </div>
