@@ -41,26 +41,20 @@ class ClaimAdminExpenses extends Component
 
             DB::beginTransaction();
 
-            $ids = array_filter($this->selected_expenses);
+            $ids = array_unique(array_filter($this->selected_expenses));
             if (empty($ids)) {
                 throw new \Exception('Please select any record to proceed.');
             }
 
-            foreach ($ids as $id) {
-                $found = AdminExpense::find($id);
-                if (empty($found)) {
-                    throw new \Exception('Admin expense not found. Please select again.');
-                }
-                if ($found->status != 'unclaimed') {
-                    $this->search();
-                    throw new \Exception('Admin expense has already been claimed. Please select again.');
-                }
+            // conditional update so two concurrent claimers can't both flip the same row
+            $claimed = AdminExpense::whereIn('id', $ids)->where('status', 'unclaimed')->update([
+                'status' => 'claimed',
+                'status_changed_by' => auth()->id(),
+                'status_changed_at' => Carbon::now()->toDateTimeString(),
+            ]);
 
-                $found->update([
-                    'status' => 'claimed',
-                    'status_changed_by' => auth()->id(),
-                    'status_changed_at' => Carbon::now()->toDateTimeString(),
-                ]);
+            if ($claimed != count($ids)) {
+                throw new \Exception('One or more admin expenses were removed or already claimed. Please select again.');
             }
 
             $this->success = 'Admin Expenses Claimed Successfully.';
@@ -71,6 +65,7 @@ class ClaimAdminExpenses extends Component
             DB::commit();
         } catch (\Exception $ex) {
             DB::rollBack();
+            $this->search();
             $this->addError('error', $ex->getMessage());
         }
     }

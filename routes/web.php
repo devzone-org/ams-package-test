@@ -158,19 +158,22 @@ Route::group(['middleware' => ['permission:3.view.petty-expenses']], function ()
     });
 });
 
-Route::group(['middleware' => ['permission:3.view.admin-expenses']], function () {
-    Route::get('admin-expenses/list', function () {
-        return view('ams::admin-expenses.admin-expenses-list');
-    });
-    Route::get('admin-expenses/add/{id?}', function () {
+Route::group(['prefix' => 'admin-expenses', 'as' => 'admin-expenses.'], function () {
+    Route::get('add', function () {
         return view('ams::admin-expenses.add-admin-expenses');
-    });
-});
+    })->name('add')->middleware("permission:3.add.admin-expenses");
 
-Route::group(['middleware' => ['permission:3.claim.admin-expenses']], function () {
-    Route::get('admin-expenses/claim', function () {
+    Route::get('update/unclaimed/{id}', function () {
+        return view('ams::admin-expenses.add-admin-expenses');
+    })->name('update.unclaimed')->middleware("permission:3.update.admin-expenses.unclaimed");
+
+    Route::get('list', function () {
+        return view('ams::admin-expenses.admin-expenses-list');
+    })->name('list')->middleware("permission:3.view.admin-expenses");
+
+    Route::get('claim', function () {
         return view('ams::admin-expenses.claim-admin-expenses');
-    });
+    })->name('claim')->middleware('permission:3.claim.admin-expenses');
 });
 
 if(env('AMS_CUSTOMER', false) === true) {

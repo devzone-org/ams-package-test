@@ -14,20 +14,6 @@
                         <div class="card-header">
                             <div class="d-flex justify-content-between">
                                 <p class="card-title pt-1"><b>Search Filters</b></p>
-                                <div>
-                                    @can('3.claim.admin-expenses')
-                                        <a href="{{ url('accounts/admin-expenses/claim') }}"
-                                           class="btn btn-outline-primary btn-sm">
-                                            Claim Reimbursement
-                                        </a>
-                                    @endcan
-                                    @can('3.add.admin-expenses')
-                                        <a href="{{ url('accounts/admin-expenses/add') }}"
-                                           class="btn btn-primary btn-sm">
-                                            Add Expense
-                                        </a>
-                                    @endcan
-                                </div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -113,6 +99,21 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header">
                             <p class="card-title"><b>Admin Expenses</b></p>
+
+                            <div>
+                                @can('3.claim.admin-expenses')
+                                    <a href="{{ url('accounts/admin-expenses/claim') }}"
+                                       class="btn btn-outline-primary btn-sm">
+                                        Claim Reimbursement
+                                    </a>
+                                @endcan
+                                @can('3.add.admin-expenses')
+                                    <a href="{{ url('accounts/admin-expenses/add') }}"
+                                       class="btn btn-primary btn-sm">
+                                        Add Expense
+                                    </a>
+                                @endcan
+                            </div>
                         </div>
                         <div class="card-body">
                             <table class="table table-bordered border-0">
@@ -167,7 +168,7 @@
                                         </td>
                                         <td>
                                             @if($ae['status'] == 'unclaimed')
-                                                <a href="/accounts/admin-expenses/add/{{$ae['id']}}" class="">
+                                                <a href="/accounts/admin-expenses/update/unclaimed/{{$ae['id']}}" class="">
                                                     Edit
                                                 </a>
                                                 @can('3.delete.admin-expenses.unclaimed')
@@ -229,7 +230,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p class="mb-0">Are you sure you want to {!! $delete_modal_msg !!}? This can't be undone.</p>
+                        <p class="mb-0">Are you sure you want to {{ $delete_modal_msg }}? This can't be undone.</p>
                     </div>
                     <div class="modal-footer py-2">
                         <button type="button" wire:click.prevent="closeDeleteModal()" class="btn btn-sm btn-light">
@@ -320,20 +321,6 @@
 
             <div class="p-4 px-6 flex justify-between border-b">
                 <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">Search Filters</h3>
-                <div class="flex">
-                    @can('3.claim.admin-expenses')
-                        <a href="{{ url('accounts/admin-expenses/claim') }}"
-                           class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
-                            Claim Reimbursement
-                        </a>
-                    @endcan
-                    @can('3.add.admin-expenses')
-                        <a href="{{ url('accounts/admin-expenses/add') }}"
-                           class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
-                            Add Expense
-                        </a>
-                    @endcan
-                </div>
             </div>
             <form wire:submit.prevent="search">
                 <div class="py-6 px-4 space-y-6 sm:p-6">
@@ -418,6 +405,21 @@
             <div class="bg-white  mb-5 rounded-md overflow-hidden">
                 <div class="py-6 px-4 sm:p-6 flex justify-between">
                     <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">Admin Expenses</h3>
+
+                    <div class="flex">
+                        @can('3.claim.admin-expenses')
+                            <a href="{{ url('accounts/admin-expenses/claim') }}"
+                               class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                Claim Reimbursement
+                            </a>
+                        @endcan
+                        @can('3.add.admin-expenses')
+                            <a href="{{ url('accounts/admin-expenses/add') }}"
+                               class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                Add Expense
+                            </a>
+                        @endcan
+                    </div>
                 </div>
                 <table class="min-w-full table-fixed  ">
                     <thead class="">
@@ -515,7 +517,6 @@
                                     @can('3.delete.admin-expenses.unclaimed')
                                         |
                                         <button type="button" class="text-red-500 font-medium"
-                                                @click="$dispatch('open-delete-modal')"
                                                 wire:click.prevent="openDeleteModal({{$ae['id']}})">
                                             Delete
                                         </button>
@@ -557,6 +558,6 @@
                 </table>
             </div>
         </div>
-        @include("ams::include.new-delete-modal")
+        @include("ams::include.delete-modal")
     </div>
 @endif

@@ -38,7 +38,7 @@ class AddAdminExpenses extends Component
         'admin_expenses.expense_account_id' => 'required|integer',
         'admin_expenses.description' => 'nullable',
         'admin_expenses.requisite_by' => 'nullable|integer',
-        'attachment' => 'nullable',
+        'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
     ];
 
     protected $validationAttributes = [
@@ -174,6 +174,12 @@ class AddAdminExpenses extends Component
 
         $this->validate();
         try {
+            // authorise before touching S3, otherwise a rejected save still uploads
+            $permission = $this->is_edit ? '3.update.admin-expenses.unclaimed' : '3.add.admin-expenses';
+            if (!Auth::user()->can($permission)) {
+                throw new \Exception(env('PERMISSION_ERROR'));
+            }
+
             $data = $this->admin_expenses;
             unset($data['expense_account_name'], $data['vendor_name']);
 
@@ -187,10 +193,6 @@ class AddAdminExpenses extends Component
             }
 
             if (!$this->is_edit) {
-                if (!Auth::user()->can('3.add.admin-expenses')) {
-                    throw new \Exception(env('PERMISSION_ERROR'));
-                }
-
                 $data['added_by'] = Auth::id();
                 $data['status'] = 'unclaimed';
 
@@ -198,10 +200,6 @@ class AddAdminExpenses extends Component
                 $this->success = 'Admin Expense Added Successfully';
                 $this->clear();
             } else {
-                if (!Auth::user()->can('3.update.admin-expenses.unclaimed')) {
-                    throw new \Exception(env('PERMISSION_ERROR'));
-                }
-
                 $found = AdminExpense::find($this->admin_expenses['id']);
                 if (empty($found)) {
                     throw new \Exception('No Record Found.');
