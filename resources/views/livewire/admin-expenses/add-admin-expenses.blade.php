@@ -23,8 +23,10 @@
                                     <div class="row">
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
-                                                <label class="font-weight-normal">Expense On Date<span
-                                                            class="text-danger">*</span> </label>
+                                                <label class="font-weight-normal">
+                                                    Expense Date
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <input type="date" wire:model.defer="admin_expenses.expense_date" @if($is_view) disabled @endif
                                                        autocomplete="off"
                                                        class="form-control @error('admin_expenses.expense_date')  is-invalid @enderror">
@@ -33,8 +35,10 @@
 
                                         <div class="col-xs-6 col-sm-4" wire:key="vendor-name">
                                             <div class="form-group">
-                                                <label class="font-weight-normal">Vendor <span
-                                                            class="text-danger">*</span></label>
+                                                <label class="font-weight-normal">
+                                                    Vendor
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <input type="text" readonly autocomplete="off"
                                                        @if(!$is_view) onclick="window.dispatchEvent(new CustomEvent('open-vendor-modal'))"
                                                        wire:click="vendorOpenModal('admin_expenses.vendor_id','admin_expenses.vendor_name')" @endif
@@ -54,8 +58,10 @@
 
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
-                                                <label class="font-weight-normal">Amount <span
-                                                            class="text-danger">*</span></label>
+                                                <label class="font-weight-normal">
+                                                    Amount
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <input type="number" step="0.1"
                                                        wire:model.defer="admin_expenses.amount" @if($is_view) disabled @endif autocomplete="off"
                                                        class="form-control @error('admin_expenses.amount')  is-invalid @enderror">
@@ -64,8 +70,10 @@
 
                                         <div class="col-xs-6 col-sm-4" wire:key="expense-account-name">
                                             <div class="form-group">
-                                                <label class="font-weight-normal">Expense on A/C Of <span
-                                                            class="text-danger">*</span></label>
+                                                <label class="font-weight-normal">
+                                                    Expense on A/C Of
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <input type="text" readonly autocomplete="off"
                                                        @if(!$is_view) onclick="$('#SelectAccount').modal('show')"
                                                        wire:click="searchableOpenModal('admin_expenses.expense_account_id','admin_expenses.expense_account_name','accounts')" @endif
@@ -217,22 +225,28 @@
             @endif
 
             <div class="py-6 px-4 sm:p-6 flex justify-between border-b">
-                <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">{{ $is_view ? 'View' : ($is_edit ? 'Update' : 'Add') }}
-                    Admin Expenses</h3>
+                <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">
+                    {{ $is_view ? 'View' : ($is_edit ? 'Update' : 'Add') }} Admin Expenses
+                </h3>
             </div>
+
             <form wire:submit.prevent="save">
                 <div class="py-6 px-4 space-y-6 sm:p-6">
                     <div class="grid grid-cols-4 gap-4">
                         <div class="col-span-6 sm:col-span-1">
-                            <label class="block text-sm font-medium text-gray-700">Expense On Date <span
-                                        class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Expense Date
+                                <span class="text-red-500">*</span>
+                            </label>
                             <input type="date" wire:model.defer="admin_expenses.expense_date" @if($is_view) disabled @endif autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
                         <div class="col-span-6 sm:col-span-1" wire:key="vendor-name" x-data="{}">
-                            <label class="block text-sm font-medium text-gray-700">Vendor <span
-                                        class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Vendor
+                                <span class="text-red-500">*</span>
+                            </label>
                             <input type="text" readonly autocomplete="off"
                                    @if(!$is_view) @click="$dispatch('open-vendor-modal')"
                                    wire:click="vendorOpenModal('admin_expenses.vendor_id','admin_expenses.vendor_name')" @endif

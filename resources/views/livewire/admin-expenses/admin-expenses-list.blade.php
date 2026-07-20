@@ -393,16 +393,16 @@
                             #
                         </th>
                         <th scope="col" style="width: 110px;"
-                            class="px-2 py-2   bg-gray-100 border-t border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Expense Date
+                            class="px-2 py-2 whitespace-nowrap   bg-gray-100 border-t border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
+                            Expense On<br> Dated
                         </th>
                         <th scope="col"
                             class="px-2 py-2  bg-gray-100  border-t border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Vendor / Invoice #
+                            Vendor
                         </th>
                         <th scope="col"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Expense Account
+                            Expense A/C
                         </th>
                         <th scope="col"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
@@ -414,7 +414,11 @@
                         </th>
                         <th scope="col" style="width: 150px;"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Added By / At
+                            Added By
+                        </th>
+                        <th scope="col" style="width: 150px;"
+                            class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
+                            Added At
                         </th>
                         <th scope="col" style="width: 120px;"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">

@@ -35,11 +35,11 @@ class AddAdminExpenses extends Component
         'admin_expenses.expense_account_id' => 'required|integer',
         'admin_expenses.description' => 'nullable',
         'admin_expenses.requisite_by' => 'nullable|integer',
-        'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
+        'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:200',
     ];
 
     protected $validationAttributes = [
-        'admin_expenses.expense_date' => 'Expense On Date',
+        'admin_expenses.expense_date' => 'Expense Date',
         'admin_expenses.vendor_id' => 'Vendor',
         'admin_expenses.invoice_no' => 'Invoice #',
         'admin_expenses.amount' => 'Amount',
@@ -138,7 +138,7 @@ class AddAdminExpenses extends Component
 
             $exists = ChartOfAccount::where('id', $data['expense_account_id'])->exists();
             if (!$exists) {
-                throw new \Exception('Expense account not found.');
+                throw new \Exception('Expense on A/C Of not found.');
             }
 
             if (!empty($this->attachment)) {
@@ -184,6 +184,7 @@ class AddAdminExpenses extends Component
         if (!empty($id)) {
             $this->admin_expenses['id'] = $id;
         }
+        $this->attachment = null;
     }
 
     public function render()
