@@ -4,22 +4,21 @@ namespace Devzone\Ams\Http\Livewire\AdminExpenses;
 
 use App\Models\User;
 use Devzone\Ams\Http\Traits\Searchable;
+use Devzone\Ams\Http\Traits\UserSearchable;
 use Devzone\Ams\Http\Traits\VendorSearchable;
 use Devzone\Ams\Models\AccVendor;
 use Devzone\Ams\Models\AdminExpense;
 use Devzone\Ams\Models\ChartOfAccount;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class AddAdminExpenses extends Component
 {
-    use Searchable, VendorSearchable, WithFileUploads;
+    use Searchable, VendorSearchable, UserSearchable, WithFileUploads;
 
     public $admin_expenses = [];
     public $attachment;
-    public $fetch_users = [];
     public $success;
 
     public $is_edit = false;
@@ -60,20 +59,11 @@ class AddAdminExpenses extends Component
             unset($this->admin_expenses['created_at'], $this->admin_expenses['updated_at'], $this->admin_expenses['deleted_at']);
             $this->admin_expenses['vendor_name'] = AccVendor::where('id', $found->vendor_id)->value('business_name');
             $this->admin_expenses['expense_account_name'] = ChartOfAccount::where('id', $found->expense_account_id)->value('name');
+            $this->admin_expenses['requisite_by_name'] = User::where('id', $found->requisite_by)->value('name');
             $this->is_edit = true;
             // once claimed the record is locked: open it read-only
             $this->is_view = $found->status != 'unclaimed';
         }
-
-        // users table differs per host app: only filter on columns that exist.
-        $this->fetch_users = User::select('id', 'name')
-            ->when(Schema::hasColumn('users', 'type'), function ($q) {
-                return $q->where('type', 'admin');
-            })
-            ->when(Schema::hasColumn('users', 'status'), function ($q) {
-                return $q->where('status', 't');
-            })
-            ->orderBy('name')->get()->toArray();
     }
 
     public function createVendor()
@@ -134,7 +124,7 @@ class AddAdminExpenses extends Component
             }
 
             $data = $this->admin_expenses;
-            unset($data['expense_account_name'], $data['vendor_name']);
+            unset($data['expense_account_name'], $data['vendor_name'], $data['requisite_by_name']);
 
             $exists = ChartOfAccount::where('id', $data['expense_account_id'])->exists();
             if (!$exists) {

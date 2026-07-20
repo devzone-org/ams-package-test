@@ -82,16 +82,14 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-xs-6 col-sm-4">
+                                        <div class="col-xs-6 col-sm-4" wire:key="requisite-by-name">
                                             <div class="form-group">
                                                 <label class="font-weight-normal">Requisite By </label>
-                                                <select wire:model.defer="admin_expenses.requisite_by" @if($is_view) disabled @endif
-                                                        class="form-control @error('admin_expenses.requisite_by')  is-invalid @enderror">
-                                                    <option value=""></option>
-                                                    @foreach($fetch_users as $u)
-                                                        <option value="{{ $u['id'] }}">{{ $u['name'] }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <input type="text" readonly autocomplete="off"
+                                                       @if(!$is_view) onclick="window.dispatchEvent(new CustomEvent('open-user-modal'))"
+                                                       wire:click="userOpenModal('admin_expenses.requisite_by','admin_expenses.requisite_by_name','Requisite By')" @endif
+                                                       wire:model="admin_expenses.requisite_by_name"
+                                                       class="form-control @error('admin_expenses.requisite_by')  is-invalid @enderror">
                                             </div>
                                         </div>
 
@@ -145,6 +143,7 @@
         </div>
         @include("ams::include.searchable")
         @include("ams::include.vendor-searchable")
+        @include("ams::include.user-searchable")
         @include("ams::livewire.admin-expenses.vendor-create-modal")
     </div>
 @else
@@ -277,15 +276,13 @@
                                    class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
-                        <div class="col-span-6 sm:col-span-1">
+                        <div class="col-span-6 sm:col-span-1" wire:key="requisite-by-name" x-data="{}">
                             <label class="block text-sm font-medium text-gray-700">Requisite By </label>
-                            <select wire:model.defer="admin_expenses.requisite_by" @if($is_view) disabled @endif
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option value=""></option>
-                                @foreach($fetch_users as $u)
-                                    <option value="{{ $u['id'] }}">{{ $u['name'] }}</option>
-                                @endforeach
-                            </select>
+                            <input type="text" readonly autocomplete="off"
+                                   @if(!$is_view) @click="$dispatch('open-user-modal')"
+                                   wire:click="userOpenModal('admin_expenses.requisite_by','admin_expenses.requisite_by_name','Requisite By')" @endif
+                                   wire:model="admin_expenses.requisite_by_name"
+                                   class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
                         <div class="col-span-6 sm:col-span-1">
@@ -327,6 +324,7 @@
         </div>
         @include("ams::include.searchable")
         @include("ams::include.vendor-searchable")
+        @include("ams::include.user-searchable")
         @include("ams::livewire.admin-expenses.vendor-create-modal")
         <script>
             document.addEventListener('livewire:load', () => {
