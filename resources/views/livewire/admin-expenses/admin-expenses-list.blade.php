@@ -21,59 +21,44 @@
                                 <div class="row">
                                     <div class="col-xs-6 col-sm-3">
                                         <div class="form-group">
-                                            <label class="font-weight-normal">Expense on Dated</label>
-                                            <input type="date" wire:model.lazy="filter.expense_date" autocomplete="off"
-                                                   class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6 col-sm-3">
-                                        <div class="form-group">
-                                            <label class="font-weight-normal">Vendor</label>
-                                            <input type="text" wire:model.lazy="filter.vendor" autocomplete="off"
-                                                   class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6 col-sm-3">
-                                        <div class="form-group">
-                                            <label class="font-weight-normal">A/c Head</label>
-                                            <select wire:model.defer="filter.expense_account_id" class="form-control">
-                                                <option value=""></option>
-                                                @foreach($fetch_account_heads as $a)
-                                                    <option value="{{ $a['id'] }}">{{ $a['name'] }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6 col-sm-3">
-                                        <div class="form-group">
-                                            <label class="font-weight-normal">Amount</label>
-                                            <input type="number" step="0.01" wire:model.lazy="filter.amount"
+                                            <label class="font-weight-normal">Expense Date From</label>
+                                            <input type="date" wire:model.defer="filter.expense_date_from"
                                                    autocomplete="off" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-xs-6 col-sm-3">
                                         <div class="form-group">
-                                            <label class="font-weight-normal">Added By</label>
-                                            <select wire:model.defer="filter.added_by" class="form-control">
-                                                <option value=""></option>
-                                                @foreach($fetch_added_by as $u)
-                                                    <option value="{{ $u['id'] }}">{{ $u['name'] }}</option>
-                                                @endforeach
-                                            </select>
+                                            <label class="font-weight-normal">Expense Date To</label>
+                                            <input type="date" wire:model.defer="filter.expense_date_to"
+                                                   autocomplete="off" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-xs-6 col-sm-3">
                                         <div class="form-group">
-                                            <label class="font-weight-normal">Added At</label>
-                                            <input type="date" wire:model.lazy="filter.added_at" autocomplete="off"
+                                            <label class="font-weight-normal">Vendor</label>
+                                            <input type="text" wire:model.defer="filter.vendor" autocomplete="off"
                                                    class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-3">
+                                        <div class="form-group">
+                                            <label class="font-weight-normal">Expense Account</label>
+                                            <input type="text" wire:model.defer="filter.expense_account"
+                                                   autocomplete="off" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-3">
+                                        <div class="form-group">
+                                            <label class="font-weight-normal">Amount</label>
+                                            <input type="number" step="0.01" wire:model.defer="filter.amount"
+                                                   autocomplete="off" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-xs-6 col-sm-3">
                                         <div class="form-group">
                                             <label class="font-weight-normal">Status</label>
                                             <select wire:model.defer="filter.status" class="form-control">
-                                                <option value=""></option>
+                                                <option value="">All</option>
                                                 <option value="unclaimed">Unclaimed</option>
                                                 <option value="claimed">Claimed</option>
                                             </select>
@@ -326,48 +311,32 @@
                 <div class="py-6 px-4 space-y-6 sm:p-6">
                     <div class="grid grid-cols-4 gap-4">
                         <div class="col-span-6 sm:col-span-1">
-                            <label class="block text-sm font-medium text-gray-700">Expense on Dated </label>
-                            <input type="date" wire:model.lazy="filter.expense_date" autocomplete="off"
+                            <label class="block text-sm font-medium text-gray-700">Expense Date From </label>
+                            <input type="date" wire:model.defer="filter.expense_date_from" autocomplete="off"
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-1">
+                            <label class="block text-sm font-medium text-gray-700">Expense Date To </label>
+                            <input type="date" wire:model.defer="filter.expense_date_to" autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
                         <div class="col-span-6 sm:col-span-1">
                             <label class="block text-sm font-medium text-gray-700">Vendor </label>
-                            <input type="text" wire:model.lazy="filter.vendor" autocomplete="off"
+                            <input type="text" wire:model.defer="filter.vendor" autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
                         <div class="col-span-6 sm:col-span-1">
-                            <label class="block text-sm font-medium text-gray-700">A/c Head </label>
-                            <select wire:model.defer="filter.expense_account_id"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option value=""></option>
-                                @foreach($fetch_account_heads as $a)
-                                    <option value="{{ $a['id'] }}">{{ $a['name'] }}</option>
-                                @endforeach
-                            </select>
+                            <label class="block text-sm font-medium text-gray-700">Expense Account </label>
+                            <input type="text" wire:model.defer="filter.expense_account" autocomplete="off"
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
                         <div class="col-span-6 sm:col-span-1">
                             <label class="block text-sm font-medium text-gray-700">Amount </label>
-                            <input type="number" step="0.01" wire:model.lazy="filter.amount" autocomplete="off"
-                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        </div>
-
-                        <div class="col-span-6 sm:col-span-1">
-                            <label class="block text-sm font-medium text-gray-700">Added By </label>
-                            <select wire:model.defer="filter.added_by"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option value=""></option>
-                                @foreach($fetch_added_by as $u)
-                                    <option value="{{ $u['id'] }}">{{ $u['name'] }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="col-span-6 sm:col-span-1">
-                            <label class="block text-sm font-medium text-gray-700">Added At </label>
-                            <input type="date" wire:model.lazy="filter.added_at" autocomplete="off"
+                            <input type="number" step="0.01" wire:model.defer="filter.amount" autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
@@ -375,7 +344,7 @@
                             <label class="block text-sm font-medium text-gray-700">Status </label>
                             <select wire:model.defer="filter.status"
                                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option value=""></option>
+                                <option value="">All</option>
                                 <option value="unclaimed">Unclaimed</option>
                                 <option value="claimed">Claimed</option>
                             </select>
