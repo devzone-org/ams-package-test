@@ -104,13 +104,12 @@
                             <table class="table table-bordered border-0">
                                 <thead class="">
                                 <th class="add-services-table text-muted">#</th>
-                                <th class="add-services-table text-muted">Expense on Dated</th>
-                                <th class="add-services-table text-left text-muted">Vendor</th>
-                                <th class="add-services-table text-left text-muted">A/c Head</th>
+                                <th class="add-services-table text-muted">Expense Date</th>
+                                <th class="add-services-table text-left text-muted">Vendor / Invoice #</th>
+                                <th class="add-services-table text-left text-muted">Expense Account</th>
                                 <th class="add-services-table text-left text-muted">Description</th>
                                 <th class="add-services-table text-right text-muted">Amount</th>
-                                <th class="add-services-table text-left text-muted">Added By</th>
-                                <th class="add-services-table text-left text-muted">Added At</th>
+                                <th class="add-services-table text-left text-muted">Added By / At</th>
                                 <th class="add-services-table text-left text-muted">Status</th>
                                 <th class="text-center add-services-table text-muted" style="width: 20px;"></th>
                                 </thead>
@@ -124,25 +123,19 @@
                                             {{ date('d M, Y',strtotime($ae['expense_date'])) }}
                                         </td>
                                         <td>
-                                            {{ ucwords($ae['vendor_name']) }}
-                                            @if(!empty($ae['invoice_no']))
-                                                <br>{{ $ae['invoice_no'] }}
-                                            @endif
+                                            {{ ucwords($ae['vendor_name'] ?? '') }}<br>{{ $ae['invoice_no'] }}
                                         </td>
                                         <td>
-                                            {{ ucwords($ae['account_head']) }}
+                                            {{ ucwords($ae['account_head'] ?? '') }}
                                         </td>
                                         <td>
-                                            {{ ucfirst($ae['description']) }}
+                                            {{ ucfirst($ae['description'] ?? '') }}
                                         </td>
                                         <td class="text-right">
                                             {{ number_format($ae['amount'],2) }}
                                         </td>
                                         <td>
-                                            {{ ucwords($ae['added_by_name']) }}
-                                        </td>
-                                        <td>
-                                            {{ date('d M, Y',strtotime($ae['created_at'])) }}
+                                            {{ ucwords($ae['added_by_name'] ?? '') }}<br>{{ date('d M, Y h:i A',strtotime($ae['created_at'])) }}
                                         </td>
                                         <td>
                                             @if($ae['status'] == 'claimed')
@@ -164,7 +157,7 @@
                                                     </button>
                                                 @endcan
                                             @else
-                                                <a href="/accounts/admin-expenses/add/{{$ae['id']}}" class="">
+                                                <a href="{{ url('accounts/admin-expenses/view/'.$ae['id']) }}" class="">
                                                     View
                                                 </a>
                                             @endif
@@ -185,12 +178,12 @@
                                             <td class="px-2 py-2 text-right">
                                                 <b>{{ number_format(collect($admin_expenses_list)->sum('amount'),2) }}</b>
                                             </td>
-                                            <td class="px-2 py-2" colspan="4"></td>
+                                            <td class="px-2 py-2" colspan="3"></td>
                                         </tr>
                                     @endif
                                 @empty
                                     <tr>
-                                        <td colspan="10" class="text-danger rounded-md overflow-hidden">
+                                        <td colspan="9" class="text-danger rounded-md overflow-hidden">
                                             No Record Found
                                         </td>
                                     </tr>
@@ -399,15 +392,15 @@
                         </th>
                         <th scope="col" style="width: 110px;"
                             class="px-2 py-2   bg-gray-100 border-t border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Expense on Dated
+                            Expense Date
                         </th>
                         <th scope="col"
                             class="px-2 py-2  bg-gray-100  border-t border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Vendor
+                            Vendor / Invoice #
                         </th>
                         <th scope="col"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            A/c Head
+                            Expense Account
                         </th>
                         <th scope="col"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
@@ -417,13 +410,9 @@
                             class="px-2 py-2   border-t bg-gray-100 border-r text-right  text-sm font-bold text-gray-500  tracking-wider">
                             Amount
                         </th>
-                        <th scope="col"
+                        <th scope="col" style="width: 150px;"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Added By
-                        </th>
-                        <th scope="col" style="width: 110px;"
-                            class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Added At
+                            Added By / At
                         </th>
                         <th scope="col" style="width: 120px;"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
@@ -445,26 +434,20 @@
                                 {{ date('d M, Y',strtotime($ae['expense_date'])) }}
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
-                                {{ ucwords($ae['vendor_name']) }}
-                                @if(!empty($ae['invoice_no']))
-                                    <br>{{ $ae['invoice_no'] }}
-                                @endif
+                                {{ ucwords($ae['vendor_name'] ?? '') }}<br>{{ $ae['invoice_no'] }}
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
-                                {{ ucwords($ae['account_head']) }}
+                                {{ ucwords($ae['account_head'] ?? '') }}
                             </td>
                             <td class=" px-2 py-2 border-r text-sm text-gray-500 whitespace-initial"
                                 style="width: 400px !important;">
-                                {{ ucfirst($ae['description']) }}
+                                {{ ucfirst($ae['description'] ?? '') }}
                             </td>
                             <td class="px-2 py-2 border-r text-right text-sm text-gray-500">
                                 {{ number_format($ae['amount'],2) }}
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
-                                {{ ucwords($ae['added_by_name']) }}
-                            </td>
-                            <td class="px-2 py-2 border-r text-sm text-gray-500">
-                                {{ date('d M, Y',strtotime($ae['created_at'])) }}
+                                {{ ucwords($ae['added_by_name'] ?? '') }}<br>{{ date('d M, Y h:i A',strtotime($ae['created_at'])) }}
                             </td>
                             <td class="px-2 py-2 border-r text-left text-sm text-gray-500">
                                 @if($ae['status'] == 'claimed')
@@ -479,7 +462,7 @@
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
                                 @if($ae['status'] == 'unclaimed')
-                                    <a href="/accounts/admin-expenses/add/{{$ae['id']}}"
+                                    <a href="{{ url('accounts/admin-expenses/update/unclaimed/'.$ae['id']) }}"
                                        class="text-indigo-500 font-medium">
                                         Edit
                                     </a>
@@ -491,7 +474,7 @@
                                         </button>
                                     @endcan
                                 @else
-                                    <a href="/accounts/admin-expenses/add/{{$ae['id']}}"
+                                    <a href="{{ url('accounts/admin-expenses/view/'.$ae['id']) }}"
                                        class="text-gray-500 font-medium">
                                         View
                                     </a>
@@ -513,12 +496,12 @@
                                 <td class="px-2 py-2 border-r text-right text-sm text-gray-500">
                                     <b>{{ number_format(collect($admin_expenses_list)->sum('amount'),2) }}</b>
                                 </td>
-                                <td class="px-2 py-2 border-r text-sm text-gray-500" colspan="4"></td>
+                                <td class="px-2 py-2 border-r text-sm text-gray-500" colspan="3"></td>
                             </tr>
                         @endif
                     @empty
                         <tr class="border-t border-b">
-                            <td colspan="10" class="text-sm text-red-500 rounded-md overflow-hidden">
+                            <td colspan="9" class="text-sm text-red-500 rounded-md overflow-hidden">
                                 No Record Found
                             </td>
                         </tr>

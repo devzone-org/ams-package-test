@@ -43,7 +43,7 @@ class AdminExpensesList extends Component
             ->when(!empty($this->filter['status']), function ($q) {
                 return $q->where('admin_expenses.status', $this->filter['status']);
             })
-            ->select('admin_expenses.*', 'v.business_name as vendor_name', 'v.contact_no as vendor_contact_no',
+            ->select('admin_expenses.*', 'v.business_name as vendor_name',
                 'coa.name as account_head', 'au.name as added_by_name')
             ->orderBy('admin_expenses.expense_date', 'desc')
             ->get()->toArray();

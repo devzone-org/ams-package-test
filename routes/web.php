@@ -171,6 +171,10 @@ Route::group(['prefix' => 'admin-expenses', 'as' => 'admin-expenses.'], function
         return view('ams::admin-expenses.admin-expenses-list');
     })->name('list')->middleware("permission:3.view.admin-expenses");
 
+    Route::get('view/{id}', function () {
+        return view('ams::admin-expenses.add-admin-expenses');
+    })->name('view')->middleware("permission:3.view.admin-expenses");
+
     Route::get('claim', function () {
         return view('ams::admin-expenses.claim-admin-expenses');
     })->name('claim')->middleware('permission:3.claim.admin-expenses');
