@@ -43,10 +43,9 @@ class ClaimAdminExpenses extends Component
 
     public function updatedCheckedAll($checked)
     {
+        $this->checked_admin_expenses = [];
         if ($checked) {
             $this->checked_admin_expenses = array_fill_keys(array_column($this->admin_expenses_list, 'id'), true);
-        } else {
-            $this->checked_admin_expenses = [];
         }
     }
 

@@ -5,7 +5,7 @@
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header py-2">
-                        <h5 class="modal-title" id="selectedExpensesLabel">Selected Bills</h5>
+                        <h5 class="modal-title" id="selectedExpensesLabel">Selected Expenses</h5>
                         <button type="button" class="close" onclick="$('#SelectedExpenses').modal('hide')"
                                 aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -15,9 +15,9 @@
                         <table class="table table-bordered border-0 mb-0">
                             <thead class="">
                             <th class="add-services-table text-muted">#</th>
-                            <th class="add-services-table text-muted">Expense Date</th>
-                            <th class="add-services-table text-left text-muted">Vendor / Invoice #</th>
-                            <th class="add-services-table text-left text-muted">Expense Account</th>
+                            <th class="add-services-table text-muted">Expense On Dated</th>
+                            <th class="add-services-table text-left text-muted">Vendor</th>
+                            <th class="add-services-table text-left text-muted">A/C Head</th>
                             <th class="add-services-table text-right text-muted">Amount</th>
                             <th class="add-services-table text-left text-muted" style="width: 20px;"></th>
                             </thead>
@@ -26,9 +26,7 @@
                                 <tr wire:key="selected-{{ $ae['id'] }}">
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ date('d M, Y',strtotime($ae['expense_date'])) }}</td>
-                                    <td>
-                                        {{ ucwords($ae['vendor_name'] ?? '') }}<br>{{ $ae['invoice_no'] }}
-                                    </td>
+                                    <td>{{ ucwords($ae['vendor_name'] ?? '') }}</td>
                                     <td>{{ ucwords($ae['account_head'] ?? '') }}</td>
                                     <td class="text-right">{{ number_format($ae['amount'],2) }}</td>
                                     <td>
@@ -101,7 +99,7 @@
 
                 <div class="flex items-center px-4 py-3 border-b border-gray-200">
                     <h3 class="flex-1 text-base font-medium text-gray-900" id="selected-expenses-headline">
-                        Selected Bills
+                        Selected Expenses
                     </h3>
                     <button type="button" @click="open = false"
                             class="-mr-1 p-1 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -125,15 +123,15 @@
                             </th>
                             <th scope="col" style="width: 110px;"
                                 class="px-2 py-2 bg-gray-100 border-t border-r text-left text-sm font-bold text-gray-500  tracking-wider">
-                                Expense Date
+                                Expense On Dated
                             </th>
                             <th scope="col"
                                 class="px-2 py-2 bg-gray-100 border-t border-r text-left text-sm font-bold text-gray-500  tracking-wider">
-                                Vendor / Invoice #
+                                Vendor
                             </th>
                             <th scope="col"
                                 class="px-2 py-2 border-t bg-gray-100 border-r text-left text-sm font-bold text-gray-500  tracking-wider">
-                                Expense Account
+                                A/C Head
                             </th>
                             <th scope="col" style="width: 110px;"
                                 class="px-2 py-2 border-t bg-gray-100 border-r text-right text-sm font-bold text-gray-500  tracking-wider">
@@ -155,7 +153,7 @@
                                     {{ date('d M, Y',strtotime($ae['expense_date'])) }}
                                 </td>
                                 <td class="px-2 py-2 border-r text-sm text-gray-500">
-                                    {{ ucwords($ae['vendor_name'] ?? '') }}<br>{{ $ae['invoice_no'] }}
+                                    {{ ucwords($ae['vendor_name'] ?? '') }}
                                 </td>
                                 <td class="px-2 py-2 border-r text-sm text-gray-500">
                                     {{ ucwords($ae['account_head'] ?? '') }}

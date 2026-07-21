@@ -1,5 +1,4 @@
 @extends('ams::layouts.master')
-
 @section('title')
     Claim Reimbursement
 @endsection
@@ -12,5 +11,4 @@
             @livewire('admin-expenses.claim-admin-expenses')
         </div>
     @endif
-
 @endsection
