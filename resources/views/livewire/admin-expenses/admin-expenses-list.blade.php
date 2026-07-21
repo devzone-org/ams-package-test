@@ -201,8 +201,10 @@
             </div>
         </div>
 
-        <div class="modal fade" id="DeleteConfirm" wire:ignore.self="" tabindex="-1" role="dialog"
-             aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div x-data="{ open: @entangle('delete_modal') }"
+             class="modal" id="DeleteConfirm" tabindex="-1" role="dialog"
+             aria-labelledby="deleteModalLabel"
+             :style="open ? 'display:block; background: rgba(0,0,0,.5);' : 'display:none;'">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header py-2">
@@ -222,23 +224,17 @@
                         <button type="button" wire:click="deleteRecord" wire:loading.attr="disabled"
                                 class="btn btn-sm btn-danger">
                             <span wire:loading.remove wire:target="deleteRecord">Delete</span>
-                            <span wire:loading wire:target="deleteRecord">Deleting...</span>
+                            <span wire:loading wire:target="deleteRecord">
+                                <span class="spinner-border spinner-border-sm" role="status"
+                                      aria-hidden="true"></span>
+                                Deleting...
+                            </span>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @push('js')
-        <script>
-            document.addEventListener('open-delete-modal', function () {
-                $('#DeleteConfirm').modal('show');
-            })
-            document.addEventListener('close-delete-modal', function () {
-                $('#DeleteConfirm').modal('hide');
-            })
-        </script>
-    @endpush
 @else
     <div>
         <div class="mb-5 shadow sm:rounded-md sm:overflow-hidden bg-white">
@@ -472,7 +468,8 @@
                                     </a>
                                     @can('3.delete.admin-expenses.unclaimed')
                                         |
-                                        <button type="button" class="text-red-500 font-medium"
+                                        <button type="button" class="text-red-500 font-medium" style="outline: none !important;"
+                                                @click="$dispatch('open-delete-modal')"
                                                 wire:click.prevent="openDeleteModal({{$ae['id']}})">
                                             Delete
                                         </button>
@@ -514,9 +511,12 @@
                     @endforelse
                     </tbody>
                 </table>
-                <div class="bg-white p-3 border-t rounded-b-md  ">
-                    {{ $admin_expenses_list->links() }}
-                </div>
+
+                @if($admin_expenses_list->isNotEmpty() && $admin_expenses_list->lastPage() > 1)
+                    <div class="bg-white p-3 border-t rounded-b-md  ">
+                        {{ $admin_expenses_list->links() }}
+                    </div>
+                @endif
             </div>
         </div>
         @include("ams::include.delete-modal")

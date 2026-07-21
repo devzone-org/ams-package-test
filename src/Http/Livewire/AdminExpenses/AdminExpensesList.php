@@ -54,10 +54,6 @@ class AdminExpensesList extends Component
             $this->delete_modal = true;
             $this->delete_id = $id;
             $this->delete_modal_msg = 'delete this admin expense';
-
-            if (env('AMS_BOOTSTRAP') == 'true') {
-                $this->dispatchBrowserEvent('open-delete-modal');
-            }
         } catch (\Exception $ex) {
             $this->addError('error', $ex->getMessage());
         }
@@ -68,9 +64,7 @@ class AdminExpensesList extends Component
         $this->resetErrorBag();
         $this->reset('success', 'delete_modal', 'delete_id', 'delete_modal_msg');
 
-        if (env('AMS_BOOTSTRAP') == 'true') {
-            $this->dispatchBrowserEvent('close-delete-modal');
-        }
+        $this->dispatchBrowserEvent('close-delete-modal');
     }
 
     public function deleteRecord()
@@ -93,9 +87,7 @@ class AdminExpensesList extends Component
             $this->success = 'Admin expense deleted successfully.';
             $this->reset('delete_modal', 'delete_id', 'delete_modal_msg');
 
-            if (env('AMS_BOOTSTRAP') == 'true') {
-                $this->dispatchBrowserEvent('close-delete-modal');
-            }
+            $this->dispatchBrowserEvent('close-delete-modal');
 
             $this->search();
         } catch (\Exception $ex) {
