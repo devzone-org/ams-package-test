@@ -4,11 +4,14 @@ namespace Devzone\Ams\Http\Livewire\AdminExpenses;
 
 use Devzone\Ams\Models\AdminExpense;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class AdminExpensesList extends Component
 {
+    use WithPagination;
+
     public $filter = [];
-    public $admin_expenses_list = [];
+
     public $success;
     public $delete_modal = false;
     public $delete_id;
@@ -21,32 +24,7 @@ class AdminExpensesList extends Component
 
     public function search()
     {
-        // admin_expenses is not aliased: the SoftDeletes scope qualifies admin_expenses.deleted_at
-        $this->admin_expenses_list = AdminExpense::leftJoin('acc_vendors as v', 'v.id', '=', 'admin_expenses.acc_vendor_id')
-            ->leftJoin('chart_of_accounts as coa', 'coa.id', '=', 'admin_expenses.expense_account_id')
-            ->leftJoin('users as au', 'au.id', '=', 'admin_expenses.added_by')
-            ->when(!empty($this->filter['expense_date_from']), function ($q) {
-                return $q->whereDate('admin_expenses.expense_date', '>=', $this->filter['expense_date_from']);
-            })
-            ->when(!empty($this->filter['expense_date_to']), function ($q) {
-                return $q->whereDate('admin_expenses.expense_date', '<=', $this->filter['expense_date_to']);
-            })
-            ->when(!empty($this->filter['vendor']), function ($q) {
-                return $q->where('v.business_name', 'LIKE', '%' . $this->filter['vendor'] . '%');
-            })
-            ->when(!empty($this->filter['expense_account']), function ($q) {
-                return $q->where('coa.name', 'LIKE', '%' . $this->filter['expense_account'] . '%');
-            })
-            ->when(!empty($this->filter['amount']), function ($q) {
-                return $q->where('admin_expenses.amount', $this->filter['amount']);
-            })
-            ->when(!empty($this->filter['status']), function ($q) {
-                return $q->where('admin_expenses.status', $this->filter['status']);
-            })
-            ->select('admin_expenses.*', 'v.business_name as vendor_name',
-                'coa.name as account_head', 'au.name as added_by_name')
-            ->orderBy('admin_expenses.expense_date', 'desc')
-            ->get()->toArray();
+//        Don't remove me
     }
 
     public function clear()
@@ -127,6 +105,33 @@ class AdminExpensesList extends Component
 
     public function render()
     {
-        return view('ams::livewire.admin-expenses.admin-expenses-list');
+        // admin_expenses is not aliased: the SoftDeletes scope qualifies admin_expenses.deleted_at
+        $admin_expenses_list = AdminExpense::leftJoin('acc_vendors as v', 'v.id', '=', 'admin_expenses.acc_vendor_id')
+            ->leftJoin('chart_of_accounts as coa', 'coa.id', '=', 'admin_expenses.expense_account_id')
+            ->leftJoin('users as au', 'au.id', '=', 'admin_expenses.added_by')
+            ->when(!empty($this->filter['expense_date_from']), function ($q) {
+                return $q->whereDate('admin_expenses.expense_date', '>=', $this->filter['expense_date_from']);
+            })
+            ->when(!empty($this->filter['expense_date_to']), function ($q) {
+                return $q->whereDate('admin_expenses.expense_date', '<=', $this->filter['expense_date_to']);
+            })
+            ->when(!empty($this->filter['vendor']), function ($q) {
+                return $q->where('v.business_name', 'LIKE', '%' . $this->filter['vendor'] . '%');
+            })
+            ->when(!empty($this->filter['expense_account']), function ($q) {
+                return $q->where('coa.name', 'LIKE', '%' . $this->filter['expense_account'] . '%');
+            })
+            ->when(!empty($this->filter['amount']), function ($q) {
+                return $q->where('admin_expenses.amount', $this->filter['amount']);
+            })
+            ->when(!empty($this->filter['status']), function ($q) {
+                return $q->where('admin_expenses.status', $this->filter['status']);
+            })
+            ->select('admin_expenses.*', 'v.business_name as vendor_name',
+                'coa.name as account_head', 'au.name as added_by_name')
+            ->orderBy('admin_expenses.expense_date', 'desc')
+            ->paginate(50);
+
+        return view('ams::livewire.admin-expenses.admin-expenses-list', ['admin_expenses_list' => $admin_expenses_list]);
     }
 }

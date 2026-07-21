@@ -29,5 +29,4 @@
             @livewire('admin-expenses.admin-expenses-list')
         </div>
     @endif
-
 @endsection

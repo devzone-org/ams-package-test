@@ -42,7 +42,7 @@
                                     </div>
                                     <div class="col-xs-6 col-sm-3">
                                         <div class="form-group">
-                                            <label class="font-weight-normal">Expense Account</label>
+                                            <label class="font-weight-normal">A/C Head</label>
                                             <input type="text" wire:model.defer="filter.expense_account"
                                                    autocomplete="off" class="form-control">
                                         </div>
@@ -83,7 +83,7 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header">
-                            <p class="card-title"><b>Admin Expenses</b></p>
+                            <p class="card-title"><b>Admin Expenses List</b></p>
 
                             <div>
                                 @can('3.claim.admin-expenses')
@@ -104,14 +104,14 @@
                             <table class="table table-bordered border-0">
                                 <thead class="">
                                 <th class="add-services-table text-muted">#</th>
-                                <th class="add-services-table text-muted">Expense Date</th>
-                                <th class="add-services-table text-left text-muted">Vendor / Invoice #</th>
-                                <th class="add-services-table text-left text-muted">Expense Account</th>
-                                <th class="add-services-table text-left text-muted">Description</th>
+                                <th class="add-services-table text-muted">Expense On Dated</th>
+                                <th class="add-services-table text-left text-muted">Vendor</th>
+                                <th class="add-services-table text-left text-muted">A/C Head</th>
                                 <th class="add-services-table text-right text-muted">Amount</th>
-                                <th class="add-services-table text-left text-muted">Added By / At</th>
+                                <th class="add-services-table text-left text-muted">Added By</th>
+                                <th class="add-services-table text-left text-muted">Added At</th>
                                 <th class="add-services-table text-left text-muted">Status</th>
-                                <th class="text-center add-services-table text-muted" style="width: 20px;"></th>
+                                <th class="text-center add-services-table text-muted"></th>
                                 </thead>
                                 <tbody>
                                 @forelse($admin_expenses_list as $ae)
@@ -123,19 +123,19 @@
                                             {{ date('d M, Y',strtotime($ae['expense_date'])) }}
                                         </td>
                                         <td>
-                                            {{ ucwords($ae['vendor_name'] ?? '') }}<br>{{ $ae['invoice_no'] }}
+                                            {{ ucwords($ae['vendor_name'] ?? '') }}
                                         </td>
                                         <td>
                                             {{ ucwords($ae['account_head'] ?? '') }}
-                                        </td>
-                                        <td>
-                                            {{ ucfirst($ae['description'] ?? '') }}
                                         </td>
                                         <td class="text-right">
                                             {{ number_format($ae['amount'],2) }}
                                         </td>
                                         <td>
-                                            {{ ucwords($ae['added_by_name'] ?? '') }}<br>{{ date('d M, Y h:i A',strtotime($ae['created_at'])) }}
+                                            {{ ucwords($ae['added_by_name'] ?? '') }}
+                                        </td>
+                                        <td>
+                                            {{ date('d M, Y h:i A',strtotime($ae['created_at'])) }}
                                         </td>
                                         <td>
                                             @if($ae['status'] == 'claimed')
@@ -172,11 +172,11 @@
                                     </tr>
                                     @if($loop->last)
                                         <tr>
-                                            <td class="px-2 py-2 text-right" colspan="5">
+                                            <td class="px-2 py-2 text-right" colspan="4">
                                                 <b>Total</b>
                                             </td>
                                             <td class="px-2 py-2 text-right">
-                                                <b>{{ number_format(collect($admin_expenses_list)->sum('amount'),2) }}</b>
+                                                <b>{{ number_format($admin_expenses_list->sum('amount'),2) }}</b>
                                             </td>
                                             <td class="px-2 py-2" colspan="3"></td>
                                         </tr>
@@ -192,6 +192,9 @@
                                 @endforelse
                                 </tbody>
                             </table>
+                            <div>
+                                {{ $admin_expenses_list->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -324,7 +327,7 @@
                         </div>
 
                         <div class="col-span-6 sm:col-span-1">
-                            <label class="block text-sm font-medium text-gray-700">Expense Account </label>
+                            <label class="block text-sm font-medium text-gray-700">A/C Head </label>
                             <input type="text" wire:model.defer="filter.expense_account" autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
@@ -368,7 +371,7 @@
         <div class="shadow rounded-md">
             <div class="bg-white  mb-5 rounded-md overflow-hidden">
                 <div class="py-6 px-4 sm:p-6 flex justify-between">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">Admin Expenses</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">Admin Expenses List</h3>
 
                     <div class="flex">
                         @can('3.claim.admin-expenses')
@@ -392,9 +395,9 @@
                             class="w-7 px-2 bg-gray-100 border-t border-r py-2 text-left text-sm font-bold text-gray-500  tracking-wider">
                             #
                         </th>
-                        <th scope="col" style="width: 110px;"
+                        <th scope="col"
                             class="px-2 py-2 whitespace-nowrap   bg-gray-100 border-t border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Expense On<br> Dated
+                            Expense On Dated
                         </th>
                         <th scope="col"
                             class="px-2 py-2  bg-gray-100  border-t border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
@@ -402,29 +405,25 @@
                         </th>
                         <th scope="col"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Expense A/C
+                            A/C Head
                         </th>
                         <th scope="col"
-                            class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Description
-                        </th>
-                        <th scope="col" style="width: 110px;"
                             class="px-2 py-2   border-t bg-gray-100 border-r text-right  text-sm font-bold text-gray-500  tracking-wider">
                             Amount
                         </th>
-                        <th scope="col" style="width: 150px;"
+                        <th scope="col"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
                             Added By
                         </th>
-                        <th scope="col" style="width: 150px;"
+                        <th scope="col"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
                             Added At
                         </th>
-                        <th scope="col" style="width: 120px;"
+                        <th scope="col"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
                             Status
                         </th>
-                        <th scope="col" style="width: 140px;"
+                        <th scope="col"
                             class="rounded-tr-md bg-gray-100    border-t px-2 py-2     text-left  text-sm font-bold text-gray-500 uppercase tracking-wider">
                         </th>
                     </tr>
@@ -440,20 +439,19 @@
                                 {{ date('d M, Y',strtotime($ae['expense_date'])) }}
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
-                                {{ ucwords($ae['vendor_name'] ?? '') }}<br>{{ $ae['invoice_no'] }}
+                                {{ ucwords($ae['vendor_name'] ?? '') }}
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
                                 {{ ucwords($ae['account_head'] ?? '') }}
-                            </td>
-                            <td class=" px-2 py-2 border-r text-sm text-gray-500 whitespace-initial"
-                                style="width: 400px !important;">
-                                {{ ucfirst($ae['description'] ?? '') }}
                             </td>
                             <td class="px-2 py-2 border-r text-right text-sm text-gray-500">
                                 {{ number_format($ae['amount'],2) }}
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
-                                {{ ucwords($ae['added_by_name'] ?? '') }}<br>{{ date('d M, Y h:i A',strtotime($ae['created_at'])) }}
+                                {{ ucwords($ae['added_by_name'] ?? '') }}
+                            </td>
+                            <td class="px-2 py-2 border-r text-sm text-gray-500">
+                                {{ date('d M, Y h:i A',strtotime($ae['created_at'])) }}
                             </td>
                             <td class="px-2 py-2 border-r text-left text-sm text-gray-500">
                                 @if($ae['status'] == 'claimed')
@@ -496,11 +494,11 @@
                         </tr>
                         @if($loop->last)
                             <tr class="border-b">
-                                <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="5">
+                                <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="4">
                                     <b>Total</b>
                                 </td>
                                 <td class="px-2 py-2 border-r text-right text-sm text-gray-500">
-                                    <b>{{ number_format(collect($admin_expenses_list)->sum('amount'),2) }}</b>
+                                    <b>{{ number_format($admin_expenses_list->sum('amount'),2) }}</b>
                                 </td>
                                 <td class="px-2 py-2 border-r text-sm text-gray-500" colspan="3"></td>
                             </tr>
@@ -516,6 +514,9 @@
                     @endforelse
                     </tbody>
                 </table>
+                <div class="bg-white p-3 border-t rounded-b-md  ">
+                    {{ $admin_expenses_list->links() }}
+                </div>
             </div>
         </div>
         @include("ams::include.delete-modal")
