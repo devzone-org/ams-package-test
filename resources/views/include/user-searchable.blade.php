@@ -107,7 +107,7 @@
                 <div wire:loading wire:target="userOpenModal" class="w-full pt-5 pb-5">
                     <div class="flex justify-center items-center w-full">
                         {{-- border-top-color inline: this package ships tailwind v2, which has no border-t-{color} --}}
-                        <div style="border-top-color: #2563eb;"
+                        <div style="border-top-color: #2563eb !important;"
                              class="h-12 w-12 animate-spin rounded-full border-4 border-gray-300"></div>
                     </div>
                 </div>
