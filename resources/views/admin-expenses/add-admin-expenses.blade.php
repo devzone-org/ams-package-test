@@ -1,6 +1,6 @@
 @extends('ams::layouts.master')
 @section('title')
-    Admin Expenses
+    {{ucwords(request()->segment(3))}} Admin Expenses
 @endsection
 
 @section('content')
@@ -11,5 +11,4 @@
             @livewire('admin-expenses.add-admin-expenses',['id'=>request('id')])
         </div>
     @endif
-
 @endsection

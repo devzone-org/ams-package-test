@@ -16,7 +16,8 @@
                     <div class="col">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <h3 class="card-title"><b>{{ $is_view ? "View" : ($is_edit ? "Update" : "Add") }} Admin Expenses</b></h3>
+                                <h3 class="card-title"><b>{{ $is_view ? "View" : ($is_edit ? "Update" : "Add") }} Admin
+                                        Expenses</b></h3>
                             </div>
                             <div class="card-body">
                                 <form wire:submit.prevent="save">
@@ -27,7 +28,8 @@
                                                     Expense Date
                                                     <span class="text-danger">*</span>
                                                 </label>
-                                                <input type="date" wire:model.defer="admin_expenses.expense_date" @if($is_view) disabled @endif
+                                                <input type="date" wire:model.defer="admin_expenses.expense_date"
+                                                       @if($is_view) disabled @endif
                                                        autocomplete="off"
                                                        class="form-control @error('admin_expenses.expense_date')  is-invalid @enderror">
                                             </div>
@@ -41,7 +43,8 @@
                                                 </label>
                                                 <input type="text" readonly autocomplete="off"
                                                        @if(!$is_view) onclick="window.dispatchEvent(new CustomEvent('open-vendor-modal'))"
-                                                       wire:click="vendorOpenModal('admin_expenses.acc_vendor_id','admin_expenses.vendor_name')" @endif
+                                                       wire:click="vendorOpenModal('admin_expenses.acc_vendor_id','admin_expenses.vendor_name')"
+                                                       @endif
                                                        wire:model="admin_expenses.vendor_name"
                                                        class="form-control @error('admin_expenses.acc_vendor_id')  is-invalid @enderror">
                                             </div>
@@ -50,7 +53,8 @@
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
                                                 <label class="font-weight-normal">Invoice # </label>
-                                                <input type="text" wire:model.defer="admin_expenses.invoice_no" @if($is_view) disabled @endif
+                                                <input type="text" wire:model.defer="admin_expenses.invoice_no"
+                                                       @if($is_view) disabled @endif
                                                        autocomplete="off"
                                                        class="form-control @error('admin_expenses.invoice_no')  is-invalid @enderror">
                                             </div>
@@ -63,7 +67,8 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <input type="number" step="0.1"
-                                                       wire:model.defer="admin_expenses.amount" @if($is_view) disabled @endif autocomplete="off"
+                                                       wire:model.defer="admin_expenses.amount" @if($is_view) disabled
+                                                       @endif autocomplete="off"
                                                        class="form-control @error('admin_expenses.amount')  is-invalid @enderror">
                                             </div>
                                         </div>
@@ -76,7 +81,8 @@
                                                 </label>
                                                 <input type="text" readonly autocomplete="off"
                                                        @if(!$is_view) onclick="$('#SelectAccount').modal('show')"
-                                                       wire:click="searchableOpenModal('admin_expenses.expense_account_id','admin_expenses.expense_account_name','accounts')" @endif
+                                                       wire:click="searchableOpenModal('admin_expenses.expense_account_id','admin_expenses.expense_account_name','accounts')"
+                                                       @endif
                                                        wire:model="admin_expenses.expense_account_name"
                                                        class="form-control @error('admin_expenses.expense_account_id')  is-invalid @enderror">
                                             </div>
@@ -87,7 +93,8 @@
                                                 <label class="font-weight-normal">Requisite By </label>
                                                 <input type="text" readonly autocomplete="off"
                                                        @if(!$is_view) onclick="window.dispatchEvent(new CustomEvent('open-user-modal'))"
-                                                       wire:click="userOpenModal('admin_expenses.requisite_by','admin_expenses.requisite_by_name','Requisite By')" @endif
+                                                       wire:click="userOpenModal('admin_expenses.requisite_by','admin_expenses.requisite_by_name','Requisite By')"
+                                                       @endif
                                                        wire:model="admin_expenses.requisite_by_name"
                                                        class="form-control @error('admin_expenses.requisite_by')  is-invalid @enderror">
                                             </div>
@@ -96,7 +103,8 @@
                                         <div class="col-xs-6 col-sm-4">
                                             <div class="form-group">
                                                 <label class="font-weight-normal">Attachment </label>
-                                                <input type="file" wire:model.defer="attachment" @if($is_view) disabled @endif autocomplete="off"
+                                                <input type="file" wire:model.defer="attachment" @if($is_view) disabled
+                                                       @endif autocomplete="off"
                                                        class="form-control p-0 m-0 pt-1 px-1">
                                             </div>
                                         </div>
@@ -104,7 +112,8 @@
                                         <div class="col-12 pt-3">
                                             <div class="form-group">
                                                 <label class="font-weight-normal">Description </label>
-                                                <textarea wire:model.defer="admin_expenses.description" @if($is_view) disabled @endif
+                                                <textarea wire:model.defer="admin_expenses.description"
+                                                          @if($is_view) disabled @endif
                                                           autocomplete="off" rows="5"
                                                           class="form-control @error('admin_expenses.description')  is-invalid @enderror"></textarea>
                                             </div>
@@ -115,8 +124,10 @@
                                                 @if(!$is_view)
                                                     <button type="submit" wire:loading.attr="disabled"
                                                             class="btn btn-success mx-1">
-                                                        <span wire:loading.remove wire:target="save">{{ $is_edit ? 'Update' : 'Save' }}</span>
-                                                        <span wire:loading wire:target="save">{{ $is_edit ? 'Updating...' : 'Saving...' }}</span>
+                                                        <span wire:loading.remove
+                                                              wire:target="save">{{ $is_edit ? 'Update' : 'Save' }}</span>
+                                                        <span wire:loading
+                                                              wire:target="save">{{ $is_edit ? 'Updating...' : 'Saving...' }}</span>
                                                     </button>
 
                                                     <button type="button" wire:click="clear"
@@ -237,7 +248,8 @@
                                 Expense Date
                                 <span class="text-red-500">*</span>
                             </label>
-                            <input type="date" wire:model.defer="admin_expenses.expense_date" @if($is_view) disabled @endif autocomplete="off"
+                            <input type="date" wire:model.defer="admin_expenses.expense_date" @if($is_view) disabled
+                                   @endif autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
@@ -248,21 +260,24 @@
                             </label>
                             <input type="text" readonly autocomplete="off"
                                    @if(!$is_view) @click="$dispatch('open-vendor-modal')"
-                                   wire:click="vendorOpenModal('admin_expenses.acc_vendor_id','admin_expenses.vendor_name')" @endif
+                                   wire:click="vendorOpenModal('admin_expenses.acc_vendor_id','admin_expenses.vendor_name')"
+                                   @endif
                                    wire:model="admin_expenses.vendor_name"
                                    class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
                         <div class="col-span-6 sm:col-span-1">
                             <label class="block text-sm font-medium text-gray-700">Invoice # </label>
-                            <input type="text" wire:model.defer="admin_expenses.invoice_no" @if($is_view) disabled @endif autocomplete="off"
+                            <input type="text" wire:model.defer="admin_expenses.invoice_no" @if($is_view) disabled
+                                   @endif autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
                         <div class="col-span-6 sm:col-span-1">
                             <label class="block text-sm font-medium text-gray-700">Amount <span
                                         class="text-red-500">*</span></label>
-                            <input type="number" step="0.1" wire:model.defer="admin_expenses.amount" @if($is_view) disabled @endif autocomplete="off"
+                            <input type="number" step="0.1" wire:model.defer="admin_expenses.amount"
+                                   @if($is_view) disabled @endif autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
@@ -271,7 +286,8 @@
                                         class="text-red-500">*</span></label>
                             <input type="text" readonly autocomplete="off"
                                    @if(!$is_view) @click="$dispatch('open-modal')"
-                                   wire:click="searchableOpenModal('admin_expenses.expense_account_id','admin_expenses.expense_account_name','accounts')" @endif
+                                   wire:click="searchableOpenModal('admin_expenses.expense_account_id','admin_expenses.expense_account_name','accounts')"
+                                   @endif
                                    wire:model="admin_expenses.expense_account_name"
                                    class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
@@ -280,21 +296,24 @@
                             <label class="block text-sm font-medium text-gray-700">Requisite By </label>
                             <input type="text" readonly autocomplete="off"
                                    @if(!$is_view) @click="$dispatch('open-user-modal')"
-                                   wire:click="userOpenModal('admin_expenses.requisite_by','admin_expenses.requisite_by_name','Requisite By')" @endif
+                                   wire:click="userOpenModal('admin_expenses.requisite_by','admin_expenses.requisite_by_name','Requisite By')"
+                                   @endif
                                    wire:model="admin_expenses.requisite_by_name"
                                    class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
 
                         <div class="col-span-6 sm:col-span-1">
                             <label class="block text-sm font-medium text-gray-700">Attachment </label>
-                            <input type="file" wire:model.defer="attachment" @if($is_view) disabled @endif autocomplete="off"
+                            <input type="file" wire:model.defer="attachment" @if($is_view) disabled
+                                   @endif autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
                     </div>
 
                     <div class="col-span-6">
                         <label class="block text-sm font-medium text-gray-700">Description </label>
-                        <textarea wire:model.defer="admin_expenses.description" @if($is_view) disabled @endif autocomplete="off" rows="5"
+                        <textarea wire:model.defer="admin_expenses.description" @if($is_view) disabled
+                                  @endif autocomplete="off" rows="5"
                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
                     </div>
 
@@ -303,8 +322,10 @@
                             @if(!$is_view)
                                 <button type="submit" wire:loading.attr="disabled"
                                         class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    <span wire:loading.remove wire:target="save">{{ $is_edit ? 'Update' : 'Save' }}</span>
-                                    <span wire:loading wire:target="save">{{ $is_edit ? 'Updating...' : 'Saving...' }}</span>
+                                    <span wire:loading.remove
+                                          wire:target="save">{{ $is_edit ? 'Update' : 'Save' }}</span>
+                                    <span wire:loading
+                                          wire:target="save">{{ $is_edit ? 'Updating...' : 'Saving...' }}</span>
                                 </button>
 
                                 <button type="button" wire:click="clear" wire:loading.attr="disabled"

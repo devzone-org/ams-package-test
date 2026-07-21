@@ -111,6 +111,7 @@ class AddAdminExpenses extends Component
 
     public function save()
     {
+        $this->success = null;
         if ($this->is_view) {
             return;
         }
