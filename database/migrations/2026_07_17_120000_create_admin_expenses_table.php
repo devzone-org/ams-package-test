@@ -16,7 +16,7 @@ class CreateAdminExpensesTable extends Migration
         Schema::create('admin_expenses', function (Blueprint $table) {
             $table->id();
             $table->date('expense_date');
-            $table->unsignedInteger('vendor_id');
+            $table->unsignedInteger('acc_vendor_id');
             $table->string('invoice_no', 100)->nullable();
             $table->decimal('amount', 11, 2);
             $table->unsignedInteger('expense_account_id');

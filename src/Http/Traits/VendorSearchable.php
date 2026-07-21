@@ -19,7 +19,7 @@ trait VendorSearchable
 
     /**
      * $id / $name are the properties the picked vendor is written back to and
-     * may be dotted paths, e.g. 'admin_expenses.vendor_id'.
+     * may be dotted paths, e.g. 'admin_expenses.acc_vendor_id'.
      */
     public function vendorOpenModal($id, $name)
     {

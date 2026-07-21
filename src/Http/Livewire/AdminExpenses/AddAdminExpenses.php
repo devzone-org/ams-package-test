@@ -28,7 +28,7 @@ class AddAdminExpenses extends Component
 
     protected $rules = [
         'admin_expenses.expense_date' => 'required|date',
-        'admin_expenses.vendor_id' => 'required|integer',
+        'admin_expenses.acc_vendor_id' => 'required|integer',
         'admin_expenses.invoice_no' => 'nullable|max:100',
         'admin_expenses.amount' => 'required|numeric|min:1',
         'admin_expenses.expense_account_id' => 'required|integer',
@@ -39,7 +39,7 @@ class AddAdminExpenses extends Component
 
     protected $validationAttributes = [
         'admin_expenses.expense_date' => 'Expense Date',
-        'admin_expenses.vendor_id' => 'Vendor',
+        'admin_expenses.acc_vendor_id' => 'Vendor',
         'admin_expenses.invoice_no' => 'Invoice #',
         'admin_expenses.amount' => 'Amount',
         'admin_expenses.expense_account_id' => 'Expense on A/C Of',
@@ -57,7 +57,7 @@ class AddAdminExpenses extends Component
             }
             $this->admin_expenses = $found->toArray();
             unset($this->admin_expenses['created_at'], $this->admin_expenses['updated_at'], $this->admin_expenses['deleted_at']);
-            $this->admin_expenses['vendor_name'] = AccVendor::where('id', $found->vendor_id)->value('business_name');
+            $this->admin_expenses['vendor_name'] = AccVendor::where('id', $found->acc_vendor_id)->value('business_name');
             $this->admin_expenses['expense_account_name'] = ChartOfAccount::where('id', $found->expense_account_id)->value('name');
             $this->admin_expenses['requisite_by_name'] = User::where('id', $found->requisite_by)->value('name');
             $this->is_edit = true;
@@ -94,7 +94,7 @@ class AddAdminExpenses extends Component
         try {
             $vendor = AccVendor::create($this->new_vendor);
             // a freshly created vendor is what they wanted: select it straight away
-            $this->admin_expenses['vendor_id'] = $vendor->id;
+            $this->admin_expenses['acc_vendor_id'] = $vendor->id;
             $this->admin_expenses['vendor_name'] = $vendor->business_name;
             $this->closeVendorCreate();
         } catch (\Exception $ex) {

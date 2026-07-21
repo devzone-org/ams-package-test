@@ -41,9 +41,9 @@
                                                 </label>
                                                 <input type="text" readonly autocomplete="off"
                                                        @if(!$is_view) onclick="window.dispatchEvent(new CustomEvent('open-vendor-modal'))"
-                                                       wire:click="vendorOpenModal('admin_expenses.vendor_id','admin_expenses.vendor_name')" @endif
+                                                       wire:click="vendorOpenModal('admin_expenses.acc_vendor_id','admin_expenses.vendor_name')" @endif
                                                        wire:model="admin_expenses.vendor_name"
-                                                       class="form-control @error('admin_expenses.vendor_id')  is-invalid @enderror">
+                                                       class="form-control @error('admin_expenses.acc_vendor_id')  is-invalid @enderror">
                                             </div>
                                         </div>
 
@@ -248,7 +248,7 @@
                             </label>
                             <input type="text" readonly autocomplete="off"
                                    @if(!$is_view) @click="$dispatch('open-vendor-modal')"
-                                   wire:click="vendorOpenModal('admin_expenses.vendor_id','admin_expenses.vendor_name')" @endif
+                                   wire:click="vendorOpenModal('admin_expenses.acc_vendor_id','admin_expenses.vendor_name')" @endif
                                    wire:model="admin_expenses.vendor_name"
                                    class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>

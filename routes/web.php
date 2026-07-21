@@ -167,13 +167,13 @@ Route::group(['prefix' => 'admin-expenses', 'as' => 'admin-expenses.'], function
         return view('ams::admin-expenses.add-admin-expenses');
     })->name('update.unclaimed')->middleware("permission:3.update.admin-expenses.unclaimed");
 
-    Route::get('list', function () {
-        return view('ams::admin-expenses.admin-expenses-list');
-    })->name('list')->middleware("permission:3.view.admin-expenses");
-
     Route::get('view/{id}', function () {
         return view('ams::admin-expenses.add-admin-expenses');
     })->name('view')->middleware("permission:3.view.admin-expenses");
+
+    Route::get('list', function () {
+        return view('ams::admin-expenses.admin-expenses-list');
+    })->name('list')->middleware("permission:3.view.admin-expenses");
 
     Route::get('claim', function () {
         return view('ams::admin-expenses.claim-admin-expenses');

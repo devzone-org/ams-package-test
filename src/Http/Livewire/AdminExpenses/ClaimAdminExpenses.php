@@ -53,7 +53,7 @@ class ClaimAdminExpenses extends Component
     public function search()
     {
         // admin_expenses is not aliased: the SoftDeletes scope qualifies admin_expenses.deleted_at
-        $this->admin_expenses_list = AdminExpense::leftJoin('acc_vendors as v', 'v.id', '=', 'admin_expenses.vendor_id')
+        $this->admin_expenses_list = AdminExpense::leftJoin('acc_vendors as v', 'v.id', '=', 'admin_expenses.acc_vendor_id')
             ->leftJoin('chart_of_accounts as coa', 'coa.id', '=', 'admin_expenses.expense_account_id')
             ->leftJoin('users as au', 'au.id', '=', 'admin_expenses.added_by')
             ->where('admin_expenses.status', 'unclaimed')
