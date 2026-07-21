@@ -165,6 +165,11 @@ class AddAdminExpenses extends Component
         }
     }
 
+    public function deleteAttachment()
+    {
+        $this->admin_expenses['attachment'] = null;
+    }
+
     public function clear()
     {
         $this->resetErrorBag();

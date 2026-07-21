@@ -105,7 +105,18 @@
                                                 <label class="font-weight-normal">Attachment </label>
                                                 <input type="file" wire:model.defer="attachment" @if($is_view) disabled
                                                        @endif autocomplete="off"
-                                                       class="form-control p-0 m-0 pt-1 px-1">
+                                                       class="form-control form-control-sm p-0 m-0 pt-1 px-1">
+                                                @if(!empty($admin_expenses['attachment']))
+                                                    <div class="mt-2 d-flex justify-content-between">
+                                                        <a href="{{ env('AWS_URL').$admin_expenses['attachment'] }}"
+                                                           target="_blank" class="btn btn-xs btn-info">View Attachment</a>
+                                                        @if(!$is_view)
+                                                            <button type="button" wire:click="deleteAttachment"
+                                                                    wire:loading.attr="disabled"
+                                                                    class="btn btn-xs btn-danger">Delete</button>
+                                                        @endif
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
 
@@ -307,6 +318,17 @@
                             <input type="file" wire:model.defer="attachment" @if($is_view) disabled
                                    @endif autocomplete="off"
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            @if(!empty($admin_expenses['attachment']))
+                                <div class="mt-2 flex justify-between">
+                                    <a href="{{ env('AWS_URL').$admin_expenses['attachment'] }}" target="_blank"
+                                       class="text-sm font-medium text-indigo-600 hover:text-indigo-500">View Attachment</a>
+                                    @if(!$is_view)
+                                        <button type="button" wire:click="deleteAttachment"
+                                                wire:loading.attr="disabled"
+                                                class="text-sm font-medium text-red-600 hover:text-red-500">Delete</button>
+                                    @endif
+                                </div>
+                            @endif
                         </div>
                     </div>
 
