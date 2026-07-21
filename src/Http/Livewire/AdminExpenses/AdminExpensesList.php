@@ -120,6 +120,8 @@ class AdminExpensesList extends Component
                 return $q->where('admin_expenses.status', $this->filter['status']);
             })
             ->select('admin_expenses.*', 'v.business_name as vendor_name',
+                'v.business_address as vendor_address', 'v.contact_no as vendor_contact',
+                'v.owner_name as vendor_owner',
                 'coa.name as account_head', 'au.name as added_by_name')
             ->orderBy('admin_expenses.expense_date', 'desc')
             ->paginate(50);

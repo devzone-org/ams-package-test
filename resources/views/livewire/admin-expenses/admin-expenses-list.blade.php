@@ -435,7 +435,20 @@
                                 {{ date('d M, Y',strtotime($ae['expense_date'])) }}
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
-                                {{ ucwords($ae['vendor_name'] ?? '') }}
+                                @php
+                                    $vendorTip = collect([
+                                        !empty($ae['vendor_owner']) ? 'Owner: ' . ucwords($ae['vendor_owner']) : null,
+                                        !empty($ae['vendor_contact']) ? 'Contact: ' . $ae['vendor_contact'] : null,
+                                        !empty($ae['vendor_address']) ? 'Address: ' . ucwords($ae['vendor_address']) : null,
+                                    ])->filter()->implode("\n");
+                                @endphp
+                                <div class="flex items-center gap-1">
+                                    <span>{{ ucwords($ae['vendor_name'] ?? '') }}</span>
+                                    @if(!empty($vendorTip))
+                                        <span title="{{ $vendorTip }}"
+                                              class="inline-flex items-center justify-center h-4 w-4 rounded-full bg-indigo-100 text-indigo-600 text-xs font-bold cursor-help">i</span>
+                                    @endif
+                                </div>
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
                                 {{ ucwords($ae['account_head'] ?? '') }}
