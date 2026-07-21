@@ -65,6 +65,8 @@ class ClaimAdminExpenses extends Component
     public function claim()
     {
         try {
+            throw new \Exception("Under Development.");
+
             if (!Auth::user()->can('3.claim.admin-expenses')) {
                 throw new \Exception(env('PERMISSION_ERROR'));
             }
