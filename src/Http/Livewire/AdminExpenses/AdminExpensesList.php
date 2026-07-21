@@ -101,6 +101,7 @@ class AdminExpensesList extends Component
         $admin_expenses_list = AdminExpense::leftJoin('acc_vendors as v', 'v.id', '=', 'admin_expenses.acc_vendor_id')
             ->leftJoin('chart_of_accounts as coa', 'coa.id', '=', 'admin_expenses.expense_account_id')
             ->leftJoin('users as au', 'au.id', '=', 'admin_expenses.added_by')
+            ->leftJoin('users as cu', 'cu.id', '=', 'admin_expenses.status_changed_by')
             ->when(!empty($this->filter['expense_date_from']), function ($q) {
                 return $q->whereDate('admin_expenses.expense_date', '>=', $this->filter['expense_date_from']);
             })
@@ -122,7 +123,8 @@ class AdminExpensesList extends Component
             ->select('admin_expenses.*', 'v.business_name as vendor_name',
                 'v.business_address as vendor_address', 'v.contact_no as vendor_contact',
                 'v.owner_name as vendor_owner',
-                'coa.name as account_head', 'au.name as added_by_name')
+                'coa.name as account_head', 'au.name as added_by_name',
+                'cu.name as claimed_by_name')
             ->orderBy('admin_expenses.expense_date', 'desc')
             ->paginate(50);
 

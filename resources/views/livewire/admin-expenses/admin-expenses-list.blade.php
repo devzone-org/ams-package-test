@@ -464,8 +464,18 @@
                             </td>
                             <td class="px-2 py-2 border-r text-left text-sm text-gray-500">
                                 @if($ae['status'] == 'claimed')
-                                    <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                    @php
+                                        $claimTip = collect([
+                                            !empty($ae['claimed_by_name']) ? 'Claimed by: ' . ucwords($ae['claimed_by_name']) : null,
+                                            !empty($ae['status_changed_at']) ? 'Claimed at: ' . date('d M, Y h:i A', strtotime($ae['status_changed_at'])) : null,
+                                        ])->filter()->implode("\n");
+                                    @endphp
+                                    <span title="{{ $claimTip }}"
+                                          class="inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800 {{ $claimTip ? 'cursor-help' : '' }}">
                                         Claimed
+                                        @if($claimTip)
+                                            <span class="inline-flex items-center justify-center h-4 w-4 rounded-full bg-green-200 text-green-700 text-xs font-bold">i</span>
+                                        @endif
                                     </span>
                                 @else
                                     <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
