@@ -100,12 +100,13 @@
                                 <thead class="">
                                 <th class="add-services-table text-muted">#</th>
                                 <th class="add-services-table text-muted">Expense Incurred</th>
-                                <th class="add-services-table text-left text-muted">Vendor</th>
-                                <th class="add-services-table text-left text-muted">A/C Head</th>
+                                <th class="add-services-table text-left text-muted">Vendor /<br>A/C Head</th>
                                 <th class="add-services-table text-right text-muted">Amount</th>
-                                <th class="add-services-table text-left text-muted">Added By</th>
-                                <th class="add-services-table text-left text-muted">Added At</th>
                                 <th class="add-services-table text-left text-muted">Status</th>
+                                <th class="add-services-table text-left text-muted">Added By /<br>Added At</th>
+                                <th class="add-services-table text-left text-muted" style="cursor: help;"
+                                    title="Claim In Progress By / Claim In Progress At">Claim IP By /<br>Claim IP At</th>
+                                <th class="add-services-table text-left text-muted">Claimed By /<br>Claimed At</th>
                                 <th class="text-center add-services-table text-muted"></th>
                                 </thead>
                                 <tbody>
@@ -118,30 +119,43 @@
                                             {{ date('d M, Y',strtotime($ae['expense_date'])) }}
                                         </td>
                                         <td>
-                                            {{ ucwords($ae['vendor_name'] ?? '') }}
-                                        </td>
-                                        <td>
-                                            {{ ucwords($ae['account_head'] ?? '') }}
+                                            {{ ucwords($ae['vendor_name'] ?? '-') }}<br>
+                                            <span class="text-muted">{{ ucwords($ae['account_head'] ?? '-') }}</span>
                                         </td>
                                         <td class="text-right">
                                             {{ number_format($ae['amount'],2) }}
                                         </td>
                                         <td>
-                                            {{ ucwords($ae['added_by_name'] ?? '') }}
-                                        </td>
-                                        <td>
-                                            {{ date('d M, Y h:i A',strtotime($ae['created_at'])) }}
-                                        </td>
-                                        <td>
                                             @if($ae['status'] == 'claimed')
                                                 <span class="badge badge-success">Claimed</span>
                                             @elseif($ae['status'] == 'claim-in-progress')
-                                                <span class="badge badge-info">Claim In Progress</span>
+                                                <span class="badge badge-info" style="cursor: help;"
+                                                      title="Claim In Progress">Claim IP</span>
                                                 @if(!empty($ae['code']))
                                                     <div class="text-muted small">{{ strtoupper($ae['code']) }}</div>
                                                 @endif
                                             @else
                                                 <span class="badge badge-warning">Unclaimed</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            {{ ucwords($ae['added_by_name'] ?? '-') }}<br>
+                                            <span class="text-muted">{{ date('d M, Y h:i A',strtotime($ae['created_at'])) }}</span>
+                                        </td>
+                                        <td>
+                                            @if(!empty($ae['claim_in_progress_by_name']) || !empty($ae['claim_in_progress_at']))
+                                                {{ ucwords($ae['claim_in_progress_by_name'] ?? '-') }}<br>
+                                                <span class="text-muted">{{ !empty($ae['claim_in_progress_at']) ? date('d M, Y h:i A', strtotime($ae['claim_in_progress_at'])) : '-' }}</span>
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if(!empty($ae['claimed_by_name']) || !empty($ae['claimed_at']))
+                                                {{ ucwords($ae['claimed_by_name'] ?? '-') }}<br>
+                                                <span class="text-muted">{{ !empty($ae['claimed_at']) ? date('d M, Y h:i A', strtotime($ae['claimed_at'])) : '-' }}</span>
+                                            @else
+                                                -
                                             @endif
                                         </td>
                                         <td>
@@ -172,13 +186,13 @@
                                     </tr>
                                     @if($loop->last)
                                         <tr>
-                                            <td class="px-2 py-2 text-right" colspan="4">
+                                            <td class="px-2 py-2 text-right" colspan="3">
                                                 <b>Total</b>
                                             </td>
                                             <td class="px-2 py-2 text-right">
                                                 <b>{{ number_format($admin_expenses_list->sum('amount'),2) }}</b>
                                             </td>
-                                            <td class="px-2 py-2" colspan="3"></td>
+                                            <td class="px-2 py-2" colspan="5"></td>
                                         </tr>
                                     @endif
                                 @empty
@@ -392,11 +406,7 @@
                         </th>
                         <th scope="col"
                             class="px-2 py-2  bg-gray-100  border-t border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Vendor
-                        </th>
-                        <th scope="col"
-                            class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            A/C Head
+                            Vendor /<br>A/C Head
                         </th>
                         <th scope="col"
                             class="px-2 py-2   border-t bg-gray-100 border-r text-right  text-sm font-bold text-gray-500  tracking-wider">
@@ -404,15 +414,20 @@
                         </th>
                         <th scope="col"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Added By
-                        </th>
-                        <th scope="col"
-                            class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                            Added At
-                        </th>
-                        <th scope="col"
-                            class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
                             Status
+                        </th>
+                        <th scope="col"
+                            class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
+                            Added By /<br>Added At
+                        </th>
+                        <th scope="col"
+                            class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider cursor-help"
+                            title="Claim In Progress By / Claim In Progress At">
+                            Claim IP By /<br>Claim IP At
+                        </th>
+                        <th scope="col"
+                            class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
+                            Claimed By /<br>Claimed At
                         </th>
                         <th scope="col"
                             class="rounded-tr-md bg-gray-100    border-t px-2 py-2     text-left  text-sm font-bold text-gray-500 uppercase tracking-wider">
@@ -438,43 +453,26 @@
                                     ])->filter()->implode("\n");
                                 @endphp
                                 <div class="flex items-center gap-1">
-                                    <span>{{ ucwords($ae['vendor_name'] ?? '') }}</span>
+                                    <span>{{ ucwords($ae['vendor_name'] ?? '-') }}</span>
                                     @if(!empty($vendorTip))
                                         <span title="{{ $vendorTip }}"
                                               class="inline-flex items-center justify-center h-4 w-4 rounded-full bg-indigo-100 text-indigo-600 text-xs font-bold cursor-help">i</span>
                                     @endif
                                 </div>
-                            </td>
-                            <td class="px-2 py-2 border-r text-sm text-gray-500">
-                                {{ ucwords($ae['account_head'] ?? '') }}
+                                <span class="text-gray-400">{{ ucwords($ae['account_head'] ?? '-') }}</span>
                             </td>
                             <td class="px-2 py-2 border-r text-right text-sm text-gray-500">
                                 {{ number_format($ae['amount'],2) }}
                             </td>
-                            <td class="px-2 py-2 border-r text-sm text-gray-500">
-                                {{ ucwords($ae['added_by_name'] ?? '') }}
-                            </td>
-                            <td class="px-2 py-2 border-r text-sm text-gray-500">
-                                {{ date('d M, Y h:i A',strtotime($ae['created_at'])) }}
-                            </td>
                             <td class="px-2 py-2 border-r text-left text-sm text-gray-500">
                                 @if($ae['status'] == 'claimed')
-                                    @php
-                                        $claimTip = collect([
-                                            !empty($ae['claimed_by_name']) ? 'Claimed by: ' . ucwords($ae['claimed_by_name']) : null,
-                                            !empty($ae['claimed_at']) ? 'Claimed at: ' . date('d M, Y h:i A', strtotime($ae['claimed_at'])) : null,
-                                        ])->filter()->implode("\n");
-                                    @endphp
-                                    <span title="{{ $claimTip }}"
-                                          class="inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800 {{ $claimTip ? 'cursor-help' : '' }}">
+                                    <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
                                         Claimed
-                                        @if($claimTip)
-                                            <span class="inline-flex items-center justify-center h-4 w-4 rounded-full bg-green-200 text-green-700 text-xs font-bold">i</span>
-                                        @endif
                                     </span>
                                 @elseif($ae['status'] == 'claim-in-progress')
-                                    <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                                        Claim In Progress
+                                    <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800 cursor-help"
+                                          title="Claim In Progress">
+                                        Claim IP
                                     </span>
                                     @if(!empty($ae['code']))
                                         <div class="text-xs text-gray-500 mt-1">{{ strtoupper($ae['code']) }}</div>
@@ -483,6 +481,26 @@
                                     <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
                                         Unclaimed
                                     </span>
+                                @endif
+                            </td>
+                            <td class="px-2 py-2 border-r text-sm text-gray-500">
+                                {{ ucwords($ae['added_by_name'] ?? '-') }}<br>
+                                <span class="text-gray-400">{{ date('d M, Y h:i A',strtotime($ae['created_at'])) }}</span>
+                            </td>
+                            <td class="px-2 py-2 border-r text-sm text-gray-500">
+                                @if(!empty($ae['claim_in_progress_by_name']) || !empty($ae['claim_in_progress_at']))
+                                    {{ ucwords($ae['claim_in_progress_by_name'] ?? '-') }}<br>
+                                    <span class="text-gray-400">{{ !empty($ae['claim_in_progress_at']) ? date('d M, Y h:i A', strtotime($ae['claim_in_progress_at'])) : '-' }}</span>
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td class="px-2 py-2 border-r text-sm text-gray-500">
+                                @if(!empty($ae['claimed_by_name']) || !empty($ae['claimed_at']))
+                                    {{ ucwords($ae['claimed_by_name'] ?? '-') }}<br>
+                                    <span class="text-gray-400">{{ !empty($ae['claimed_at']) ? date('d M, Y h:i A', strtotime($ae['claimed_at'])) : '-' }}</span>
+                                @else
+                                    -
                                 @endif
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
@@ -516,13 +534,13 @@
                         </tr>
                         @if($loop->last)
                             <tr class="border-b">
-                                <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="4">
+                                <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="3">
                                     <b>Total</b>
                                 </td>
                                 <td class="px-2 py-2 border-r text-right text-sm text-gray-500">
                                     <b>{{ number_format($admin_expenses_list->sum('amount'),2) }}</b>
                                 </td>
-                                <td class="px-2 py-2 border-r text-sm text-gray-500" colspan="3"></td>
+                                <td class="px-2 py-2 border-r text-sm text-gray-500" colspan="5"></td>
                             </tr>
                         @endif
                     @empty
