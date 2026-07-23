@@ -24,7 +24,7 @@ class CreateAdminExpensesTable extends Migration
             $table->unsignedInteger('requisite_by')->nullable();
             $table->string('attachment')->nullable();
             $table->enum('status', ['unclaimed', 'claim-in-progress', 'claimed'])->default('unclaimed');
-            $table->string('code', 20)->nullable()->unique();
+            $table->string('code', 20)->nullable()->index();
             $table->dateTime('claim_in_progress_at')->nullable();
             $table->unsignedInteger('claim_in_progress_by')->nullable();
             $table->dateTime('claimed_at')->nullable();

@@ -178,6 +178,10 @@ Route::group(['prefix' => 'admin-expenses', 'as' => 'admin-expenses.'], function
     Route::get('claim', function () {
         return view('ams::admin-expenses.claim-admin-expenses');
     })->name('claim')->middleware('permission:3.claim.admin-expenses');
+
+    Route::get('statement', function () {
+        return view('ams::admin-expenses.statement');
+    })->name('statement')->middleware('permission:3.view.admin-expenses');
 });
 
 if(env('AMS_CUSTOMER', false) === true) {

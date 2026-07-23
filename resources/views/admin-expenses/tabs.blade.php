@@ -13,7 +13,8 @@
                href="{{ route('admin-expenses.claim') }}" role="tab">Unclaimed Expenses</a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link rounded" href="javascript:void(0)" role="tab">Statement</a>
+            <a class="nav-link rounded {{ $current_tab == 'statement' ? 'active bg-gray' : '' }}"
+               href="{{ route('admin-expenses.statement') }}" role="tab">Statement</a>
         </li>
     </ul>
 @else
@@ -32,8 +33,8 @@
                    class="{{ $current_tab == 'claim' ? $a_current : $a_default }} inline-flex items-center px-1 py-4 text-sm font-medium">
                     <span>Unclaimed Expenses</span>
                 </a>
-                <a href="javascript:void(0)"
-                   class="{{ $a_default }} inline-flex items-center px-1 py-4 text-sm font-medium">
+                <a href="{{ route('admin-expenses.statement') }}"
+                   class="{{ $current_tab == 'statement' ? $a_current : $a_default }} inline-flex items-center px-1 py-4 text-sm font-medium">
                     <span>Statement</span>
                 </a>
             </nav>

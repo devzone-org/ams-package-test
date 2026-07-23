@@ -20,6 +20,7 @@
                     </div>
                     <div class="modal-body" style="max-height: 460px; overflow-y: auto;">
                         <div class="text-center mb-3">
+                            <h5 class="mb-0"><b>{{ env('APP_NAME') }}</b></h5>
                             <h4 class="mb-0"><b>Expenses Claim Statement</b></h4>
                             <small class="text-muted">Unclaimed admin expenses selected for claim</small>
                         </div>
@@ -149,6 +150,7 @@
 
                 <div class="px-6 pt-5">
                     <div class="text-center mb-4">
+                        <h3 class="text-base font-bold text-gray-900">{{ env('APP_NAME') }}</h3>
                         <h2 class="text-lg font-semibold text-gray-900">Expenses Claim Statement</h2>
                         <p class="text-sm text-gray-500">Unclaimed admin expenses selected for claim</p>
                     </div>

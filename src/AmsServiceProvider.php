@@ -104,6 +104,7 @@ class AmsServiceProvider extends ServiceProvider
         Livewire::component('admin-expenses.admin-expenses-list', AdminExpenses\AdminExpensesList::class);
         Livewire::component('admin-expenses.add-admin-expenses', AdminExpenses\AddAdminExpenses::class);
         Livewire::component('admin-expenses.claim-admin-expenses', AdminExpenses\ClaimAdminExpenses::class);
+        Livewire::component('admin-expenses.statement-admin-expenses', AdminExpenses\StatementAdminExpenses::class);
 
         Livewire::component('chart-of-accounts.equity-ratio', EquityRatio::class);
 

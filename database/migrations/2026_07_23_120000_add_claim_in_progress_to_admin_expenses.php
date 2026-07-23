@@ -21,7 +21,7 @@ class AddClaimInProgressToAdminExpenses extends Migration
 
         Schema::table('admin_expenses', function (Blueprint $table) {
             if (!Schema::hasColumn('admin_expenses', 'code')) {
-                $table->string('code', 20)->nullable()->unique()->after('status');
+                $table->string('code', 20)->nullable()->index()->after('status');
             }
             if (!Schema::hasColumn('admin_expenses', 'claim_in_progress_at')) {
                 $table->dateTime('claim_in_progress_at')->nullable()->after('code');
@@ -35,7 +35,6 @@ class AddClaimInProgressToAdminExpenses extends Migration
     public function down()
     {
         Schema::table('admin_expenses', function (Blueprint $table) {
-            $table->dropUnique(['code']);
             $table->dropColumn(['code', 'claim_in_progress_at', 'claim_in_progress_by']);
         });
 

@@ -84,19 +84,17 @@ class ClaimAdminExpenses extends Component
                     throw new \Exception('One or more expenses were removed or already in a claim. Please select again.');
                 }
 
-                // ponytail: sequential code via max()+1; unique index is the real guard,
-                // a colliding concurrent claim just rolls back and retries.
-                $next = (int) AdminExpense::max(DB::raw('CAST(SUBSTRING(code, 5) AS UNSIGNED)'));
+                // one shared code for the whole claim batch; next number = highest so far + 1
+                // ponytail: max()+1 under the row lock above; fine for expense volumes.
+                $next = (int) AdminExpense::max(DB::raw('CAST(SUBSTRING(code, 5) AS UNSIGNED)')) + 1;
+                $code = 'AEC-' . str_pad($next, 3, '0', STR_PAD_LEFT);
 
-                foreach ($expenses as $expense) {
-                    $next++;
-                    $expense->update([
-                        'code' => 'exp-' . str_pad($next, 3, '0', STR_PAD_LEFT),
-                        'status' => 'claim-in-progress',
-                        'claim_in_progress_by' => auth()->id(),
-                        'claim_in_progress_at' => Carbon::now()->toDateTimeString(),
-                    ]);
-                }
+                AdminExpense::whereIn('id', $expenses->pluck('id'))->update([
+                    'code' => $code,
+                    'status' => 'claim-in-progress',
+                    'claim_in_progress_by' => auth()->id(),
+                    'claim_in_progress_at' => Carbon::now()->toDateTimeString(),
+                ]);
             });
 
             $this->success = 'Selected expenses moved to claim in progress.';
