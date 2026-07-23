@@ -15,68 +15,73 @@
                             <p class="card-title pt-1"><b>Unclaimed Expenses List</b></p>
                         </div>
                         <div class="card-body">
+                            <style>
+                                #claimTable.table-bordered th:first-child,
+                                #claimTable.table-bordered td:first-child {
+                                    border-left: 1px solid #dee2e6 !important;
+                                }
+                            </style>
                             <form wire:submit.prevent="claim">
-                                <table class="table table-bordered border-0">
-                                    <thead class="">
-                                    @if(!empty($admin_expenses_list))
-                                        <th class="add-services-table">
-                                            <input type="checkbox" wire:model="checked_all" class=""/>
+                                <table id="claimTable" class="table table-bordered table-hover table-sm mb-0"
+                                       style="border-left: 1px solid #dee2e6;">
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th class="align-middle" style="width: 36px;">
+                                            @if(!empty($admin_expenses_list))
+                                                <input type="checkbox" wire:model="checked_all"/>
+                                            @endif
                                         </th>
-                                    @endif
-                                    <th class="add-services-table text-muted">#</th>
-                                    <th class="add-services-table text-muted">Expense On Dated</th>
-                                    <th class="add-services-table text-left text-muted">Vendor</th>
-                                    <th class="add-services-table text-left text-muted">A/C Head</th>
-                                    <th class="add-services-table text-right text-muted">Amount</th>
-                                    <th class="add-services-table text-left text-muted">Added By</th>
-                                    <th class="add-services-table text-left text-muted">Added At</th>
+                                        <th class="align-middle" style="width: 40px;">#</th>
+                                        <th class="align-middle">Expense On Dated</th>
+                                        <th class="align-middle">Vendor</th>
+                                        <th class="align-middle">A/C Head</th>
+                                        <th class="align-middle text-right">Amount</th>
+                                        <th class="align-middle">Added By</th>
+                                        <th class="align-middle">Added At</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     @forelse($admin_expenses_list as $ae)
-                                        <tr>
-                                            <td>
+                                        <tr class="{{ !empty($checked_admin_expenses[$ae['id']]) ? 'table-active' : '' }}">
+                                            <td class="align-middle">
                                                 <input type="checkbox"
-                                                       wire:model="checked_admin_expenses.{{$ae['id']}}" class=""/>
+                                                       wire:model="checked_admin_expenses.{{$ae['id']}}"/>
                                             </td>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ date('d M, Y',strtotime($ae['expense_date'])) }}</td>
-                                            <td>{{ ucwords($ae['vendor_name'] ?? '') }}</td>
-                                            <td>{{ ucwords($ae['account_head'] ?? '') }}</td>
-                                            <td class="text-right">{{ number_format($ae['amount'],2) }}</td>
-                                            <td>{{ ucwords($ae['added_by_name'] ?? '') }}</td>
-                                            <td>{{ date('d M, Y h:i A',strtotime($ae['created_at'])) }}</td>
+                                            <td class="align-middle text-muted">{{ $loop->iteration }}</td>
+                                            <td class="align-middle">{{ date('d M, Y',strtotime($ae['expense_date'])) }}</td>
+                                            <td class="align-middle">{{ ucwords($ae['vendor_name'] ?? '') }}</td>
+                                            <td class="align-middle">{{ ucwords($ae['account_head'] ?? '') }}</td>
+                                            <td class="align-middle text-right">{{ number_format($ae['amount'],2) }}</td>
+                                            <td class="align-middle">{{ ucwords($ae['added_by_name'] ?? '') }}</td>
+                                            <td class="align-middle text-muted">{{ date('d M, Y h:i A',strtotime($ae['created_at'])) }}</td>
                                         </tr>
-                                        @if($loop->last)
-                                            <tr>
-                                                <td class="px-2 py-2 text-right" colspan="5">
-                                                    <b>No. Of Selected</b>
-                                                </td>
-                                                <td class="px-2 py-2 text-right">
-                                                    <b>{{ number_format(count(array_filter($checked_admin_expenses))) }}</b>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="px-2 py-2 text-right" colspan="5">
-                                                    <b>Amount Claiming</b>
-                                                </td>
-                                                <td class="px-2 py-2 text-right">
-                                                    @php
-                                                        $amount = collect($admin_expenses_list)->whereIn('id',array_keys(array_filter($checked_admin_expenses)))->sum('amount');
-                                                    @endphp
-                                                    <b>{{ number_format($amount,2) }}</b>
-                                                </td>
-                                            </tr>
-                                        @endif
                                     @empty
                                         <tr>
-                                            <td colspan="8" class="text-danger rounded-md overflow-hidden">
-                                                <div class="alert alert-danger mb-0 py-4 text-center">
+                                            <td colspan="8" class="p-0">
+                                                <div class="alert alert-danger mb-0 py-4 text-center rounded-0">
                                                     <b>No Records Found.</b>
                                                 </div>
                                             </td>
                                         </tr>
                                     @endforelse
                                     </tbody>
+                                    @if(!empty($admin_expenses_list))
+                                        @php
+                                            $amount = collect($admin_expenses_list)->whereIn('id',array_keys(array_filter($checked_admin_expenses)))->sum('amount');
+                                        @endphp
+                                        <tfoot class="thead-light">
+                                        <tr>
+                                            <td class="text-right" colspan="5"><b>No. Of Selected</b></td>
+                                            <td class="text-right" colspan="3">
+                                                <b>{{ number_format(count(array_filter($checked_admin_expenses))) }}</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right" colspan="5"><b>Amount Claiming</b></td>
+                                            <td class="text-right" colspan="3"><b>{{ number_format($amount,2) }}</b></td>
+                                        </tr>
+                                        </tfoot>
+                                    @endif
                                 </table>
 
                                 <div class="d-flex justify-content-end align-items-center pt-2">
