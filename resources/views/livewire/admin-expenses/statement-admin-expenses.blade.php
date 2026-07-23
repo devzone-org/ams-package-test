@@ -6,8 +6,9 @@
                     @forelse($groups as $code => $expenses)
                         @php $head = $expenses->first(); @endphp
                         <div class="card card-primary card-outline">
-                            <div class="card-header">
-                                <p class="card-title pt-1 mb-0"><b>Claim In Progress Expenses #{{ strtoupper($code) }}</b></p>
+                            <div class="card-header py-3">
+                                <p class="card-title"><b>Claim In Progress Expenses
+                                        <span class="text-primary">#{{ strtoupper($code) }}</span></b></p>
                             </div>
                             <div class="card-body">
                                 <table class="table table-bordered table-hover table-sm mb-0">
@@ -20,7 +21,7 @@
                                         <th class="align-middle">Status</th>
                                         <th class="align-middle">Added By /<br>Added At</th>
                                         <th class="align-middle" style="cursor: help;"
-                                            title="Claim In Progress By / Claim In Progress At">Claim IP By /<br>Claim IP At</th>
+                                            title="Claim In Progress By / Claim In Progress At">Claim In Progress By /<br>Claim In Progress At</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -35,7 +36,7 @@
                                             <td class="align-middle text-right">{{ number_format($ae['amount'],2) }}</td>
                                             <td class="align-middle">
                                                 <span class="badge badge-info" style="cursor: help;"
-                                                      title="Claim In Progress">Claim IP</span>
+                                                      title="Claim In Progress">Claim In Progress</span>
                                             </td>
                                             <td class="align-middle">
                                                 {{ ucwords($ae['added_by_name'] ?? '-') }}<br>
@@ -70,8 +71,9 @@
         @forelse($groups as $code => $expenses)
             @php $head = $expenses->first(); @endphp
             <div class="mb-6 shadow rounded-md overflow-hidden bg-white">
-                <div class="px-4 py-3 border-b border-gray-200">
-                    <h3 class="text-base font-bold text-gray-900">Claim In Progress Expenses #{{ strtoupper($code) }}</h3>
+                <div class="px-4 py-4 border-b border-gray-200">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Claim In Progress Expenses
+                        <span class="text-indigo-600">#{{ strtoupper($code) }}</span></h3>
                 </div>
                 <table class="min-w-full table-fixed">
                     <thead>
@@ -83,7 +85,7 @@
                         <th class="px-2 py-2 bg-gray-100 border-t border-r text-left text-sm font-bold text-gray-500">Status</th>
                         <th class="px-2 py-2 bg-gray-100 border-t border-r text-left text-sm font-bold text-gray-500">Added By /<br>Added At</th>
                         <th class="px-2 py-2 bg-gray-100 border-t border-r text-left text-sm font-bold text-gray-500 cursor-help"
-                            title="Claim In Progress By / Claim In Progress At">Claim IP By /<br>Claim IP At</th>
+                            title="Claim In Progress By / Claim In Progress At">Claim In Progress By /<br>Claim In Progress At</th>
                     </tr>
                     </thead>
                     <tbody class="bg-white">
@@ -98,7 +100,7 @@
                             <td class="px-2 py-2 border-r text-right text-sm text-gray-500">{{ number_format($ae['amount'],2) }}</td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
                                 <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800 cursor-help"
-                                      title="Claim In Progress">Claim IP</span>
+                                      title="Claim In Progress">Claim In Progress</span>
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
                                 {{ ucwords($ae['added_by_name'] ?? '-') }}<br>

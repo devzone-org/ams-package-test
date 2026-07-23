@@ -61,7 +61,7 @@
                                                 <option value="">All</option>
                                                 <option value="unclaimed">Unclaimed</option>
                                                 <option value="claim-in-progress">Claim In Progress</option>
-                                                <option value="claimed">Claimed</option>
+                                                <option value="claimed">Claim Completed</option>
                                             </select>
                                         </div>
                                     </div>
@@ -99,13 +99,14 @@
                             <table class="table table-bordered border-0">
                                 <thead class="">
                                 <th class="add-services-table text-muted">#</th>
+                                <th class="add-services-table text-muted">Code</th>
                                 <th class="add-services-table text-muted">Expense Incurred</th>
                                 <th class="add-services-table text-left text-muted">Vendor /<br>A/C Head</th>
                                 <th class="add-services-table text-right text-muted">Amount</th>
                                 <th class="add-services-table text-left text-muted">Status</th>
                                 <th class="add-services-table text-left text-muted">Added By /<br>Added At</th>
                                 <th class="add-services-table text-left text-muted" style="cursor: help;"
-                                    title="Claim In Progress By / Claim In Progress At">Claim IP By /<br>Claim IP At</th>
+                                    title="Claim In Progress By / Claim In Progress At">Claim In Progress By /<br>Claim In Progress At</th>
                                 <th class="add-services-table text-left text-muted">Claimed By /<br>Claimed At</th>
                                 <th class="text-center add-services-table text-muted"></th>
                                 </thead>
@@ -114,6 +115,13 @@
                                     <tr>
                                         <td>
                                             {{ $loop->iteration }}
+                                        </td>
+                                        <td>
+                                            @if(!empty($ae['code']))
+                                                <b class="text-primary">{{ strtoupper($ae['code']) }}</b>
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
                                         </td>
                                         <td>
                                             {{ date('d M, Y',strtotime($ae['expense_date'])) }}
@@ -127,13 +135,9 @@
                                         </td>
                                         <td>
                                             @if($ae['status'] == 'claimed')
-                                                <span class="badge badge-success">Claimed</span>
+                                                <span class="badge badge-success">Claim Completed</span>
                                             @elseif($ae['status'] == 'claim-in-progress')
-                                                <span class="badge badge-info" style="cursor: help;"
-                                                      title="Claim In Progress">Claim IP</span>
-                                                @if(!empty($ae['code']))
-                                                    <div class="text-muted small">{{ strtoupper($ae['code']) }}</div>
-                                                @endif
+                                                <span class="badge badge-info">Claim In Progress</span>
                                             @else
                                                 <span class="badge badge-warning">Unclaimed</span>
                                             @endif
@@ -186,7 +190,7 @@
                                     </tr>
                                     @if($loop->last)
                                         <tr>
-                                            <td class="px-2 py-2 text-right" colspan="3">
+                                            <td class="px-2 py-2 text-right" colspan="4">
                                                 <b>Total</b>
                                             </td>
                                             <td class="px-2 py-2 text-right">
@@ -197,7 +201,7 @@
                                     @endif
                                 @empty
                                     <tr>
-                                        <td colspan="9" class="text-danger rounded-md overflow-hidden">
+                                        <td colspan="10" class="text-danger rounded-md overflow-hidden">
                                             <div class="alert alert-danger mb-0 py-4 text-center">
                                                 <b>No Records Found.</b>
                                             </div>
@@ -355,7 +359,7 @@
                                 <option value="">All</option>
                                 <option value="unclaimed">Unclaimed</option>
                                 <option value="claim-in-progress">Claim In Progress</option>
-                                <option value="claimed">Claimed</option>
+                                <option value="claimed">Claim Completed</option>
                             </select>
                         </div>
                     </div>
@@ -401,6 +405,10 @@
                             #
                         </th>
                         <th scope="col"
+                            class="px-2 py-2 bg-gray-100 border-t border-r text-left text-sm font-bold text-gray-500  tracking-wider">
+                            Code
+                        </th>
+                        <th scope="col"
                             class="px-2 py-2 whitespace-nowrap   bg-gray-100 border-t border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
                             Expense Incurred
                         </th>
@@ -423,7 +431,7 @@
                         <th scope="col"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider cursor-help"
                             title="Claim In Progress By / Claim In Progress At">
-                            Claim IP By /<br>Claim IP At
+                            Claim In Progress By /<br>Claim In Progress At
                         </th>
                         <th scope="col"
                             class=" px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
@@ -442,23 +450,17 @@
                                 {{ $loop->iteration }}
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
+                                @if(!empty($ae['code']))
+                                    <span class="font-bold text-indigo-600">{{ strtoupper($ae['code']) }}</span>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-2 py-2 border-r text-sm text-gray-500">
                                 {{ date('d M, Y',strtotime($ae['expense_date'])) }}
                             </td>
                             <td class="px-2 py-2 border-r text-sm text-gray-500">
-                                @php
-                                    $vendorTip = collect([
-                                        !empty($ae['vendor_owner']) ? 'Owner: ' . ucwords($ae['vendor_owner']) : null,
-                                        !empty($ae['vendor_contact']) ? 'Contact: ' . $ae['vendor_contact'] : null,
-                                        !empty($ae['vendor_address']) ? 'Address: ' . ucwords($ae['vendor_address']) : null,
-                                    ])->filter()->implode("\n");
-                                @endphp
-                                <div class="flex items-center gap-1">
-                                    <span>{{ ucwords($ae['vendor_name'] ?? '-') }}</span>
-                                    @if(!empty($vendorTip))
-                                        <span title="{{ $vendorTip }}"
-                                              class="inline-flex items-center justify-center h-4 w-4 rounded-full bg-indigo-100 text-indigo-600 text-xs font-bold cursor-help">i</span>
-                                    @endif
-                                </div>
+                                {{ ucwords($ae['vendor_name'] ?? '-') }}<br>
                                 <span class="text-gray-400">{{ ucwords($ae['account_head'] ?? '-') }}</span>
                             </td>
                             <td class="px-2 py-2 border-r text-right text-sm text-gray-500">
@@ -467,16 +469,12 @@
                             <td class="px-2 py-2 border-r text-left text-sm text-gray-500">
                                 @if($ae['status'] == 'claimed')
                                     <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                                        Claimed
+                                        Claim Completed
                                     </span>
                                 @elseif($ae['status'] == 'claim-in-progress')
-                                    <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800 cursor-help"
-                                          title="Claim In Progress">
-                                        Claim IP
+                                    <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                        Claim In Progress
                                     </span>
-                                    @if(!empty($ae['code']))
-                                        <div class="text-xs text-gray-500 mt-1">{{ strtoupper($ae['code']) }}</div>
-                                    @endif
                                 @else
                                     <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
                                         Unclaimed
@@ -534,7 +532,7 @@
                         </tr>
                         @if($loop->last)
                             <tr class="border-b">
-                                <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="3">
+                                <td class="px-2 py-2 border-r text-right text-sm text-gray-500" colspan="4">
                                     <b>Total</b>
                                 </td>
                                 <td class="px-2 py-2 border-r text-right text-sm text-gray-500">
@@ -545,7 +543,7 @@
                         @endif
                     @empty
                         <tr class="border-t border-b">
-                            <td colspan="9" class="text-sm text-red-500 rounded-md overflow-hidden">
+                            <td colspan="10" class="text-sm text-red-500 rounded-md overflow-hidden">
                                 <div class="flex items-center justify-center py-5">
                                     <b>No Records Found.</b>
                                 </div>
