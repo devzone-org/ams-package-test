@@ -86,12 +86,6 @@
                             <p class="card-title"><b>Admin Expenses List</b></p>
 
                             <div>
-                                @can('3.claim.admin-expenses')
-                                    <a href="{{ url('accounts/admin-expenses/claim') }}"
-                                       class="btn btn-outline-primary btn-sm">
-                                        Claim Reimbursement
-                                    </a>
-                                @endcan
                                 @can('3.add.admin-expenses')
                                     <a href="{{ url('accounts/admin-expenses/add') }}"
                                        class="btn btn-primary btn-sm">
@@ -370,12 +364,6 @@
                     <h3 class="text-lg leading-6 font-medium text-gray-900 flex items-center">Admin Expenses List</h3>
 
                     <div class="flex">
-                        @can('3.claim.admin-expenses')
-                            <a href="{{ url('accounts/admin-expenses/claim') }}"
-                               class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
-                                Claim Reimbursement
-                            </a>
-                        @endcan
                         @can('3.add.admin-expenses')
                             <a href="{{ url('accounts/admin-expenses/add') }}"
                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
