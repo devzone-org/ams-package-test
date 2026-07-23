@@ -1,6 +1,6 @@
 @extends('ams::layouts.master')
 @section('title')
-    Claim Reimbursement
+    Claim Expenses
 @endsection
 
 @section('content')

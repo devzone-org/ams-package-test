@@ -12,7 +12,7 @@
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header py-2">
-                        <h5 class="modal-title" id="selectedExpensesLabel">Reimbursement Statement</h5>
+                        <h5 class="modal-title" id="selectedExpensesLabel">Expense Statement</h5>
                         <button type="button" class="close" onclick="$('#SelectedExpenses').modal('hide')"
                                 aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -20,8 +20,8 @@
                     </div>
                     <div class="modal-body" style="max-height: 460px; overflow-y: auto;">
                         <div class="text-center mb-3">
-                            <h4 class="mb-0"><b>Expense Reimbursement Statement</b></h4>
-                            <small class="text-muted">Unclaimed admin expenses selected for reimbursement</small>
+                            <h4 class="mb-0"><b>Expenses Claim Statement</b></h4>
+                            <small class="text-muted">Unclaimed admin expenses selected for claim</small>
                         </div>
 
                         <div class="row mb-3">
@@ -133,7 +133,7 @@
 
                 <div class="flex items-center px-4 py-3 border-b border-gray-200">
                     <h3 class="flex-1 text-base font-medium text-gray-900" id="selected-expenses-headline">
-                        Reimbursement Statement
+                        Expense Statement
                     </h3>
                     <button type="button" @click="open = false"
                             class="-mr-1 p-1 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -149,8 +149,8 @@
 
                 <div class="px-6 pt-5">
                     <div class="text-center mb-4">
-                        <h2 class="text-lg font-semibold text-gray-900">Expense Reimbursement Statement</h2>
-                        <p class="text-sm text-gray-500">Unclaimed admin expenses selected for reimbursement</p>
+                        <h2 class="text-lg font-semibold text-gray-900">Expenses Claim Statement</h2>
+                        <p class="text-sm text-gray-500">Unclaimed admin expenses selected for claim</p>
                     </div>
                     <div class="flex justify-between text-sm text-gray-700 mb-4">
                         <div class="space-y-1">
