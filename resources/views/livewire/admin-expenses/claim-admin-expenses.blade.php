@@ -36,6 +36,7 @@
                                         <th class="align-middle">Vendor</th>
                                         <th class="align-middle">A/C Head</th>
                                         <th class="align-middle text-right">Amount</th>
+                                        <th class="align-middle">Status</th>
                                         <th class="align-middle">Added By</th>
                                         <th class="align-middle">Added At</th>
                                     </tr>
@@ -52,12 +53,15 @@
                                             <td class="align-middle">{{ ucwords($ae['vendor_name'] ?? '') }}</td>
                                             <td class="align-middle">{{ ucwords($ae['account_head'] ?? '') }}</td>
                                             <td class="align-middle text-right">{{ number_format($ae['amount'],2) }}</td>
+                                            <td class="align-middle">
+                                                <span class="badge badge-warning">Unclaimed</span>
+                                            </td>
                                             <td class="align-middle">{{ ucwords($ae['added_by_name'] ?? '') }}</td>
                                             <td class="align-middle text-muted">{{ date('d M, Y h:i A',strtotime($ae['created_at'])) }}</td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="8" class="p-0">
+                                            <td colspan="9" class="p-0">
                                                 <div class="alert alert-danger mb-0 py-4 text-center rounded-0">
                                                     <b>No Records Found.</b>
                                                 </div>
@@ -72,13 +76,13 @@
                                         <tfoot class="thead-light">
                                         <tr>
                                             <td class="text-right" colspan="5"><b>No. Of Selected</b></td>
-                                            <td class="text-right" colspan="3">
+                                            <td class="text-right" colspan="4">
                                                 <b>{{ number_format(count(array_filter($checked_admin_expenses))) }}</b>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="text-right" colspan="5"><b>Amount Claiming</b></td>
-                                            <td class="text-right" colspan="3"><b>{{ number_format($amount,2) }}</b>
+                                            <td class="text-right" colspan="4"><b>{{ number_format($amount,2) }}</b>
                                             </td>
                                         </tr>
                                         </tfoot>
@@ -191,6 +195,10 @@
                                 Amount
                             </th>
                             <th scope="col"
+                                class="px-2 py-2   border-t bg-gray-100 border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
+                                Status
+                            </th>
+                            <th scope="col"
                                 class="rounded-tr-md bg-gray-100    border-t px-2 py-2     text-left  text-sm font-bold text-gray-500  tracking-wider">
                                 Added By
                             </th>
@@ -223,6 +231,11 @@
                                     {{ number_format($ae['amount'],2) }}
                                 </td>
                                 <td class="px-2 py-2 border-r text-sm text-gray-500">
+                                    <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                                        Unclaimed
+                                    </span>
+                                </td>
+                                <td class="px-2 py-2 border-r text-sm text-gray-500">
                                     {{ ucwords($ae['added_by_name'] ?? '') }}
                                 </td>
                                 <td class="px-2 py-2 border-r text-sm text-gray-500">
@@ -252,7 +265,7 @@
                             @endif
                         @empty
                             <tr class="border-t border-b">
-                                <td colspan="8" class="text-sm text-red-500 rounded-md overflow-hidden">
+                                <td colspan="9" class="text-sm text-red-500 rounded-md overflow-hidden">
                                     <div class="flex items-center justify-center py-5">
                                         <b>No Records Found.</b>
                                     </div>
