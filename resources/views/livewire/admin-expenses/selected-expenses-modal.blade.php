@@ -43,7 +43,7 @@
                         <table class="table table-bordered mb-0">
                             <thead>
                             <th class="add-services-table text-muted">#</th>
-                            <th class="add-services-table text-muted">Expense On Dated</th>
+                            <th class="add-services-table text-muted">Expense Incurred</th>
                             <th class="add-services-table text-left text-muted">Vendor</th>
                             <th class="add-services-table text-left text-muted">A/C Head</th>
                             <th class="add-services-table text-right text-muted">Amount</th>
@@ -164,7 +164,7 @@
                 </div>
 
                 <div class="max-h-96 overflow-y-auto px-6 pb-5">
-                    <table class="min-w-full table-fixed border-l border-r">
+                    <table class="min-w-full table-fixed border-l border-r border-b">
                         <thead class="">
                         <tr class="">
                             <th scope="col"
@@ -173,7 +173,7 @@
                             </th>
                             <th scope="col" style="width: 110px;"
                                 class="px-2 py-2 bg-gray-100 border-t border-r text-left text-sm font-bold text-gray-500  tracking-wider">
-                                Expense On Dated
+                                Expense Incurred
                             </th>
                             <th scope="col"
                                 class="px-2 py-2 bg-gray-100 border-t border-r text-left text-sm font-bold text-gray-500  tracking-wider">
@@ -192,7 +192,7 @@
                             </th>
                         </tr>
                         </thead>
-                        <tbody class="bg-white">
+                        <tbody class="bg-white border-b">
                         @forelse($selected as $ae)
                             <tr wire:key="selected-{{ $ae['id'] }}"
                                 class="{{ $loop->first ? 'border-t': '' }} border-b">

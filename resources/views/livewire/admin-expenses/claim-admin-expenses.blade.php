@@ -32,7 +32,7 @@
                                             @endif
                                         </th>
                                         <th class="align-middle" style="width: 40px;">#</th>
-                                        <th class="align-middle">Expense On Dated</th>
+                                        <th class="align-middle">Expense Incurred</th>
                                         <th class="align-middle">Vendor</th>
                                         <th class="align-middle">A/C Head</th>
                                         <th class="align-middle text-right">Amount</th>
@@ -178,7 +178,7 @@
                             </th>
                             <th scope="col"
                                 class="px-2 py-2   bg-gray-100 border-t border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
-                                Expense On Dated
+                                Expense Incurred
                             </th>
                             <th scope="col"
                                 class="px-2 py-2  bg-gray-100  border-t border-r text-left  text-sm font-bold text-gray-500  tracking-wider">
