@@ -60,6 +60,7 @@
                                             <select wire:model.defer="filter.status" class="form-control">
                                                 <option value="">All</option>
                                                 <option value="unclaimed">Unclaimed</option>
+                                                <option value="claim-in-progress">Claim In Progress</option>
                                                 <option value="claimed">Claimed</option>
                                             </select>
                                         </div>
@@ -134,6 +135,11 @@
                                         <td>
                                             @if($ae['status'] == 'claimed')
                                                 <span class="badge badge-success">Claimed</span>
+                                            @elseif($ae['status'] == 'claim-in-progress')
+                                                <span class="badge badge-info">Claim In Progress</span>
+                                                @if(!empty($ae['code']))
+                                                    <div class="text-muted small">{{ strtoupper($ae['code']) }}</div>
+                                                @endif
                                             @else
                                                 <span class="badge badge-warning">Unclaimed</span>
                                             @endif
@@ -334,6 +340,7 @@
                                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <option value="">All</option>
                                 <option value="unclaimed">Unclaimed</option>
+                                <option value="claim-in-progress">Claim In Progress</option>
                                 <option value="claimed">Claimed</option>
                             </select>
                         </div>
@@ -465,6 +472,13 @@
                                             <span class="inline-flex items-center justify-center h-4 w-4 rounded-full bg-green-200 text-green-700 text-xs font-bold">i</span>
                                         @endif
                                     </span>
+                                @elseif($ae['status'] == 'claim-in-progress')
+                                    <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                        Claim In Progress
+                                    </span>
+                                    @if(!empty($ae['code']))
+                                        <div class="text-xs text-gray-500 mt-1">{{ strtoupper($ae['code']) }}</div>
+                                    @endif
                                 @else
                                     <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
                                         Unclaimed

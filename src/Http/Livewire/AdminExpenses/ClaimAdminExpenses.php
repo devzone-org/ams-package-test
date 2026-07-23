@@ -62,6 +62,53 @@ class ClaimAdminExpenses extends Component
             ->get()->toArray();
     }
 
+    public function proceedClaim()
+    {
+        try {
+            if (!Auth::user()->can('3.claim.admin-expenses')) {
+                throw new \Exception(env('PERMISSION_ERROR'));
+            }
+
+            $ids = array_keys(array_filter($this->checked_admin_expenses));
+            if (empty($ids)) {
+                throw new \Exception('Please select any record to proceed.');
+            }
+
+            DB::transaction(function () use ($ids) {
+                // lock the rows so two concurrent claimers can't grab the same ones
+                $expenses = AdminExpense::whereIn('id', $ids)
+                    ->where('status', 'unclaimed')
+                    ->lockForUpdate()->get();
+
+                if ($expenses->count() != count($ids)) {
+                    throw new \Exception('One or more expenses were removed or already in a claim. Please select again.');
+                }
+
+                // ponytail: sequential code via max()+1; unique index is the real guard,
+                // a colliding concurrent claim just rolls back and retries.
+                $next = (int) AdminExpense::max(DB::raw('CAST(SUBSTRING(code, 5) AS UNSIGNED)'));
+
+                foreach ($expenses as $expense) {
+                    $next++;
+                    $expense->update([
+                        'code' => 'exp-' . str_pad($next, 3, '0', STR_PAD_LEFT),
+                        'status' => 'claim-in-progress',
+                        'status_changed_by' => auth()->id(),
+                        'status_changed_at' => Carbon::now()->toDateTimeString(),
+                    ]);
+                }
+            });
+
+            $this->success = 'Selected expenses moved to claim in progress.';
+            $this->reset('checked_admin_expenses', 'checked_all');
+            $this->dispatchBrowserEvent('close-selected-modal');
+            $this->search();
+        } catch (\Exception $ex) {
+            $this->search();
+            $this->addError('error', $ex->getMessage());
+        }
+    }
+
     public function claim()
     {
         try {

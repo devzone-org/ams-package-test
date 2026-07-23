@@ -90,9 +90,9 @@
 {{--                                            <span wire:loading.remove wire:target="claim">Claim</span>--}}
 {{--                                            <span wire:loading wire:target="claim">Claiming...</span>--}}
 {{--                                        </button>--}}
-                                        <button type="button" class="btn btn-outline-primary mx-1"
+                                        <button type="button" class="btn btn-primary mx-1"
                                                 onclick="$('#SelectedExpenses').modal('show')">
-                                            View Selected ({{ count(array_filter($checked_admin_expenses)) }})
+                                            Proceed to Claim ({{ count(array_filter($checked_admin_expenses)) }})
                                         </button>
                                     @endif
                                     <a href="{{ url('accounts/admin-expenses/list') }}" class="btn btn-secondary mx-1">
@@ -272,8 +272,8 @@
 {{--                                <span wire:loading wire:target="claim">Claiming...</span>--}}
 {{--                            </button>--}}
                             <button type="button" x-data="{}" @click="$dispatch('open-selected-modal')"
-                                    class="ml-2 inline-flex justify-center px-4 py-2 text-sm font-medium text-indigo-600 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                View Selected ({{ count(array_filter($checked_admin_expenses)) }})
+                                    class="ml-2 inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Proceed to Claim ({{ count(array_filter($checked_admin_expenses)) }})
                             </button>
                         @endif
 

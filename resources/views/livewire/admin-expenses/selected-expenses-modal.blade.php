@@ -91,6 +91,13 @@
                                 onclick="$('#SelectedExpenses').modal('hide')">
                             Close
                         </button>
+                        @if($selected->isNotEmpty())
+                            <button type="button" class="btn btn-sm btn-primary" wire:loading.attr="disabled"
+                                    wire:target="proceedClaim" wire:click.prevent="proceedClaim">
+                                <span wire:loading.remove wire:target="proceedClaim">Proceed</span>
+                                <span wire:loading wire:target="proceedClaim">Processing...</span>
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -254,6 +261,14 @@
                             class="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Close
                     </button>
+                    @if($selected->isNotEmpty())
+                        <button type="button" wire:loading.attr="disabled" wire:target="proceedClaim"
+                                wire:click.prevent="proceedClaim"
+                                class="ml-2 inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <span wire:loading.remove wire:target="proceedClaim">Proceed</span>
+                            <span wire:loading wire:target="proceedClaim">Processing...</span>
+                        </button>
+                    @endif
                 </div>
             </div>
         </div>
