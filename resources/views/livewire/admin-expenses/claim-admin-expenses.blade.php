@@ -78,27 +78,25 @@
                                         </tr>
                                         <tr>
                                             <td class="text-right" colspan="5"><b>Amount Claiming</b></td>
-                                            <td class="text-right" colspan="3"><b>{{ number_format($amount,2) }}</b></td>
+                                            <td class="text-right" colspan="3"><b>{{ number_format($amount,2) }}</b>
+                                            </td>
                                         </tr>
                                         </tfoot>
                                     @endif
                                 </table>
 
-                                <div class="d-flex justify-content-end align-items-center pt-2">
-                                    @if(count(array_filter($checked_admin_expenses)) > 0)
-{{--                                        <button type="submit" wire:loading.attr="disabled" class="btn btn-primary mx-1">--}}
-{{--                                            <span wire:loading.remove wire:target="claim">Claim</span>--}}
-{{--                                            <span wire:loading wire:target="claim">Claiming...</span>--}}
-{{--                                        </button>--}}
+                                @if(count(array_filter($checked_admin_expenses)) > 0)
+                                    <div class="d-flex justify-content-end align-items-center pt-2">
+                                        {{--                                        <button type="submit" wire:loading.attr="disabled" class="btn btn-primary mx-1">--}}
+                                        {{--                                            <span wire:loading.remove wire:target="claim">Claim</span>--}}
+                                        {{--                                            <span wire:loading wire:target="claim">Claiming...</span>--}}
+                                        {{--                                        </button>--}}
                                         <button type="button" class="btn btn-primary mx-1"
                                                 onclick="$('#SelectedExpenses').modal('show')">
                                             Proceed to Claim ({{ count(array_filter($checked_admin_expenses)) }})
                                         </button>
-                                    @endif
-                                    <a href="{{ url('accounts/admin-expenses/list') }}" class="btn btn-secondary mx-1">
-                                        Go Back
-                                    </a>
-                                </div>
+                                    </div>
+                                @endif
                             </form>
                         </div>
                     </div>
@@ -162,7 +160,7 @@
                     </h3>
                 </div>
                 <form wire:submit.prevent="claim">
-                    <table class="min-w-full table-fixed  ">
+                    <table class="min-w-full table-fixed border-b">
                         <thead class="">
                         <tr class="">
                             @if(!empty($admin_expenses_list))
@@ -264,24 +262,19 @@
                         </tbody>
                     </table>
 
-                    <div class="w-full flex justify-end items-center py-6 px-4 sm:p-6 border-t">
-                        @if(count(array_filter($checked_admin_expenses)) > 0)
-{{--                            <button type="submit" wire:loading.attr="disabled"--}}
-{{--                                    class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">--}}
-{{--                                <span wire:loading.remove wire:target="claim">Claim</span>--}}
-{{--                                <span wire:loading wire:target="claim">Claiming...</span>--}}
-{{--                            </button>--}}
+                    @if(count(array_filter($checked_admin_expenses)) > 0)
+                        <div class="w-full flex justify-end items-center py-3 px-6">
+                            {{--                            <button type="submit" wire:loading.attr="disabled"--}}
+                            {{--                                    class="ml-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">--}}
+                            {{--                                <span wire:loading.remove wire:target="claim">Claim</span>--}}
+                            {{--                                <span wire:loading wire:target="claim">Claiming...</span>--}}
+                            {{--                            </button>--}}
                             <button type="button" x-data="{}" @click="$dispatch('open-selected-modal')"
                                     class="ml-2 inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 Proceed to Claim ({{ count(array_filter($checked_admin_expenses)) }})
                             </button>
-                        @endif
-
-                        <a href="{{ url('accounts/admin-expenses/list') }}"
-                           class="ml-1 inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            Go Back
-                        </a>
-                    </div>
+                        </div>
+                    @endif
                 </form>
             </div>
         </div>

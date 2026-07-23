@@ -93,8 +93,8 @@ class ClaimAdminExpenses extends Component
                     $expense->update([
                         'code' => 'exp-' . str_pad($next, 3, '0', STR_PAD_LEFT),
                         'status' => 'claim-in-progress',
-                        'status_changed_by' => auth()->id(),
-                        'status_changed_at' => Carbon::now()->toDateTimeString(),
+                        'claim_in_progress_by' => auth()->id(),
+                        'claim_in_progress_at' => Carbon::now()->toDateTimeString(),
                     ]);
                 }
             });
@@ -128,8 +128,8 @@ class ClaimAdminExpenses extends Component
             // conditional update so two concurrent claimers can't both flip the same row
             $claimed = AdminExpense::whereIn('id', $ids)->where('status', 'unclaimed')->update([
                 'status' => 'claimed',
-                'status_changed_by' => auth()->id(),
-                'status_changed_at' => Carbon::now()->toDateTimeString(),
+                'claimed_by' => auth()->id(),
+                'claimed_at' => Carbon::now()->toDateTimeString(),
             ]);
 
             if ($claimed != count($ids)) {

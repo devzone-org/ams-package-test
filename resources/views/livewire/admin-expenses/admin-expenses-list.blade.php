@@ -462,7 +462,7 @@
                                     @php
                                         $claimTip = collect([
                                             !empty($ae['claimed_by_name']) ? 'Claimed by: ' . ucwords($ae['claimed_by_name']) : null,
-                                            !empty($ae['status_changed_at']) ? 'Claimed at: ' . date('d M, Y h:i A', strtotime($ae['status_changed_at'])) : null,
+                                            !empty($ae['claimed_at']) ? 'Claimed at: ' . date('d M, Y h:i A', strtotime($ae['claimed_at'])) : null,
                                         ])->filter()->implode("\n");
                                     @endphp
                                     <span title="{{ $claimTip }}"
