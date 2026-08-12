@@ -170,7 +170,16 @@ class Close extends Component
 
 
                 DB::beginTransaction();
+
+                if ($this->retained_cash < 0) {
+                    throw new \Exception('Cash Retained cannot be negative.');
+                }
+
                 $total_denomination = collect($this->denomination_counting)->sum('total');
+
+                if ($this->retained_cash > $total_denomination) {
+                    throw new \Exception('Cash Retained cannot be greater than Physical Cash.');
+                }
                 $transfer_amount = $total_denomination - $this->retained_cash;
                 $description = "[TILL CLOSING: " . date('d M Y h:i A') . "]; [Teller: " . $this->current_user['name'] .
                     " Till closed by: " . Auth::user()->name . "][Transferring " . env('CURRENCY','PKR') . " " . number_format($transfer_amount, 2) . " to " . collect($this->transfers)->firstWhere('id', $this->transfer_id)['name'] . " from till of Teller '" . $this->current_user['name'] . "'. Cash Retained PKR " .
