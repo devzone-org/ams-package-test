@@ -25,20 +25,39 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
+                                        <div class="col-xs-6 col-sm-3" id="type-group" wire:key="type-group">
+                                            <label for="type" class="font-weight-normal">Type</label>
+                                            <select wire:model="type" class="form-control" id="type">
+                                                <option value="posting_date">Posting Date</option>
+                                                <option value="approved_at">Approved Date & Time</option>
+                                            </select>
+                                        </div>
                                         <div class="col-xs-6 col-sm-3">
                                             <div class="form-group" id="from-date-group" wire:key="from-date-group">
                                                 <label for="from_date" class="font-weight-normal">From Date</label>
-                                                <input type="text" wire:model.lazy="from_date" id="from_date"
-                                                       autocomplete="off"
-                                                       class="form-control">
+                                                <div wire:ignore>
+                                                    <input type="text" wire:model.lazy="from_date" id="from_date"
+                                                           autocomplete="off"
+                                                           class="form-control">
+                                                </div>
+                                                @if($type == 'approved_at')
+                                                    <input type="time" wire:model.defer="from_time" wire:key="from-time-input"
+                                                           class="form-control mt-1">
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="col-xs-6 col-sm-3">
                                             <div class="form-group" id="to-date-group" wire:key="to-date-group">
                                                 <label for="to_date" class="font-weight-normal">To Date</label>
-                                                <input type="text" wire:model.lazy="to_date" id="to_date"
-                                                       autocomplete="off"
-                                                       class="form-control">
+                                                <div wire:ignore>
+                                                    <input type="text" wire:model.lazy="to_date" id="to_date"
+                                                           autocomplete="off"
+                                                           class="form-control">
+                                                </div>
+                                                @if($type == 'approved_at')
+                                                    <input type="time" wire:model.defer="to_time" wire:key="to-time-input"
+                                                           class="form-control mt-1">
+                                                @endif
                                             </div>
                                         </div>
 
@@ -66,7 +85,7 @@
                                                 </button>
 
                                                 @if(!empty($report))
-                                                    <a href="{{'profit-and-loss/export'}}?from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}&closing_vouchers={{$closing_vouchers}}"
+                                                    <a href="{{'profit-and-loss/export'}}?from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}&closing_vouchers={{$closing_vouchers}}&type={{$type}}&from_time={{urlencode($from_time)}}&to_time={{urlencode($to_time)}}"
                                                        target="_blank"
                                                        class="btn btn-success"
                                                        id="export-btn" wire:key="export-btn">
@@ -81,8 +100,8 @@
                                     <h5 class="d-flex justify-content-center p-0 m-0"><b>Profit and Loss (P&L) - Periodic</b></h5>
                                     <p class="text-center p-0 m-0 text-muted">{{ env('APP_NAME') }}</p>
                                     <p class="text-center p-0 m-0 text-muted">Statement
-                                        Period {{ date('d M, Y',strtotime($from_date)) }}
-                                        to {{ date('d M, Y',strtotime($to_date)) }} </p>
+                                        Period {{ date('d M, Y',strtotime($from_date)) }}{{ $type == 'approved_at' ? ' ' . date('h:i A', strtotime($from_time)) : '' }}
+                                        to {{ date('d M, Y',strtotime($to_date)) }}{{ $type == 'approved_at' ? ' ' . date('h:i A', strtotime($to_time)) : '' }} </p>
                                 </div>
 
                                 <div class="card-body p-0">
@@ -414,17 +433,42 @@
 
 
                 <div class="grid grid-cols-8 gap-6">
+                    <div class="col-span-6 sm:col-span-2" id="type-group" wire:key="type-group">
+                        <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
+                        <select wire:model="type" id="type" wire:key="type-select"
+                                class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="posting_date">Posting Date</option>
+                            <option value="approved_at">Approved Date & Time</option>
+                        </select>
+                    </div>
+
                     <div class="col-span-6 sm:col-span-2" id="from-date-group" wire:key="from-date-group">
                         <label for="from_date" class="block text-sm font-medium text-gray-700">From Date</label>
-                        <input type="text" wire:model.lazy="from_date" wire:key="from-date-input" readonly id="from_date" autocomplete="off"
-                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <div class="flex gap-2">
+                            <div wire:ignore class="flex-1">
+                                <input type="text" wire:model.lazy="from_date" wire:key="from-date-input" readonly id="from_date" autocomplete="off"
+                                       class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            @if($type == 'approved_at')
+                                <input type="time" wire:model.defer="from_time" wire:key="from-time-input"
+                                       class="mt-1 block border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            @endif
+                        </div>
                     </div>
 
 
                     <div class="col-span-6 sm:col-span-2" id="to-date-group" wire:key="to-date-group">
                         <label for="to_date" class="block text-sm font-medium text-gray-700">To Date</label>
-                        <input type="text" readonly wire:model.lazy="to_date" wire:key="to-date-input" id="to_date" autocomplete="off"
-                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <div class="flex gap-2">
+                            <div wire:ignore class="flex-1">
+                                <input type="text" readonly wire:model.lazy="to_date" wire:key="to-date-input" id="to_date" autocomplete="off"
+                                       class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            @if($type == 'approved_at')
+                                <input type="time" wire:model.defer="to_time" wire:key="to-time-input"
+                                       class="mt-1 block border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            @endif
+                        </div>
                     </div>
                     <div class="col-span-6 sm:col-span-2" id="closing-vouchers-group" wire:key="closing-vouchers-group">
                         <label for="closing_vouchers" class="block text-sm font-medium text-gray-700">Closing Vouchers</label>
@@ -451,7 +495,7 @@
                             </button>
 
                             @if(!empty($report))
-                                <a href="{{'profit-and-loss/export'}}?from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}&closing_vouchers={{$closing_vouchers}}"
+                                <a href="{{'profit-and-loss/export'}}?from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}&closing_vouchers={{$closing_vouchers}}&type={{$type}}&from_time={{urlencode($from_time)}}&to_time={{urlencode($to_time)}}"
                                    target="_blank"
                                    class="ml-3 disabled:opacity-30 bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none"
                                    id="export-btn" wire:key="export-btn">
@@ -470,8 +514,8 @@
                     <h3 class="text-lg leading-6 text-center font-medium text-gray-900">Profit and Loss (P&L) - Periodic</h3>
                     <p class="text-md  font-sm text-gray-500 text-center">{{ env('APP_NAME') }}</p>
                     <p class="text-md  font-sm text-gray-500 text-center">Statement
-                        Period {{ date('d M, Y',strtotime($from_date)) }}
-                        to {{ date('d M, Y',strtotime($to_date)) }} </p>
+                        Period {{ date('d M, Y',strtotime($from_date)) }}{{ $type == 'approved_at' ? ' ' . date('h:i A', strtotime($from_time)) : '' }}
+                        to {{ date('d M, Y',strtotime($to_date)) }}{{ $type == 'approved_at' ? ' ' . date('h:i A', strtotime($to_time)) : '' }} </p>
 
                 </div>
             </div>
