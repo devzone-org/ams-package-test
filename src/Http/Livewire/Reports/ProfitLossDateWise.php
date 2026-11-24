@@ -17,6 +17,9 @@ class ProfitLossDateWise extends Component
     public $from_date;
     public $to_date;
     public $closing_vouchers = 'hide';
+    public $type = 'posting_date';
+    public $from_time = '00:00';
+    public $to_time = '23:59';
     public $heading = [];
     public $report = [];
     public $year;
@@ -41,8 +44,21 @@ class ProfitLossDateWise extends Component
             ->format('Y-m-d');
     }
 
+    // returns [column, [from, to]] for the selected type
+    private function dateRange()
+    {
+        if ($this->type == 'approved_at') {
+            return ['l.approved_at', [
+                Carbon::createFromFormat('d M Y H:i', $this->from_date . ' ' . ($this->from_time ?: '00:00'))->format('Y-m-d H:i:00'),
+                Carbon::createFromFormat('d M Y H:i', $this->to_date . ' ' . ($this->to_time ?: '23:59'))->format('Y-m-d H:i:59'),
+            ]];
+        }
+        return ['l.posting_date', [$this->formatDate($this->from_date), $this->formatDate($this->to_date)]];
+    }
+
     public function search()
     {
+        [$col, $range] = $this->dateRange();
         $from = Carbon::parse($this->from_date);
         $to = Carbon::parse($this->to_date);
 
@@ -69,13 +85,12 @@ class ProfitLossDateWise extends Component
                 'coa.reference',
                 'coa.sub_account',
                 'l.account_id',
-                DB::raw("DATE_FORMAT(l.posting_date,'%d %M') as month"),
-                DB::raw("DATE_FORMAT(l.posting_date,'%Y-%m-%d') as date"))
-            ->where('l.posting_date', '>=', $this->formatDate($this->from_date))
-            ->where('l.posting_date', '<=', $this->formatDate($this->to_date))
+                DB::raw("DATE_FORMAT({$col},'%d %M') as month"),
+                DB::raw("DATE_FORMAT({$col},'%Y-%m-%d') as date"))
+            ->whereBetween($col, $range)
             ->where('l.is_approve', 't')
             ->whereIn('coa.type', ['Income', 'Expenses'])
-            ->groupBy(DB::raw("DATE_FORMAT(l.posting_date,'%d %M')"))
+            ->groupBy(DB::raw("DATE_FORMAT({$col},'%d %M')"))
             ->groupBy('l.account_id')
             ->orderBy('coa.name', 'asc')
             ->get();

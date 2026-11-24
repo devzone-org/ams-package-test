@@ -190,7 +190,7 @@
 
         <div x-show="isExpanded" class="space-y-1">
             <a href="{{ url('accounts/reports/profit-and-loss') }}"
-               class="{{ Request::segment(3)=='profit-and-loss'  ? $a_current : $a_default}} group rounded-md pr-2 pl-11 pl-3 py-2 flex items-center text-sm font-normal">
+               class="{{ (Request::segment(3)=='profit-and-loss' && empty(Request::segment(4))) ? $a_current : $a_default}} group rounded-md pr-2 pl-11 pl-3 py-2 flex items-center text-sm font-normal">
                 Profit & Loss
             </a>
         </div>

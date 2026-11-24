@@ -274,7 +274,7 @@
                     </a>
 
                     <a href="{{ url('accounts/reports/profit-and-loss') }}"
-                       class="-m-3 p-3 flex items-center rounded-lg hover:bg-gray-100 {{ Request::segment(3)=='profit-and-loss'  ? 'bg-gray-100' : ''}} ">
+                       class="-m-3 p-3 flex items-center rounded-lg hover:bg-gray-100 {{ (Request::segment(3)=='profit-and-loss' && empty(Request::segment(4))) ? 'bg-gray-100' : ''}} ">
 
                         <svg class="flex-shrink-0 h-6 w-6 text-indigo-600" fill="none" stroke="currentColor"
                              viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -292,7 +292,7 @@
                         </div>
                     </a>
                     <a href="{{ url('accounts/reports/profit-and-loss/date-wise') }}"
-                       class="-m-3 p-3 flex items-center rounded-lg hover:bg-gray-100 {{ Request::segment(3)=='profit-and-loss'  ? 'bg-gray-100' : ''}} ">
+                       class="-m-3 p-3 flex items-center rounded-lg hover:bg-gray-100 {{ (Request::segment(3)=='profit-and-loss' && Request::segment(4)=='date-wise') ? 'bg-gray-100' : ''}} ">
 
                         <svg class="flex-shrink-0 h-6 w-6 text-indigo-600" fill="none" stroke="currentColor"
                              viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
