@@ -79,11 +79,6 @@
                                                     <span wire:loading.remove wire:target="search">Search</span>
                                                 </button>
 
-                                                <button type="button" wire:click="resetSearch" wire:loading.attr="disabled"
-                                                        class="btn btn-danger" id="reset-btn" wire:key="reset-btn">
-                                                    Reset
-                                                </button>
-
                                                 @if(!empty($report))
                                                     <a href="{{'profit-and-loss/export'}}?from_date={{date('d M Y', strtotime($from_date))}}&to_date={{date('d M Y', strtotime($to_date))}}&closing_vouchers={{$closing_vouchers}}&type={{$type}}&from_time={{urlencode($from_time)}}&to_time={{urlencode($to_time)}}"
                                                        target="_blank"
@@ -486,12 +481,6 @@
                                     id="search-btn" wire:key="search-btn">
                                 <span wire:loading wire:target="search">Searching ...</span>
                                 <span wire:loading.remove wire:target="search">Search</span>
-                            </button>
-
-                            <button type="button" wire:click="resetSearch" wire:loading.attr="disabled"
-                                    class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                                    id="reset-btn" wire:key="reset-btn">
-                                Reset
                             </button>
 
                             @if(!empty($report))

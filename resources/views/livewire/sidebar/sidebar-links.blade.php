@@ -406,14 +406,14 @@ $favourite = [];
             </div>
 
             <div x-show="isExpanded" class="space-y-1">
-                <div class="flex flex-row item-center {{ Request::segment(3)=='profit-and-loss'  ? $a_current : $a_default}}">
+                <div class="flex flex-row item-center {{ (Request::segment(3)=='profit-and-loss' && empty(Request::segment(4))) ? $a_current : $a_default}}">
 
                     <a href="{{ url('accounts/reports/profit-and-loss') }}"
                        class=" group w-full rounded-tl-md pr-2 pl-11 pl-3 py-2 flex items-center text-sm font-normal">
                         Profit & Loss
                     </a>
                     <div wire:click.prevent="selectedFavourite('Profit and Loss','accounts/reports/profit-and-loss')"
-                         class="{{ Request::segment(3)=='profit-and-loss'  ? $a_current : $a_default}} pt-2 rounded-tr-md rounded-br-md cursor-pointer">
+                         class="{{ (Request::segment(3)=='profit-and-loss' && empty(Request::segment(4))) ? $a_current : $a_default}} pt-2 rounded-tr-md rounded-br-md cursor-pointer">
 
                         {{--                            favourite--}}
                         @if(in_array('accounts/reports/profit-and-loss',$favourite))
