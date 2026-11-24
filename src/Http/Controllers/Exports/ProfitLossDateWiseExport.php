@@ -15,6 +15,9 @@ class ProfitLossDateWiseExport
     protected $to_date;
     protected $template_id;
     protected $closing_vouchers = 'hide';
+    protected $type = 'posting_date';
+    protected $from_time = '00:00';
+    protected $to_time = '23:59';
 
 
     public function __construct()
@@ -24,6 +27,21 @@ class ProfitLossDateWiseExport
         $this->to_date = $request['to_date'];
         $this->closing_vouchers = $request['closing_vouchers'];
         $this->template_id = $request['template_id'];
+        $this->type = $request['type'] ?: 'posting_date';
+        $this->from_time = $request['from_time'] ?: '00:00';
+        $this->to_time = $request['to_time'] ?: '23:59';
+    }
+
+    // returns [column, [from, to]] for the selected type
+    private function dateRange()
+    {
+        if ($this->type == 'approved_at') {
+            return ['l.approved_at', [
+                \Carbon\Carbon::createFromFormat('d M Y H:i', $this->from_date . ' ' . $this->from_time)->format('Y-m-d H:i:00'),
+                \Carbon\Carbon::createFromFormat('d M Y H:i', $this->to_date . ' ' . $this->to_time)->format('Y-m-d H:i:59'),
+            ]];
+        }
+        return ['l.posting_date', [$this->formatDate($this->from_date), $this->formatDate($this->to_date)]];
     }
 
 
@@ -40,6 +58,8 @@ class ProfitLossDateWiseExport
     {
         $from = \Carbon\Carbon::parse($this->from_date);
         $to = \Carbon\Carbon::parse($this->to_date);
+
+        [$col, $range] = $this->dateRange();
 
         $lvl_5_account_ids = null;
         if(!empty($this->template_id)){
@@ -62,16 +82,15 @@ class ProfitLossDateWiseExport
                 'coa.reference',
                 'coa.sub_account',
                 'l.account_id',
-                DB::raw("DATE_FORMAT(l.posting_date,'%d %M') as month"),
-                DB::raw("DATE_FORMAT(l.posting_date,'%Y-%m-%d') as date"))
-            ->where('l.posting_date', '>=', $this->formatDate($this->from_date))
-            ->where('l.posting_date', '<=', $this->formatDate($this->to_date))
+                DB::raw("DATE_FORMAT({$col},'%d %M') as month"),
+                DB::raw("DATE_FORMAT({$col},'%Y-%m-%d') as date"))
+            ->whereBetween($col, $range)
             ->when(!empty($lvl_5_account_ids),function ($q) use($lvl_5_account_ids){
                 $q->whereIn('l.account_id', $lvl_5_account_ids);
             })
             ->where('l.is_approve', 't')
             ->whereIn('coa.type', ['Income', 'Expenses'])
-            ->groupBy(DB::raw("DATE_FORMAT(l.posting_date,'%d %M')"))
+            ->groupBy(DB::raw("DATE_FORMAT({$col},'%d %M')"))
             ->groupBy('l.account_id')
             ->orderBy('coa.name', 'asc')
             ->get();
